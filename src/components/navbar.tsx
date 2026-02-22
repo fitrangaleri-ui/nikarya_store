@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Search, ShoppingCart, User, LogOut, ChevronDown } from "lucide-react";
+import {
+  Search,
+  ShoppingCart,
+  User,
+  LogOut,
+  ChevronDown,
+  Menu,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/auth-provider";
@@ -36,70 +43,68 @@ export function Navbar() {
     user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/60 backdrop-blur-md shadow-sm">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
         {/* Bagian Kiri: Logo & Menu */}
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-1">
-            <span className="text-2xl font-bold text-slate-900 tracking-tight">
+          <Link href="/" className="flex items-center gap-1 group">
+            <span className="text-2xl font-bold text-foreground tracking-tight group-hover:text-primary transition-colors">
               customgaleri
             </span>
-            <span className="text-[10px] font-semibold text-slate-500 tracking-widest uppercase mt-1">
+            <span className="text-[10px] font-semibold text-primary tracking-widest uppercase mt-1">
               INVITATION
             </span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
             <Link
               href="/products"
-              className="hover:text-blue-600 transition-colors"
+              className="hover:text-primary transition-colors"
             >
               Produk
             </Link>
             <Link
               href="/promo"
-              className="hover:text-blue-600 transition-colors"
+              className="hover:text-primary transition-colors"
             >
               Promo
             </Link>
           </nav>
         </div>
 
-        {/* Bagian Kanan: Search & Icons */}
+        {/* Bagian Kanan: Search, Icons, & Mobile Menu */}
         <div className="flex items-center gap-4 flex-1 justify-end">
-          <div className="relative w-full max-w-[400px] hidden md:block">
+          <div className="relative w-full max-w-[400px] hidden md:block group">
             <Input
               type="search"
               placeholder="Cari Undangan"
-              className="w-full pl-4 pr-10 rounded-full border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-blue-600 transition-all"
+              className="w-full pl-4 pr-10 rounded-full border-border/50 bg-background/50 focus:bg-background focus:ring-1 focus:ring-primary transition-all"
             />
-            <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
           </div>
 
           <div className="flex items-center gap-1">
-            {/* ✅ Cart: hidden di mobile, tampil di desktop */}
             <Button
               variant="ghost"
               size="icon"
-              className="relative text-slate-700 hover:text-blue-600 hidden md:inline-flex"
+              className="relative text-foreground hover:text-primary hover:bg-primary/10 hidden md:inline-flex rounded-full transition-colors"
               onClick={openCart}
               aria-label="Buka keranjang"
             >
               <ShoppingCart className="h-5 w-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-orange-500 text-[10px] font-bold text-white ring-2 ring-white">
+                <span className="absolute -top-0.5 -right-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground ring-2 ring-background">
                   {cartCount > 99 ? "99+" : cartCount}
                 </span>
               )}
             </Button>
 
-            {/* ✅ User/Akun: hidden di mobile, tampil di desktop */}
             <div className="hidden md:block">
               {isLoading ? (
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-slate-400"
+                  className="text-muted-foreground rounded-full"
                   disabled
                 >
                   <User className="h-5 w-5 animate-pulse" />
@@ -109,10 +114,10 @@ export function Navbar() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="flex items-center gap-1.5 text-slate-700 hover:text-blue-600 px-2"
+                    className="flex items-center gap-1.5 text-foreground hover:text-primary hover:bg-primary/10 px-2 rounded-full transition-colors"
                     onClick={() => setShowDropdown(!showDropdown)}
                   >
-                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/15 text-primary">
                       <span className="text-xs font-semibold">
                         {displayName.charAt(0).toUpperCase()}
                       </span>
@@ -124,18 +129,18 @@ export function Navbar() {
                   </Button>
 
                   {showDropdown && (
-                    <div className="absolute right-0 top-full mt-1.5 w-52 rounded-lg border border-slate-200 bg-white py-1.5 shadow-lg z-50">
-                      <div className="px-3 py-2 border-b border-slate-100">
-                        <p className="text-sm font-medium text-slate-900 truncate">
+                    <div className="absolute right-0 top-full mt-1.5 w-52 rounded-xl border border-border/50 bg-background/80 backdrop-blur-md py-1.5 shadow-lg shadow-black/5 z-50 animate-in fade-in zoom-in-95 duration-200">
+                      <div className="px-3 py-2 border-b border-border/50">
+                        <p className="text-sm font-medium text-foreground truncate">
                           {displayName}
                         </p>
-                        <p className="text-xs text-slate-500 truncate">
+                        <p className="text-xs text-muted-foreground truncate">
                           {user.email}
                         </p>
                       </div>
                       <Link
                         href="/dashboard"
-                        className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                        className="flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-primary/10 hover:text-primary transition-colors"
                         onClick={() => setShowDropdown(false)}
                       >
                         <User className="h-4 w-4" />
@@ -143,7 +148,7 @@ export function Navbar() {
                       </Link>
                       <button
                         onClick={handleSignOut}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                        className="flex w-full items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-destructive/10 transition-colors"
                       >
                         <LogOut className="h-4 w-4" />
                         Keluar
@@ -156,13 +161,25 @@ export function Navbar() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-slate-700 hover:text-blue-600"
+                    className="text-foreground hover:text-primary hover:bg-primary/10 rounded-full transition-colors"
                   >
                     <User className="h-5 w-5" />
                   </Button>
                 </Link>
               )}
             </div>
+
+            {/* MOCKUP HAMBURGER MENU (Hanya tampil di Mobile) */}
+            <Link href="/menu" className="md:hidden ml-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-foreground hover:text-primary hover:bg-primary/10 rounded-full transition-colors"
+                aria-label="Menu"
+              >
+                <Menu className="h-6 w-6" />
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

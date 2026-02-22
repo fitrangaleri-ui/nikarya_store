@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+// ✅ Tambahkan import Quicksand
+import { Inter, JetBrains_Mono, Quicksand } from "next/font/google";
 import Script from "next/script";
 import { AuthProvider } from "@/components/auth-provider";
 import { CartProvider } from "@/context/cart-context";
@@ -7,10 +8,21 @@ import { CartSidebar } from "@/components/cart-sidebar";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta-sans",
+const inter = Inter({
+  variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600", "700", "800"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+});
+
+// ✅ Inisialisasi Quicksand dengan weight 300
+const quicksand = Quicksand({
+  variable: "--font-quicksand",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -27,9 +39,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <body className={`${plusJakartaSans.variable} font-sans antialiased`}>
+      {/* ✅ Tambahkan variabel quicksand.variable ke body */}
+      <body
+        className={`${inter.variable} ${jetbrainsMono.variable} ${quicksand.variable} font-sans antialiased`}
+      >
         <NextTopLoader
-          color="#6B4226"
+          color="#0d9488"
           height={3}
           showSpinner={false}
           shadow={false}
