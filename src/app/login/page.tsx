@@ -7,25 +7,14 @@ import { login, loginWithGoogle } from "../(auth)/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { LogIn } from "lucide-react";
 
 // Komponen Icon Google (SVG)
 function GoogleIcon() {
   return (
     <svg
-      className="mr-2 h-4 w-4"
+      className="mr-2.5 h-4 w-4"
       aria-hidden="true"
       focusable="false"
-      data-prefix="fab"
-      data-icon="google"
       role="img"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 488 512"
@@ -70,62 +59,39 @@ function LoginFormInner() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-      <Card className="w-full max-w-md border-slate-200 bg-white shadow-lg">
-        <CardHeader className="text-center space-y-2">
-          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-blue-50">
-            <LogIn className="h-6 w-6 text-blue-600" />
-          </div>
-          <CardTitle className="text-2xl font-bold text-slate-900">
-            Masuk ke Akun
-          </CardTitle>
-          <CardDescription className="text-slate-500">
-            Pilih metode login untuk melanjutkan
-          </CardDescription>
-        </CardHeader>
+    <div className="min-h-screen flex items-center justify-center bg-background p-4 relative overflow-hidden">
+      {/* Background Ornamen Halus */}
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10" />
+      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] -z-10" />
 
-        <CardContent className="space-y-4">
+      <div className="w-full max-w-[400px] bg-background/95 backdrop-blur-xl border border-border/40 shadow-2xl rounded-3xl overflow-hidden relative animate-in fade-in zoom-in-95 duration-500">
+        {/* Glow Akses Dalam Box */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] rounded-full pointer-events-none -z-10" />
+
+        <div className="text-center px-6 pt-10 pb-4">
+          <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1.5">
+            Selamat Datang Kembali
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Masuk untuk mengakses koleksi Anda.
+          </p>
+        </div>
+
+        <div className="px-6 pb-8 space-y-5">
           {error && (
-            <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200">
+            <div className="rounded-xl bg-destructive/10 p-3 text-sm text-center text-destructive border border-destructive/20 animate-in fade-in zoom-in-95">
               {error}
             </div>
           )}
 
-          {/* Tombol Google Login */}
-          <Button
-            variant="outline"
-            type="button"
-            className="w-full"
-            onClick={handleGoogleLogin}
-            disabled={isPending}
-          >
-            {isPending ? (
-              "Memproses..."
-            ) : (
-              <>
-                <GoogleIcon />
-                Lanjutkan dengan Google
-              </>
-            )}
-          </Button>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-slate-200" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-slate-500">
-                Atau login dengan email
-              </span>
-            </div>
-          </div>
-
-          {/* Form Login Biasa */}
           <form action={handleSubmit} className="space-y-4">
             <input type="hidden" name="redirectTo" value={redirectTo} />
 
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-slate-700">
+            <div className="space-y-1.5 text-left">
+              <Label
+                htmlFor="email"
+                className="text-xs font-semibold text-muted-foreground ml-1"
+              >
                 Email
               </Label>
               <Input
@@ -134,54 +100,94 @@ function LoginFormInner() {
                 type="email"
                 placeholder="nama@email.com"
                 required
-                className="border-slate-300 bg-white text-slate-900 focus:ring-blue-600 focus:border-blue-600"
+                className="h-11 rounded-xl border-border/50 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-sm"
               />
             </div>
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-slate-700">
-                  Password
-                </Label>
-                <Link
-                  href="/forgot-password"
-                  className="text-sm font-medium text-blue-600 hover:text-blue-500"
-                >
-                  Lupa password?
-                </Link>
-              </div>
+            <div className="space-y-1.5 text-left">
+              <Label
+                htmlFor="password"
+                className="text-xs font-semibold text-muted-foreground ml-1"
+              >
+                Kata Sandi
+              </Label>
               <Input
                 id="password"
                 name="password"
                 type="password"
                 placeholder="••••••••"
                 required
-                className="border-slate-300 bg-white text-slate-900 focus:ring-blue-600 focus:border-blue-600"
+                className="h-11 rounded-xl border-border/50 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-sm"
               />
+            </div>
+
+            <div className="flex items-center justify-between pt-1 pb-2">
+              <div className="flex items-center gap-2 ml-1">
+                <input
+                  type="checkbox"
+                  id="remember"
+                  className="rounded border-border/50 h-3.5 w-3.5 focus:ring-primary text-primary bg-background cursor-pointer"
+                />
+                <Label
+                  htmlFor="remember"
+                  className="text-[11px] font-medium text-muted-foreground cursor-pointer hover:text-foreground"
+                >
+                  Ingat Saya
+                </Label>
+              </div>
+
+              <Link
+                href="/forgot-password"
+                className="text-[11px] font-medium text-muted-foreground hover:text-primary transition-colors"
+              >
+                Lupa Sandi?
+              </Link>
             </div>
 
             <Button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+              variant="brand"
+              className="w-full rounded-full h-11"
               disabled={isPending}
             >
               {isPending ? "Memproses..." : "Masuk"}
             </Button>
           </form>
-        </CardContent>
 
-        <CardFooter className="flex flex-col gap-4">
-          <p className="text-center text-sm text-slate-600">
+          {/* Minimalist Divider */}
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border/40" />
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-background/95 px-3 text-muted-foreground text-[10px]">
+                atau
+              </span>
+            </div>
+          </div>
+
+          <Button
+            variant="outline"
+            type="button"
+            className="w-full h-11 rounded-full border-border/50 bg-transparent text-foreground hover:bg-muted/50 font-medium text-sm transition-all"
+            onClick={handleGoogleLogin}
+            disabled={isPending}
+          >
+            <GoogleIcon />
+            Lanjutkan dengan Google
+          </Button>
+
+          <p className="text-xs text-muted-foreground text-center pt-2">
             Belum punya akun?{" "}
             <Link
-              href="/register"
-              className="font-semibold text-blue-600 hover:text-blue-500 hover:underline"
+              href={`/register${redirectTo ? `?redirectTo=${redirectTo}` : ""}`}
+              className="text-primary hover:text-primary/80 font-medium transition-colors"
             >
-              Daftar sekarang
+              Daftar
             </Link>
           </p>
-        </CardFooter>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }
@@ -190,8 +196,8 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-slate-50">
-          <p className="text-slate-500 animate-pulse">Memuat...</p>
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <div className="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
         </div>
       }
     >

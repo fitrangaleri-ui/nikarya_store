@@ -6,14 +6,6 @@ import { register } from "../(auth)/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { UserPlus, MailCheck } from "lucide-react";
 
 // 1. Definisikan tipe data state secara eksplisit
@@ -49,66 +41,86 @@ export default function RegisterPage() {
   // 3. Sekarang TypeScript tahu bahwa state bisa punya properti success
   if (state?.success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-        <Card className="w-full max-w-md border-slate-200 bg-white shadow-lg text-center p-6">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-            <MailCheck className="h-8 w-8 text-green-600" />
+      <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
+        <div className="w-full max-w-sm bg-background/95 backdrop-blur-xl border border-border/40 shadow-2xl rounded-3xl p-8 text-center relative overflow-hidden animate-in fade-in zoom-in-95 duration-500">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] rounded-full pointer-events-none -z-10" />
+
+          <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 border border-primary/20">
+            <MailCheck className="h-10 w-10 text-primary" />
           </div>
-          <CardTitle className="text-2xl font-bold text-slate-900 mb-2">
+          <h2 className="text-2xl font-bold text-foreground tracking-tight mb-2">
             Cek Email Anda
-          </CardTitle>
-          <CardDescription className="text-slate-600 mb-6">
+          </h2>
+          <p className="text-sm text-muted-foreground leading-relaxed mb-8">
             Kami telah mengirimkan link verifikasi ke alamat email yang Anda
             daftarkan. Silakan klik link tersebut untuk mengaktifkan akun.
-          </CardDescription>
+          </p>
           <Button
             asChild
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+            size="lg"
+            variant="brand"
+            className="w-full rounded-full h-12 shadow-md shadow-primary/20"
           >
-            <Link href="/login">Kembali ke Halaman Login</Link>
+            <Link href="/login">Masuk ke Akun</Link>
           </Button>
-        </Card>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-      <Card className="w-full max-w-md border-slate-200 bg-white shadow-lg">
-        <CardHeader className="text-center space-y-2">
-          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-blue-50">
-            <UserPlus className="h-6 w-6 text-blue-600" />
+    <div className="min-h-screen flex items-center justify-center bg-background p-4 relative overflow-hidden">
+      {/* Background Ornamen Halus */}
+      <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10" />
+      <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] -z-10" />
+
+      <div className="w-full max-w-[400px] bg-background/95 backdrop-blur-xl border border-border/40 shadow-2xl rounded-3xl overflow-hidden relative animate-in fade-in zoom-in-95 duration-500">
+        {/* Glow Akses Dalam Box */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] rounded-full pointer-events-none -z-10" />
+
+        <div className="text-center px-6 pt-10 pb-4">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 border border-primary/20 mb-5">
+            <UserPlus className="h-7 w-7 text-primary" />
           </div>
-          <CardTitle className="text-2xl font-bold text-slate-900">
+          <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1.5">
             Buat Akun Baru
-          </CardTitle>
-          <CardDescription className="text-slate-500">
-            Isi form di bawah ini untuk mendaftar
-          </CardDescription>
-        </CardHeader>
-        <form action={formAction}>
-          <CardContent className="space-y-4">
-            {state?.error && (
-              <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200">
-                {state.error}
-              </div>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="fullName" className="text-slate-700">
-                Nama Lengkap
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Daftar untuk mulai menyimpan koleksi favorit.
+          </p>
+        </div>
+
+        <div className="px-6 pb-8 space-y-5">
+          {state?.error && (
+            <div className="rounded-xl bg-destructive/10 p-3 text-sm text-center text-destructive border border-destructive/20 animate-in fade-in zoom-in-95">
+              {state.error}
+            </div>
+          )}
+
+          <form action={formAction} className="space-y-4">
+            <div className="space-y-1.5 text-left">
+              <Label
+                htmlFor="fullName"
+                className="text-xs font-semibold text-muted-foreground ml-1"
+              >
+                Nama Lengkap <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="fullName"
                 name="fullName"
                 type="text"
-                placeholder="Jhon Doe"
+                placeholder="John Doe"
                 required
-                className="border-slate-300 bg-white text-slate-900 focus:ring-blue-600 focus:border-blue-600"
+                className="h-11 rounded-xl border-border/50 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-sm"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-slate-700">
-                Email
+
+            <div className="space-y-1.5 text-left">
+              <Label
+                htmlFor="email"
+                className="text-xs font-semibold text-muted-foreground ml-1"
+              >
+                Alamat Email <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="email"
@@ -116,56 +128,69 @@ export default function RegisterPage() {
                 type="email"
                 placeholder="nama@email.com"
                 required
-                className="border-slate-300 bg-white text-slate-900 focus:ring-blue-600 focus:border-blue-600"
+                className="h-11 rounded-xl border-border/50 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-sm"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-slate-700">
-                Password
-              </Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                required
-                className="border-slate-300 bg-white text-slate-900 focus:ring-blue-600 focus:border-blue-600"
-              />
+
+            {/* Grid 2 Kolom untuk Password */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5 text-left">
+                <Label
+                  htmlFor="password"
+                  className="text-xs font-semibold text-muted-foreground ml-1"
+                >
+                  Kata Sandi <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  required
+                  className="h-11 rounded-xl border-border/50 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-sm"
+                />
+              </div>
+              <div className="space-y-1.5 text-left">
+                <Label
+                  htmlFor="confirmPassword"
+                  className="text-xs font-semibold text-muted-foreground ml-1"
+                >
+                  Konfirmasi <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  placeholder="••••••••"
+                  required
+                  className="h-11 rounded-xl border-border/50 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-sm"
+                />
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-slate-700">
-                Konfirmasi Password
-              </Label>
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                placeholder="••••••••"
-                required
-                className="border-slate-300 bg-white text-slate-900 focus:ring-blue-600 focus:border-blue-600"
-              />
+
+            <div className="pt-2">
+              <Button
+                type="submit"
+                variant="brand"
+                className="w-full rounded-full h-11"
+                disabled={isPending}
+              >
+                {isPending ? "Memproses..." : "Daftar Sekarang"}
+              </Button>
             </div>
-          </CardContent>
-          <CardFooter className="flex flex-col gap-4">
-            <Button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
-              disabled={isPending}
-            >
-              {isPending ? "Memproses..." : "Daftar Akun"}
-            </Button>
-            <p className="text-center text-sm text-slate-600">
-              Sudah punya akun?{" "}
+
+            <p className="text-xs text-muted-foreground text-center pt-2">
+              Sudah memiliki akun?{" "}
               <Link
                 href="/login"
-                className="font-semibold text-blue-600 hover:text-blue-500 hover:underline"
+                className="text-primary hover:text-primary/80 font-medium transition-colors"
               >
                 Masuk di sini
               </Link>
             </p>
-          </CardFooter>
-        </form>
-      </Card>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

@@ -2,6 +2,13 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ArrowUpDown } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const OPTIONS = [
   { value: "newest", label: "Terbaru" },
@@ -25,19 +32,38 @@ export function MobileSortDropdown() {
   };
 
   return (
-    <div className="md:hidden flex items-center justify-end gap-2 mb-4">
-      <ArrowUpDown className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-      <select
-        value={current}
-        onChange={(e) => onChange(e.target.value)}
-        className="text-sm font-medium text-foreground border border-border rounded-none px-3 py-2 bg-background focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
-      >
-        {OPTIONS.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
+    <div className="md:hidden flex items-center justify-between mb-4 px-1">
+      <div className="flex items-center gap-1.5">
+        <ArrowUpDown className="w-3.5 h-3.5 text-muted-foreground/70" />
+        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+          Urutkan
+        </span>
+      </div>
+
+      <div className="relative">
+        <Select value={current} onValueChange={onChange}>
+          <SelectTrigger
+            className="w-[150px] h-9 text-xs font-bold text-foreground border-border/50 rounded-full bg-card/60 backdrop-blur-sm focus:ring-1 focus:ring-primary focus:border-primary transition-all shadow-sm hover:bg-muted/40 outline-none"
+            aria-label="Urutkan Produk"
+          >
+            <SelectValue placeholder="Pilih Urutan" />
+          </SelectTrigger>
+          <SelectContent
+            className="rounded-xl border-border/50 bg-background/95 backdrop-blur-xl shadow-lg animate-in fade-in zoom-in-95"
+            position="popper"
+          >
+            {OPTIONS.map((o) => (
+              <SelectItem
+                key={o.value}
+                value={o.value}
+                className="text-xs font-medium cursor-pointer rounded-lg hover:bg-primary/10 focus:bg-primary/10 hover:text-primary focus:text-primary transition-colors my-0.5"
+              >
+                {o.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 }
