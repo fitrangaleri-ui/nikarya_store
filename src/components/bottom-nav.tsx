@@ -22,8 +22,9 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
+// Menghapus hover:bg-muted untuk pengalaman mobile yang lebih bersih. Menambahkan active state.
 const baseItemClass =
-  "inline-flex flex-col items-center justify-center px-2 hover:bg-muted transition-colors group";
+  "inline-flex flex-col items-center justify-center px-1 transition-all group active:scale-95 duration-200";
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -35,21 +36,28 @@ export function BottomNav() {
   const akunHref = user ? "/dashboard" : "/login";
 
   return (
-    <div className="fixed bottom-0 left-0 z-30 w-full bg-background border-t border-border shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] md:hidden">
+    // Update ke efek Liquid Glass
+    <div className="fixed bottom-0 left-0 z-30 w-full bg-background/80 backdrop-blur-xl border-t border-border/50 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)] md:hidden safe-area-pb">
       {isProductsPage ? (
-        <div className="grid h-16 grid-cols-5 mx-auto">
+        <div className="grid h-[68px] grid-cols-5 mx-auto px-2">
           {/* Home */}
           <Link
             href="/"
             className={cn(
               baseItemClass,
               pathname === "/"
-                ? "text-primary"
-                : "text-muted-foreground hover:text-primary/80",
+                ? "text-primary font-semibold"
+                : "text-muted-foreground hover:text-primary/70",
             )}
           >
-            <Home className="w-6 h-6 mb-1" strokeWidth={2} />
-            <span className="text-[10px] font-medium">Home</span>
+            <Home
+              className={cn(
+                "w-5 h-5 mb-1.5 transition-transform",
+                pathname === "/" && "scale-110",
+              )}
+              strokeWidth={2}
+            />
+            <span className="text-[9px] tracking-wide">Home</span>
           </Link>
 
           {/* Filter */}
@@ -58,11 +66,11 @@ export function BottomNav() {
             onClick={openFilter}
             className={cn(
               baseItemClass,
-              "text-muted-foreground hover:text-primary/80",
+              "text-muted-foreground hover:text-primary/70",
             )}
           >
-            <Filter className="w-6 h-6 mb-1" strokeWidth={2} />
-            <span className="text-[10px] font-medium">Filter</span>
+            <Filter className="w-5 h-5 mb-1.5" strokeWidth={2} />
+            <span className="text-[9px] tracking-wide">Filter</span>
           </button>
 
           {/* Akun */}
@@ -71,12 +79,18 @@ export function BottomNav() {
             className={cn(
               baseItemClass,
               pathname === akunHref
-                ? "text-primary"
-                : "text-muted-foreground hover:text-primary/80",
+                ? "text-primary font-semibold"
+                : "text-muted-foreground hover:text-primary/70",
             )}
           >
-            <User className="w-6 h-6 mb-1" strokeWidth={2} />
-            <span className="text-[10px] font-medium">Akun</span>
+            <User
+              className={cn(
+                "w-5 h-5 mb-1.5 transition-transform",
+                pathname === akunHref && "scale-110",
+              )}
+              strokeWidth={2}
+            />
+            <span className="text-[9px] tracking-wide">Akun</span>
           </Link>
 
           {/* Keranjang */}
@@ -85,18 +99,18 @@ export function BottomNav() {
             onClick={openCart}
             className={cn(
               baseItemClass,
-              "text-muted-foreground hover:text-primary/80",
+              "text-muted-foreground hover:text-primary/70 relative",
             )}
           >
             <span className="relative">
-              <ShoppingCart className="w-6 h-6 mb-1" strokeWidth={2} />
+              <ShoppingCart className="w-5 h-5 mb-1.5" strokeWidth={2} />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[9px] font-bold text-destructive-foreground ring-1 ring-background">
+                <span className="absolute -top-1.5 -right-2.5 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground ring-2 ring-background shadow-sm animate-in zoom-in">
                   {cartCount > 99 ? "99+" : cartCount}
                 </span>
               )}
             </span>
-            <span className="text-[10px] font-medium">Keranjang</span>
+            <span className="text-[9px] tracking-wide">Keranjang</span>
           </button>
 
           {/* Chat */}
@@ -104,27 +118,33 @@ export function BottomNav() {
             type="button"
             className={cn(
               baseItemClass,
-              "text-muted-foreground hover:text-primary/80",
+              "text-muted-foreground hover:text-primary/70",
             )}
           >
-            <WhatsAppIcon className="w-6 h-6 mb-1" />
-            <span className="text-[10px] font-medium">Chat</span>
+            <WhatsAppIcon className="w-5 h-5 mb-1.5 text-emerald-500/90" />
+            <span className="text-[9px] tracking-wide">Chat</span>
           </button>
         </div>
       ) : (
-        <div className="grid h-16 grid-cols-4 mx-auto">
+        <div className="grid h-[68px] grid-cols-4 mx-auto px-2">
           {/* Tema */}
           <Link
             href="/products"
             className={cn(
               baseItemClass,
               pathname === "/products"
-                ? "text-primary"
-                : "text-muted-foreground hover:text-primary/80",
+                ? "text-primary font-semibold"
+                : "text-muted-foreground hover:text-primary/70",
             )}
           >
-            <Palette className="w-6 h-6 mb-1" strokeWidth={2} />
-            <span className="text-[10px] font-medium">Tema</span>
+            <Palette
+              className={cn(
+                "w-5 h-5 mb-1.5 transition-transform",
+                pathname === "/products" && "scale-110",
+              )}
+              strokeWidth={2}
+            />
+            <span className="text-[9px] tracking-wide">Tema</span>
           </Link>
 
           {/* Akun */}
@@ -133,12 +153,18 @@ export function BottomNav() {
             className={cn(
               baseItemClass,
               pathname === akunHref
-                ? "text-primary"
-                : "text-muted-foreground hover:text-primary/80",
+                ? "text-primary font-semibold"
+                : "text-muted-foreground hover:text-primary/70",
             )}
           >
-            <User className="w-6 h-6 mb-1" strokeWidth={2} />
-            <span className="text-[10px] font-medium">Akun</span>
+            <User
+              className={cn(
+                "w-5 h-5 mb-1.5 transition-transform",
+                pathname === akunHref && "scale-110",
+              )}
+              strokeWidth={2}
+            />
+            <span className="text-[9px] tracking-wide">Akun</span>
           </Link>
 
           {/* Keranjang */}
@@ -147,18 +173,18 @@ export function BottomNav() {
             onClick={openCart}
             className={cn(
               baseItemClass,
-              "text-muted-foreground hover:text-primary/80",
+              "text-muted-foreground hover:text-primary/70",
             )}
           >
             <span className="relative">
-              <ShoppingCart className="w-6 h-6 mb-1" strokeWidth={2} />
+              <ShoppingCart className="w-5 h-5 mb-1.5" strokeWidth={2} />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[9px] font-bold text-destructive-foreground ring-1 ring-background">
+                <span className="absolute -top-1.5 -right-2.5 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground ring-2 ring-background shadow-sm animate-in zoom-in">
                   {cartCount > 99 ? "99+" : cartCount}
                 </span>
               )}
             </span>
-            <span className="text-[10px] font-medium">Keranjang</span>
+            <span className="text-[9px] tracking-wide">Keranjang</span>
           </button>
 
           {/* Chat */}
@@ -166,11 +192,11 @@ export function BottomNav() {
             type="button"
             className={cn(
               baseItemClass,
-              "text-muted-foreground hover:text-primary/80",
+              "text-muted-foreground hover:text-primary/70",
             )}
           >
-            <WhatsAppIcon className="w-6 h-6 mb-1" />
-            <span className="text-[10px] font-medium">Chat</span>
+            <WhatsAppIcon className="w-5 h-5 mb-1.5 text-emerald-500/90" />
+            <span className="text-[9px] tracking-wide">Chat</span>
           </button>
         </div>
       )}

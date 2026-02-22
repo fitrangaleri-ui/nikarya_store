@@ -37,54 +37,54 @@ export function CategoryCarousel({ categories }: CategoryCarouselProps) {
       {/* Tombol Navigasi Kiri */}
       <button
         onClick={scrollLeft}
-        className="absolute left-0 top-1/2 -translate-y-1/2 z-30 w-7 h-7 md:w-8 md:h-8 bg-background border border-border flex items-center justify-center text-muted-foreground shadow-md hover:text-primary hover:border-primary/30 hover:scale-110 transition-all cursor-pointer"
+        className="absolute left-1 md:-left-4 top-1/2 -translate-y-1/2 z-30 w-8 h-8 md:w-10 md:h-10 rounded-full bg-background/80 backdrop-blur-md border border-border/50 flex items-center justify-center text-foreground shadow-lg hover:text-primary hover:bg-primary/10 hover:scale-105 transition-all cursor-pointer opacity-0 group-hover/carousel:opacity-100"
         aria-label="Previous category"
       >
-        <ArrowLeft className="w-3 h-3 md:w-3.5 md:h-3.5" />
+        <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
       </button>
 
       {/* Carousel Layout */}
       <div
         ref={carouselRef}
-        className="flex overflow-x-auto gap-2.5 md:gap-4 pb-3 md:pb-4 px-1 scroll-smooth snap-x snap-mandatory no-scrollbar"
+        className="flex overflow-x-auto gap-3 md:gap-4 pb-4 px-1 md:px-2 scroll-smooth snap-x snap-mandatory no-scrollbar"
       >
         {categories.length > 0 ? (
           categories.map((cat) => (
             <Link
               key={cat.id}
               href={`/products?category=${cat.slug}`}
-              className="flex-none w-[calc(50%-5px)] md:w-[260px] snap-center group/card relative"
+              className="flex-none w-[calc(60%-10px)] sm:w-[calc(40%-10px)] md:w-[280px] snap-center group/card relative"
             >
-              {/* Mobile: aspect-[4/3] | md: aspect-[4/3] konsisten */}
-              <div className="aspect-[4/3] overflow-hidden bg-muted border border-border relative transition-all duration-300 group-hover/card:border-primary/50 group-hover/card:shadow-md">
+              {/* Radius membulat dan efek border disesuaikan tema */}
+              <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-card/60 backdrop-blur-sm border border-border/50 relative transition-all duration-300 group-hover/card:border-primary/50 group-hover/card:shadow-xl group-hover/card:shadow-primary/10">
                 {cat.thumbnail_url ? (
                   <Image
                     src={cat.thumbnail_url}
                     alt={cat.name}
                     fill
-                    sizes="(max-width: 640px) 50vw, 260px"
-                    className="object-cover transition-transform duration-500 group-hover/card:scale-105"
+                    sizes="(max-width: 640px) 60vw, (max-width: 1024px) 40vw, 280px"
+                    className="object-cover transition-transform duration-700 ease-out group-hover/card:scale-110"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center bg-muted/50 text-muted-foreground/50">
-                    <ImageIcon className="h-6 w-6 md:h-8 md:w-8" />
+                  <div className="flex h-full items-center justify-center bg-muted/30 text-muted-foreground/30">
+                    <ImageIcon className="h-8 w-8 md:h-10 md:w-10" />
                   </div>
                 )}
 
-                {/* Gradient Overlay — Menggunakan black/slate agar netral */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                {/* Gradient Overlay — lebih halus */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/0 opacity-80 group-hover/card:opacity-100 transition-opacity duration-300" />
 
-                {/* Badge count — primary fill */}
-                <div className="absolute top-2 left-2 z-10">
-                  <span className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-[8px] md:text-[10px] font-bold px-2 md:px-2.5 py-0.5 md:py-1 uppercase tracking-widest shadow-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary-foreground animate-pulse"></span>
+                {/* Badge count — dipindahkan ke kanan atas & pakai style pill */}
+                <div className="absolute top-3 right-3 z-10">
+                  <span className="inline-flex items-center gap-1.5 bg-primary/90 backdrop-blur-md text-primary-foreground text-[9px] md:text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest shadow-sm border border-primary/20">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
                     {cat.productCount} Tema
                   </span>
                 </div>
 
                 {/* Title */}
-                <div className="absolute bottom-0 left-0 p-2.5 md:p-3.5 w-full">
-                  <h4 className="font-bold text-white text-xs md:text-base leading-tight drop-shadow-md uppercase tracking-wide">
+                <div className="absolute bottom-0 left-0 p-3 md:p-4 w-full">
+                  <h4 className="font-bold text-white text-sm md:text-lg leading-tight drop-shadow-md tracking-tight group-hover/card:text-primary-100 transition-colors">
                     {cat.name}
                   </h4>
                 </div>
@@ -92,8 +92,8 @@ export function CategoryCarousel({ categories }: CategoryCarouselProps) {
             </Link>
           ))
         ) : (
-          <div className="w-full py-8 text-center border border-dashed border-border bg-muted/10">
-            <p className="text-xs text-muted-foreground">Belum ada kategori.</p>
+          <div className="w-full py-12 text-center border border-dashed border-border/50 rounded-2xl bg-card/30 backdrop-blur-sm">
+            <p className="text-sm text-muted-foreground">Belum ada kategori.</p>
           </div>
         )}
       </div>
@@ -101,10 +101,10 @@ export function CategoryCarousel({ categories }: CategoryCarouselProps) {
       {/* Tombol Navigasi Kanan */}
       <button
         onClick={scrollRight}
-        className="absolute right-0 top-1/2 -translate-y-1/2 z-30 w-7 h-7 md:w-8 md:h-8 bg-background border border-border flex items-center justify-center text-muted-foreground shadow-md hover:text-primary hover:border-primary/30 hover:scale-110 transition-all cursor-pointer"
+        className="absolute right-1 md:-right-4 top-1/2 -translate-y-1/2 z-30 w-8 h-8 md:w-10 md:h-10 rounded-full bg-background/80 backdrop-blur-md border border-border/50 flex items-center justify-center text-foreground shadow-lg hover:text-primary hover:bg-primary/10 hover:scale-105 transition-all cursor-pointer opacity-0 group-hover/carousel:opacity-100"
         aria-label="Next category"
       >
-        <ArrowRight className="w-3 h-3 md:w-3.5 md:h-3.5" />
+        <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
       </button>
     </div>
   );
