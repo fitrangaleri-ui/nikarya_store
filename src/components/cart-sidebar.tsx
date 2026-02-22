@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { X, ShoppingBag, ArrowRight, Loader2 } from "lucide-react";
+import { X, ShoppingBag, ArrowRight, Loader2, Minus, Plus } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import { useAuth } from "@/components/auth-provider";
 import { Button } from "@/components/ui/button";
@@ -99,7 +99,7 @@ export function CartSidebar() {
 
   return (
     <>
-      {/* Overlay */}
+      {/* Overlay (Liquid Glass) */}
       <div
         className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
           isCartOpen
@@ -112,101 +112,124 @@ export function CartSidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 right-0 h-full z-50 flex flex-col bg-background border-l border-border transition-transform duration-300 ease-in-out
-                    w-[85%] md:w-[380px] ${
+        className={`fixed top-0 right-0 h-full z-50 flex flex-col bg-background/95 backdrop-blur-2xl border-l border-border/50 transition-transform duration-300 ease-out shadow-2xl
+                    w-[90%] sm:w-[400px] ${
                       isCartOpen ? "translate-x-0" : "translate-x-full"
                     }`}
         role="dialog"
         aria-label="Keranjang Belanja"
       >
+        {/* Aksen Pendaran di sudut Sidebar */}
+        <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 blur-[60px] rounded-full pointer-events-none -z-10" />
+
         {/* ── HEADER ── */}
-        <div className="flex items-center justify-between px-4 py-3.5 border-b border-border bg-muted/30">
-          <div className="flex items-center gap-2">
-            <ShoppingBag className="w-4 h-4 text-primary" />
-            <h2 className="text-xs font-bold text-foreground uppercase tracking-widest">
-              Keranjang Belanja
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border/40 bg-card/30 backdrop-blur-md relative z-10">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+              <ShoppingBag className="w-4 h-4 text-primary" />
+            </div>
+            <h2 className="text-sm font-bold text-foreground tracking-tight">
+              Keranjang Saya
             </h2>
+            {cartItems.length > 0 && (
+              <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full ml-1">
+                {cartItems.length}
+              </span>
+            )}
           </div>
           <button
             onClick={closeCart}
-            className="w-7 h-7 flex items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-all active:scale-95"
             aria-label="Tutup keranjang"
           >
-            <X className="h-3.5 w-3.5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
 
         {/* ── BODY ── */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10">
           {cartItems.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full py-16 px-4 text-center">
-              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-3">
-                <ShoppingBag className="h-6 w-6 text-primary" />
+            <div className="flex flex-col items-center justify-center h-full py-20 px-6 text-center">
+              <div className="w-20 h-20 rounded-full bg-muted/50 border border-border/50 flex items-center justify-center mb-5 shadow-sm">
+                <ShoppingBag className="h-8 w-8 text-muted-foreground/50" />
               </div>
-              <p className="text-sm font-semibold text-foreground">
-                Keranjang kosong
+              <p className="text-lg font-bold text-foreground tracking-tight">
+                Keranjang masih kosong
               </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                Tambahkan produk untuk mulai belanja
+              <p className="text-sm text-muted-foreground mt-2 max-w-[200px]">
+                Mari tambahkan produk luar biasa ke keranjang Anda.
               </p>
+              <Button
+                onClick={closeCart}
+                variant="outline"
+                className="mt-6 rounded-full px-8 border-border/60 hover:bg-primary/5 hover:text-primary transition-colors"
+              >
+                Mulai Belanja
+              </Button>
             </div>
           ) : (
-            <ul className="divide-y divide-border">
+            <ul className="divide-y divide-border/40 p-3">
               {cartItems.map((item) => (
-                <li key={item.id} className="flex gap-3 p-3 group">
-                  {/* Thumbnail + tombol X merah di pojok kiri atas */}
-                  <div className="relative w-16 h-16 flex-shrink-0">
+                <li
+                  key={item.id}
+                  className="flex gap-4 p-3 bg-card/20 hover:bg-card/40 rounded-2xl transition-colors group relative"
+                >
+                  {/* Thumbnail Container */}
+                  <div className="relative w-20 h-20 flex-shrink-0">
+                    {/* Tombol X Hapus Item di Pojok Kiri Atas Gambar */}
                     <button
                       onClick={() => removeFromCart(item.id)}
-                      className="absolute -top-1.5 -left-1.5 z-10 w-4 h-4 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors shadow-sm opacity-0 group-hover:opacity-100 md:opacity-100"
+                      className="absolute -top-2 -left-2 z-20 w-6 h-6 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-all shadow-sm opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
                       aria-label="Hapus item"
                     >
-                      <X className="h-2.5 w-2.5" />
+                      <X className="h-3 w-3" />
                     </button>
 
-                    <div className="w-full h-full rounded-none overflow-hidden bg-muted border border-border">
+                    <div className="w-full h-full rounded-xl overflow-hidden bg-muted/30 border border-border/50 shadow-sm relative">
                       {item.thumbnail_url ? (
                         <Image
                           src={item.thumbnail_url}
                           alt={item.title}
                           fill
-                          className="object-cover"
+                          className="object-cover transition-transform group-hover:scale-105 duration-500"
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
-                          <ShoppingBag className="h-4 w-4 text-muted-foreground/50" />
+                          <ShoppingBag className="h-5 w-5 text-muted-foreground/40" />
                         </div>
                       )}
                     </div>
                   </div>
 
                   {/* Info */}
-                  <div className="flex-1 min-w-0 flex flex-col justify-center">
-                    <p className="text-[11px] font-semibold text-foreground leading-snug line-clamp-2 mb-0.5">
-                      {item.title}
-                    </p>
-                    <p className="text-[11px] font-medium text-muted-foreground mb-2">
-                      Rp {Number(item.price).toLocaleString("id-ID")}
-                    </p>
+                  <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                    <div>
+                      <p className="text-xs md:text-sm font-bold text-foreground leading-snug line-clamp-2 pr-1">
+                        {item.title}
+                      </p>
+                      <p className="text-xs font-semibold text-primary mt-1">
+                        Rp {Number(item.price).toLocaleString("id-ID")}
+                      </p>
+                    </div>
 
-                    {/* Quantity Controls */}
-                    <div className="inline-flex items-center border border-border rounded-none overflow-hidden w-fit">
+                    {/* Quantity Controls (Pill Shape) */}
+                    <div className="inline-flex items-center bg-background border border-border/60 rounded-full h-7 mt-2 w-fit shadow-sm">
                       <button
                         onClick={() => decreaseQuantity(item.id)}
-                        className="w-6 h-6 flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-primary transition-colors text-xs font-bold"
+                        className="w-7 h-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-l-full transition-colors"
                         aria-label="Kurangi"
                       >
-                        −
+                        <Minus className="h-3 w-3" />
                       </button>
-                      <span className="w-6 h-6 flex items-center justify-center text-[10px] font-bold text-foreground border-x border-border bg-background">
+                      <span className="w-6 text-center text-[11px] font-bold text-foreground">
                         {item.quantity}
                       </span>
                       <button
                         onClick={() => increaseQuantity(item.id)}
-                        className="w-6 h-6 flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-primary transition-colors text-xs font-bold"
+                        className="w-7 h-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-r-full transition-colors"
                         aria-label="Tambah"
                       >
-                        +
+                        <Plus className="h-3 w-3" />
                       </button>
                     </div>
                   </div>
@@ -216,14 +239,14 @@ export function CartSidebar() {
           )}
         </div>
 
-        {/* ── FOOTER: Subtotal + 1 tombol saja ── */}
+        {/* ── FOOTER: Subtotal + Tombol Checkout ── */}
         {cartItems.length > 0 && (
-          <div className="border-t border-border p-4 space-y-3 bg-background">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-muted-foreground">
-                Subtotal ({cartItems.length} produk)
+          <div className="border-t border-border/40 p-5 bg-card/60 backdrop-blur-md relative z-10 shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.1)]">
+            <div className="flex items-end justify-between mb-4">
+              <span className="text-sm font-semibold text-muted-foreground">
+                Total Pembayaran
               </span>
-              <span className="text-base font-extrabold text-primary">
+              <span className="text-xl md:text-2xl font-black text-primary tracking-tight">
                 Rp {subtotal.toLocaleString("id-ID")}
               </span>
             </div>
@@ -231,19 +254,22 @@ export function CartSidebar() {
             <Button
               onClick={handleCheckoutAll}
               disabled={loading}
+              variant="brand"
               size="lg"
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-none shadow-none transition-all active:scale-[0.98] disabled:opacity-60"
+              className="w-full h-14 rounded-full shadow-[0_4px_14px_0_rgba(13,148,136,0.39)] hover:shadow-[0_6px_20px_rgba(13,148,136,0.23)] hover:-translate-y-0.5 transition-all"
             >
               {loading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-2.5 h-5 w-5 animate-spin" />
                   Memproses...
                 </>
               ) : (
-                <>
-                  Pembayaran
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </>
+                <div className="flex items-center justify-between w-full px-2">
+                  <span>Pembayaran</span>
+                  <div className="w-8 h-8 rounded-full bg-background/20 flex items-center justify-center backdrop-blur-sm">
+                    <ArrowRight className="h-4 w-4" />
+                  </div>
+                </div>
               )}
             </Button>
           </div>

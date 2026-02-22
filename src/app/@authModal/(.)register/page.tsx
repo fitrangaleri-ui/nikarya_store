@@ -58,27 +58,30 @@ function RegisterModalInner() {
       <Dialog open={true} onOpenChange={handleOpenChange}>
         <DialogContent
           onOpenAutoFocus={(e) => e.preventDefault()}
-          className="sm:max-w-md bg-background p-6 text-center border border-border shadow-xl rounded-none
+          className="sm:max-w-md bg-background/95 backdrop-blur-xl p-8 text-center border border-border/40 shadow-2xl rounded-3xl
           data-[state=open]:animate-in data-[state=closed]:animate-out
           data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0
           data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95
-          duration-500 ease-out"
+          duration-300 ease-out"
         >
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] rounded-full pointer-events-none -z-10" />
+
           <DialogTitle className="sr-only">Registrasi Berhasil</DialogTitle>
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-            <MailCheck className="h-8 w-8 text-primary" />
+          <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 border border-primary/20">
+            <MailCheck className="h-10 w-10 text-primary" />
           </div>
-          <h2 className="text-xl font-bold text-foreground tracking-tight mb-2">
+          <h2 className="text-2xl font-bold text-foreground tracking-tight mb-2">
             Cek Email Anda
           </h2>
-          <DialogDescription className="text-sm text-muted-foreground mb-6">
+          <DialogDescription className="text-sm text-muted-foreground mb-8">
             Kami telah mengirimkan link verifikasi. Silakan cek email Anda untuk
-            mengaktifkan akun.
+            mengaktifkan akun dan mulai berbelanja.
           </DialogDescription>
           <Button
             size="lg"
+            variant="brand"
             onClick={() => handleOpenChange(false)}
-            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-none text-sm font-bold transition-all active:scale-[0.98]"
+            className="w-full rounded-full h-12"
           >
             Tutup
           </Button>
@@ -92,33 +95,36 @@ function RegisterModalInner() {
     <Dialog open={true} onOpenChange={handleOpenChange}>
       <DialogContent
         onOpenAutoFocus={(e) => e.preventDefault()}
-        className="sm:max-w-md bg-background p-0 overflow-hidden shadow-xl rounded-none border border-border
+        className="sm:max-w-[400px] bg-background/95 backdrop-blur-xl p-0 overflow-hidden shadow-2xl rounded-3xl border border-border/40
         data-[state=open]:animate-in data-[state=closed]:animate-out
         data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0
         data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95
-        duration-500 ease-out"
+        duration-300 ease-out"
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-muted/30">
-          <DialogTitle className="text-lg font-bold text-foreground tracking-tight">
-            Daftar Akun
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] rounded-full pointer-events-none -z-10" />
+
+        {/* Header Modal - Minimalist */}
+        <div className="px-6 pt-7 pb-2 text-center">
+          <DialogTitle className="text-xl font-bold text-foreground tracking-tight">
+            Buat Akun Baru
           </DialogTitle>
-          <DialogDescription className="sr-only">
-            Form registrasi akun baru.
+          <DialogDescription className="text-sm text-muted-foreground mt-1.5">
+            Daftar untuk menyimpan koleksi favorit.
           </DialogDescription>
         </div>
 
-        <form action={formAction} className="p-6 space-y-6">
+        <form action={formAction} className="px-6 pb-7 pt-4 space-y-5">
           {state?.error && (
-            <div className="rounded-none bg-destructive/10 p-3 text-sm font-medium text-destructive border border-destructive/20">
+            <div className="rounded-xl bg-destructive/10 p-3 text-sm text-center text-destructive border border-destructive/20 animate-in fade-in zoom-in-95">
               {state.error}
             </div>
           )}
 
           <div className="space-y-4">
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <Label
                 htmlFor="fullName"
-                className="text-sm font-semibold text-muted-foreground"
+                className="text-xs font-semibold text-muted-foreground ml-1"
               >
                 Nama Lengkap <span className="text-destructive">*</span>
               </Label>
@@ -128,14 +134,14 @@ function RegisterModalInner() {
                 type="text"
                 placeholder="John Doe"
                 required
-                className="h-11 rounded-none border-border focus:ring-1 focus:ring-primary focus:border-primary transition-colors bg-background text-sm font-medium"
+                className="h-11 rounded-xl border-border/50 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-sm"
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <Label
                 htmlFor="email"
-                className="text-sm font-semibold text-muted-foreground"
+                className="text-xs font-semibold text-muted-foreground ml-1"
               >
                 Alamat Email <span className="text-destructive">*</span>
               </Label>
@@ -145,15 +151,15 @@ function RegisterModalInner() {
                 type="email"
                 placeholder="nama@email.com"
                 required
-                className="h-11 rounded-none border-border focus:ring-1 focus:ring-primary focus:border-primary transition-colors bg-background text-sm font-medium"
+                className="h-11 rounded-xl border-border/50 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-sm"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
                 <Label
                   htmlFor="password"
-                  className="text-sm font-semibold text-muted-foreground"
+                  className="text-xs font-semibold text-muted-foreground ml-1"
                 >
                   Kata Sandi <span className="text-destructive">*</span>
                 </Label>
@@ -163,13 +169,13 @@ function RegisterModalInner() {
                   type="password"
                   placeholder="••••••••"
                   required
-                  className="h-11 rounded-none border-border focus:ring-1 focus:ring-primary focus:border-primary transition-colors bg-background text-sm font-medium"
+                  className="h-11 rounded-xl border-border/50 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-sm"
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label
                   htmlFor="confirmPassword"
-                  className="text-sm font-semibold text-muted-foreground"
+                  className="text-xs font-semibold text-muted-foreground ml-1"
                 >
                   Konfirmasi <span className="text-destructive">*</span>
                 </Label>
@@ -179,7 +185,7 @@ function RegisterModalInner() {
                   type="password"
                   placeholder="••••••••"
                   required
-                  className="h-11 rounded-none border-border focus:ring-1 focus:ring-primary focus:border-primary transition-colors bg-background text-sm font-medium"
+                  className="h-11 rounded-xl border-border/50 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-sm"
                 />
               </div>
             </div>
@@ -187,23 +193,23 @@ function RegisterModalInner() {
 
           <Button
             type="submit"
-            size="lg"
-            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-none shadow-none font-bold text-sm h-11 transition-all active:scale-[0.98] mt-2"
+            variant="brand"
+            className="w-full rounded-full h-11 mt-2"
             disabled={isPending}
           >
             {isPending ? "Memproses..." : "Daftar Sekarang"}
           </Button>
 
-          <div className="text-sm text-muted-foreground text-center pt-2">
+          <p className="text-xs text-muted-foreground text-center pt-3">
             Sudah memiliki akun?{" "}
             <Link
               href={`/login${redirectTo ? `?redirectTo=${redirectTo}` : ""}`}
               onClick={navigateToLogin}
-              className="text-primary hover:underline hover:text-primary/80 font-semibold transition-colors"
+              className="text-primary hover:text-primary/80 font-medium transition-colors"
             >
               Masuk di sini
             </Link>
-          </div>
+          </p>
         </form>
       </DialogContent>
     </Dialog>
