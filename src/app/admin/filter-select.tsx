@@ -47,23 +47,28 @@ export function FilterSelect({
     <Select value={resolvedValue} onValueChange={handleValueChange}>
       <SelectTrigger
         className={cn(
-          "w-full h-11 rounded-none border-border bg-background px-4 py-2 text-sm font-medium text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors cursor-pointer",
+          "w-full h-11 rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm px-4 py-2 text-sm font-semibold text-foreground outline-none focus:ring-1 focus:ring-primary focus:border-primary shadow-sm hover:bg-muted/40 transition-all cursor-pointer",
           className,
         )}
       >
         <SelectValue placeholder={`Pilih ${name}`} />
       </SelectTrigger>
 
-      <SelectContent className="rounded-none border-border">
-        {options.map((opt) => (
-          <SelectItem
-            key={opt.value || "all"}
-            value={opt.value || "all"}
-            className="rounded-none"
-          >
-            {opt.label}
-          </SelectItem>
-        ))}
+      <SelectContent
+        className="rounded-xl border border-border/50 bg-background/95 backdrop-blur-xl shadow-lg animate-in fade-in zoom-in-95"
+        position="popper"
+      >
+        <div className="p-1">
+          {options.map((opt) => (
+            <SelectItem
+              key={opt.value || "all"}
+              value={opt.value || "all"}
+              className="rounded-lg text-sm font-medium cursor-pointer hover:bg-primary/10 focus:bg-primary/10 hover:text-primary focus:text-primary transition-colors my-0.5 px-3 py-2"
+            >
+              {opt.label}
+            </SelectItem>
+          ))}
+        </div>
       </SelectContent>
     </Select>
   );

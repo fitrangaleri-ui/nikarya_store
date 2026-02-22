@@ -335,11 +335,12 @@ function PaymentInstructionContent() {
   if (loading) {
     return (
       <main className="mx-auto max-w-lg px-4 py-12">
-        <div className="rounded-none border border-border bg-background p-6 space-y-5 animate-pulse">
-          <div className="h-6 bg-muted rounded-none w-3/4 mx-auto" />
-          <div className="h-4 bg-muted rounded-none w-1/2 mx-auto" />
-          <div className="h-20 bg-muted/50 rounded-none" />
-          <div className="h-32 bg-muted/50 rounded-none" />
+        <div className="rounded-3xl border border-border/40 bg-card/40 backdrop-blur-md p-8 space-y-6 animate-pulse shadow-sm">
+          <div className="h-16 w-16 bg-muted rounded-full mx-auto" />
+          <div className="h-6 bg-muted rounded-full w-2/3 mx-auto" />
+          <div className="h-4 bg-muted rounded-full w-1/2 mx-auto" />
+          <div className="h-24 bg-muted/50 rounded-2xl" />
+          <div className="h-32 bg-muted/50 rounded-2xl" />
         </div>
       </main>
     );
@@ -349,19 +350,22 @@ function PaymentInstructionContent() {
   if (error || !data) {
     return (
       <main className="mx-auto max-w-lg px-4 py-12">
-        <div className="rounded-none border border-destructive/20 bg-background p-6 text-center space-y-4">
-          <AlertTriangle className="h-10 w-10 text-destructive mx-auto" />
-          <div className="space-y-1">
-            <h1 className="text-lg font-bold text-foreground tracking-tight">
+        <div className="rounded-3xl border border-destructive/20 bg-background/80 backdrop-blur-md p-8 text-center space-y-5 shadow-sm">
+          <div className="w-16 h-16 rounded-full bg-destructive/10 mx-auto flex items-center justify-center">
+            <AlertTriangle className="h-8 w-8 text-destructive" />
+          </div>
+          <div className="space-y-1.5">
+            <h1 className="text-xl font-bold text-foreground tracking-tight">
               Terjadi Kesalahan
             </h1>
             <p className="text-sm font-medium text-muted-foreground">
-              {error || "Data tidak ditemukan"}
+              {error || "Data instruksi pembayaran tidak ditemukan."}
             </p>
           </div>
           <Button
             onClick={() => router.push("/")}
-            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-none shadow-none h-11 transition-all active:scale-[0.98]"
+            variant="brand"
+            className="w-full rounded-full h-12 shadow-sm"
           >
             Kembali ke Beranda
           </Button>
@@ -377,56 +381,60 @@ function PaymentInstructionContent() {
   const isDeeplink = data.paymentType === "shopeepay" && data.paymentCode;
 
   return (
-    <main className="mx-auto max-w-lg px-4 py-8">
-      <div className="rounded-none border border-border bg-background overflow-hidden">
+    <main className="mx-auto max-w-lg px-4 py-10">
+      <div className="rounded-3xl border border-border/40 bg-card/60 backdrop-blur-md shadow-lg overflow-hidden animate-in fade-in zoom-in-95 duration-500">
         {/* ── Header ── */}
-        <div className="bg-primary px-6 py-8 text-center">
-          <div className="w-14 h-14 rounded-full bg-background/20 flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">{methodIcon}</span>
+        <div className="relative bg-primary/5 px-6 py-10 text-center border-b border-border/40">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 blur-[60px] rounded-full pointer-events-none" />
+
+          <div className="relative z-10 w-20 h-20 rounded-full bg-background border border-primary/20 flex items-center justify-center mx-auto mb-4 shadow-sm">
+            <span className="text-4xl">{methodIcon}</span>
           </div>
-          <h1 className="text-xl font-bold text-primary-foreground tracking-tight">
+          <h1 className="relative z-10 text-2xl font-black text-foreground tracking-tight">
             Instruksi Pembayaran
           </h1>
-          <p className="text-sm font-medium text-primary-foreground/90 mt-1.5">
+          <p className="relative z-10 text-sm font-bold text-primary mt-1.5">
             {methodLabel}
           </p>
-          <p className="text-xs font-medium text-primary-foreground/70 mt-1">
-            Order #{data.orderId}
-          </p>
+          <div className="relative z-10 inline-block bg-background/50 border border-border/50 rounded-full px-3 py-1 mt-3">
+            <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+              Order #{data.orderId.split("-")[0]}
+            </p>
+          </div>
         </div>
 
-        <div className="p-6 space-y-5">
+        <div className="p-6 md:p-8 space-y-6">
           {/* ── Countdown Timer ── */}
           {!isPaid && data.paymentDeadline && (
             <div
-              className={`rounded-none p-5 text-center border ${
+              className={`rounded-2xl p-6 text-center border shadow-sm transition-all ${
                 isExpired
-                  ? "bg-destructive/10 border-destructive/20"
-                  : "bg-muted/20 border-border"
+                  ? "bg-destructive/5 border-destructive/20"
+                  : "bg-background/50 border-border/50"
               }`}
             >
               {isExpired ? (
                 <>
-                  <div className="flex items-center justify-center gap-2 mb-1.5">
-                    <AlertTriangle className="h-4 w-4 text-destructive" />
-                    <p className="text-sm font-bold text-destructive">
-                      Pembayaran Kedaluwarsa
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <AlertTriangle className="h-5 w-5 text-destructive" />
+                    <p className="text-base font-bold text-destructive">
+                      Waktu Habis
                     </p>
                   </div>
-                  <p className="text-sm font-medium text-destructive/80">
-                    Batas waktu pembayaran telah habis. Silakan buat pesanan
-                    baru.
+                  <p className="text-sm font-medium text-destructive/80 leading-relaxed">
+                    Batas waktu pembayaran telah terlewati. Silakan buat pesanan
+                    baru jika masih berminat.
                   </p>
                 </>
               ) : (
                 <>
-                  <div className="flex items-center justify-center gap-2 mb-2.5">
+                  <div className="flex items-center justify-center gap-2 mb-3">
                     <Clock className="h-4 w-4 text-muted-foreground" />
-                    <p className="text-sm font-semibold text-muted-foreground">
-                      Selesaikan pembayaran dalam
+                    <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                      Selesaikan sebelum
                     </p>
                   </div>
-                  <p className="text-3xl font-mono font-bold text-foreground tracking-wider">
+                  <p className="text-4xl font-mono font-black text-foreground tracking-wider drop-shadow-sm">
                     {formatCountdown(remainingMs)}
                   </p>
                 </>
@@ -436,68 +444,77 @@ function PaymentInstructionContent() {
 
           {/* ── Paid status ── */}
           {isPaid && (
-            <div className="rounded-none bg-primary/10 border border-primary/20 p-5 text-center space-y-2">
-              <CheckCircle className="h-8 w-8 text-primary mx-auto" />
-              <p className="text-base font-bold text-primary tracking-tight">
+            <div className="rounded-2xl bg-primary/10 border border-primary/20 p-6 text-center space-y-3 shadow-sm animate-in zoom-in-95">
+              <CheckCircle className="h-10 w-10 text-primary mx-auto" />
+              <p className="text-lg font-bold text-primary tracking-tight">
                 Pembayaran Dikonfirmasi!
               </p>
               <p className="text-sm font-medium text-primary/80">
-                Mengalihkan ke dashboard...
+                Pesanan Anda sedang diproses. Mengalihkan ke dashboard...
               </p>
             </div>
           )}
 
           {/* ── Transfer Amount ── */}
           {!isExpired && !isPaid && (
-            <div className="rounded-none border border-border bg-background p-5">
-              <p className="text-sm font-semibold text-muted-foreground mb-1.5">
-                Jumlah Pembayaran
+            <div className="rounded-2xl border border-border/50 bg-background/60 p-5 shadow-sm">
+              <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-2">
+                Jumlah Tagihan
               </p>
               <div className="flex items-center justify-between">
-                <p className="text-2xl font-extrabold text-primary tracking-tight">
+                <p className="text-2xl font-black text-primary tracking-tight">
                   Rp {data.totalAmount.toLocaleString("id-ID")}
                 </p>
                 <button
                   onClick={() => handleCopy(String(data.totalAmount), "amount")}
-                  className="flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 font-bold transition-colors"
+                  className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all ${
+                    copiedField === "amount"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-primary/10 text-primary hover:bg-primary/20"
+                  }`}
                 >
                   {copiedField === "amount" ? (
                     <>
-                      <CheckCircle className="h-4 w-4" /> Tersalin
+                      <CheckCircle className="h-3.5 w-3.5" /> Tersalin
                     </>
                   ) : (
                     <>
-                      <Copy className="h-4 w-4" /> Salin
+                      <Copy className="h-3.5 w-3.5" /> Salin
                     </>
                   )}
                 </button>
               </div>
-              <p className="text-xs font-medium text-muted-foreground mt-3">
-                * Transfer sesuai jumlah di atas agar pembayaran terverifikasi
-                otomatis.
+              <p className="text-[10px] font-medium text-muted-foreground mt-3 leading-relaxed">
+                * Pastikan transfer hingga{" "}
+                <strong className="text-foreground">3 digit terakhir</strong>{" "}
+                agar pembayaran terverifikasi otomatis.
               </p>
             </div>
           )}
 
           {/* ── VA Number (Gateway - Bank Transfer) ── */}
           {showVA && !isExpired && !isPaid && (
-            <div className="rounded-none border border-border bg-background p-5 space-y-2">
-              <p className="text-sm font-semibold text-muted-foreground">
+            <div className="rounded-2xl border border-border/50 bg-background/60 p-5 shadow-sm space-y-3">
+              <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
                 {data.paymentType === "echannel"
                   ? "Biller Code & Bill Key"
                   : "Nomor Virtual Account"}
               </p>
               <div className="flex items-center justify-between gap-4">
-                <p className="text-xl font-mono font-bold text-foreground tracking-wider break-all">
+                <p className="text-xl font-mono font-bold text-foreground tracking-widest break-all">
                   {data.paymentCode}
                 </p>
                 <button
                   onClick={() => handleCopy(data.paymentCode!, "va")}
-                  className="p-2 rounded-none hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                  className={`flex items-center justify-center w-10 h-10 rounded-full transition-all flex-shrink-0 ${
+                    copiedField === "va"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted hover:bg-primary/10 hover:text-primary text-muted-foreground"
+                  }`}
                   title="Salin nomor"
                 >
                   {copiedField === "va" ? (
-                    <CheckCircle className="h-4 w-4 text-primary" />
+                    <CheckCircle className="h-4 w-4" />
                   ) : (
                     <Copy className="h-4 w-4" />
                   )}
@@ -508,19 +525,21 @@ function PaymentInstructionContent() {
 
           {/* ── QR Code (Gateway - QRIS / GoPay) ── */}
           {showQR && !isExpired && !isPaid && (
-            <div className="rounded-none border border-border bg-background p-5 text-center space-y-4">
-              <p className="text-sm font-semibold text-muted-foreground">
-                Scan QR Code untuk Bayar
+            <div className="rounded-2xl border border-border/50 bg-background/60 p-6 text-center space-y-4 shadow-sm">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                Scan QR Code
               </p>
               {data.paymentCode && data.paymentCode.startsWith("http") ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={data.paymentCode}
-                  alt="QR Code"
-                  className="w-48 h-48 mx-auto rounded-none border border-border"
-                />
+                <div className="bg-white p-3 rounded-2xl w-fit mx-auto border border-border/50 shadow-sm inline-block">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={data.paymentCode}
+                    alt="QR Code"
+                    className="w-48 h-48 rounded-xl object-contain"
+                  />
+                </div>
               ) : (
-                <div className="bg-muted/20 rounded-none p-4">
+                <div className="bg-muted/30 rounded-xl p-4">
                   <p className="text-sm text-muted-foreground font-mono break-all">
                     {data.paymentCode}
                   </p>
@@ -536,7 +555,7 @@ function PaymentInstructionContent() {
                 href={data.paymentCode!}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex w-full justify-center h-11 items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold px-6 py-2.5 rounded-none transition-all active:scale-[0.98]"
+                className="inline-flex w-full justify-center h-12 items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold px-6 py-2.5 rounded-full shadow-md shadow-primary/20 transition-all active:scale-[0.98]"
               >
                 <span>📱</span> Buka Aplikasi ShopeePay
               </a>
@@ -545,18 +564,18 @@ function PaymentInstructionContent() {
 
           {/* ── Manual Payment Method Details ── */}
           {data.manualMethod && !isExpired && !isPaid && (
-            <div className="rounded-none border border-border bg-background p-5 space-y-4">
-              <div className="flex items-center gap-2.5 border-b border-border pb-3">
-                <span className="text-xl">
+            <div className="rounded-2xl border border-border/50 bg-background/60 p-5 space-y-5 shadow-sm">
+              <div className="flex items-center gap-3 border-b border-border/50 pb-4">
+                <div className="w-10 h-10 rounded-full bg-muted/50 border border-border/50 flex items-center justify-center flex-shrink-0 text-lg">
                   {data.manualMethod.type === "bank_transfer" ? "🏦" : "📱"}
-                </span>
+                </div>
                 <p className="text-base font-bold text-foreground">
                   {data.manualMethod.provider_name}
                 </p>
               </div>
               <div className="space-y-4 pt-1">
                 <div>
-                  <p className="text-sm font-semibold text-muted-foreground mb-1">
+                  <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-1">
                     Atas Nama
                   </p>
                   <p className="text-base font-bold text-foreground">
@@ -564,7 +583,7 @@ function PaymentInstructionContent() {
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-muted-foreground mb-1">
+                  <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-1">
                     {data.manualMethod.type === "bank_transfer"
                       ? "Nomor Rekening"
                       : "Nomor Tujuan"}
@@ -577,11 +596,15 @@ function PaymentInstructionContent() {
                       onClick={() =>
                         handleCopy(data.manualMethod!.account_number, "account")
                       }
-                      className="p-2 rounded-none hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                      className={`flex items-center justify-center w-10 h-10 rounded-full transition-all flex-shrink-0 ${
+                        copiedField === "account"
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted hover:bg-primary/10 hover:text-primary text-muted-foreground"
+                      }`}
                       title="Salin nomor"
                     >
                       {copiedField === "account" ? (
-                        <CheckCircle className="h-4 w-4 text-primary" />
+                        <CheckCircle className="h-4 w-4" />
                       ) : (
                         <Copy className="h-4 w-4" />
                       )}
@@ -598,14 +621,17 @@ function PaymentInstructionContent() {
               {instructions.map((section, idx) => (
                 <div
                   key={idx}
-                  className="rounded-none bg-muted/20 border border-border p-5 space-y-3"
+                  className="rounded-2xl bg-muted/20 border border-border/50 p-6 space-y-4"
                 >
-                  <p className="text-sm font-bold text-foreground tracking-tight">
+                  <p className="text-sm font-bold text-foreground tracking-tight flex items-center gap-2">
+                    <span className="w-1.5 h-4 bg-primary rounded-full inline-block" />
                     {section.title}
                   </p>
-                  <ol className="text-sm font-medium text-muted-foreground space-y-2 list-decimal list-inside leading-relaxed">
+                  <ol className="text-sm font-medium text-muted-foreground space-y-2.5 list-decimal list-outside ml-4 leading-relaxed">
                     {section.steps.map((step, sIdx) => (
-                      <li key={sIdx}>{step}</li>
+                      <li key={sIdx} className="pl-1.5">
+                        {step}
+                      </li>
                     ))}
                   </ol>
                 </div>
@@ -615,30 +641,32 @@ function PaymentInstructionContent() {
 
           {/* ── Polling indicator ── */}
           {!isPaid && !isExpired && (
-            <div className="flex items-center justify-center gap-2.5 text-sm font-medium text-muted-foreground pt-4 pb-2">
-              <span className="relative flex h-2.5 w-2.5">
+            <div className="flex items-center justify-center gap-3 text-xs font-semibold text-muted-foreground pt-4 pb-2">
+              <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/60 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
               </span>
-              Menunggu konfirmasi pembayaran...
+              Menunggu konfirmasi pembayaran otomatis...
             </div>
           )}
 
           {/* ── Action Button ── */}
-          <div className="pt-2">
+          <div className="pt-4">
             {isPaid ? (
               <Button
                 onClick={() => router.push("/dashboard")}
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-none shadow-none h-11 transition-all active:scale-[0.98]"
+                variant="brand"
+                className="w-full rounded-full h-12 shadow-md shadow-primary/20 transition-all active:scale-95"
               >
                 Lihat Dashboard
               </Button>
             ) : (
               <Button
                 onClick={() => router.push("/")}
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-none shadow-none h-11 transition-all active:scale-[0.98]"
+                variant="outline"
+                className="w-full rounded-full h-12 border-border/50 bg-transparent text-foreground hover:bg-muted/50 font-bold transition-all active:scale-95"
               >
-                {isExpired ? "Kembali ke Beranda" : "Selesai"}
+                {isExpired ? "Kembali ke Beranda" : "Selesai (Bayar Nanti)"}
               </Button>
             )}
           </div>
@@ -653,10 +681,12 @@ export default function PaymentInstructionPage() {
     <Suspense
       fallback={
         <main className="mx-auto max-w-lg px-4 py-12">
-          <div className="rounded-none border border-border bg-background p-6 space-y-5 animate-pulse">
-            <div className="h-6 bg-muted rounded-none w-3/4 mx-auto" />
-            <div className="h-4 bg-muted rounded-none w-1/2 mx-auto" />
-            <div className="h-20 bg-muted/50 rounded-none" />
+          <div className="rounded-3xl border border-border/40 bg-card/40 backdrop-blur-md p-8 space-y-6 animate-pulse shadow-sm">
+            <div className="h-16 w-16 bg-muted rounded-full mx-auto" />
+            <div className="h-6 bg-muted rounded-full w-2/3 mx-auto" />
+            <div className="h-4 bg-muted rounded-full w-1/2 mx-auto" />
+            <div className="h-24 bg-muted/50 rounded-2xl" />
+            <div className="h-32 bg-muted/50 rounded-2xl" />
           </div>
         </main>
       }

@@ -33,7 +33,9 @@ export function DeleteProductButton({
     <Button
       variant="ghost"
       size="icon"
-      className="h-9 w-9 rounded-none text-destructive hover:text-destructive/80 hover:bg-destructive/10 shadow-none transition-colors"
+      // Diubah: Memiliki rounded-xl agar konsisten dengan tombol Edit di halaman products,
+      // efek hover diperhalus, namun warna merah (destructive) tetap dipertahankan.
+      className="h-10 w-10 rounded-xl text-destructive hover:text-destructive/90 hover:bg-destructive/10 shadow-none transition-colors"
       onClick={handleDelete}
       disabled={isPending}
       title="Hapus Produk"
@@ -64,7 +66,9 @@ export function ToggleStatusButton({
       checked={isActive}
       onCheckedChange={handleToggle}
       disabled={isPending}
-      className="data-[state=checked]:bg-green-600"
+      // Tetap mempertahankan warna hijau (bg-green-600) untuk status aktif,
+      // serta menambahkan transisi agar efeknya lebih mulus
+      className="data-[state=checked]:bg-green-600 transition-colors shadow-sm"
     />
   );
 }
