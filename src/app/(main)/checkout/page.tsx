@@ -481,8 +481,20 @@ export default function CheckoutPage() {
                         className="accent-primary w-4 h-4 flex-shrink-0 cursor-pointer"
                       />
                       <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className="w-10 h-10 rounded-full bg-muted/50 border border-border/50 flex items-center justify-center flex-shrink-0 text-lg">
-                          {method.type === "bank_transfer" ? "🏦" : "📱"}
+                        <div className="w-10 h-10 rounded-xl bg-white border border-border/50 flex items-center justify-center flex-shrink-0 overflow-hidden p-1.5">
+                          {method.logo_url ? (
+                            <Image
+                              src={method.logo_url}
+                              alt={method.provider_name}
+                              width={40}
+                              height={40}
+                              className="w-full h-full object-contain"
+                            />
+                          ) : (
+                            <span className="text-lg">
+                              {method.type === "bank_transfer" ? "🏦" : "📱"}
+                            </span>
+                          )}
                         </div>
                         <div className="min-w-0">
                           <p className="text-sm font-bold text-foreground">
