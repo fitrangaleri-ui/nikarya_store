@@ -65,15 +65,15 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/60 backdrop-blur-md shadow-sm">
-      {/* ── Baris utama navbar (logo, nav, search, icon) ───────────────── */}
-      {/*    Tinggi: mobile h-[84px] (56×1.5), desktop h-24 (64×1.5)       */}
-      <div className="container mx-auto px-4 h-[84px] md:h-24 flex items-center justify-between gap-3">
+      {/* ── Baris utama navbar                                          ── */}
+      {/*    Tinggi: mobile h-[63px] (84×0.75), desktop h-[72px] (96×0.75) */}
+      <div className="container mx-auto px-4 h-[63px] md:h-[72px] flex items-center justify-between gap-3">
         {/* ── Kiri: Logo + navigasi desktop ───────────────────────────── */}
         <div className="flex items-center gap-4 shrink-0">
           {/* Link ke halaman utama — hover: scale naik + opacity turun */}
           <Link href="/" className="flex items-center group">
             <div className="flex items-center">
-              {/* Logo brand — diperbesar + animasi hover scale & opacity */}
+              {/* Logo brand — h-11/h-12, tanpa rounded, hover scale & opacity */}
               <Image
                 src="/logo-nikarya.png"
                 alt="Logo Brand"
@@ -121,38 +121,38 @@ export function Navbar() {
           </div>
 
           {/* Tombol toggle search — hanya tampil di mobile               */}
-          {/* Hover: warna primary + scale + background teal tipis        */}
+          {/* Icon 50% lebih besar (h-5→h-[30px]), button h-[60px]       */}
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden h-10 w-10 text-primary hover:text-primary
+            className="md:hidden h-[60px] w-[60px] text-primary hover:text-primary
                        hover:bg-primary/15 rounded-full
                        transition-all duration-200 hover:scale-110 active:scale-95"
             onClick={() => setShowMobileSearch(!showMobileSearch)}
             aria-label="Cari"
           >
             {showMobileSearch ? (
-              <X className="h-5 w-5" />
+              <X className="h-[30px] w-[30px]" />
             ) : (
-              <Search className="h-5 w-5" />
+              <Search className="h-[30px] w-[30px]" />
             )}
           </Button>
 
           {/* Tombol cart — hidden di mobile, visible di desktop          */}
-          {/* Hover: warna primary + scale + background teal tipis        */}
+          {/* Icon 50% lebih besar (h-5→h-[30px]), button h-[60px]       */}
           <Button
             variant="ghost"
             size="icon"
-            className="relative h-10 w-10 text-primary hover:text-primary
+            className="relative h-[60px] w-[60px] text-primary hover:text-primary
                        hover:bg-primary/15 hidden md:inline-flex rounded-full
                        transition-all duration-200 hover:scale-110 active:scale-95"
             onClick={openCart}
             aria-label="Buka keranjang"
           >
-            <ShoppingCart className="h-5 w-5" />
+            <ShoppingCart className="h-[30px] w-[30px]" />
             {/* Badge jumlah item di keranjang */}
             {cartCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground ring-2 ring-background">
+              <span className="absolute top-2 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground ring-2 ring-background">
                 {cartCount > 99 ? "99+" : cartCount}
               </span>
             )}
@@ -176,7 +176,8 @@ export function Navbar() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="flex items-center gap-1.5 text-foreground hover:text-primary hover:bg-primary/10 px-2 h-9 rounded-full transition-colors"
+                  className="flex items-center gap-1.5 text-foreground hover:text-primary
+                             hover:bg-primary/10 px-2 h-9 rounded-full transition-colors"
                   onClick={() => setShowDropdown(!showDropdown)}
                 >
                   {/* Avatar dengan inisial user */}
@@ -189,7 +190,7 @@ export function Navbar() {
                   <span className="hidden lg:inline text-sm font-medium max-w-[100px] truncate">
                     {displayName}
                   </span>
-                  {/* Icon chevron dengan animasi rotate saat dropdown terbuka */}
+                  {/* Icon chevron — animasi rotate saat dropdown terbuka */}
                   <ChevronDown
                     className={`h-3.5 w-3.5 opacity-50 transition-transform duration-200 ${
                       showDropdown ? "rotate-180" : ""
@@ -209,7 +210,7 @@ export function Navbar() {
                         {user.email}
                       </p>
                     </div>
-                    {/* Link ke dashboard */}
+                    {/* Link ke halaman dashboard */}
                     <Link
                       href="/dashboard"
                       className="flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-primary/10 hover:text-primary transition-colors"
@@ -245,23 +246,23 @@ export function Navbar() {
           </div>
 
           {/* Hamburger / menu icon — hanya tampil di mobile              */}
-          {/* Hover: warna primary + scale + background teal tipis        */}
+          {/* Icon 50% lebih besar (h-5→h-[30px]), button h-[60px]       */}
           <Link href="/menu" className="md:hidden ml-1">
             <Button
               variant="ghost"
               size="icon"
-              className="h-10 w-10 text-primary hover:text-primary
+              className="h-[60px] w-[60px] text-primary hover:text-primary
                          hover:bg-primary/15 rounded-full
                          transition-all duration-200 hover:scale-110 active:scale-95"
               aria-label="Menu"
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="h-[30px] w-[30px]" />
             </Button>
           </Link>
         </div>
       </div>
 
-      {/* ── Search bar untuk mobile (expandable di bawah navbar) ─────── */}
+      {/* ── Search bar expandable untuk mobile (muncul di bawah navbar) ─ */}
       {showMobileSearch && (
         <div className="md:hidden px-4 pb-4 animate-in slide-in-from-top-2 fade-in duration-200">
           <div className="relative group">
