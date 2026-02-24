@@ -66,20 +66,23 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/60 backdrop-blur-md shadow-sm">
       {/* ── Baris utama navbar (logo, nav, search, icon) ───────────────── */}
-      <div className="container mx-auto px-4 h-14 md:h-16 flex items-center justify-between gap-3">
+      {/*    Tinggi: mobile h-[84px] (56×1.5), desktop h-24 (64×1.5)       */}
+      <div className="container mx-auto px-4 h-[84px] md:h-24 flex items-center justify-between gap-3">
         {/* ── Kiri: Logo + navigasi desktop ───────────────────────────── */}
         <div className="flex items-center gap-4 shrink-0">
-          {/* Link ke halaman utama dengan logo brand */}
+          {/* Link ke halaman utama — hover: scale naik + opacity turun */}
           <Link href="/" className="flex items-center group">
-            {/* Wrapper logo, hanya gambar logo saja sesuai permintaan */}
             <div className="flex items-center">
+              {/* Logo brand — diperbesar + animasi hover scale & opacity */}
               <Image
                 src="/logo-nikarya.png"
                 alt="Logo Brand"
-                width={42}
-                height={42}
+                width={56}
+                height={56}
                 priority
-                className="h-8 w-8 md:h-9 md:w-9 object-contain shrink-0"
+                className="h-11 w-11 md:h-12 md:w-12 object-contain shrink-0
+                           transition-all duration-200
+                           group-hover:scale-110 group-hover:opacity-80"
               />
             </div>
           </Link>
@@ -108,16 +111,23 @@ export function Navbar() {
             <Input
               type="search"
               placeholder="Cari Undangan..."
-              className="w-full pl-4 pr-10 h-9 rounded-full border-border/50 bg-muted/40 focus:bg-background focus:ring-1 focus:ring-primary transition-all text-sm"
+              className="w-full pl-4 pr-10 h-9 rounded-full border-border/50 bg-muted/40
+                         focus:bg-background focus:ring-1 focus:ring-primary
+                         hover:border-primary/40 hover:bg-muted/60
+                         transition-all text-sm"
             />
+            {/* Icon search desktop — berubah warna saat input fokus */}
             <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
           </div>
 
-          {/* Tombol toggle search — hanya tampil di mobile */}
+          {/* Tombol toggle search — hanya tampil di mobile               */}
+          {/* Hover: warna primary + scale + background teal tipis        */}
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden h-9 w-9 text-primary hover:text-primary hover:bg-primary/10 rounded-full transition-colors"
+            className="md:hidden h-10 w-10 text-primary hover:text-primary
+                       hover:bg-primary/15 rounded-full
+                       transition-all duration-200 hover:scale-110 active:scale-95"
             onClick={() => setShowMobileSearch(!showMobileSearch)}
             aria-label="Cari"
           >
@@ -128,15 +138,19 @@ export function Navbar() {
             )}
           </Button>
 
-          {/* Tombol cart — hanya tampil di desktop (hidden di mobile) */}
+          {/* Tombol cart — hidden di mobile, visible di desktop          */}
+          {/* Hover: warna primary + scale + background teal tipis        */}
           <Button
             variant="ghost"
             size="icon"
-            className="relative h-9 w-9 text-foreground hover:text-primary hover:bg-primary/10 hidden md:inline-flex rounded-full transition-colors"
+            className="relative h-10 w-10 text-primary hover:text-primary
+                       hover:bg-primary/15 hidden md:inline-flex rounded-full
+                       transition-all duration-200 hover:scale-110 active:scale-95"
             onClick={openCart}
             aria-label="Buka keranjang"
           >
             <ShoppingCart className="h-5 w-5" />
+            {/* Badge jumlah item di keranjang */}
             {cartCount > 0 && (
               <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground ring-2 ring-background">
                 {cartCount > 99 ? "99+" : cartCount}
@@ -144,10 +158,10 @@ export function Navbar() {
             )}
           </Button>
 
-          {/* Bagian user (avatar / tombol masuk) — hanya di desktop */}
+          {/* Bagian user (avatar / tombol masuk) — hanya di desktop ─── */}
           <div className="hidden md:block ml-1">
             {isLoading ? (
-              // State loading user
+              // State loading: tampilkan ikon user dengan animasi pulse
               <Button
                 variant="ghost"
                 size="icon"
@@ -230,12 +244,15 @@ export function Navbar() {
             )}
           </div>
 
-          {/* Hamburger / menu icon — hanya tampil di mobile */}
+          {/* Hamburger / menu icon — hanya tampil di mobile              */}
+          {/* Hover: warna primary + scale + background teal tipis        */}
           <Link href="/menu" className="md:hidden ml-1">
             <Button
               variant="ghost"
               size="icon"
-              className="h-9 w-9 text-primary hover:text-primary hover:bg-primary/10 rounded-full transition-colors"
+              className="h-10 w-10 text-primary hover:text-primary
+                         hover:bg-primary/15 rounded-full
+                         transition-all duration-200 hover:scale-110 active:scale-95"
               aria-label="Menu"
             >
               <Menu className="h-5 w-5" />
@@ -246,13 +263,15 @@ export function Navbar() {
 
       {/* ── Search bar untuk mobile (expandable di bawah navbar) ─────── */}
       {showMobileSearch && (
-        <div className="md:hidden px-4 pb-3 animate-in slide-in-from-top-2 fade-in duration-200">
+        <div className="md:hidden px-4 pb-4 animate-in slide-in-from-top-2 fade-in duration-200">
           <div className="relative group">
             <Input
               ref={mobileSearchRef}
               type="search"
               placeholder="Cari Undangan..."
-              className="w-full pl-4 pr-10 h-10 rounded-full border-border/50 bg-muted/40 focus:bg-background focus:ring-1 focus:ring-primary transition-all text-sm"
+              className="w-full pl-4 pr-10 h-10 rounded-full border-border/50 bg-muted/40
+                         focus:bg-background focus:ring-1 focus:ring-primary
+                         transition-all text-sm"
             />
             <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
           </div>
