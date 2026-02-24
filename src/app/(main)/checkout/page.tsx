@@ -233,7 +233,7 @@ export default function CheckoutPage() {
     <main className="mx-auto max-w-6xl px-4 md:px-6 py-8 md:py-10">
       <div className="flex items-center gap-3 mb-8">
         <span className="w-1.5 h-7 bg-primary rounded-full block" />
-        <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
           Checkout Pesanan
         </h1>
       </div>
@@ -600,7 +600,7 @@ export default function CheckoutPage() {
                 <span className="text-sm font-bold text-muted-foreground">
                   Total Bayar
                 </span>
-                <span className="text-2xl font-black text-primary tracking-tight">
+                <span className="text-2xl font-bold text-primary tracking-tight">
                   Rp {subtotal.toLocaleString("id-ID")}
                 </span>
               </div>
@@ -628,7 +628,7 @@ export default function CheckoutPage() {
                 disabled={loading || cartItems.length === 0}
                 variant="brand"
                 size="lg"
-                className="w-full h-14 rounded-full shadow-[0_4px_14px_0_rgba(13,148,136,0.39)] hover:shadow-[0_6px_20px_rgba(13,148,136,0.23)] hover:-translate-y-0.5 transition-all"
+                className="w-full h-14 rounded-full hover:shadow-[0_6px_20px_rgba(13,148,136,0.23)] hover:-translate-y-0.5 transition-all"
               >
                 {loading ? (
                   <>

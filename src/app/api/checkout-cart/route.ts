@@ -34,12 +34,13 @@ export async function POST(request: NextRequest) {
 
     // 2. Parse request body
     const body = await request.json();
-    const { items, customerInfo, paymentMethod, manualPaymentMethodId } = body as {
-      items: CartItemInput[];
-      customerInfo?: CustomerInfo;
-      paymentMethod?: string;
-      manualPaymentMethodId?: string;
-    };
+    const { items, customerInfo, paymentMethod, manualPaymentMethodId } =
+      body as {
+        items: CartItemInput[];
+        customerInfo?: CustomerInfo;
+        paymentMethod?: string;
+        manualPaymentMethodId?: string;
+      };
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
@@ -61,7 +62,12 @@ export async function POST(request: NextRequest) {
       customerEmail = profile?.email || existingUser.email || "";
     } else {
       // Not logged in: require customerInfo
-      if (!customerInfo || !customerInfo.name || !customerInfo.email || !customerInfo.phone) {
+      if (
+        !customerInfo ||
+        !customerInfo.name ||
+        !customerInfo.email ||
+        !customerInfo.phone
+      ) {
         return NextResponse.json(
           { error: "Informasi pelanggan (nama, email, HP) wajib diisi" },
           { status: 400 },
@@ -74,18 +80,25 @@ export async function POST(request: NextRequest) {
 
       // If password provided, create a new Supabase Auth account
       if (customerInfo.password) {
-        const { data: signUpData, error: signUpError } = await adminSupabase.auth.admin.createUser({
-          email: customerInfo.email,
-          password: customerInfo.password,
-          user_metadata: { full_name: customerInfo.name },
-          email_confirm: false, // requires email verification
-        });
+        const { data: signUpData, error: signUpError } =
+          await adminSupabase.auth.admin.createUser({
+            email: customerInfo.email,
+            password: customerInfo.password,
+            user_metadata: { full_name: customerInfo.name },
+            email_confirm: false, // requires email verification
+          });
 
         if (signUpError) {
           // If email already exists, tell user to login
-          if (signUpError.message?.includes("already") || signUpError.message?.includes("exists")) {
+          if (
+            signUpError.message?.includes("already") ||
+            signUpError.message?.includes("exists")
+          ) {
             return NextResponse.json(
-              { error: "Email sudah terdaftar. Silakan login terlebih dahulu.", requireLogin: true },
+              {
+                error: "Email sudah terdaftar. Silakan login terlebih dahulu.",
+                requireLogin: true,
+              },
               { status: 409 },
             );
           }
@@ -177,13 +190,18 @@ export async function POST(request: NextRequest) {
         midtrans_order_id: orderId,
         download_count: 0,
         payment_method: paymentMethod || null,
-        payment_gateway: paymentResult.gateway_name || (isManual ? "manual" : null),
+        payment_gateway:
+          paymentResult.gateway_name || (isManual ? "manual" : null),
         guest_name: existingUser ? null : customerName,
         guest_email: existingUser ? null : customerEmail,
         guest_phone: existingUser ? null : customerPhone,
-        manual_payment_method_id: isManual ? (manualPaymentMethodId || null) : null,
+        manual_payment_method_id: isManual
+          ? manualPaymentMethodId || null
+          : null,
         payment_deadline: paymentDeadline,
-        midtrans_transaction_id: isGateway ? (paymentResult.transaction_id || null) : null,
+        midtrans_transaction_id: isGateway
+          ? paymentResult.transaction_id || null
+          : null,
         payment_code: paymentResult.payment_code || null,
         payment_type: paymentResult.payment_type || null,
       };
