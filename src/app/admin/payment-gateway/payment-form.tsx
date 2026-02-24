@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -455,8 +456,20 @@ export function PaymentForm({
                     }`}
                   >
                     {/* Icon */}
-                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-muted/50 border border-border/50 flex items-center justify-center text-xl shadow-sm">
-                      {method.type === "bank_transfer" ? "🏦" : "📱"}
+                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-white border border-border/50 flex items-center justify-center overflow-hidden shadow-sm p-1.5">
+                      {method.logo_url ? (
+                        <Image
+                          src={method.logo_url}
+                          alt={method.provider_name}
+                          width={40}
+                          height={40}
+                          className="w-full h-full object-contain"
+                        />
+                      ) : (
+                        <span className="text-xl">
+                          {method.type === "bank_transfer" ? "🏦" : "📱"}
+                        </span>
+                      )}
                     </div>
 
                     {/* Info */}
