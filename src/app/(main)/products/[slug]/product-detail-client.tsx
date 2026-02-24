@@ -125,7 +125,7 @@ export function ProductDetailClient({
             <div className="flex flex-col gap-6">
               {/* 1. JUDUL & BADGE */}
               <div>
-                <h1 className="text-3xl font-black lg:text-4xl leading-tight text-foreground mb-4 tracking-tight">
+                <h1 className="text-3xl font-bold lg:text-4xl leading-tight text-foreground mb-4 tracking-tight">
                   {product.title}
                 </h1>
                 <div className="flex flex-wrap items-center gap-2">
@@ -182,7 +182,7 @@ export function ProductDetailClient({
                       <span className="text-sm md:text-base text-muted-foreground line-through mb-1 font-medium">
                         Rp {Number(product.price).toLocaleString("id-ID")}
                       </span>
-                      <span className="text-3xl font-black text-primary tracking-tight">
+                      <span className="text-3xl font-bold text-primary tracking-tight">
                         Rp {Number(finalPrice).toLocaleString("id-ID")}
                       </span>
                     </div>

@@ -246,7 +246,7 @@ export function CartSidebar() {
               <span className="text-sm font-semibold text-muted-foreground">
                 Total Pembayaran
               </span>
-              <span className="text-xl md:text-2xl font-black text-primary tracking-tight">
+              <span className="text-xl md:text-2xl font-bold text-primary tracking-tight">
                 Rp {subtotal.toLocaleString("id-ID")}
               </span>
             </div>
@@ -256,7 +256,7 @@ export function CartSidebar() {
               disabled={loading}
               variant="brand"
               size="lg"
-              className="w-full h-14 rounded-full shadow-[0_4px_14px_0_rgba(13,148,136,0.39)] hover:shadow-[0_6px_20px_rgba(13,148,136,0.23)] hover:-translate-y-0.5 transition-all"
+              className="w-full h-14 rounded-full hover:shadow-[0_6px_20px_rgba(13,148,136,0.23)] hover:-translate-y-0.5 transition-all"
             >
               {loading ? (
                 <>

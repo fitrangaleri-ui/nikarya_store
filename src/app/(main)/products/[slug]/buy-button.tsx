@@ -87,7 +87,9 @@ export function BuyButton({
       onClick={handleBuy}
       disabled={loading}
       size="lg"
-      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold uppercase tracking-widest rounded-full shadow-[0_4px_14px_0_rgba(13,148,136,0.39)] hover:shadow-[0_6px_20px_rgba(13,148,136,0.23)] hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.98] disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none h-full"
+      // font-bold, uppercase, tracking-widest dihapus —
+      // sudah dihandle oleh base class Button (Quicksand, font-medium, tracking-[-0.005em])
+      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm rounded-full hover:shadow-[0_6px_20px_rgba(13,148,136,0.23)] hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.98] disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none h-full"
     >
       {loading ? (
         <>
