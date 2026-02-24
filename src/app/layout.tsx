@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-// ✅ Tambahkan import Quicksand
-import { Inter, JetBrains_Mono, Quicksand } from "next/font/google";
+import { Inter, JetBrains_Mono, Quicksand, Orbitron } from "next/font/google"; // ← ganti Jura → Orbitron
 import Script from "next/script";
 import { AuthProvider } from "@/components/auth-provider";
 import { CartProvider } from "@/context/cart-context";
@@ -18,11 +17,18 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
-// ✅ Inisialisasi Quicksand dengan weight 300
 const quicksand = Quicksand({
   variable: "--font-quicksand",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
+});
+
+// ← GANTI: Jura → Orbitron
+const orbitron = Orbitron({
+  variable: "--font-orbitron",
+  subsets: ["latin"],
+  weight: ["700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -39,9 +45,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      {/* ✅ Tambahkan variabel quicksand.variable ke body */}
+      {/* ← Ganti jura.variable → orbitron.variable */}
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} ${quicksand.variable} font-sans antialiased`}
+        className={`${inter.variable} ${jetbrainsMono.variable} ${quicksand.variable} ${orbitron.variable} font-sans antialiased`}
       >
         <NextTopLoader
           color="#0d9488"
