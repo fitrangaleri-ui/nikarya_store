@@ -496,16 +496,6 @@ export default function CheckoutPage() {
                             </span>
                           )}
                         </div>
-                        <div className="min-w-0">
-                          <p className="text-sm font-bold text-foreground">
-                            {method.provider_name}
-                          </p>
-                          <p className="text-xs font-medium text-muted-foreground mt-0.5">
-                            {method.account_name}{" "}
-                            <span className="mx-1">•</span>{" "}
-                            {method.account_number}
-                          </p>
-                        </div>
                       </div>
                     </label>
                   ))}
