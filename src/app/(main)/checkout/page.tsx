@@ -481,6 +481,7 @@ export default function CheckoutPage() {
                         className="accent-primary w-4 h-4 flex-shrink-0 cursor-pointer"
                       />
                       <div className="flex items-center gap-3 min-w-0 flex-1">
+                        {/* Logo bank */}
                         <div className="w-10 h-10 rounded-xl bg-white border border-border/50 flex items-center justify-center flex-shrink-0 overflow-hidden p-1.5">
                           {method.logo_url ? (
                             <Image
@@ -496,6 +497,10 @@ export default function CheckoutPage() {
                             </span>
                           )}
                         </div>
+                        {/* Nama bank — tanpa account_name & account_number */}
+                        <p className="text-sm font-bold text-foreground">
+                          {method.provider_name}
+                        </p>
                       </div>
                     </label>
                   ))}
