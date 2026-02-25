@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 
+const MAX_DOWNLOADS = 25
+
 export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ orderId: string }> }
@@ -41,10 +43,16 @@ export async function GET(
             )
         }
 
-        // 5. Validate: download_count < 5
-        if (order.download_count >= 5) {
+        // 5. Validate: download_count < MAX_DOWNLOADS
+        const currentCount = order.download_count || 0
+        if (currentCount >= MAX_DOWNLOADS) {
             return NextResponse.json(
-                { error: 'Batas download tercapai (maksimal 5x)' },
+                {
+                    error: `Batas download tercapai (maksimal ${MAX_DOWNLOADS}x)`,
+                    download_count: currentCount,
+                    remaining: 0,
+                    max: MAX_DOWNLOADS,
+                },
                 { status: 403 }
             )
         }
@@ -60,14 +68,24 @@ export async function GET(
             )
         }
 
-        // 7. Increment download_count
+        // 7. Increment download_count and record timestamp
+        const newCount = currentCount + 1
         await adminClient
             .from('orders')
-            .update({ download_count: order.download_count + 1 })
+            .update({
+                download_count: newCount,
+                last_download_at: new Date().toISOString(),
+            })
             .eq('id', orderId)
 
-        // 8. Redirect 302 to drive_file_url
-        return NextResponse.redirect(driveUrl, 302)
+        // 8. Return the drive URL + metadata
+        return NextResponse.json({
+            url: driveUrl,
+            download_count: newCount,
+            remaining: MAX_DOWNLOADS - newCount,
+            max: MAX_DOWNLOADS,
+            product_title: product?.title || 'Produk',
+        })
     } catch (err: unknown) {
         console.error('Download error:', err)
         return NextResponse.json({ error: 'Server error' }, { status: 500 })

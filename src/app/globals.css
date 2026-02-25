@@ -219,6 +219,24 @@
   .animation-delay-4000 {
     animation-delay: 4s;
   }
+
+  /* --- DASHBOARD UTILITIES --- */
+  .dashboard-sidebar {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-right: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+
+  .dashboard-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: var(--radius-xl);
+  }
 }
 
 /* ─── Cart Sidebar ─────────────────────────────── */
