@@ -8,22 +8,6 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-declare global {
-  interface Window {
-    snap: {
-      pay: (
-        token: string,
-        options: {
-          onSuccess: (result: unknown) => void;
-          onPending: (result: unknown) => void;
-          onError: (result: unknown) => void;
-          onClose: () => void;
-        },
-      ) => void;
-    };
-  }
-}
-
 export function CartSidebar() {
   const {
     cartItems,
@@ -48,7 +32,7 @@ export function CartSidebar() {
       return;
     }
 
-    // Logged-in users: direct Midtrans payment
+    // Logged-in users: direct payment
     setLoading(true);
 
     try {
@@ -70,25 +54,14 @@ export function CartSidebar() {
         return;
       }
 
-      if (window.snap) {
-        window.snap.pay(data.snap_token, {
-          onSuccess: () => {
-            clearCart();
-            closeCart();
-            router.push("/dashboard");
-          },
-          onPending: () => {
-            clearCart();
-            closeCart();
-            router.push("/dashboard");
-          },
-          onError: () => {
-            alert("Pembayaran gagal. Silakan coba lagi.");
-          },
-          onClose: () => {
-            // User menutup popup tanpa bayar
-          },
-        });
+      clearCart();
+      closeCart();
+
+      // Redirect based on payment mode
+      if (data.redirect_url && data.gateway_name === "duitku") {
+        window.location.href = data.redirect_url;
+      } else {
+        router.push(`/payment-instruction?orderId=${data.midtrans_order_id}`);
       }
     } catch {
       alert("Terjadi kesalahan. Silakan coba lagi.");
@@ -101,11 +74,10 @@ export function CartSidebar() {
     <>
       {/* Overlay (Liquid Glass) */}
       <div
-        className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
-          isCartOpen
+        className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${isCartOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
-        }`}
+          }`}
         onClick={closeCart}
         aria-hidden="true"
       />
@@ -113,9 +85,8 @@ export function CartSidebar() {
       {/* Sidebar */}
       <aside
         className={`fixed top-0 right-0 h-full z-50 flex flex-col bg-background/95 backdrop-blur-2xl border-l border-border/50 transition-transform duration-300 ease-out shadow-2xl
-                    w-[90%] sm:w-[400px] ${
-                      isCartOpen ? "translate-x-0" : "translate-x-full"
-                    }`}
+                    w-[90%] sm:w-[400px] ${isCartOpen ? "translate-x-0" : "translate-x-full"
+          }`}
         role="dialog"
         aria-label="Keranjang Belanja"
       >

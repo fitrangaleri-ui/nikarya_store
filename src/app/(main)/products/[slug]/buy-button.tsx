@@ -5,21 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Loader2 } from "lucide-react";
 import { useState } from "react";
 
-declare global {
-  interface Window {
-    snap: {
-      pay: (
-        token: string,
-        options: {
-          onSuccess: (result: unknown) => void;
-          onPending: (result: unknown) => void;
-          onError: (result: unknown) => void;
-          onClose: () => void;
-        },
-      ) => void;
-    };
-  }
-}
 
 export function BuyButton({
   productId,
@@ -59,21 +44,11 @@ export function BuyButton({
         return;
       }
 
-      if (window.snap) {
-        window.snap.pay(data.snap_token, {
-          onSuccess: () => {
-            router.push("/dashboard");
-          },
-          onPending: () => {
-            router.push("/dashboard");
-          },
-          onError: () => {
-            alert("Pembayaran gagal. Silakan coba lagi.");
-          },
-          onClose: () => {
-            // User closed the popup without finishing
-          },
-        });
+      // Redirect based on payment mode
+      if (data.redirect_url && data.gateway_name === "duitku") {
+        window.location.href = data.redirect_url;
+      } else {
+        router.push(`/payment-instruction?orderId=${data.midtrans_order_id}`);
       }
     } catch {
       alert("Terjadi kesalahan. Silakan coba lagi.");
