@@ -58,12 +58,24 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
-  // Protected routes: /dashboard/* requires authentication
-  if (pathname.startsWith("/dashboard") && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    url.searchParams.set("redirectTo", pathname);
-    return NextResponse.redirect(url);
+  // Protected routes: /dashboard/* requires authentication + email verification
+  if (pathname.startsWith("/dashboard")) {
+    if (!user) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("redirectTo", pathname);
+      return NextResponse.redirect(url);
+    }
+
+    // Email verification guard (skip for verify-email page itself)
+    if (!pathname.startsWith("/dashboard/verify-email")) {
+      const isEmailVerified = !!user.email_confirmed_at;
+      if (!isEmailVerified) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/dashboard/verify-email";
+        return NextResponse.redirect(url);
+      }
+    }
   }
 
   // Admin routes: /admin/* requires ADMIN role

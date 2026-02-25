@@ -274,6 +274,14 @@ export default function CheckoutPage() {
 
       clearCart();
 
+      // Guest checkout with new account — redirect to email verification
+      if (data.isNewUser) {
+        router.push(
+          `/dashboard/verify-email`
+        );
+        return;
+      }
+
       if (data.redirect_url && data.gateway_name === "duitku") {
         window.location.href = data.redirect_url;
       } else {
