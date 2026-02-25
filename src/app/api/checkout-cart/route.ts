@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { processPayment } from "@/lib/payment/processor";
+import { validatePromo } from "@/lib/promo/validator";
 
 interface CartItemInput {
   id: string;
@@ -34,12 +35,13 @@ export async function POST(request: NextRequest) {
 
     // 2. Parse request body
     const body = await request.json();
-    const { items, customerInfo, paymentMethod, manualPaymentMethodId } =
+    const { items, customerInfo, paymentMethod, manualPaymentMethodId, promoCode } =
       body as {
         items: CartItemInput[];
         customerInfo?: CustomerInfo;
         paymentMethod?: string;
         manualPaymentMethodId?: string;
+        promoCode?: string;
       };
 
     if (!items || !Array.isArray(items) || items.length === 0) {
@@ -137,20 +139,47 @@ export async function POST(request: NextRequest) {
       quantityMap.set(item.id, item.quantity);
     }
 
-    // 6. Calculate total price
-    const totalPrice = products.reduce((sum, p) => {
+    // 6. Calculate total price (original subtotal)
+    const originalTotal = products.reduce((sum, p) => {
       const qty = quantityMap.get(p.id) || 1;
       return sum + Number(p.price) * qty;
     }, 0);
 
+    // 6b. Promo validation (server-side re-check)
+    let discountAmount = 0;
+    let appliedPromoCode: string | null = null;
+    let appliedPromoId: string | null = null;
+
+    if (promoCode) {
+      const promoResult = await validatePromo(adminSupabase, {
+        code: promoCode,
+        items: items,
+        userId: userId || null,
+        email: customerEmail || null,
+      });
+
+      if (!promoResult.valid) {
+        return NextResponse.json(
+          { error: `Promo tidak valid: ${promoResult.message}` },
+          { status: 400 },
+        );
+      }
+
+      discountAmount = promoResult.discountAmount || 0;
+      appliedPromoCode = promoResult.code || promoCode;
+      appliedPromoId = promoResult.promoId || null;
+    }
+
+    const finalTotal = Math.max(0, originalTotal - discountAmount);
+
     // 7. Generate unique order id
     const orderId = `CGS-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
 
-    // 8. Use unified payment processor
+    // 8. Use unified payment processor (send DISCOUNTED total)
     const paymentResult = await processPayment(
       {
         orderId,
-        grossAmount: totalPrice,
+        grossAmount: finalTotal,
         items: products.map((product) => {
           const qty = quantityMap.get(product.id) || 1;
           return {
@@ -204,6 +233,10 @@ export async function POST(request: NextRequest) {
           : null,
         payment_code: paymentResult.payment_code || null,
         payment_type: paymentResult.payment_type || null,
+        // Promo fields
+        promo_code: appliedPromoCode,
+        discount_amount: discountAmount,
+        original_total: originalTotal,
       };
     });
 
@@ -219,13 +252,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 10. Return result to frontend
+    // 10. Record promo usage
+    if (appliedPromoId && appliedPromoCode) {
+      await adminSupabase.from("promo_usages").insert({
+        promo_id: appliedPromoId,
+        order_id: orderId,
+        user_id: userId || null,
+        guest_email: !userId ? customerEmail : null,
+        discount_amount: discountAmount,
+      });
+    }
+
+    // 11. Return result to frontend
     return NextResponse.json({
       mode: paymentResult.mode,
       gateway_name: paymentResult.gateway_name || null,
       redirect_url: paymentResult.redirect_url || null,
       midtrans_order_id: orderId,
       isNewUser,
+      discountAmount,
     });
   } catch (err: unknown) {
     console.error("Checkout cart error:", err);

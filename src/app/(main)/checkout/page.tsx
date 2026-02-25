@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
@@ -15,6 +15,8 @@ import {
   User,
   CreditCard,
   ReceiptText,
+  Ticket,
+  X,
 } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import { useAuth } from "@/components/auth-provider";
@@ -54,6 +56,7 @@ export default function CheckoutPage() {
     decreaseQuantity,
     removeFromCart,
   } = useCart();
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const { user } = useAuth();
   const router = useRouter();
 
@@ -76,6 +79,88 @@ export default function CheckoutPage() {
     string | null
   >(null);
 
+  // Promo code state
+  const [promoInput, setPromoInput] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState<{
+    code: string;
+    discountAmount: number;
+    message: string;
+  } | null>(null);
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [promoError, setPromoError] = useState("");
+  const [promoSuccess, setPromoSuccess] = useState("");
+  const prevCartKey = useRef("");
+
+  // Validate promo code
+  const validatePromo = useCallback(
+    async (code: string, silent = false) => {
+      if (!code.trim()) return;
+      if (!silent) setPromoLoading(true);
+      setPromoError("");
+      setPromoSuccess("");
+
+      try {
+        const res = await fetch("/api/promo/validate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            code,
+            items: cartItems.map((i) => ({ id: i.id, quantity: i.quantity })),
+            email: email || undefined,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (data.valid) {
+          setAppliedPromo({
+            code: data.code,
+            discountAmount: data.discountAmount,
+            message: data.message,
+          });
+          setPromoSuccess(data.message);
+          setPromoInput("");
+        } else {
+          // Auto-revalidation failed — remove promo
+          if (silent) {
+            setAppliedPromo(null);
+            setPromoError("Promo tidak lagi berlaku untuk keranjang ini.");
+          } else {
+            setPromoError(data.message || "Kode promo tidak valid.");
+          }
+        }
+      } catch {
+        if (!silent) setPromoError("Gagal memvalidasi promo.");
+      } finally {
+        if (!silent) setPromoLoading(false);
+      }
+    },
+    [cartItems, email],
+  );
+
+  // Auto-revalidate promo when cart changes
+  useEffect(() => {
+    const key = cartItems.map((i) => `${i.id}:${i.quantity}`).join(",");
+    if (prevCartKey.current && key !== prevCartKey.current && appliedPromo) {
+      validatePromo(appliedPromo.code, true);
+    }
+    prevCartKey.current = key;
+  }, [cartItems, appliedPromo, validatePromo]);
+
+  const handleApplyPromo = () => {
+    validatePromo(promoInput);
+  };
+
+  const handleRemovePromo = () => {
+    setAppliedPromo(null);
+    setPromoError("");
+    setPromoSuccess("");
+  };
+
+  const discountedTotal = appliedPromo
+    ? Math.max(0, subtotal - appliedPromo.discountAmount)
+    : subtotal;
+
   // Fetch payment config
   useEffect(() => {
     fetch("/api/payment-config")
@@ -94,7 +179,6 @@ export default function CheckoutPage() {
   const displayName =
     user?.user_metadata?.full_name || user?.email?.split("@")[0] || "";
   const displayEmail = user?.email || "";
-  const cartCount = cartItems.reduce((acc, i) => acc + i.quantity, 0);
 
   const handleDecrease = (id: string, quantity: number) => {
     if (quantity <= 1) {
@@ -154,6 +238,7 @@ export default function CheckoutPage() {
           quantity: item.quantity,
         })),
         paymentMethod: selectedGatewayMethod || undefined,
+        promoCode: appliedPromo?.code || undefined,
       };
 
       if (paymentConfig?.mode === "manual" && selectedManualMethodId) {
@@ -411,11 +496,10 @@ export default function CheckoutPage() {
                   {paymentConfig.gateway_methods.map((method) => (
                     <label
                       key={method.code}
-                      className={`flex items-center gap-4 rounded-2xl border p-4 cursor-pointer transition-all shadow-sm ${
-                        selectedGatewayMethod === method.code
-                          ? "border-primary bg-primary/5 ring-1 ring-primary/20"
-                          : "border-border/50 bg-background hover:border-primary/40 hover:bg-primary/5"
-                      }`}
+                      className={`flex items-center gap-4 rounded-2xl border p-4 cursor-pointer transition-all shadow-sm ${selectedGatewayMethod === method.code
+                        ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                        : "border-border/50 bg-background hover:border-primary/40 hover:bg-primary/5"
+                        }`}
                     >
                       <input
                         type="radio"
@@ -463,11 +547,10 @@ export default function CheckoutPage() {
                   {paymentConfig.manual_methods.map((method) => (
                     <label
                       key={method.id}
-                      className={`flex items-center gap-4 rounded-2xl border p-4 cursor-pointer transition-all shadow-sm ${
-                        selectedManualMethodId === method.id
-                          ? "border-primary bg-primary/5 ring-1 ring-primary/20"
-                          : "border-border/50 bg-background hover:border-primary/40 hover:bg-primary/5"
-                      }`}
+                      className={`flex items-center gap-4 rounded-2xl border p-4 cursor-pointer transition-all shadow-sm ${selectedManualMethodId === method.id
+                        ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                        : "border-border/50 bg-background hover:border-primary/40 hover:bg-primary/5"
+                        }`}
                     >
                       <input
                         type="radio"
@@ -587,7 +670,69 @@ export default function CheckoutPage() {
               ))}
             </ul>
 
-            <div className="pt-5 border-t border-border/50 mb-6">
+            {/* Promo Code Section */}
+            <div className="pt-5 border-t border-border/50 mb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Ticket className="h-4 w-4 text-primary" />
+                <span className="text-sm font-bold text-foreground">Kode Promo</span>
+              </div>
+
+              {appliedPromo ? (
+                <div className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-xl px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <Ticket className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-black text-primary">{appliedPromo.code}</span>
+                    <span className="text-xs font-semibold text-primary/70">
+                      −Rp {appliedPromo.discountAmount.toLocaleString("id-ID")}
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleRemovePromo}
+                    className="h-6 w-6 rounded-full hover:bg-destructive/10 flex items-center justify-center transition-colors"
+                  >
+                    <X className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <Input
+                    value={promoInput}
+                    onChange={(e) => {
+                      setPromoInput(e.target.value.toUpperCase());
+                      setPromoError("");
+                    }}
+                    placeholder="Masukkan kode"
+                    className="h-10 rounded-xl text-sm uppercase flex-1"
+                    onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
+                  />
+                  <Button
+                    variant="brand"
+                    className="h-10 rounded-xl px-5 shrink-0"
+                    onClick={handleApplyPromo}
+                    disabled={promoLoading || !promoInput.trim()}
+                  >
+                    {promoLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      "Terapkan"
+                    )}
+                  </Button>
+                </div>
+              )}
+
+              {promoError && (
+                <p className="text-xs font-semibold text-destructive mt-2">
+                  {promoError}
+                </p>
+              )}
+              {promoSuccess && !appliedPromo && (
+                <p className="text-xs font-semibold text-primary mt-2">
+                  {promoSuccess}
+                </p>
+              )}
+            </div>
+
+            <div className="pt-4 border-t border-border/50 mb-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-muted-foreground">
                   Jumlah Item
@@ -596,12 +741,30 @@ export default function CheckoutPage() {
                   {cartCount} Item
                 </span>
               </div>
-              <div className="flex items-end justify-between">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-muted-foreground">
+                  Subtotal
+                </span>
+                <span className="text-sm font-bold text-foreground">
+                  Rp {subtotal.toLocaleString("id-ID")}
+                </span>
+              </div>
+              {appliedPromo && (
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-primary">
+                    Diskon ({appliedPromo.code})
+                  </span>
+                  <span className="text-sm font-bold text-primary">
+                    −Rp {appliedPromo.discountAmount.toLocaleString("id-ID")}
+                  </span>
+                </div>
+              )}
+              <div className="flex items-end justify-between pt-2 border-t border-dashed border-border/50">
                 <span className="text-sm font-bold text-muted-foreground">
                   Total Bayar
                 </span>
                 <span className="text-2xl font-bold text-primary tracking-tight">
-                  Rp {subtotal.toLocaleString("id-ID")}
+                  Rp {discountedTotal.toLocaleString("id-ID")}
                 </span>
               </div>
             </div>

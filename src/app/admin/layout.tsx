@@ -12,6 +12,7 @@ import {
   Store,
   Menu,
   X,
+  Ticket,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -32,14 +33,14 @@ export default function AdminLayout({
   const isDashboard = pathname === "/admin";
   const isProducts = pathname.startsWith("/admin/products");
   const isOrders = pathname.startsWith("/admin/orders");
+  const isPromos = pathname.startsWith("/admin/promos");
   const isPayment = pathname.startsWith("/admin/payment-gateway");
   const isAccount = pathname.startsWith("/admin/account");
 
   const getLinkStyle = (active: boolean) =>
-    `w-full justify-start gap-3.5 h-12 rounded-2xl font-bold transition-all ${
-      active
-        ? "bg-primary/15 text-primary shadow-sm ring-1 ring-primary/20"
-        : "text-muted-foreground hover:text-primary hover:bg-primary/5 hover:scale-[0.98]"
+    `w-full justify-start gap-3.5 h-12 rounded-2xl font-bold transition-all ${active
+      ? "bg-primary/15 text-primary shadow-sm ring-1 ring-primary/20"
+      : "text-muted-foreground hover:text-primary hover:bg-primary/5 hover:scale-[0.98]"
     }`;
 
   return (
@@ -69,17 +70,15 @@ export default function AdminLayout({
 
       {/* ── OVERLAY GELAP (Saat sidebar terbuka di Mobile) ── */}
       <div
-        className={`md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity duration-300 ${
-          isMobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
-        }`}
+        className={`md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity duration-300 ${isMobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
+          }`}
         onClick={() => setIsMobileMenuOpen(false)}
       />
 
       {/* ── SIDEBAR (Hidden di Mobile, Fixed di Desktop) ── */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-border/50 bg-card backdrop-blur-2xl shadow-2xl md:shadow-none flex flex-col transform transition-transform duration-300 ease-out ${
-          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-border/50 bg-card backdrop-blur-2xl shadow-2xl md:shadow-none flex flex-col transform transition-transform duration-300 ease-out ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0`}
       >
         {/* Decorative Glow */}
         <div className="absolute top-0 left-0 w-full h-32 bg-primary/5 blur-[50px] pointer-events-none -z-10" />
@@ -131,6 +130,13 @@ export default function AdminLayout({
             <Button variant="ghost" className={getLinkStyle(isOrders)}>
               <ShoppingCart className="h-5 w-5" />
               Pesanan
+            </Button>
+          </Link>
+
+          <Link href="/admin/promos">
+            <Button variant="ghost" className={getLinkStyle(isPromos)}>
+              <Ticket className="h-5 w-5" />
+              Promo
             </Button>
           </Link>
 

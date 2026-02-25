@@ -1,9 +1,9 @@
-# FINAL PROJECT BRIEF: Custom Galeri Store
+# FINAL PROJECT BRIEF: Nikarya Store
 **Zero Cost Digital Product Store**
 
 ## A. CORE CONCEPT
 
-**Custom Galeri Store** adalah website toko online untuk menjual produk digital secara satuan dengan biaya operasional Rp 0.
+**Nikarya Store** adalah website toko online untuk menjual produk digital secara satuan dengan biaya operasional Rp 0.
 
 **Business Model:**
 - Penjualan produk digital satuan.
