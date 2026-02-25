@@ -191,9 +191,8 @@ export function Navbar() {
                   </span>
                   {/* Icon chevron dengan animasi rotate saat dropdown terbuka */}
                   <ChevronDown
-                    className={`h-3.5 w-3.5 opacity-50 transition-transform duration-200 ${
-                      showDropdown ? "rotate-180" : ""
-                    }`}
+                    className={`h-3.5 w-3.5 opacity-50 transition-transform duration-200 ${showDropdown ? "rotate-180" : ""
+                      }`}
                   />
                 </Button>
 

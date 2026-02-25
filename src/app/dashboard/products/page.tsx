@@ -16,11 +16,13 @@ export default async function ProductsPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-                    <Download className="h-6 w-6 text-primary" />
+                <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <Download className="h-5 w-5 text-primary" />
+                    </div>
                     Produk Saya
                 </h1>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="mt-2 text-sm text-muted-foreground ml-[52px]">
                     Produk digital yang sudah Anda beli dan tersedia untuk diunduh.
                 </p>
             </div>

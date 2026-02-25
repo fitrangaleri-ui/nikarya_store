@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  LayoutDashboard,
   Package,
   Download,
   Wallet,
@@ -19,8 +20,13 @@ export default async function DashboardPage() {
     <div className="space-y-8">
       {/* ── HEADER ── */}
       <div>
-        <h1 className="text-3xl font-bold text-foreground">Dashboard Saya</h1>
-        <p className="mt-1 text-muted-foreground">
+        <h1 className="text-2xl sm:text-3xl font-bold text-foreground flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+            <LayoutDashboard className="h-5 w-5 text-primary" />
+          </div>
+          Dashboard Saya
+        </h1>
+        <p className="mt-2 text-sm sm:text-base text-muted-foreground ml-[52px]">
           Halo,{" "}
           <span className="font-semibold text-foreground">
             {profile?.full_name || profile?.email || "User"}
