@@ -83,15 +83,30 @@ export default function PromoFormDialog({
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState("");
 
+    // Convert a UTC Date to a local datetime-local string (YYYY-MM-DDTHH:mm)
+    const toLocalDatetimeString = (isoDate: string): string => {
+        const d = new Date(isoDate);
+        const pad = (n: number) => n.toString().padStart(2, "0");
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    };
+
+    // Convert a datetime-local string to a full ISO string with timezone offset
+    const localToISO = (dtLocal: string): string => {
+        if (!dtLocal) return "";
+        // dtLocal is "YYYY-MM-DDTHH:mm" in the user's local time
+        const d = new Date(dtLocal);
+        return d.toISOString();
+    };
+
     useEffect(() => {
         if (initialData) {
             setForm({
                 ...initialData,
                 start_date: initialData.start_date
-                    ? new Date(initialData.start_date).toISOString().slice(0, 16)
+                    ? toLocalDatetimeString(initialData.start_date)
                     : "",
                 end_date: initialData.end_date
-                    ? new Date(initialData.end_date).toISOString().slice(0, 16)
+                    ? toLocalDatetimeString(initialData.end_date)
                     : "",
             });
         } else {
@@ -126,7 +141,13 @@ export default function PromoFormDialog({
 
         setSaving(true);
         try {
-            await onSave(form);
+            // Convert local dates to UTC ISO strings before saving
+            const dataToSave = {
+                ...form,
+                start_date: form.start_date ? localToISO(form.start_date) : undefined,
+                end_date: form.end_date ? localToISO(form.end_date) : undefined,
+            };
+            await onSave(dataToSave);
             onClose();
         } catch (e) {
             setError(e instanceof Error ? e.message : "Gagal menyimpan promo");

@@ -39,6 +39,7 @@ interface PromoRow {
 interface ProductRow {
     id: string;
     price: number;
+    discount_price: number | null;
     category_id: string | null;
 }
 
@@ -118,7 +119,7 @@ export async function validatePromo(
     const productIds = input.items.map((i) => i.id);
     const { data: products } = await adminSupabase
         .from("products")
-        .select("id, price, category_id")
+        .select("id, price, discount_price, category_id")
         .in("id", productIds)
         .eq("is_active", true);
 
@@ -128,9 +129,13 @@ export async function validatePromo(
 
     const qtyMap = new Map(input.items.map((i) => [i.id, i.quantity]));
 
-    // Calculate full subtotal
+    // Helper: get effective selling price (discount_price if set, else price)
+    const effectivePrice = (prod: ProductRow) =>
+        Number(prod.discount_price ?? prod.price);
+
+    // Calculate full subtotal using effective prices
     const fullSubtotal = (products as ProductRow[]).reduce(
-        (sum, prod) => sum + Number(prod.price) * (qtyMap.get(prod.id) || 1),
+        (sum, prod) => sum + effectivePrice(prod) * (qtyMap.get(prod.id) || 1),
         0,
     );
 
@@ -143,7 +148,7 @@ export async function validatePromo(
         eligibleSubtotal = (products as ProductRow[])
             .filter((prod) => prod.category_id === p.scope_ref_id)
             .reduce(
-                (sum, prod) => sum + Number(prod.price) * (qtyMap.get(prod.id) || 1),
+                (sum, prod) => sum + effectivePrice(prod) * (qtyMap.get(prod.id) || 1),
                 0,
             );
     } else if (p.scope_type === "product" && p.scope_ref_id) {
@@ -152,7 +157,7 @@ export async function validatePromo(
         );
         if (target) {
             eligibleSubtotal =
-                Number(target.price) * (qtyMap.get(target.id) || 1);
+                effectivePrice(target) * (qtyMap.get(target.id) || 1);
         }
     }
 

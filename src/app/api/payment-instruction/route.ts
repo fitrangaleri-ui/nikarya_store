@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
         // Fetch the first order row with this midtrans_order_id
         const { data: order, error: orderError } = await supabase
             .from("orders")
-            .select("midtrans_order_id, total_price, payment_status, payment_deadline, manual_payment_method_id, quantity, payment_code, payment_type, payment_gateway, payment_method, midtrans_transaction_id")
+            .select("midtrans_order_id, total_price, payment_status, payment_deadline, manual_payment_method_id, quantity, payment_code, payment_type, payment_gateway, payment_method, midtrans_transaction_id, discount_amount, original_total, promo_code")
             .eq("midtrans_order_id", orderId)
             .limit(1)
             .maybeSingle();
@@ -38,13 +38,21 @@ export async function GET(request: NextRequest) {
         // Calculate grand total across all order rows for this orderId
         const { data: allOrders } = await supabase
             .from("orders")
-            .select("total_price")
+            .select("total_price, discount_amount, original_total, promo_code")
             .eq("midtrans_order_id", orderId);
 
         const grandTotal = (allOrders || []).reduce(
             (sum, o) => sum + Number(o.total_price),
             0,
         );
+
+        // Get discount info from first order row (discount is order-level)
+        const discountAmount = Number(order.discount_amount || 0);
+        const originalTotal = Number(order.original_total || 0);
+        const promoCode = order.promo_code || null;
+
+        // Final amount = grand total - discount
+        const finalAmount = Math.max(0, grandTotal - discountAmount);
 
         // Fetch manual payment method if applicable
         let manualMethod = null;
@@ -59,7 +67,10 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json({
             orderId: order.midtrans_order_id,
-            totalAmount: grandTotal,
+            totalAmount: finalAmount,
+            originalTotal: originalTotal > 0 ? originalTotal : grandTotal,
+            discountAmount,
+            promoCode,
             paymentStatus: order.payment_status,
             paymentDeadline: order.payment_deadline,
             paymentGateway: order.payment_gateway,

@@ -46,7 +46,7 @@ interface ProductDetailClientProps {
 
 export function ProductDetailClient({
   product,
-  isLoggedIn,
+  isLoggedIn: _isLoggedIn,
   relatedProducts,
 }: ProductDetailClientProps) {
   const { addToCart, openCart } = useCart();
@@ -56,9 +56,9 @@ export function ProductDetailClient({
   const isDiscounted = !!product.discount_price;
   const discountPercentage = isDiscounted
     ? Math.round(
-        ((product.price - Number(product.discount_price)) / product.price) *
-          100,
-      )
+      ((product.price - Number(product.discount_price)) / product.price) *
+      100,
+    )
     : 0;
 
   const handleAddToCart = () => {
@@ -231,9 +231,13 @@ export function ProductDetailClient({
 
                 <div className="h-14">
                   <BuyButton
-                    productId={product.id}
-                    isLoggedIn={isLoggedIn}
-                    productSlug={product.slug}
+                    product={{
+                      id: product.id,
+                      title: product.title,
+                      slug: product.slug,
+                      price: Number(finalPrice),
+                      thumbnail_url: product.thumbnail_url,
+                    }}
                     showIcon={true}
                   />
                 </div>
@@ -249,9 +253,13 @@ export function ProductDetailClient({
                 </button>
                 <div className="flex-1 h-14">
                   <BuyButton
-                    productId={product.id}
-                    isLoggedIn={isLoggedIn}
-                    productSlug={product.slug}
+                    product={{
+                      id: product.id,
+                      title: product.title,
+                      slug: product.slug,
+                      price: Number(finalPrice),
+                      thumbnail_url: product.thumbnail_url,
+                    }}
                     showIcon={false}
                   />
                 </div>
@@ -306,18 +314,16 @@ export function ProductDetailClient({
                   </h2>
                 </div>
                 <ChevronDown
-                  className={`w-6 h-6 text-muted-foreground transition-transform duration-300 ${
-                    isDescOpen ? "rotate-180" : ""
-                  }`}
+                  className={`w-6 h-6 text-muted-foreground transition-transform duration-300 ${isDescOpen ? "rotate-180" : ""
+                    }`}
                 />
               </button>
 
               <div
-                className={`grid transition-all duration-300 ease-in-out ${
-                  isDescOpen
-                    ? "grid-rows-[1fr] opacity-100"
-                    : "grid-rows-[0fr] opacity-0"
-                }`}
+                className={`grid transition-all duration-300 ease-in-out ${isDescOpen
+                  ? "grid-rows-[1fr] opacity-100"
+                  : "grid-rows-[0fr] opacity-0"
+                  }`}
               >
                 <div className="overflow-hidden">
                   <div className="p-6 md:p-8 pt-0 md:pt-0">

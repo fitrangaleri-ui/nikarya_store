@@ -4,57 +4,38 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Loader2 } from "lucide-react";
 import { useState } from "react";
-
+import { useCart } from "@/context/cart-context";
 
 export function BuyButton({
-  productId,
-  isLoggedIn,
-  productSlug,
-  onAfterSuccess,
+  product,
   showIcon = true,
 }: {
-  productId: string;
-  isLoggedIn: boolean;
-  productSlug: string;
-  onAfterSuccess?: () => void;
+  product: {
+    id: string;
+    title: string;
+    slug: string;
+    price: number;
+    thumbnail_url: string | null;
+  };
   showIcon?: boolean;
 }) {
   const router = useRouter();
+  const { clearCart, addToCart } = useCart();
   const [loading, setLoading] = useState(false);
 
-  const handleBuy = async () => {
-    if (!isLoggedIn) {
-      router.push(`/login?redirectTo=/products/${productSlug}`);
-      return;
-    }
-
+  const handleBuy = () => {
     setLoading(true);
 
-    try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.error || "Gagal membuat order");
-        return;
-      }
-
-      // Redirect based on payment mode
-      if (data.redirect_url && data.gateway_name === "duitku") {
-        window.location.href = data.redirect_url;
-      } else {
-        router.push(`/payment-instruction?orderId=${data.midtrans_order_id}`);
-      }
-    } catch {
-      alert("Terjadi kesalahan. Silakan coba lagi.");
-    } finally {
-      setLoading(false);
-    }
+    // Use the same cart pipeline: clear cart → add this product → go to checkout
+    clearCart();
+    addToCart({
+      id: product.id,
+      title: product.title,
+      slug: product.slug,
+      price: product.price,
+      thumbnail_url: product.thumbnail_url,
+    });
+    router.push("/checkout");
   };
 
   return (
@@ -62,8 +43,6 @@ export function BuyButton({
       onClick={handleBuy}
       disabled={loading}
       size="lg"
-      // font-bold, uppercase, tracking-widest dihapus —
-      // sudah dihandle oleh base class Button (Quicksand, font-medium, tracking-[-0.005em])
       className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm rounded-full hover:shadow-[0_6px_20px_rgba(13,148,136,0.23)] hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.98] disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none h-full"
     >
       {loading ? (

@@ -41,15 +41,16 @@ export async function POST(request: NextRequest) {
         // 3. Generate unique order id
         const orderId = `CGS-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`
 
-        // 4. Use unified payment processor
+        // 4. Use unified payment processor (use discount_price if available)
+        const effectivePrice = Number(product.discount_price ?? product.price);
         const paymentResult = await processPayment(
             {
                 orderId,
-                grossAmount: Number(product.price),
+                grossAmount: effectivePrice,
                 items: [
                     {
                         id: product.id,
-                        price: Number(product.price),
+                        price: effectivePrice,
                         quantity: 1,
                         name: product.title.substring(0, 50),
                     },
@@ -63,16 +64,30 @@ export async function POST(request: NextRequest) {
         )
 
         // 5. Create order in DB
+        const isManual = paymentResult.mode === 'manual';
+        const isGateway = paymentResult.mode === 'gateway';
+
+        const paymentDeadline = paymentResult.expiry_time
+            ? new Date(paymentResult.expiry_time).toISOString()
+            : isManual
+                ? new Date(Date.now() + 1 * 60 * 60 * 1000).toISOString()
+                : null;
+
         const { data: order, error: orderError } = await supabase
             .from('orders')
             .insert({
                 user_id: user.id,
                 product_id: product.id,
-                total_price: product.price,
-                payment_status: paymentResult.mode === 'manual' ? 'PENDING_MANUAL' : 'PENDING',
+                total_price: effectivePrice,
+                payment_status: isManual ? 'PENDING_MANUAL' : 'PENDING',
                 midtrans_order_id: orderId,
                 download_count: 0,
-                payment_gateway: paymentResult.gateway_name || (paymentResult.mode === 'manual' ? 'manual' : null),
+                payment_gateway: paymentResult.gateway_name || (isManual ? 'manual' : null),
+                payment_deadline: paymentDeadline,
+                midtrans_transaction_id: isGateway ? (paymentResult.transaction_id || null) : null,
+                payment_code: paymentResult.payment_code || null,
+                payment_type: paymentResult.payment_type || null,
+                payment_method: paymentMethod || null,
             })
             .select()
             .single()
@@ -82,23 +97,6 @@ export async function POST(request: NextRequest) {
                 { error: `Gagal membuat order: ${orderError?.message}` },
                 { status: 500 }
             )
-        }
-
-        // 6. Update Core API fields if gateway mode
-        if (paymentResult.mode === 'gateway') {
-            const paymentDeadline = paymentResult.expiry_time
-                ? new Date(paymentResult.expiry_time).toISOString()
-                : null;
-
-            await supabase
-                .from('orders')
-                .update({
-                    midtrans_transaction_id: paymentResult.transaction_id || null,
-                    payment_code: paymentResult.payment_code || null,
-                    payment_type: paymentResult.payment_type || null,
-                    payment_deadline: paymentDeadline,
-                })
-                .eq('id', order.id)
         }
 
         // 7. Return result to frontend

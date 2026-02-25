@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { X, ShoppingBag, ArrowRight, Loader2, Minus, Plus } from "lucide-react";
 import { useCart } from "@/context/cart-context";
-import { useAuth } from "@/components/auth-provider";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+
+import Image from "next/image";
 
 export function CartSidebar() {
   const {
@@ -16,58 +16,15 @@ export function CartSidebar() {
     increaseQuantity,
     decreaseQuantity,
     removeFromCart,
-    clearCart,
     subtotal,
   } = useCart();
 
-  const { user } = useAuth();
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
-  const handleCheckoutAll = async () => {
-    // Guest users go to checkout page to fill customer info
-    if (!user) {
-      closeCart();
-      router.push("/checkout");
-      return;
-    }
-
-    // Logged-in users: direct payment
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/checkout-cart", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: cartItems.map((item) => ({
-            id: item.id,
-            quantity: item.quantity,
-          })),
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.error || "Gagal membuat order");
-        return;
-      }
-
-      clearCart();
-      closeCart();
-
-      // Redirect based on payment mode
-      if (data.redirect_url && data.gateway_name === "duitku") {
-        window.location.href = data.redirect_url;
-      } else {
-        router.push(`/payment-instruction?orderId=${data.midtrans_order_id}`);
-      }
-    } catch {
-      alert("Terjadi kesalahan. Silakan coba lagi.");
-    } finally {
-      setLoading(false);
-    }
+  const handleCheckoutAll = () => {
+    closeCart();
+    router.push("/checkout");
   };
 
   return (
@@ -75,8 +32,8 @@ export function CartSidebar() {
       {/* Overlay (Liquid Glass) */}
       <div
         className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${isCartOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
+          ? "opacity-100 pointer-events-auto"
+          : "opacity-0 pointer-events-none"
           }`}
         onClick={closeCart}
         aria-hidden="true"

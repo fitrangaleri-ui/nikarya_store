@@ -139,10 +139,11 @@ export async function POST(request: NextRequest) {
       quantityMap.set(item.id, item.quantity);
     }
 
-    // 6. Calculate total price (original subtotal)
+    // 6. Calculate total price using effective selling price
     const originalTotal = products.reduce((sum, p) => {
       const qty = quantityMap.get(p.id) || 1;
-      return sum + Number(p.price) * qty;
+      const effectivePrice = Number(p.discount_price ?? p.price);
+      return sum + effectivePrice * qty;
     }, 0);
 
     // 6b. Promo validation (server-side re-check)
@@ -182,9 +183,10 @@ export async function POST(request: NextRequest) {
         grossAmount: finalTotal,
         items: products.map((product) => {
           const qty = quantityMap.get(product.id) || 1;
+          const effectivePrice = Number(product.discount_price ?? product.price);
           return {
             id: product.id,
-            price: Number(product.price),
+            price: effectivePrice,
             quantity: qty,
             name: product.title.substring(0, 50),
           };
@@ -205,15 +207,16 @@ export async function POST(request: NextRequest) {
     const paymentDeadline = paymentResult.expiry_time
       ? new Date(paymentResult.expiry_time).toISOString()
       : isManual
-        ? new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+        ? new Date(Date.now() + 1 * 60 * 60 * 1000).toISOString()
         : null;
 
     const ordersToInsert = products.map((product) => {
       const qty = quantityMap.get(product.id) || 1;
+      const effectivePrice = Number(product.discount_price ?? product.price);
       return {
         user_id: userId,
         product_id: product.id,
-        total_price: Number(product.price) * qty,
+        total_price: effectivePrice * qty,
         quantity: qty,
         payment_status: isManual ? "PENDING_MANUAL" : "PENDING",
         midtrans_order_id: orderId,

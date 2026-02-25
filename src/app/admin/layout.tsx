@@ -13,6 +13,7 @@ import {
   Menu,
   X,
   Ticket,
+  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -159,6 +160,15 @@ export default function AdminLayout({
               Akun
             </Button>
           </Link>
+
+          <div className="h-px w-full bg-border/50 my-2" />
+
+          <a href="/" target="_blank" rel="noopener noreferrer">
+            <Button variant="ghost" className="w-full justify-start gap-3.5 h-12 rounded-2xl font-bold text-muted-foreground hover:text-primary hover:bg-primary/5 hover:scale-[0.98] transition-all">
+              <ExternalLink className="h-5 w-5" />
+              Lihat Toko
+            </Button>
+          </a>
         </nav>
       </aside>
 

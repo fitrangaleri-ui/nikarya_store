@@ -18,6 +18,9 @@ interface ManualMethodInfo {
 interface InstructionData {
   orderId: string;
   totalAmount: number;
+  originalTotal: number;
+  discountAmount: number;
+  promoCode: string | null;
   paymentStatus: string;
   paymentDeadline: string | null;
   paymentGateway: string | null;
@@ -407,11 +410,10 @@ function PaymentInstructionContent() {
           {/* ── Countdown Timer ── */}
           {!isPaid && data.paymentDeadline && (
             <div
-              className={`rounded-2xl p-6 text-center border shadow-sm transition-all ${
-                isExpired
+              className={`rounded-2xl p-6 text-center border shadow-sm transition-all ${isExpired
                   ? "bg-destructive/5 border-destructive/20"
                   : "bg-background/50 border-border/50"
-              }`}
+                }`}
             >
               {isExpired ? (
                 <>
@@ -461,17 +463,38 @@ function PaymentInstructionContent() {
               <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-2">
                 Jumlah Tagihan
               </p>
+
+              {/* Show discount breakdown if promo was applied */}
+              {data.discountAmount > 0 && (
+                <div className="space-y-1.5 mb-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-muted-foreground">Subtotal</span>
+                    <span className="text-sm font-semibold text-muted-foreground">
+                      Rp {data.originalTotal.toLocaleString("id-ID")}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-primary">
+                      Diskon {data.promoCode ? `(${data.promoCode})` : ""}
+                    </span>
+                    <span className="text-sm font-semibold text-primary">
+                      -Rp {data.discountAmount.toLocaleString("id-ID")}
+                    </span>
+                  </div>
+                  <div className="h-px bg-border/50 my-1" />
+                </div>
+              )}
+
               <div className="flex items-center justify-between">
                 <p className="text-2xl font-black text-primary tracking-tight">
                   Rp {data.totalAmount.toLocaleString("id-ID")}
                 </p>
                 <button
                   onClick={() => handleCopy(String(data.totalAmount), "amount")}
-                  className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all ${
-                    copiedField === "amount"
+                  className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all ${copiedField === "amount"
                       ? "bg-primary text-primary-foreground"
                       : "bg-primary/10 text-primary hover:bg-primary/20"
-                  }`}
+                    }`}
                 >
                   {copiedField === "amount" ? (
                     <>
@@ -506,11 +529,10 @@ function PaymentInstructionContent() {
                 </p>
                 <button
                   onClick={() => handleCopy(data.paymentCode!, "va")}
-                  className={`flex items-center justify-center w-10 h-10 rounded-full transition-all flex-shrink-0 ${
-                    copiedField === "va"
+                  className={`flex items-center justify-center w-10 h-10 rounded-full transition-all flex-shrink-0 ${copiedField === "va"
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted hover:bg-primary/10 hover:text-primary text-muted-foreground"
-                  }`}
+                    }`}
                   title="Salin nomor"
                 >
                   {copiedField === "va" ? (
@@ -566,9 +588,20 @@ function PaymentInstructionContent() {
           {data.manualMethod && !isExpired && !isPaid && (
             <div className="rounded-2xl border border-border/50 bg-background/60 p-5 space-y-5 shadow-sm">
               <div className="flex items-center gap-3 border-b border-border/50 pb-4">
-                <div className="w-10 h-10 rounded-full bg-muted/50 border border-border/50 flex items-center justify-center flex-shrink-0 text-lg">
-                  {data.manualMethod.type === "bank_transfer" ? "🏦" : "📱"}
-                </div>
+                {data.manualMethod.logo_url ? (
+                  <div className="w-10 h-10 rounded-full bg-white border border-border/50 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={data.manualMethod.logo_url}
+                      alt={data.manualMethod.provider_name}
+                      className="w-7 h-7 object-contain"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-muted/50 border border-border/50 flex items-center justify-center flex-shrink-0 text-lg">
+                    {data.manualMethod.type === "bank_transfer" ? "🏦" : "📱"}
+                  </div>
+                )}
                 <p className="text-base font-bold text-foreground">
                   {data.manualMethod.provider_name}
                 </p>
@@ -596,11 +629,10 @@ function PaymentInstructionContent() {
                       onClick={() =>
                         handleCopy(data.manualMethod!.account_number, "account")
                       }
-                      className={`flex items-center justify-center w-10 h-10 rounded-full transition-all flex-shrink-0 ${
-                        copiedField === "account"
+                      className={`flex items-center justify-center w-10 h-10 rounded-full transition-all flex-shrink-0 ${copiedField === "account"
                           ? "bg-primary text-primary-foreground"
                           : "bg-muted hover:bg-primary/10 hover:text-primary text-muted-foreground"
-                      }`}
+                        }`}
                       title="Salin nomor"
                     >
                       {copiedField === "account" ? (
