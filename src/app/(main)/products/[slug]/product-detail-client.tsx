@@ -1,3 +1,9 @@
+// ============================================================
+// FILE: src/app/(main)/products/[slug]/product-detail-client.tsx
+// PERUBAHAN:
+//   - Hapus section "TOMBOL PREVIEW" di kolom kanan
+//   - Tambah demo badge overlay di pojok kanan bawah gambar
+// ============================================================
 "use client";
 
 import { useState } from "react";
@@ -50,15 +56,15 @@ export function ProductDetailClient({
   relatedProducts,
 }: ProductDetailClientProps) {
   const { addToCart, openCart } = useCart();
-  const [isDescOpen, setIsDescOpen] = useState(true); // State untuk Accordion Deskripsi
+  const [isDescOpen, setIsDescOpen] = useState(true);
 
   const finalPrice = product.discount_price || product.price;
   const isDiscounted = !!product.discount_price;
   const discountPercentage = isDiscounted
     ? Math.round(
-      ((product.price - Number(product.discount_price)) / product.price) *
-      100,
-    )
+        ((product.price - Number(product.discount_price)) / product.price) *
+          100,
+      )
     : 0;
 
   const handleAddToCart = () => {
@@ -102,7 +108,9 @@ export function ProductDetailClient({
         {/* ── TWO COLUMN GRID ── */}
         <section className="container mx-auto max-w-6xl px-4 md:px-6">
           <div className="grid gap-8 lg:gap-12 lg:grid-cols-2 items-start">
-            {/* LEFT: IMAGE (Liquid Glass Theme) */}
+            {/* ════════════════════════════════════════════ */}
+            {/* KIRI — Gambar Produk + Demo Badge Overlay    */}
+            {/* ════════════════════════════════════════════ */}
             <div className="relative aspect-square overflow-hidden rounded-3xl bg-muted/20 border border-border/40 shadow-xl shadow-primary/5 group">
               {resolveImageSrc(product.thumbnail_url) ? (
                 <Image
@@ -118,10 +126,40 @@ export function ProductDetailClient({
                   <ShoppingBag className="h-16 w-16 text-muted-foreground/30" />
                 </div>
               )}
+
+              {/* Hover overlay */}
               <div className="absolute inset-0 bg-background/0 group-hover:bg-background/5 transition-colors duration-300 pointer-events-none" />
+
+              {/* ── Demo Badge — pojok kanan bawah gambar ── */}
+              {product.demo_link && (
+                <a
+                  href={product.demo_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="
+                    absolute bottom-3 right-3
+                    inline-flex items-center gap-1.5
+                    px-3 py-1.5
+                    rounded-full
+                    bg-background/80 backdrop-blur-md
+                    border border-border/60
+                    text-xs font-semibold text-foreground
+                    shadow-md
+                    hover:bg-primary hover:text-primary-foreground hover:border-primary
+                    transition-all duration-200
+                    hover:scale-105
+                    z-10
+                  "
+                >
+                  <Eye className="w-3.5 h-3.5 shrink-0" />
+                  Lihat Demo
+                </a>
+              )}
             </div>
 
-            {/* RIGHT: DETAILS */}
+            {/* ════════════════════════════════════════════ */}
+            {/* KANAN — Detail Produk                        */}
+            {/* ════════════════════════════════════════════ */}
             <div className="flex flex-col gap-6">
               {/* 1. JUDUL & BADGE */}
               <div>
@@ -153,26 +191,10 @@ export function ProductDetailClient({
                 </div>
               </div>
 
-              {/* 2. TOMBOL PREVIEW */}
-              {product.demo_link && (
-                <a
-                  href={product.demo_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full"
-                >
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="w-full rounded-full border-border/60 text-muted-foreground hover:bg-primary/5 hover:text-primary hover:border-primary/40 shadow-sm h-12 transition-all"
-                  >
-                    <Eye className="mr-2 h-4 w-4" />
-                    Lihat Preview
-                  </Button>
-                </a>
-              )}
+              {/* ── TOMBOL PREVIEW DIHAPUS dari sini ── */}
+              {/* Fungsi dipindah ke demo badge di pojok kanan bawah gambar */}
 
-              {/* 3. HARGA (Liquid Glass Card) */}
+              {/* 2. HARGA */}
               <div className="rounded-2xl bg-card/50 backdrop-blur-md border border-border/50 px-5 py-4 shadow-sm relative overflow-hidden">
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 blur-[40px] rounded-full pointer-events-none" />
 
@@ -199,7 +221,7 @@ export function ProductDetailClient({
                 )}
               </div>
 
-              {/* 4. BENEFITS CHECKLIST */}
+              {/* 3. BENEFITS CHECKLIST */}
               <div className="space-y-3">
                 {[
                   "File digital — download langsung setelah bayar",
@@ -217,7 +239,7 @@ export function ProductDetailClient({
                 ))}
               </div>
 
-              {/* 5. CTA BUTTONS */}
+              {/* 4. CTA BUTTONS — Desktop */}
               <div className="hidden lg:flex flex-col gap-3.5">
                 <Button
                   onClick={handleAddToCart}
@@ -243,6 +265,7 @@ export function ProductDetailClient({
                 </div>
               </div>
 
+              {/* 4. CTA BUTTONS — Mobile */}
               <div className="flex lg:hidden gap-3 items-center mt-2">
                 <button
                   onClick={handleAddToCart}
@@ -265,7 +288,7 @@ export function ProductDetailClient({
                 </div>
               </div>
 
-              {/* 6. TRUST BADGES */}
+              {/* 5. TRUST BADGES */}
               <div className="grid grid-cols-3 gap-2 pt-6 mt-2 border-t border-border/40">
                 {[
                   { icon: ShieldCheck, label: "Secure", sublabel: "Checkout" },
@@ -314,16 +337,18 @@ export function ProductDetailClient({
                   </h2>
                 </div>
                 <ChevronDown
-                  className={`w-6 h-6 text-muted-foreground transition-transform duration-300 ${isDescOpen ? "rotate-180" : ""
-                    }`}
+                  className={`w-6 h-6 text-muted-foreground transition-transform duration-300 ${
+                    isDescOpen ? "rotate-180" : ""
+                  }`}
                 />
               </button>
 
               <div
-                className={`grid transition-all duration-300 ease-in-out ${isDescOpen
-                  ? "grid-rows-[1fr] opacity-100"
-                  : "grid-rows-[0fr] opacity-0"
-                  }`}
+                className={`grid transition-all duration-300 ease-in-out ${
+                  isDescOpen
+                    ? "grid-rows-[1fr] opacity-100"
+                    : "grid-rows-[0fr] opacity-0"
+                }`}
               >
                 <div className="overflow-hidden">
                   <div className="p-6 md:p-8 pt-0 md:pt-0">
