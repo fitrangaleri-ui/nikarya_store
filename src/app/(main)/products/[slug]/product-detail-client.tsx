@@ -1,8 +1,8 @@
 // ============================================================
 // FILE: src/app/(main)/products/[slug]/product-detail-client.tsx
 // PERUBAHAN:
-//   - Hapus section "TOMBOL PREVIEW" di kolom kanan
-//   - Tambah demo badge overlay di pojok kanan bawah gambar
+//   - Ganti icon ShoppingCart → custom SVG /shopping-cart-add.svg
+//     via next/image di dua tempat: tombol desktop & tombol mobile
 // ============================================================
 "use client";
 
@@ -11,7 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ShoppingBag,
-  ShoppingCart,
+  // ShoppingCart ← dihapus, diganti custom SVG
   Eye,
   Tag,
   Box,
@@ -28,6 +28,28 @@ import { BuyButton } from "./buy-button";
 import { ProductCard } from "@/components/product-card";
 import { useCart } from "@/context/cart-context";
 import { resolveImageSrc } from "@/lib/resolve-image";
+
+// ── Custom Cart Icon ──────────────────────────────────────────
+// SVG inline agar warna bisa dikontrol via "currentColor"
+// (text-primary, group-hover:text-primary-foreground, dll.)
+// Path diambil dari /public/shopping-cart-add.svg
+function CartAddIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      // width & height TIDAK diset di sini — dikontrol sepenuhnya oleh className
+      className={className}
+      aria-hidden="true"
+    >
+      <circle cx="7" cy="22" r="2" />
+      <circle cx="17" cy="22" r="2" />
+      <path d="M23,3H21V1a1,1,0,0,0-2,0V3H17a1,1,0,0,0,0,2h2V7a1,1,0,0,0,2,0V5h2a1,1,0,0,0,0-2Z" />
+      <path d="M21.771,9.726a.994.994,0,0,0-1.162.806A3,3,0,0,1,17.657,13H5.418l-.94-8H13a1,1,0,0,0,0-2H4.242L4.2,2.648A3,3,0,0,0,1.222,0H1A1,1,0,0,0,1,2h.222a1,1,0,0,1,.993.883l1.376,11.7A5,5,0,0,0,8.557,19H19a1,1,0,0,0,0-2H8.557a3,3,0,0,1-2.829-2H17.657a5,5,0,0,0,4.921-4.112A1,1,0,0,0,21.771,9.726Z" />
+    </svg>
+  );
+}
 
 interface ProductData {
   id: string;
@@ -139,16 +161,13 @@ export function ProductDetailClient({
                   className="
                     absolute bottom-3 right-3
                     inline-flex items-center gap-1.5
-                    px-3 py-1.5
-                    rounded-full
+                    px-3 py-1.5 rounded-full
                     bg-background/80 backdrop-blur-md
                     border border-border/60
                     text-xs font-semibold text-foreground
-                    shadow-md
+                    shadow-md z-10
                     hover:bg-primary hover:text-primary-foreground hover:border-primary
-                    transition-all duration-200
-                    hover:scale-105
-                    z-10
+                    transition-all duration-200 hover:scale-105
                   "
                 >
                   <Eye className="w-3.5 h-3.5 shrink-0" />
@@ -190,9 +209,6 @@ export function ProductDetailClient({
                     ))}
                 </div>
               </div>
-
-              {/* ── TOMBOL PREVIEW DIHAPUS dari sini ── */}
-              {/* Fungsi dipindah ke demo badge di pojok kanan bawah gambar */}
 
               {/* 2. HARGA */}
               <div className="rounded-2xl bg-card/50 backdrop-blur-md border border-border/50 px-5 py-4 shadow-sm relative overflow-hidden">
@@ -239,7 +255,10 @@ export function ProductDetailClient({
                 ))}
               </div>
 
-              {/* 4. CTA BUTTONS — Desktop */}
+              {/* ════════════════════════════════════════════ */}
+              {/* 4. CTA BUTTONS — Desktop                     */}
+              {/* Icon keranjang diganti CartAddIcon (SVG)     */}
+              {/* ════════════════════════════════════════════ */}
               <div className="hidden lg:flex flex-col gap-3.5">
                 <Button
                   onClick={handleAddToCart}
@@ -247,7 +266,8 @@ export function ProductDetailClient({
                   variant="outline"
                   className="w-full rounded-full border-primary/40 text-primary bg-primary/5 hover:bg-primary hover:text-primary-foreground shadow-sm h-14 transition-all active:scale-[0.98]"
                 >
-                  <ShoppingCart className="mr-2 h-5 w-5" />
+                  {/* ← CartAddIcon menggantikan ShoppingCart */}
+                  <CartAddIcon className="mr-2 w-5 h-5" />
                   Tambah ke Keranjang
                 </Button>
 
@@ -265,14 +285,18 @@ export function ProductDetailClient({
                 </div>
               </div>
 
-              {/* 4. CTA BUTTONS — Mobile */}
+              {/* ════════════════════════════════════════════ */}
+              {/* 4. CTA BUTTONS — Mobile                      */}
+              {/* Tombol ikon bulat kiri juga pakai CartAddIcon */}
+              {/* ════════════════════════════════════════════ */}
               <div className="flex lg:hidden gap-3 items-center mt-2">
                 <button
                   onClick={handleAddToCart}
                   aria-label="Tambah ke Keranjang"
                   className="flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-2xl border-2 border-primary/20 bg-primary/10 text-primary hover:bg-primary/20 transition-all active:scale-[0.96]"
                 >
-                  <ShoppingCart className="h-6 w-6" />
+                  {/* ← CartAddIcon menggantikan ShoppingCart */}
+                  <CartAddIcon className="w-6 h-6" />
                 </button>
                 <div className="flex-1 h-14">
                   <BuyButton
