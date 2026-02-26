@@ -7,6 +7,7 @@
 //   - Semua fetching, data transform, section lain TIDAK DIUBAH
 // ============================================================
 
+import { PrimaryButton } from "@/components/ui/primary-button";
 import { OrderProcedure } from "@/components/order-procedure";
 import { FaqSection } from "@/components/faq-section";
 import { FeaturesGrid } from "@/components/feature-card";
@@ -109,13 +110,13 @@ export default async function HomePage() {
             {/* ── Kolom Kiri ── */}
             <div
               className="
-              w-full md:w-[60%]
-              px-4 md:pl-[max(2rem,calc((100vw-72rem)/2))] md:pr-12
-              flex flex-col justify-center
-              gap-6 md:gap-7
-              text-left relative z-10
-              pt-12 pb-8 md:pt-0 md:pb-0
-            "
+        w-full md:w-[60%]
+        px-4 md:pl-[max(2rem,calc((100vw-72rem)/2))] md:pr-12
+        flex flex-col justify-center
+        gap-6 md:gap-7
+        text-left relative z-10
+        pt-12 pb-8 md:pt-0 md:pb-0
+      "
             >
               <div className="inline-flex items-center gap-2 w-fit rounded-full px-3.5 py-1.5 bg-primary/10 border border-primary/20 text-primary">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
@@ -149,18 +150,18 @@ export default async function HomePage() {
                 lainnya.
               </p>
 
+              {/* ── CTA Button — PrimaryButton + SVG custom ── */}
               <div className="flex items-center">
                 <Link href="/products">
-                  <Button
-                    variant="brand-pill"
-                    size="lg"
-                    className="w-fit min-w-40 group"
-                  >
+                  <PrimaryButton size="lg" className="w-fit min-w-40 gap-2.5">
                     Lihat Tema
-                    <span className="brand-pill__icon">
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-300" />
-                    </span>
-                  </Button>
+                    <img
+                      src="/arrow-circle-right.svg"
+                      alt=""
+                      aria-hidden="true"
+                      className="w-5 h-5 brightness-0 invert transition-transform duration-300 group-hover:translate-x-0.5"
+                    />
+                  </PrimaryButton>
                 </Link>
               </div>
 
