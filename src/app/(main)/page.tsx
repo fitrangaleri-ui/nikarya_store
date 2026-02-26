@@ -1,3 +1,9 @@
+// ============================================================
+// FILE: src/app/(main)/page.tsx
+// CATATAN: Hanya Hero Section yang diubah.
+//          Semua logika fetching, data, dan konfigurasi tetap.
+// ============================================================
+
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Button } from "@/components/ui/button";
@@ -11,14 +17,12 @@ import {
   FilePen,
   Headset,
   Star,
-  Sparkles,
-  Heart,
   ArrowRight,
-  TrendingUp,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
+// ─── Constants ────────────────────────────────────────────────
 const benefits = [
   { icon: BadgeCheck, title: "Desain Premium", desc: "Kualitas terbaik." },
   { icon: Zap, title: "Akses Instan", desc: "Langsung pakai." },
@@ -26,7 +30,21 @@ const benefits = [
   { icon: Headset, title: "Support Cepat", desc: "Bantuan siap." },
 ];
 
+// Placeholder grid — ganti src dengan thumbnail produk asli jika tersedia
+const heroGridItems = [
+  { id: 1, alt: "Tema Jawa" },
+  { id: 2, alt: "Tema Batik" },
+  { id: 3, alt: "Tema Candi" },
+  { id: 4, alt: "Tema Floral" },
+  { id: 5, alt: "Tema Modern" },
+  { id: 6, alt: "Tema Vintage" },
+  { id: 7, alt: "Tema Passport" },
+  { id: 8, alt: "Tema Bali" },
+  { id: 9, alt: "Tema Pink" },
+];
+
 export default async function HomePage() {
+  // ─── Data Fetching (TIDAK DIUBAH) ─────────────────────────
   const supabase = createAdminClient();
 
   const [
@@ -43,15 +61,11 @@ export default async function HomePage() {
     supabase
       .from("categories")
       .select(
-        `
-        id,
-        name,
-        slug,
-        products (
-          id, title, slug, price, discount_price, thumbnail_url, sku, tags, demo_link,
-          categories(name)
-        )
-      `,
+        `id, name, slug,
+         products (
+           id, title, slug, price, discount_price, thumbnail_url, sku, tags, demo_link,
+           categories(name)
+         )`,
       )
       .not("products", "is", null)
       .limit(4),
@@ -67,6 +81,7 @@ export default async function HomePage() {
       .limit(8),
   ]);
 
+  // ─── Data Transform (TIDAK DIUBAH) ────────────────────────
   const carouselCategories =
     allCategoriesRaw?.map((cat) => ({
       ...cat,
@@ -75,141 +90,258 @@ export default async function HomePage() {
 
   const categoriesWithProducts =
     featuredCategoriesRaw
-      ?.map((cat) => ({
-        ...cat,
-        products: cat.products as any[],
-      }))
+      ?.map((cat) => ({ ...cat, products: cat.products as any[] }))
       .filter((cat) => cat.products.length > 0) || [];
 
   return (
     <main className="min-h-screen bg-background text-foreground pb-24 md:pb-20 overflow-x-hidden">
       <div className="flex flex-col gap-12 md:gap-20">
-        {/* ---------------------------------------------------------- */}
-        {/* HERO (mobile-first & Liquid Glass Theme)                     */}
-        {/* ---------------------------------------------------------- */}
-        <section className="relative w-full pt-6 md:pt-16 px-4 md:px-0">
-          {/* Background Aksen Blur (Blob) */}
-          <div className="absolute top-10 left-1/2 -translate-x-1/2 w-full max-w-3xl h-64 bg-primary/10 blur-[100px] rounded-full pointer-events-none -z-10 animate-blob" />
+        {/* ============================================================ */}
+        {/* HERO SECTION                                                  */}
+        {/* Layout  : 60:40 — teks kiri (60%), video kanan (40%)         */}
+        {/* Font    : font-sans (Inter) dari layout.tsx — konsisten      */}
+        {/* ============================================================ */}
+        <section className="relative w-full overflow-hidden">
+          {/* ── Blob 1: kiri tengah ── */}
+          <div
+            aria-hidden
+            className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-primary/8 blur-[140px] rounded-full pointer-events-none -z-10 animate-blob"
+          />
+          {/* ── Blob 2: kanan atas ── */}
+          <div
+            aria-hidden
+            className="absolute -top-20 right-0 w-[400px] h-[400px] bg-primary/5 blur-[100px] rounded-full pointer-events-none -z-10 animate-blob animation-delay-2000"
+          />
+          {/* ── Blob 3: kiri bawah ── */}
+          <div
+            aria-hidden
+            className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-primary/5 blur-[80px] rounded-full pointer-events-none -z-10 animate-blob animation-delay-4000"
+          />
 
-          <div className="mx-auto max-w-6xl">
-            <div className="flex flex-col md:flex-row md:items-center gap-8 md:gap-16">
-              {/* Text Content (Diurutkan ke atas untuk mobile, kiri di desktop) */}
-              <div className="w-full md:flex-1 md:order-1 relative z-10">
-                <div className="space-y-6 md:space-y-8 text-center md:text-left">
-                  {/* Badge */}
-                  <div className="inline-flex items-center gap-2 border border-border/50 bg-card/60 backdrop-blur-md rounded-full px-4 py-1.5 shadow-sm">
-                    <Sparkles className="w-4 h-4 text-primary" />
-                    <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-foreground/80">
-                      New Collection 2026
+          {/* ── Grid pattern background subtle ── */}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-grid-pattern -z-10 opacity-40"
+          />
+
+          {/* ── Wrapper utama ── */}
+          <div className="flex flex-col md:flex-row md:items-center gap-0 min-h-[calc(100vh-4rem)]">
+            {/* ════════════════════════════════════════ */}
+            {/* KOLOM KIRI — 60% lebar                  */}
+            {/* ════════════════════════════════════════ */}
+            <div
+              className="
+      w-full md:w-[60%]
+      px-4 md:pl-[max(2rem,calc((100vw-72rem)/2))] md:pr-12
+      flex flex-col justify-center
+      gap-6 md:gap-7
+      text-left relative z-10
+      pt-12 pb-8 md:pt-0 md:pb-0
+    "
+            >
+              {/* ── Trust Badge Pill ── */}
+              <div className="inline-flex items-center gap-2 w-fit rounded-full px-3.5 py-1.5 bg-primary/10 border border-primary/20 text-primary">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                <span className="text-[11px] font-bold uppercase tracking-[-0.005em]">
+                  Platform E-Invitation Indonesia
+                </span>
+              </div>
+
+              {/* ── Headline ── */}
+              <div className="space-y-2">
+                <h1
+                  className="
+          font-sans
+          text-4xl sm:text-6xl md:text-[3rem] lg:text-[3.5rem]
+          font-bold text-foreground
+          leading-[1.1] tracking-tight
+        "
+                >
+                  Praktis, Elegan
+                </h1>
+                <h1
+                  className="
+          font-sans
+          text-4xl sm:text-6xl md:text-[3rem] lg:text-[3.5rem]
+          font-bold leading-[1.1] tracking-tight
+          text-transparent bg-clip-text
+          bg-gradient-to-r from-primary via-primary to-primary/50
+        "
+                >
+                  & Penuh Kesan
+                </h1>
+              </div>
+
+              {/* ── Subheading ── */}
+              {/* PERUBAHAN: teks deskripsi diganti sesuai permintaan */}
+              <p className="text-sm md:text-base leading-relaxed text-muted-foreground max-w-[400px]">
+                <strong className="text-foreground font-semibold">
+                  Nikarya Digital
+                </strong>{" "}
+                adalah solusi terbaik buat Anda yang ingin membuat undangan
+                digital. Kami menyediakan layanan jasa pembuatan undangan
+                digital untuk acara{" "}
+                <span className="text-foreground font-medium">pernikahan</span>,{" "}
+                <span className="text-foreground font-medium">ulang tahun</span>
+                , dan{" "}
+                <span className="text-foreground font-medium">
+                  acara khusus
+                </span>{" "}
+                lainnya.
+              </p>
+
+              {/* ── CTA ── */}
+              <div className="flex items-center">
+                <Link href="/products">
+                  {/*
+      PERUBAHAN:
+      - Hapus size="pill" (h-14 terlalu tinggi)
+      - Hapus w-48 (terlalu lebar, tidak natural)
+      - Pakai w-fit agar lebar mengikuti konten
+      - Tambah min-w agar tidak terlalu sempit
+    */}
+                  <Button
+                    variant="brand-pill"
+                    size="lg"
+                    className="w-fit min-w-40 group"
+                  >
+                    Lihat Tema
+                    <span className="brand-pill__icon">
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-300" />
                     </span>
-                  </div>
+                  </Button>
+                </Link>
+              </div>
 
-                  {/* Headline */}
-                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-foreground leading-[1.1] tracking-tight">
-                    Undangan Digital <br className="hidden md:block" />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">
-                      Premium & Elegan
+              {/* ── Stats Row ── */}
+              <div className="flex items-center gap-0 pt-2">
+                {/* Stat 1: Rating */}
+                <div className="flex flex-col gap-1 pr-6 border-r border-border/50">
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Star
+                        key={i}
+                        className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400"
+                      />
+                    ))}
+                  </div>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-xl font-black text-foreground">
+                      4.9
                     </span>
-                  </h1>
-
-                  <p className="text-base md:text-lg leading-relaxed text-muted-foreground max-w-md mx-auto md:mx-0">
-                    Buat momen spesialmu abadi dengan desain modern. Siap pakai
-                    dalam hitungan menit, tanpa ribet.
-                  </p>
-
-                  {/* CTA Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center md:justify-start pt-2">
-                    <Link href="/products" className="w-full sm:w-auto">
-                      <Button
-                        variant="brand"
-                        size="lg"
-                        className="w-full sm:w-auto rounded-full h-14 px-8 shadow-lg shadow-primary/20"
-                      >
-                        Lihat Koleksi
-                      </Button>
-                    </Link>
-
-                    <Link href="#why-us" className="w-full sm:w-auto">
-                      <Button
-                        variant="outline"
-                        size="lg"
-                        className="w-full sm:w-auto rounded-full h-14 px-8 border-border/50 bg-card/50 backdrop-blur-md hover:bg-card/80 shadow-sm"
-                      >
-                        Pelajari Dulu
-                      </Button>
-                    </Link>
-                  </div>
-
-                  {/* Social Proof */}
-                  <div className="pt-4 flex items-center justify-center md:justify-start gap-4 text-xs text-muted-foreground">
-                    <div className="flex items-center gap-2 bg-card/50 backdrop-blur-sm border border-border/50 rounded-full px-4 py-2 shadow-sm">
-                      <div className="flex -space-x-1.5">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                          <Star
-                            key={i}
-                            className="w-4 h-4 fill-yellow-400 text-yellow-400"
-                          />
-                        ))}
-                      </div>
-                      <span className="text-foreground font-bold ml-1">
-                        4.9/5
-                      </span>
-                    </div>
-                    <span className="flex items-center gap-1.5">
-                      <TrendingUp className="w-4 h-4 text-primary" />
-                      <span className="font-semibold text-foreground">
-                        10k+
-                      </span>
-                      Terjual
+                    <span className="text-xs text-muted-foreground">
+                      /5 rating
                     </span>
                   </div>
                 </div>
-              </div>
-
-              {/* Hero Image / Mockup (Liquid Glass Theme) */}
-              <div className="w-full md:flex-1 md:order-2">
-                <div className="relative aspect-[4/5] sm:aspect-[16/15] md:aspect-square w-full overflow-hidden rounded-3xl border border-border/40 bg-card/40 backdrop-blur-xl shadow-2xl shadow-primary/10">
-                  <div className="absolute inset-0 bg-muted/20 flex items-center justify-center p-4 sm:p-8">
-                    {/* Inner Mockup Card */}
-                    <div className="relative w-full max-w-sm aspect-[3/4] bg-background/90 backdrop-blur-2xl border border-border/60 rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center shadow-inner">
-                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6 border border-primary/20">
-                        <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-primary fill-primary/20" />
-                      </div>
-                      <h3 className="font-serif text-3xl sm:text-4xl text-foreground mb-3 tracking-wide">
-                        Sarah & Dimas
-                      </h3>
-                      <p className="text-xs text-primary font-bold uppercase tracking-[0.3em] mb-6">
-                        The Wedding Of
-                      </p>
-                      <div className="w-full max-w-[150px] h-px bg-border/80">
-                        <div className="h-[2px] bg-primary w-1/3 mx-auto -translate-y-[0.5px] rounded-full"></div>
-                      </div>
-                    </div>
+                {/* Stat 2: Pelanggan */}
+                <div className="flex flex-col gap-1 px-6 border-r border-border/50">
+                  <div className="flex items-baseline gap-0.5">
+                    <span className="text-xl font-black text-foreground">
+                      500K
+                    </span>
+                    <span className="text-xs text-primary font-bold">+</span>
                   </div>
-
-                  {/* Tag Bawah */}
-                  <div className="absolute bottom-0 inset-x-0 p-4 sm:p-5 bg-background/80 backdrop-blur-xl border-t border-border/50 flex justify-between items-center rounded-b-3xl">
-                    <div>
-                      <p className="font-bold text-foreground text-sm sm:text-base">
-                        Floral Elegant
-                      </p>
-                      <p className="text-[10px] sm:text-xs text-primary font-medium uppercase tracking-wider mt-0.5">
-                        Best Seller Design
-                      </p>
-                    </div>
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-primary text-primary-foreground shadow-md hover:scale-105 transition-transform cursor-pointer">
-                      <ArrowRight className="w-4 h-4" />
-                    </div>
+                  <span className="text-xs text-muted-foreground">
+                    Mempelai puas
+                  </span>
+                </div>
+                {/* Stat 3: Tema */}
+                <div className="flex flex-col gap-1 pl-6">
+                  <div className="flex items-baseline gap-0.5">
+                    <span className="text-xl font-black text-foreground">
+                      200
+                    </span>
+                    <span className="text-xs text-primary font-bold">+</span>
                   </div>
+                  <span className="text-xs text-muted-foreground">
+                    Pilihan tema
+                  </span>
                 </div>
               </div>
             </div>
+            {/* ════════════════════════════════════════ */}
+            {/* END KOLOM KIRI                           */}
+            {/* ════════════════════════════════════════ */}
+
+            {/* ════════════════════════════════════════ */}
+            {/* KOLOM KANAN — 40% lebar                 */}
+            {/* ════════════════════════════════════════ */}
+            <div className="w-full md:w-[40%] flex items-stretch justify-end relative">
+              {/* ── Dekorasi: lingkaran orbit ── */}
+              <div
+                aria-hidden
+                className="hidden md:block absolute -left-8 top-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-primary/10 pointer-events-none"
+              />
+              <div
+                aria-hidden
+                className="hidden md:block absolute -left-16 top-1/2 -translate-y-1/2 w-96 h-96 rounded-full border border-primary/5 pointer-events-none"
+              />
+
+              {/* ── Container Video 3:4 ── */}
+              <div
+                className="
+        relative w-full
+        aspect-[3/4]
+        md:h-[calc(100vh-4rem)]
+        md:max-h-[720px]
+        overflow-hidden
+        md:rounded-l-[2rem]
+        bg-muted/20
+      "
+              >
+                {/* VIDEO */}
+                <video
+                  className="w-full h-full object-contain"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                >
+                  <source src="/hero-video.webm" type="video/webm" />
+                  <source src="/hero.mp4" type="video/mp4" />
+                  Browser kamu tidak mendukung pemutaran video.
+                </video>
+
+                {/* ── Floating badge: Live Demo ── */}
+                <div className="absolute top-4 left-4 flex items-center gap-2 bg-background/80 backdrop-blur-md border border-border/60 rounded-full px-3 py-1.5 shadow-md">
+                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-[11px] font-semibold text-foreground">
+                    Live Demo
+                  </span>
+                </div>
+
+                {/* ── Floating card: info tema ── */}
+                <div className="absolute bottom-6 left-4 right-4 glass rounded-2xl px-4 py-3 flex items-center justify-between shadow-lg">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-xs font-bold text-foreground">
+                      Floral Elegant Series
+                    </span>
+                    <span className="text-[10px] text-primary font-medium uppercase tracking-wider">
+                      Best Seller · 2.3K Terjual
+                    </span>
+                  </div>
+                  <Link href="/products">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center bg-primary text-primary-foreground hover:scale-110 transition-transform cursor-pointer shadow-md shadow-primary/30">
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            </div>
+            {/* ════════════════════════════════════════ */}
+            {/* END KOLOM KANAN                          */}
+            {/* ════════════════════════════════════════ */}
           </div>
         </section>
+        {/* ============================================================ */}
+        {/* END HERO SECTION                                             */}
+        {/* ============================================================ */}
 
-        {/* ---------------------------------------------------------- */}
-        {/* BENEFITS                                                   */}
-        {/* ---------------------------------------------------------- */}
+        {/* ============================================================ */}
+        {/* BENEFITS SECTION                                              */}
+        {/* ============================================================ */}
         <section
           id="why-us"
           className="mx-auto max-w-6xl px-4 md:px-0 scroll-mt-24"
@@ -233,10 +365,13 @@ export default async function HomePage() {
             ))}
           </div>
         </section>
+        {/* ============================================================ */}
+        {/* END BENEFITS SECTION                                          */}
+        {/* ============================================================ */}
 
-        {/* ---------------------------------------------------------- */}
-        {/* CATEGORY CAROUSEL                                          */}
-        {/* ---------------------------------------------------------- */}
+        {/* ============================================================ */}
+        {/* CATEGORY CAROUSEL SECTION                                     */}
+        {/* ============================================================ */}
         <section className="bg-transparent">
           <div className="mx-auto max-w-6xl px-4 md:px-0">
             <div className="mb-6 md:mb-8 flex items-center gap-3">
@@ -245,14 +380,16 @@ export default async function HomePage() {
                 Kategori Populer
               </h3>
             </div>
-            {/* Menggunakan CategoryCarousel yang sudah dimodifikasi */}
             <CategoryCarousel categories={carouselCategories} />
           </div>
         </section>
+        {/* ============================================================ */}
+        {/* END CATEGORY CAROUSEL SECTION                                 */}
+        {/* ============================================================ */}
 
-        {/* ---------------------------------------------------------- */}
-        {/* LATEST PRODUCTS                                            */}
-        {/* ---------------------------------------------------------- */}
+        {/* ============================================================ */}
+        {/* NEW ARRIVALS SECTION                                          */}
+        {/* ============================================================ */}
         <section className="bg-transparent">
           <div className="mx-auto max-w-6xl px-4 md:px-0">
             <div className="flex items-center gap-3 mb-6 md:mb-8">
@@ -277,10 +414,14 @@ export default async function HomePage() {
             )}
           </div>
         </section>
+        {/* ============================================================ */}
+        {/* END NEW ARRIVALS SECTION                                      */}
+        {/* ============================================================ */}
 
-        {/* ---------------------------------------------------------- */}
-        {/* PRODUCTS BY CATEGORY LOOP                                  */}
-        {/* ---------------------------------------------------------- */}
+        {/* ============================================================ */}
+        {/* PRODUCTS BY CATEGORY SECTION                                  */}
+        {/* Loop tiap kategori yang memiliki produk                       */}
+        {/* ============================================================ */}
         <div className="flex flex-col gap-8 md:gap-12">
           {categoriesWithProducts.map((category) => (
             <CategorySection
@@ -290,8 +431,12 @@ export default async function HomePage() {
             />
           ))}
         </div>
+        {/* ============================================================ */}
+        {/* END PRODUCTS BY CATEGORY SECTION                              */}
+        {/* ============================================================ */}
       </div>
 
+      {/* BottomNav — navigasi mobile (TIDAK DIUBAH) */}
       <BottomNav />
     </main>
   );

@@ -113,7 +113,7 @@ export function ProductCard({ product }: { product: any }) {
               variant="outline"
               size="sm"
               disabled
-              className="w-full rounded-xl text-[10px] md:text-xs border-border/30 text-muted-foreground/50 h-8 md:h-9"
+              className="w-full rounded-full text-[10px] md:text-xs border-border/30 text-muted-foreground/50 h-8 md:h-9"
             >
               <Eye className="mr-1.5 h-3 w-3 md:h-3.5 md:w-3.5" />
               Preview
@@ -126,7 +126,7 @@ export function ProductCard({ product }: { product: any }) {
             <Button
               variant="brand" // Menggunakan variant "brand" yang ada di komponen Button (teal)
               size="sm"
-              className="w-full rounded-xl text-[10px] md:text-xs h-9 md:h-10 transition-transform active:scale-[0.98]"
+              className="w-full rounded-full text-[10px] md:text-xs h-9 md:h-10 transition-transform active:scale-[0.98]"
             >
               <ShoppingCart className="mr-1.5 h-3.5 w-3.5 md:h-4 md:w-4" />
               Order Now
