@@ -1,10 +1,15 @@
+// ============================================================
+// FILE: src/app/(main)/products/[slug]/buy-button.tsx
+// PERUBAHAN: Ganti <Button> shadcn → <PrimaryButton>
+//            Logika & konfigurasi tidak diubah
+// ============================================================
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { ShoppingCart, Loader2 } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/context/cart-context";
+import { PrimaryButton } from "@/components/ui/primary-button";
 
 export function BuyButton({
   product,
@@ -23,10 +28,9 @@ export function BuyButton({
   const { clearCart, addToCart } = useCart();
   const [loading, setLoading] = useState(false);
 
+  // ── Handler — tidak diubah ───────────────────────────────
   const handleBuy = () => {
     setLoading(true);
-
-    // Use the same cart pipeline: clear cart → add this product → go to checkout
     clearCart();
     addToCart({
       id: product.id,
@@ -39,23 +43,15 @@ export function BuyButton({
   };
 
   return (
-    <Button
+    <PrimaryButton
+      size="lg"
+      loading={loading}
       onClick={handleBuy}
       disabled={loading}
-      size="lg"
-      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm rounded-full hover:shadow-[0_6px_20px_rgba(13,148,136,0.23)] hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.98] disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none h-full"
+      className="h-full"
     >
-      {loading ? (
-        <>
-          <Loader2 className="mr-2.5 h-5 w-5 animate-spin" />
-          Memproses...
-        </>
-      ) : (
-        <>
-          {showIcon && <ShoppingCart className="mr-2.5 h-5 w-5" />}
-          Beli Sekarang
-        </>
-      )}
-    </Button>
+      {!loading && showIcon && <ShoppingCart className="h-5 w-5" />}
+      Beli Sekarang
+    </PrimaryButton>
   );
 }

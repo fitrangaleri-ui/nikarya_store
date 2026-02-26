@@ -1,8 +1,9 @@
 // ============================================================
 // FILE: src/app/(main)/products/[slug]/product-detail-client.tsx
-// PERUBAHAN:
-//   - Ganti icon ShoppingCart → custom SVG /shopping-cart-add.svg
-//     via next/image di dua tempat: tombol desktop & tombol mobile
+// PERUBAHAN: Ganti <Button> shadcn pada CTA desktop → PrimaryButton
+//            Tombol "Tambah ke Keranjang" outline tetap pakai
+//            <Button> shadcn karena variant-nya berbeda (outline)
+//            Logika & konfigurasi tidak diubah
 // ============================================================
 "use client";
 
@@ -11,7 +12,6 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ShoppingBag,
-  // ShoppingCart ← dihapus, diganti custom SVG
   Eye,
   Tag,
   Box,
@@ -24,22 +24,19 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PrimaryButton } from "@/components/ui/primary-button";
 import { BuyButton } from "./buy-button";
 import { ProductCard } from "@/components/product-card";
 import { useCart } from "@/context/cart-context";
 import { resolveImageSrc } from "@/lib/resolve-image";
 
-// ── Custom Cart Icon ──────────────────────────────────────────
-// SVG inline agar warna bisa dikontrol via "currentColor"
-// (text-primary, group-hover:text-primary-foreground, dll.)
-// Path diambil dari /public/shopping-cart-add.svg
+// ── Custom Cart Icon — tidak diubah ──────────────────────────
 function CartAddIcon({ className }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="currentColor"
-      // width & height TIDAK diset di sini — dikontrol sepenuhnya oleh className
       className={className}
       aria-hidden="true"
     >
@@ -80,6 +77,7 @@ export function ProductDetailClient({
   const { addToCart, openCart } = useCart();
   const [isDescOpen, setIsDescOpen] = useState(true);
 
+  // ── Kalkulasi harga — tidak diubah ───────────────────────
   const finalPrice = product.discount_price || product.price;
   const isDiscounted = !!product.discount_price;
   const discountPercentage = isDiscounted
@@ -89,6 +87,7 @@ export function ProductDetailClient({
       )
     : 0;
 
+  // ── Handler — tidak diubah ───────────────────────────────
   const handleAddToCart = () => {
     addToCart({
       id: product.id,
@@ -131,7 +130,7 @@ export function ProductDetailClient({
         <section className="container mx-auto max-w-6xl px-4 md:px-6">
           <div className="grid gap-8 lg:gap-12 lg:grid-cols-2 items-start">
             {/* ════════════════════════════════════════════ */}
-            {/* KIRI — Gambar Produk + Demo Badge Overlay    */}
+            {/* KIRI — Gambar Produk                         */}
             {/* ════════════════════════════════════════════ */}
             <div className="relative aspect-square overflow-hidden rounded-3xl bg-muted/20 border border-border/40 shadow-xl shadow-primary/5 group">
               {resolveImageSrc(product.thumbnail_url) ? (
@@ -148,11 +147,7 @@ export function ProductDetailClient({
                   <ShoppingBag className="h-16 w-16 text-muted-foreground/30" />
                 </div>
               )}
-
-              {/* Hover overlay */}
               <div className="absolute inset-0 bg-background/0 group-hover:bg-background/5 transition-colors duration-300 pointer-events-none" />
-
-              {/* ── Demo Badge — pojok kanan bawah gambar ── */}
               {product.demo_link && (
                 <a
                   href={product.demo_link}
@@ -197,23 +192,21 @@ export function ProductDetailClient({
                       {product.categories.name}
                     </span>
                   )}
-                  {product.tags &&
-                    product.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="inline-flex items-center rounded-full bg-card/60 backdrop-blur-md px-3 py-1.5 text-[11px] font-medium text-muted-foreground border border-border/50 tracking-wide uppercase shadow-sm"
-                      >
-                        <Tag className="mr-1.5 h-3 w-3" />
-                        {tag}
-                      </span>
-                    ))}
+                  {product.tags?.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center rounded-full bg-card/60 backdrop-blur-md px-3 py-1.5 text-[11px] font-medium text-muted-foreground border border-border/50 tracking-wide uppercase shadow-sm"
+                    >
+                      <Tag className="mr-1.5 h-3 w-3" />
+                      {tag}
+                    </span>
+                  ))}
                 </div>
               </div>
 
               {/* 2. HARGA */}
               <div className="rounded-2xl bg-card/50 backdrop-blur-md border border-border/50 px-5 py-4 shadow-sm relative overflow-hidden">
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 blur-[40px] rounded-full pointer-events-none" />
-
                 {isDiscounted ? (
                   <div className="flex items-center justify-between relative z-10">
                     <div className="flex flex-col">
@@ -237,7 +230,7 @@ export function ProductDetailClient({
                 )}
               </div>
 
-              {/* 3. BENEFITS CHECKLIST */}
+              {/* 3. BENEFITS */}
               <div className="space-y-3">
                 {[
                   "File digital — download langsung setelah bayar",
@@ -257,20 +250,20 @@ export function ProductDetailClient({
 
               {/* ════════════════════════════════════════════ */}
               {/* 4. CTA BUTTONS — Desktop                     */}
-              {/* Icon keranjang diganti CartAddIcon (SVG)     */}
               {/* ════════════════════════════════════════════ */}
               <div className="hidden lg:flex flex-col gap-3.5">
+                {/* Tambah ke Keranjang — tetap outline <Button> */}
                 <Button
                   onClick={handleAddToCart}
                   size="lg"
                   variant="outline"
                   className="w-full rounded-full border-primary/40 text-primary bg-primary/5 hover:bg-primary hover:text-primary-foreground shadow-sm h-14 transition-all active:scale-[0.98]"
                 >
-                  {/* ← CartAddIcon menggantikan ShoppingCart */}
                   <CartAddIcon className="mr-2 w-5 h-5" />
                   Tambah ke Keranjang
                 </Button>
 
+                {/* Beli Sekarang — PrimaryButton via BuyButton */}
                 <div className="h-14">
                   <BuyButton
                     product={{
@@ -287,17 +280,18 @@ export function ProductDetailClient({
 
               {/* ════════════════════════════════════════════ */}
               {/* 4. CTA BUTTONS — Mobile                      */}
-              {/* Tombol ikon bulat kiri juga pakai CartAddIcon */}
               {/* ════════════════════════════════════════════ */}
               <div className="flex lg:hidden gap-3 items-center mt-2">
+                {/* Tombol ikon keranjang bulat */}
                 <button
                   onClick={handleAddToCart}
                   aria-label="Tambah ke Keranjang"
                   className="flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-2xl border-2 border-primary/20 bg-primary/10 text-primary hover:bg-primary/20 transition-all active:scale-[0.96]"
                 >
-                  {/* ← CartAddIcon menggantikan ShoppingCart */}
                   <CartAddIcon className="w-6 h-6" />
                 </button>
+
+                {/* Beli Sekarang — PrimaryButton via BuyButton */}
                 <div className="flex-1 h-14">
                   <BuyButton
                     product={{
@@ -366,7 +360,6 @@ export function ProductDetailClient({
                   }`}
                 />
               </button>
-
               <div
                 className={`grid transition-all duration-300 ease-in-out ${
                   isDescOpen
