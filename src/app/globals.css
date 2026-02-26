@@ -478,9 +478,6 @@
 
 /* ─────────────────────────────────────────────────────────── */
 /* Outline pulse animation untuk FeatureCard aktif             */
-/* POSISI: root level — setelah @media, di luar semua block    */
-/* PERUBAHAN: color-mix menggantikan hsl(var()) yang tidak     */
-/* valid karena --primary bertipe oklch, bukan HSL channel     */
 /* ─────────────────────────────────────────────────────────── */
 @keyframes outline-pulse {
   0%,

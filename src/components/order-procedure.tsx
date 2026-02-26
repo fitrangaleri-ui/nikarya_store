@@ -1,4 +1,4 @@
-import React from "react";
+// src/components/order-procedure.tsx
 
 const steps = [
   {
@@ -35,50 +35,64 @@ const steps = [
 
 export function OrderProcedure() {
   return (
-    <section className="w-full bg-primary py-12 md:py-24 relative overflow-hidden">
-      {/* ── Background Dekorasi Ambient ── */}
+    <section className="w-full bg-primary py-16 md:py-28 relative overflow-hidden">
+      {/* ── Dekorasi ambient ── */}
       <div
         aria-hidden
-        className="absolute top-0 left-0 w-[500px] h-[500px] bg-primary-foreground/10 rounded-full blur-[140px] pointer-events-none -translate-x-1/2 -translate-y-1/2"
+        className="absolute top-0 left-0 w-[600px] h-[600px] bg-primary-foreground/8 rounded-full blur-[160px] pointer-events-none -translate-x-1/2 -translate-y-1/2"
       />
       <div
         aria-hidden
-        className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-primary-foreground/10 rounded-full blur-[120px] pointer-events-none translate-x-1/3 translate-y-1/3"
+        className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-primary-foreground/8 rounded-full blur-[140px] pointer-events-none translate-x-1/3 translate-y-1/3"
       />
+
+      {/* ── Angka raksasa dekoratif di background ── */}
+      <div
+        aria-hidden
+        className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden"
+      >
+        <span
+          className="text-[20rem] font-black leading-none"
+          style={{ color: "rgba(255,255,255,0.025)" }}
+        >
+          6
+        </span>
+      </div>
 
       <div className="mx-auto max-w-5xl px-5 md:px-0 relative z-10">
         {/* ── Section Header ── */}
-        <div className="text-center mb-10 md:mb-20">
-          <span className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground/90 text-[11px] font-bold uppercase tracking-widest mb-5 shadow-sm backdrop-blur-sm">
+        <div className="text-center mb-14 md:mb-24">
+          <span className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground/90 text-[11px] font-bold uppercase tracking-widest mb-5 backdrop-blur-sm">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-foreground opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-foreground"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-foreground opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-foreground" />
             </span>
             Cara Pemesanan
           </span>
           <h2 className="text-3xl md:text-5xl font-extrabold text-primary-foreground tracking-tight mb-4">
             Prosedur Pemesanan
           </h2>
-          <p className="text-sm md:text-base text-primary-foreground/70 max-w-lg mx-auto leading-relaxed">
+          <p className="text-sm md:text-base text-primary-foreground/65 max-w-lg mx-auto leading-relaxed">
             Langkah mudah dari konsultasi hingga undangan dikirim. Kami pastikan
             prosesnya lancar dan menyenangkan.
           </p>
         </div>
 
         {/* ══════════════════════════════════════════════════════ */}
-        {/* TIMELINE DESKTOP — Zigzag Alternating Minimalist     */}
+        {/* DESKTOP — Zigzag dengan angka besar sebagai node      */}
         {/* ══════════════════════════════════════════════════════ */}
         <div className="hidden md:block relative">
-          {/* ── Garis vertikal tengah glowing ── */}
+          {/* Garis vertikal — gradient dua warna */}
           <div
-            className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2"
+            className="absolute left-1/2 top-8 bottom-8 -translate-x-1/2"
             style={{
+              width: "1px",
               background:
-                "linear-gradient(to bottom, transparent, rgba(255,255,255,0.3) 15%, rgba(255,255,255,0.3) 85%, transparent)",
+                "linear-gradient(to bottom, transparent, rgba(255,255,255,0.15) 10%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.15) 90%, transparent)",
             }}
           />
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col">
             {steps.map((step, idx) => {
               const isLeft = idx % 2 === 0;
               const isLast = idx === steps.length - 1;
@@ -86,19 +100,43 @@ export function OrderProcedure() {
               return (
                 <div
                   key={step.number}
-                  className={`relative flex items-center gap-0 ${isLast ? "" : "pb-10"}`}
+                  className={`relative flex items-center ${isLast ? "" : "pb-6"}`}
                 >
                   {/* ── Sisi kiri ── */}
                   <div
-                    className={`w-[calc(50%-2.5rem)] ${isLeft ? "pr-10" : "pl-10"} flex ${isLeft ? "justify-end" : "justify-start"}`}
+                    className={`w-[calc(50%-2.5rem)] flex ${isLeft ? "justify-end pr-12" : "justify-start pl-12"}`}
                   >
                     {isLeft && <StepCardDesktop step={step} align="right" />}
                   </div>
 
-                  {/* ── Node tengah (Angka sebagai Aksen) ── */}
-                  <div className="shrink-0 w-20 flex flex-col items-center relative z-10 group">
-                    <div className="w-14 h-14 rounded-full flex items-center justify-center bg-primary-foreground shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-transform duration-300 group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]">
-                      <span className="text-xl font-black text-primary leading-none">
+                  {/* ── Node: lingkaran + angka besar ── */}
+                  <div className="shrink-0 w-20 flex items-center justify-center relative z-10">
+                    {/* Ring luar */}
+                    <div
+                      className="absolute w-20 h-20 rounded-full"
+                      style={{
+                        background:
+                          "radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)",
+                      }}
+                    />
+                    {/* Lingkaran utama */}
+                    <div
+                      className="
+                        relative w-16 h-16 rounded-full
+                        flex items-center justify-center
+                        transition-all duration-500
+                        hover:scale-110
+                        group cursor-default
+                      "
+                      style={{
+                        background:
+                          "linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.08) 100%)",
+                        border: "1px solid rgba(255,255,255,0.25)",
+                        boxShadow:
+                          "0 0 0 4px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.2)",
+                      }}
+                    >
+                      <span className="text-3xl font-black text-primary-foreground leading-none">
                         {step.number}
                       </span>
                     </div>
@@ -106,7 +144,7 @@ export function OrderProcedure() {
 
                   {/* ── Sisi kanan ── */}
                   <div
-                    className={`w-[calc(50%-2.5rem)] ${isLeft ? "pl-10" : "pr-10"} flex ${isLeft ? "justify-start" : "justify-end"}`}
+                    className={`w-[calc(50%-2.5rem)] flex ${isLeft ? "justify-start pl-12" : "justify-end pr-12"}`}
                   >
                     {!isLeft && <StepCardDesktop step={step} align="left" />}
                   </div>
@@ -117,43 +155,68 @@ export function OrderProcedure() {
         </div>
 
         {/* ══════════════════════════════════════════════════════ */}
-        {/* TIMELINE MOBILE — 1 Baris Horizontal (Carousel)      */}
+        {/* MOBILE — Horizontal Carousel                          */}
         {/* ══════════════════════════════════════════════════════ */}
         <div className="md:hidden relative -mx-5 px-5">
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 pt-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
-            {steps.map((step) => {
-              return (
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-6 pt-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+            {steps.map((step) => (
+              <div
+                key={step.number}
+                className="shrink-0 w-[240px] snap-center relative flex flex-col rounded-2xl p-5 overflow-hidden"
+                style={{
+                  background:
+                    "linear-gradient(135deg, rgba(255,255,255,0.13) 0%, rgba(255,255,255,0.06) 100%)",
+                  border: "1px solid rgba(255,255,255,0.18)",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15)",
+                }}
+              >
+                {/* Shimmer pojok kanan bawah */}
                 <div
-                  key={step.number}
-                  className="shrink-0 w-[325px] snap-center relative flex flex-row items-center gap-5 rounded-2xl p-5 bg-primary-foreground/15 border-4 border-primary-foreground/20 active:bg-primary-foreground/20 transition-colors duration-200"
-                >
-                  {/* Sisi Kiri: Angka sebagai Aksen */}
-                  <div className="shrink-0 w-12 h-12 rounded-full bg-primary-foreground flex items-center justify-center shadow-lg">
-                    <span className="text-xl font-black text-primary">
-                      {step.number}
-                    </span>
-                  </div>
+                  aria-hidden
+                  className="absolute -bottom-6 -right-6 w-20 h-20 rounded-full pointer-events-none"
+                  style={{
+                    background:
+                      "radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)",
+                  }}
+                />
 
-                  {/* Sisi Kanan: Konten Teks */}
-                  <div className="flex-1 flex flex-col pr-2">
-                    <h4 className="text-[16px] font-bold text-primary-foreground mb-1.5 leading-tight">
-                      {step.title}
-                    </h4>
-                    <p className="text-[13px] text-primary-foreground/70 leading-snug line-clamp-2">
-                      {step.desc}
-                    </p>
-                  </div>
+                {/* Angka besar — ghost dekoratif di background card */}
+                <div
+                  aria-hidden
+                  className="absolute -right-2 -bottom-3 leading-none font-black select-none pointer-events-none"
+                  style={{
+                    fontSize: "5rem",
+                    color: "rgba(255,255,255,0.07)",
+                    lineHeight: 1,
+                  }}
+                >
+                  {step.number}
                 </div>
-              );
-            })}
+
+                {/* Angka aktif kiri atas */}
+                <span
+                  className="text-5xl font-black leading-none mb-4 relative z-10"
+                  style={{ color: "rgba(255,255,255,0.9)" }}
+                >
+                  {String(step.number).padStart(2, "0")}
+                </span>
+
+                <h4 className="text-sm font-bold text-primary-foreground mb-2 leading-tight relative z-10">
+                  {step.title}
+                </h4>
+                <p className="text-xs text-primary-foreground/65 leading-relaxed relative z-10">
+                  {step.desc}
+                </p>
+              </div>
+            ))}
           </div>
 
-          {/* Indikator scroll kecil */}
-          <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 pointer-events-none">
+          {/* Dot indikator */}
+          <div className="flex justify-center gap-1.5 pointer-events-none">
             {steps.map((_, i) => (
               <div
                 key={i}
-                className="w-1.5 h-1.5 rounded-full bg-primary-foreground/30"
+                className="w-1.5 h-1.5 rounded-full bg-primary-foreground/25"
               />
             ))}
           </div>
@@ -163,7 +226,7 @@ export function OrderProcedure() {
   );
 }
 
-// ── Sub-komponen card untuk desktop timeline ───────────────────
+// ── StepCard Desktop ───────────────────────────────────────────
 function StepCardDesktop({
   step,
   align,
@@ -174,23 +237,55 @@ function StepCardDesktop({
   return (
     <div
       className={`
-        group max-w-[400px] w-full
+        group max-w-[300px] w-full relative overflow-hidden
         rounded-2xl p-6
-        bg-primary-foreground/10 hover:bg-primary-foreground/15
-        border border-primary-foreground/20 hover:border-primary-foreground/40
-        backdrop-blur-md
         transition-all duration-300 ease-out
-        hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-foreground/10
+        hover:-translate-y-1.5
         ${align === "right" ? "text-right" : "text-left"}
       `}
       style={{
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1)",
+        background:
+          "linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 100%)",
+        border: "1px solid rgba(255,255,255,0.18)",
+        boxShadow:
+          "inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 24px rgba(0,0,0,0.1)",
       }}
     >
-      <h4 className="text-xl font-bold text-primary-foreground mb-2 group-hover:text-white transition-colors">
+      {/* Shimmer pojok */}
+      <div
+        aria-hidden
+        className={`
+          absolute w-24 h-24 rounded-full pointer-events-none
+          transition-opacity duration-300 opacity-0 group-hover:opacity-100
+          ${align === "right" ? "-top-6 -right-6" : "-top-6 -left-6"}
+        `}
+        style={{
+          background:
+            "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
+        }}
+      />
+
+      {/* Angka ghost dekoratif */}
+      <div
+        aria-hidden
+        className={`
+          absolute -bottom-4 font-black leading-none select-none pointer-events-none
+          transition-opacity duration-300 opacity-60 group-hover:opacity-100
+          ${align === "right" ? "-left-2" : "-right-2"}
+        `}
+        style={{
+          fontSize: "6rem",
+          color: "rgba(255,255,255,0.06)",
+          lineHeight: 1,
+        }}
+      >
+        {step.number}
+      </div>
+
+      <h4 className="text-base font-bold text-primary-foreground mb-2 relative z-10 group-hover:text-white transition-colors">
         {step.title}
       </h4>
-      <p className="text-sm text-primary-foreground/75 leading-relaxed group-hover:text-primary-foreground/90 transition-colors">
+      <p className="text-sm text-primary-foreground/70 leading-relaxed relative z-10 group-hover:text-primary-foreground/90 transition-colors">
         {step.desc}
       </p>
     </div>
