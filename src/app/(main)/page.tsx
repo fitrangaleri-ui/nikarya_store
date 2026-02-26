@@ -1,9 +1,13 @@
 // ============================================================
 // FILE: src/app/(main)/page.tsx
-// CATATAN: Hanya Hero Section yang diubah.
-//          Semua logika fetching, data, dan konfigurasi tetap.
+// PERUBAHAN:
+//   - Hapus const features[] — dipindah ke feature-card.tsx
+//   - Hapus import lucide icons untuk features
+//   - Ganti <FeatureCard> loop → <FeaturesGrid />
+//   - Semua fetching, data transform, section lain TIDAK DIUBAH
 // ============================================================
 
+import { FeaturesGrid } from "@/components/feature-card";
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Button } from "@/components/ui/button";
@@ -11,37 +15,17 @@ import { BottomNav } from "@/components/bottom-nav";
 import { ProductCard } from "@/components/product-card";
 import { CategoryCarousel } from "@/components/category-carousel";
 import { CategorySection } from "@/components/category-section";
-import {
-  BadgeCheck,
-  Zap,
-  FilePen,
-  Headset,
-  Star,
-  ArrowRight,
-} from "lucide-react";
+import { Star, ArrowRight } from "lucide-react";
+// ↑ Icons untuk features (Users, Music, MapPin, dst) DIHAPUS dari sini
+//   karena sudah dipindah ke src/components/feature-card.tsx
 
 export const dynamic = "force-dynamic";
 
-// ─── Constants ────────────────────────────────────────────────
-const benefits = [
-  { icon: BadgeCheck, title: "Desain Premium", desc: "Kualitas terbaik." },
-  { icon: Zap, title: "Akses Instan", desc: "Langsung pakai." },
-  { icon: FilePen, title: "Mudah Diedit", desc: "Tanpa coding." },
-  { icon: Headset, title: "Support Cepat", desc: "Bantuan siap." },
-];
-
-// Placeholder grid — ganti src dengan thumbnail produk asli jika tersedia
-const heroGridItems = [
-  { id: 1, alt: "Tema Jawa" },
-  { id: 2, alt: "Tema Batik" },
-  { id: 3, alt: "Tema Candi" },
-  { id: 4, alt: "Tema Floral" },
-  { id: 5, alt: "Tema Modern" },
-  { id: 6, alt: "Tema Vintage" },
-  { id: 7, alt: "Tema Passport" },
-  { id: 8, alt: "Tema Bali" },
-  { id: 9, alt: "Tema Pink" },
-];
+// ─── const features[] DIHAPUS ─────────────────────────────────
+// Dipindah sepenuhnya ke src/components/feature-card.tsx
+// agar tidak terjadi error passing class/function dari
+// Server Component ke Client Component
+// ──────────────────────────────────────────────────────────────
 
 export default async function HomePage() {
   // ─── Data Fetching (TIDAK DIUBAH) ─────────────────────────
@@ -99,47 +83,38 @@ export default async function HomePage() {
         {/* ============================================================ */}
         {/* HERO SECTION                                                  */}
         {/* Layout  : 60:40 — teks kiri (60%), video kanan (40%)         */}
-        {/* Font    : font-sans (Inter) dari layout.tsx — konsisten      */}
         {/* ============================================================ */}
         <section className="relative w-full overflow-hidden">
-          {/* ── Blob 1: kiri tengah ── */}
+          {/* ── Blob dekoratif ── */}
           <div
             aria-hidden
             className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-primary/8 blur-[140px] rounded-full pointer-events-none -z-10 animate-blob"
           />
-          {/* ── Blob 2: kanan atas ── */}
           <div
             aria-hidden
             className="absolute -top-20 right-0 w-[400px] h-[400px] bg-primary/5 blur-[100px] rounded-full pointer-events-none -z-10 animate-blob animation-delay-2000"
           />
-          {/* ── Blob 3: kiri bawah ── */}
           <div
             aria-hidden
             className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-primary/5 blur-[80px] rounded-full pointer-events-none -z-10 animate-blob animation-delay-4000"
           />
-
-          {/* ── Grid pattern background subtle ── */}
           <div
             aria-hidden
             className="absolute inset-0 bg-grid-pattern -z-10 opacity-40"
           />
 
-          {/* ── Wrapper utama ── */}
           <div className="flex flex-col md:flex-row md:items-center gap-0 min-h-[calc(100vh-4rem)]">
-            {/* ════════════════════════════════════════ */}
-            {/* KOLOM KIRI — 60% lebar                  */}
-            {/* ════════════════════════════════════════ */}
+            {/* ── Kolom Kiri ── */}
             <div
               className="
-      w-full md:w-[60%]
-      px-4 md:pl-[max(2rem,calc((100vw-72rem)/2))] md:pr-12
-      flex flex-col justify-center
-      gap-6 md:gap-7
-      text-left relative z-10
-      pt-12 pb-8 md:pt-0 md:pb-0
-    "
+              w-full md:w-[60%]
+              px-4 md:pl-[max(2rem,calc((100vw-72rem)/2))] md:pr-12
+              flex flex-col justify-center
+              gap-6 md:gap-7
+              text-left relative z-10
+              pt-12 pb-8 md:pt-0 md:pb-0
+            "
             >
-              {/* ── Trust Badge Pill ── */}
               <div className="inline-flex items-center gap-2 w-fit rounded-full px-3.5 py-1.5 bg-primary/10 border border-primary/20 text-primary">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                 <span className="text-[11px] font-bold uppercase tracking-[-0.005em]">
@@ -147,33 +122,15 @@ export default async function HomePage() {
                 </span>
               </div>
 
-              {/* ── Headline ── */}
               <div className="space-y-2">
-                <h1
-                  className="
-          font-sans
-          text-4xl sm:text-6xl md:text-[3rem] lg:text-[3.5rem]
-          font-bold text-foreground
-          leading-[1.1] tracking-tight
-        "
-                >
+                <h1 className="font-sans text-4xl sm:text-6xl md:text-[3rem] lg:text-[3.5rem] font-bold text-foreground leading-[1.1] tracking-tight">
                   Praktis, Elegan
                 </h1>
-                <h1
-                  className="
-          font-sans
-          text-4xl sm:text-6xl md:text-[3rem] lg:text-[3.5rem]
-          font-bold leading-[1.1] tracking-tight
-          text-transparent bg-clip-text
-          bg-gradient-to-r from-primary via-primary to-primary/50
-        "
-                >
+                <h1 className="font-sans text-4xl sm:text-6xl md:text-[3rem] lg:text-[3.5rem] font-bold leading-[1.1] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary to-primary/50">
                   & Penuh Kesan
                 </h1>
               </div>
 
-              {/* ── Subheading ── */}
-              {/* PERUBAHAN: teks deskripsi diganti sesuai permintaan */}
               <p className="text-sm md:text-base leading-relaxed text-muted-foreground max-w-[400px]">
                 <strong className="text-foreground font-semibold">
                   Nikarya Digital
@@ -190,16 +147,8 @@ export default async function HomePage() {
                 lainnya.
               </p>
 
-              {/* ── CTA ── */}
               <div className="flex items-center">
                 <Link href="/products">
-                  {/*
-      PERUBAHAN:
-      - Hapus size="pill" (h-14 terlalu tinggi)
-      - Hapus w-48 (terlalu lebar, tidak natural)
-      - Pakai w-fit agar lebar mengikuti konten
-      - Tambah min-w agar tidak terlalu sempit
-    */}
                   <Button
                     variant="brand-pill"
                     size="lg"
@@ -213,9 +162,7 @@ export default async function HomePage() {
                 </Link>
               </div>
 
-              {/* ── Stats Row ── */}
               <div className="flex items-center gap-0 pt-2">
-                {/* Stat 1: Rating */}
                 <div className="flex flex-col gap-1 pr-6 border-r border-border/50">
                   <div className="flex items-center gap-1">
                     {[1, 2, 3, 4, 5].map((i) => (
@@ -234,7 +181,6 @@ export default async function HomePage() {
                     </span>
                   </div>
                 </div>
-                {/* Stat 2: Pelanggan */}
                 <div className="flex flex-col gap-1 px-6 border-r border-border/50">
                   <div className="flex items-baseline gap-0.5">
                     <span className="text-xl font-black text-foreground">
@@ -246,7 +192,6 @@ export default async function HomePage() {
                     Mempelai puas
                   </span>
                 </div>
-                {/* Stat 3: Tema */}
                 <div className="flex flex-col gap-1 pl-6">
                   <div className="flex items-baseline gap-0.5">
                     <span className="text-xl font-black text-foreground">
@@ -260,15 +205,10 @@ export default async function HomePage() {
                 </div>
               </div>
             </div>
-            {/* ════════════════════════════════════════ */}
-            {/* END KOLOM KIRI                           */}
-            {/* ════════════════════════════════════════ */}
+            {/* ── End Kolom Kiri ── */}
 
-            {/* ════════════════════════════════════════ */}
-            {/* KOLOM KANAN — 40% lebar                 */}
-            {/* ════════════════════════════════════════ */}
+            {/* ── Kolom Kanan ── */}
             <div className="w-full md:w-[40%] flex items-stretch justify-end relative">
-              {/* ── Dekorasi: lingkaran orbit ── */}
               <div
                 aria-hidden
                 className="hidden md:block absolute -left-8 top-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-primary/10 pointer-events-none"
@@ -277,20 +217,7 @@ export default async function HomePage() {
                 aria-hidden
                 className="hidden md:block absolute -left-16 top-1/2 -translate-y-1/2 w-96 h-96 rounded-full border border-primary/5 pointer-events-none"
               />
-
-              {/* ── Container Video 3:4 ── */}
-              <div
-                className="
-        relative w-full
-        aspect-[3/4]
-        md:h-[calc(100vh-4rem)]
-        md:max-h-[720px]
-        overflow-hidden
-        md:rounded-l-[2rem]
-        bg-muted/20
-      "
-              >
-                {/* VIDEO */}
+              <div className="relative w-full aspect-[3/4] md:h-[calc(100vh-4rem)] md:max-h-[720px] overflow-hidden md:rounded-l-[2rem] bg-muted/20">
                 <video
                   className="w-full h-full object-contain"
                   autoPlay
@@ -303,16 +230,12 @@ export default async function HomePage() {
                   <source src="/hero.mp4" type="video/mp4" />
                   Browser kamu tidak mendukung pemutaran video.
                 </video>
-
-                {/* ── Floating badge: Live Demo ── */}
                 <div className="absolute top-4 left-4 flex items-center gap-2 bg-background/80 backdrop-blur-md border border-border/60 rounded-full px-3 py-1.5 shadow-md">
                   <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                   <span className="text-[11px] font-semibold text-foreground">
                     Live Demo
                   </span>
                 </div>
-
-                {/* ── Floating card: info tema ── */}
                 <div className="absolute bottom-6 left-4 right-4 glass rounded-2xl px-4 py-3 flex items-center justify-between shadow-lg">
                   <div className="flex flex-col gap-0.5">
                     <span className="text-xs font-bold text-foreground">
@@ -330,9 +253,7 @@ export default async function HomePage() {
                 </div>
               </div>
             </div>
-            {/* ════════════════════════════════════════ */}
-            {/* END KOLOM KANAN                          */}
-            {/* ════════════════════════════════════════ */}
+            {/* ── End Kolom Kanan ── */}
           </div>
         </section>
         {/* ============================================================ */}
@@ -340,33 +261,28 @@ export default async function HomePage() {
         {/* ============================================================ */}
 
         {/* ============================================================ */}
-        {/* BENEFITS SECTION                                              */}
+        {/* FEATURES SECTION                                              */}
         {/* ============================================================ */}
         <section
           id="why-us"
-          className="mx-auto max-w-6xl px-4 md:px-0 scroll-mt-24"
+          className="mx-auto w-full max-w-6xl px-4 md:px-0 scroll-mt-24"
         >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
-            {benefits.map((item, idx) => (
-              <div
-                key={idx}
-                className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-2xl p-5 md:p-6 transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 group"
-              >
-                <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-4 group-hover:scale-110 group-hover:bg-primary/20 transition-all">
-                  <item.icon className="w-5 h-5" />
-                </div>
-                <h4 className="font-bold text-foreground text-sm md:text-base mb-1.5">
-                  {item.title}
-                </h4>
-                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  {item.desc}
-                </p>
-              </div>
-            ))}
+          {/* ── Section Header ── */}
+          <div className="mb-8 md:mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight mb-2">
+              Miliki Semua Fiturnya
+            </h2>
+            <p className="text-sm md:text-base text-muted-foreground max-w-xl">
+              Fitur-fitur kami dirancang untuk menghadirkan pengalaman undangan
+              digital yang informatif, interaktif dan tak terlupakan.
+            </p>
           </div>
+
+          {/* ── Grid Fitur — semua logic ada di FeaturesGrid ── */}
+          <FeaturesGrid />
         </section>
         {/* ============================================================ */}
-        {/* END BENEFITS SECTION                                          */}
+        {/* END FEATURES SECTION                                          */}
         {/* ============================================================ */}
 
         {/* ============================================================ */}
@@ -398,7 +314,6 @@ export default async function HomePage() {
                 Baru Rilis
               </h3>
             </div>
-
             {newArrivals && newArrivals.length > 0 ? (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
                 {newArrivals.map((product) => (
@@ -420,7 +335,6 @@ export default async function HomePage() {
 
         {/* ============================================================ */}
         {/* PRODUCTS BY CATEGORY SECTION                                  */}
-        {/* Loop tiap kategori yang memiliki produk                       */}
         {/* ============================================================ */}
         <div className="flex flex-col gap-8 md:gap-12">
           {categoriesWithProducts.map((category) => (
