@@ -42,7 +42,7 @@ export function DownloadButton({
       <Button
         onClick={() => setModalOpen(true)}
         size="sm"
-        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
+        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground hover:shadow-md transition-all active:scale-[0.98]"
       >
         <Download className="mr-2 h-4 w-4" />
         Akses File
