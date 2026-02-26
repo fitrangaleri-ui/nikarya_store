@@ -1,55 +1,35 @@
 import React from "react";
-import {
-  Palette,
-  MessageCircle,
-  ClipboardList,
-  CreditCard,
-  Settings,
-  Send,
-} from "lucide-react";
 
 const steps = [
   {
     number: 1,
-    icon: Palette,
     title: "Pilih Tema",
     desc: "Jelajahi tema undangan digital kami yang beragam. Pilih desain yang paling cocok untuk acara spesialmu.",
-    tag: "Langkah Awal",
   },
   {
     number: 2,
-    icon: MessageCircle,
     title: "Hubungi Admin",
     desc: "Klik tombol WhatsApp untuk langsung terhubung dengan tim kami. Kami siap menjawab pertanyaan dan membantu proses pemesananmu.",
-    tag: "Konsultasi",
   },
   {
     number: 3,
-    icon: ClipboardList,
     title: "Isi Format Data",
     desc: "Setelah berkonsultasi dengan Admin, kamu akan diberikan format data yang perlu diisi sesuai informasi acaramu.",
-    tag: "Pengisian Data",
   },
   {
     number: 4,
-    icon: CreditCard,
     title: "Lakukan Pembayaran",
     desc: "Selesaikan pembayaran sesuai instruksi admin. Kami menerima berbagai metode pembayaran untuk kenyamananmu.",
-    tag: "Pembayaran",
   },
   {
     number: 5,
-    icon: Settings,
     title: "Pesanan Diproses",
     desc: "Setelah pembayaran diterima, pesananmu segera kami proses dalam waktu 2×24 jam — bahkan bisa lebih cepat.",
-    tag: "Pengerjaan",
   },
   {
     number: 6,
-    icon: Send,
     title: "Pesanan Dikirim",
     desc: "Kami kirimkan link undangan untuk kamu cek dan revisi jika ada data yang perlu diperbaiki.",
-    tag: "Selesai 🎉",
   },
 ];
 
@@ -86,7 +66,7 @@ export function OrderProcedure() {
         </div>
 
         {/* ══════════════════════════════════════════════════════ */}
-        {/* TIMELINE DESKTOP — Zigzag Alternating Elegant        */}
+        {/* TIMELINE DESKTOP — Zigzag Alternating Minimalist     */}
         {/* ══════════════════════════════════════════════════════ */}
         <div className="hidden md:block relative">
           {/* ── Garis vertikal tengah glowing ── */}
@@ -101,7 +81,6 @@ export function OrderProcedure() {
           <div className="flex flex-col gap-2">
             {steps.map((step, idx) => {
               const isLeft = idx % 2 === 0;
-              const Icon = step.icon;
               const isLast = idx === steps.length - 1;
 
               return (
@@ -113,22 +92,13 @@ export function OrderProcedure() {
                   <div
                     className={`w-[calc(50%-2.5rem)] ${isLeft ? "pr-10" : "pl-10"} flex ${isLeft ? "justify-end" : "justify-start"}`}
                   >
-                    {isLeft && (
-                      <StepCardDesktop step={step} Icon={Icon} align="right" />
-                    )}
+                    {isLeft && <StepCardDesktop step={step} align="right" />}
                   </div>
 
-                  {/* ── Node tengah ── */}
+                  {/* ── Node tengah (Angka sebagai Aksen) ── */}
                   <div className="shrink-0 w-20 flex flex-col items-center relative z-10 group">
-                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-primary border-4 border-primary-foreground/20 shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-transform duration-300 group-hover:scale-110 group-hover:border-primary-foreground/40">
-                      <Icon
-                        className="w-6 h-6 text-primary-foreground transition-transform duration-300 group-hover:rotate-6"
-                        strokeWidth={1.5}
-                      />
-                    </div>
-                    {/* Step number badge */}
-                    <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-primary-foreground flex items-center justify-center shadow-lg">
-                      <span className="text-[11px] font-black text-primary leading-none">
+                    <div className="w-14 h-14 rounded-full flex items-center justify-center bg-primary-foreground shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-transform duration-300 group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]">
+                      <span className="text-xl font-black text-primary leading-none">
                         {step.number}
                       </span>
                     </div>
@@ -138,9 +108,7 @@ export function OrderProcedure() {
                   <div
                     className={`w-[calc(50%-2.5rem)] ${isLeft ? "pl-10" : "pr-10"} flex ${isLeft ? "justify-start" : "justify-end"}`}
                   >
-                    {!isLeft && (
-                      <StepCardDesktop step={step} Icon={Icon} align="left" />
-                    )}
+                    {!isLeft && <StepCardDesktop step={step} align="left" />}
                   </div>
                 </div>
               );
@@ -154,38 +122,27 @@ export function OrderProcedure() {
         <div className="md:hidden relative -mx-5 px-5">
           <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 pt-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
             {steps.map((step) => {
-              const Icon = step.icon;
               return (
                 <div
                   key={step.number}
-                  // Mengurangi transparansi bg (bg-primary-foreground/15) dan menambah outline 4px (border-4)
-                  className="shrink-0 w-[260px] snap-center relative flex flex-col rounded-2xl p-5 bg-primary-foreground/15 border-4 border-primary-foreground/20 active:bg-primary-foreground/20 transition-colors duration-200"
+                  className="shrink-0 w-[325px] snap-center relative flex flex-row items-center gap-5 rounded-2xl p-5 bg-primary-foreground/15 border-4 border-primary-foreground/20 active:bg-primary-foreground/20 transition-colors duration-200"
                 >
-                  {/* Header Card Mobile */}
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-primary-foreground/15 border border-primary-foreground/20 flex items-center justify-center shadow-inner">
-                      <Icon
-                        className="w-5 h-5 text-primary-foreground"
-                        strokeWidth={1.5}
-                      />
-                    </div>
-                    <div className="w-6 h-6 rounded-full bg-primary-foreground/25 flex items-center justify-center backdrop-blur-sm shadow-sm">
-                      <span className="text-[10px] font-black text-primary-foreground">
-                        {step.number}
-                      </span>
-                    </div>
+                  {/* Sisi Kiri: Angka sebagai Aksen */}
+                  <div className="shrink-0 w-12 h-12 rounded-full bg-primary-foreground flex items-center justify-center shadow-lg">
+                    <span className="text-xl font-black text-primary">
+                      {step.number}
+                    </span>
                   </div>
 
-                  {/* Konten Mobile */}
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-primary-foreground/60 mb-2 block">
-                    {step.tag}
-                  </span>
-                  <h4 className="text-[15px] font-bold text-primary-foreground mb-2 leading-tight">
-                    {step.title}
-                  </h4>
-                  <p className="text-xs text-primary-foreground/70 leading-relaxed">
-                    {step.desc}
-                  </p>
+                  {/* Sisi Kanan: Konten Teks */}
+                  <div className="flex-1 flex flex-col pr-2">
+                    <h4 className="text-[16px] font-bold text-primary-foreground mb-1.5 leading-tight">
+                      {step.title}
+                    </h4>
+                    <p className="text-[13px] text-primary-foreground/70 leading-snug line-clamp-2">
+                      {step.desc}
+                    </p>
+                  </div>
                 </div>
               );
             })}
@@ -212,15 +169,13 @@ function StepCardDesktop({
   align,
 }: {
   step: (typeof steps)[0];
-  Icon: React.ElementType;
   align: "left" | "right";
 }) {
   return (
     <div
       className={`
-        group max-w-[320px] w-full
+        group max-w-[400px] w-full
         rounded-2xl p-6
-        /* Mengurangi transparansi bg desktop */
         bg-primary-foreground/10 hover:bg-primary-foreground/15
         border border-primary-foreground/20 hover:border-primary-foreground/40
         backdrop-blur-md
@@ -232,16 +187,7 @@ function StepCardDesktop({
         boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1)",
       }}
     >
-      <span
-        className={`
-          inline-block px-2.5 py-1 rounded-md bg-primary-foreground/10
-          text-[10px] font-bold uppercase tracking-widest
-          text-primary-foreground/70 mb-3 border border-primary-foreground/10
-        `}
-      >
-        {step.tag}
-      </span>
-      <h4 className="text-lg font-bold text-primary-foreground mb-2 group-hover:text-white transition-colors">
+      <h4 className="text-xl font-bold text-primary-foreground mb-2 group-hover:text-white transition-colors">
         {step.title}
       </h4>
       <p className="text-sm text-primary-foreground/75 leading-relaxed group-hover:text-primary-foreground/90 transition-colors">
