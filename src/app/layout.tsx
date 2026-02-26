@@ -1,9 +1,12 @@
+// src/app/layout.tsx
+
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Quicksand, Orbitron } from "next/font/google"; // ← ganti Jura → Orbitron
+import { Inter, JetBrains_Mono, Quicksand, Orbitron } from "next/font/google";
 import Script from "next/script";
 import { AuthProvider } from "@/components/auth-provider";
 import { CartProvider } from "@/context/cart-context";
 import { CartSidebar } from "@/components/cart-sidebar";
+import { SiteFooter } from "@/components/site-footer"; // ← tambahkan
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
@@ -23,7 +26,6 @@ const quicksand = Quicksand({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-// ← GANTI: Jura → Orbitron
 const orbitron = Orbitron({
   variable: "--font-orbitron",
   subsets: ["latin"],
@@ -45,7 +47,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      {/* ← Ganti jura.variable → orbitron.variable */}
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} ${quicksand.variable} ${orbitron.variable} font-sans antialiased`}
       >
@@ -65,6 +66,9 @@ export default function RootLayout({
             <CartSidebar />
           </CartProvider>
         </AuthProvider>
+
+        {/* ── Global Footer — tampil di semua halaman ── */}
+        <SiteFooter />
 
         <Script
           src={process.env.NEXT_PUBLIC_MIDTRANS_API_URL}

@@ -182,7 +182,7 @@ export function FaqSection() {
       <div className="mx-auto max-w-6xl px-4 md:px-0 relative z-10">
         {/* ── Header ── */}
         <div className="text-center mb-12 md:mb-16">
-          <span className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 bg-primary/10 border border-primary/20 text-primary text-[11px] font-bold uppercase tracking-widest mb-4">
+          <span className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 bg-primary/10 border border-primary/20 text-primary text-[11px] font-bold uppercase tracking-[-0.005em] mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-primary" />
             Pertanyaan Umum
           </span>
