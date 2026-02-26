@@ -475,14 +475,20 @@
     max-width: 100%;
   }
 }
-/* ── Outline pulse animation untuk FeatureCard aktif ── */
+
+/* ─────────────────────────────────────────────────────────── */
+/* Outline pulse animation untuk FeatureCard aktif             */
+/* POSISI: root level — setelah @media, di luar semua block    */
+/* PERUBAHAN: color-mix menggantikan hsl(var()) yang tidak     */
+/* valid karena --primary bertipe oklch, bukan HSL channel     */
+/* ─────────────────────────────────────────────────────────── */
 @keyframes outline-pulse {
   0%,
   100% {
-    outline-color: hsl(var(--primary) / 0.9);
+    outline-color: color-mix(in oklch, var(--primary) 90%, transparent);
   }
   50% {
-    outline-color: hsl(var(--primary) / 0.3);
+    outline-color: color-mix(in oklch, var(--primary) 30%, transparent);
   }
 }
 

@@ -103,21 +103,18 @@ function FeatureCard({
         rounded-xl
         ${active ? "scale-[1.04]" : "scale-100"}
       `}
-      // ── Outline animasi: outline mengikuti rounded-xl wrapper ──────
-      // outline-offset: ruang antara card dan outline
-      // animate-outline-pulse: opacity outline berdenyut perlahan
       style={
         active
           ? {
-              outline: "2px solid hsl(var(--primary) / 0.85)",
+              outline:
+                "2px solid color-mix(in oklch, var(--primary) 85%, transparent)",
               outlineOffset: "3px",
               animation: "outline-pulse 1.6s ease-in-out infinite",
             }
           : {
               outline: "2px solid transparent",
               outlineOffset: "3px",
-              // transition outline color saat non-aktif
-              transition: "outline-color 0.4s ease",
+              transition: "outline-color 0.4s ease, transform 0.3s ease",
             }
       }
       onClick={onFlip}
@@ -127,8 +124,6 @@ function FeatureCard({
       aria-label={`Fitur ${label}`}
       onKeyDown={(e) => e.key === "Enter" && onFlip()}
     >
-      {/* ── Inner flip container ── */}
-      {/* shadow dihapus sepenuhnya */}
       <div
         className="
           relative w-full h-full
@@ -137,61 +132,92 @@ function FeatureCard({
         "
         style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
       >
-        {/* ── Sisi Depan ── */}
+        {/* ════ SISI DEPAN ════ */}
         <div
           className="
             absolute inset-0
             flex flex-col items-center justify-center
-            gap-1.5 md:gap-3
-            p-2 md:p-6
+            gap-1.5 md:gap-3 p-2 md:p-6
             bg-primary rounded-xl
             [backface-visibility:hidden]
-            hover:bg-primary/90
-            transition-colors duration-200
+            overflow-hidden
           "
         >
+          {/* ── Glass shimmer overlay — subtle saja di atas bg solid ── */}
+          <div
+            aria-hidden
+            className="absolute inset-0 rounded-xl pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0.0) 100%)",
+            }}
+          />
+          {/* ── Stroke border teal terang di atas bg ── */}
+          <div
+            aria-hidden
+            className="absolute inset-0 rounded-xl pointer-events-none"
+            style={{
+              boxShadow:
+                "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
+              border: "1px solid rgba(255,255,255,0.15)",
+            }}
+          />
+
           <Icon
-            className="w-5 h-5 md:w-7 md:h-7 text-primary-foreground/80 shrink-0"
+            className="w-5 h-5 md:w-7 md:h-7 text-primary-foreground shrink-0 relative z-10"
             strokeWidth={1.5}
           />
           <span
             className="
-              text-[9px] md:text-xs font-medium
-              text-primary-foreground/90
+              text-[9px] md:text-xs font-semibold
+              text-primary-foreground
               text-center leading-tight
+              relative z-10
             "
           >
             {label}
           </span>
         </div>
 
-        {/* ── Sisi Belakang ── */}
+        {/* ════ SISI BELAKANG ════ */}
         <div
           className="
             absolute inset-0
             flex flex-col items-center justify-center
-            gap-1 md:gap-2
-            p-2.5 md:p-5
-            bg-primary/85 rounded-xl
+            gap-1 md:gap-2 p-2.5 md:p-5
+            bg-primary/80 rounded-xl
             [backface-visibility:hidden]
             [transform:rotateY(180deg)]
-            border border-primary-foreground/10
             overflow-hidden
           "
         >
-          <span className="hidden md:block text-[10px] font-bold uppercase tracking-widest text-primary-foreground/50">
+          {/* ── Glass shimmer overlay sisi belakang ── */}
+          <div
+            aria-hidden
+            className="absolute inset-0 rounded-xl pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
+            }}
+          />
+          {/* ── Stroke border ── */}
+          <div
+            aria-hidden
+            className="absolute inset-0 rounded-xl pointer-events-none"
+            style={{
+              boxShadow:
+                "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
+              border: "1px solid rgba(255,255,255,0.15)",
+            }}
+          />
+
+          <span className="hidden md:block text-[10px] font-bold uppercase tracking-widest text-primary-foreground/70 relative z-10">
             {label}
           </span>
-          <p
-            className="
-              text-[9px] md:text-xs
-              text-primary-foreground/90
-              text-center leading-snug
-            "
-          >
+          <p className="text-[9px] md:text-xs text-primary-foreground/95 text-center leading-snug relative z-10">
             {desc}
           </p>
-          <span className="text-[8px] md:text-[10px] text-primary-foreground/40">
+          <span className="text-[8px] md:text-[10px] text-primary-foreground/50 mt-0.5 relative z-10">
             tap lagi ↩
           </span>
         </div>
