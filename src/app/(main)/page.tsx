@@ -184,7 +184,7 @@ export default async function HomePage() {
                 <div className="flex flex-col gap-1 px-6 border-r border-border/50">
                   <div className="flex items-baseline gap-0.5">
                     <span className="text-xl font-black text-foreground">
-                      500K
+                      17K
                     </span>
                     <span className="text-xs text-primary font-bold">+</span>
                   </div>

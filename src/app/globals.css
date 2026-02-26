@@ -475,3 +475,17 @@
     max-width: 100%;
   }
 }
+/* ── Outline pulse animation untuk FeatureCard aktif ── */
+@keyframes outline-pulse {
+  0%,
+  100% {
+    outline-color: hsl(var(--primary) / 0.9);
+  }
+  50% {
+    outline-color: hsl(var(--primary) / 0.3);
+  }
+}
+
+@utility animate-outline-pulse {
+  animation: outline-pulse 1.6s ease-in-out infinite;
+}

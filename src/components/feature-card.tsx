@@ -1,7 +1,7 @@
 // src/components/feature-card.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Users,
   Music,
@@ -81,6 +81,7 @@ interface FeatureCardProps {
   label: string;
   desc: string;
   flipped: boolean;
+  active: boolean;
   onFlip: () => void;
 }
 
@@ -89,17 +90,36 @@ function FeatureCard({
   label,
   desc,
   flipped,
+  active,
   onFlip,
 }: FeatureCardProps) {
   return (
-    // ── PERUBAHAN UTAMA: h-[100px] fixed di mobile, h-[140px] di desktop ──
-    // Tinggi fixed mencegah card mengembang saat flip & menjaga grid konsisten
     <div
-      className="
+      className={`
         cursor-pointer
         h-[100px] md:h-[140px]
         [perspective:800px]
-      "
+        transition-transform duration-300
+        rounded-xl
+        ${active ? "scale-[1.04]" : "scale-100"}
+      `}
+      // ── Outline animasi: outline mengikuti rounded-xl wrapper ──────
+      // outline-offset: ruang antara card dan outline
+      // animate-outline-pulse: opacity outline berdenyut perlahan
+      style={
+        active
+          ? {
+              outline: "2px solid hsl(var(--primary) / 0.85)",
+              outlineOffset: "3px",
+              animation: "outline-pulse 1.6s ease-in-out infinite",
+            }
+          : {
+              outline: "2px solid transparent",
+              outlineOffset: "3px",
+              // transition outline color saat non-aktif
+              transition: "outline-color 0.4s ease",
+            }
+      }
       onClick={onFlip}
       role="button"
       tabIndex={0}
@@ -107,22 +127,28 @@ function FeatureCard({
       aria-label={`Fitur ${label}`}
       onKeyDown={(e) => e.key === "Enter" && onFlip()}
     >
+      {/* ── Inner flip container ── */}
+      {/* shadow dihapus sepenuhnya */}
       <div
-        className="relative w-full h-full transition-transform duration-500 ease-in-out [transform-style:preserve-3d]"
+        className="
+          relative w-full h-full
+          [transform-style:preserve-3d]
+          transition-transform duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]
+        "
         style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
       >
         {/* ── Sisi Depan ── */}
         <div
           className="
-          absolute inset-0
-          flex flex-col items-center justify-center
-          gap-1.5 md:gap-3
-          p-2 md:p-6
-          bg-primary rounded-xl md:rounded-xl
-          [backface-visibility:hidden]
-          hover:bg-primary/90
-          transition-colors duration-200
-        "
+            absolute inset-0
+            flex flex-col items-center justify-center
+            gap-1.5 md:gap-3
+            p-2 md:p-6
+            bg-primary rounded-xl
+            [backface-visibility:hidden]
+            hover:bg-primary/90
+            transition-colors duration-200
+          "
         >
           <Icon
             className="w-5 h-5 md:w-7 md:h-7 text-primary-foreground/80 shrink-0"
@@ -130,10 +156,10 @@ function FeatureCard({
           />
           <span
             className="
-            text-[9px] md:text-xs font-medium
-            text-primary-foreground/90
-            text-center leading-tight
-          "
+              text-[9px] md:text-xs font-medium
+              text-primary-foreground/90
+              text-center leading-tight
+            "
           >
             {label}
           </span>
@@ -142,28 +168,26 @@ function FeatureCard({
         {/* ── Sisi Belakang ── */}
         <div
           className="
-          absolute inset-0
-          flex flex-col items-center justify-center
-          gap-1 md:gap-2
-          p-2.5 md:p-5
-          bg-primary/85 rounded-xl md:rounded-xl
-          [backface-visibility:hidden]
-          [transform:rotateY(180deg)]
-          border border-primary-foreground/10
-          overflow-hidden
-        "
+            absolute inset-0
+            flex flex-col items-center justify-center
+            gap-1 md:gap-2
+            p-2.5 md:p-5
+            bg-primary/85 rounded-xl
+            [backface-visibility:hidden]
+            [transform:rotateY(180deg)]
+            border border-primary-foreground/10
+            overflow-hidden
+          "
         >
-          {/* Label judul — hanya desktop, hemat ruang di mobile */}
           <span className="hidden md:block text-[10px] font-bold uppercase tracking-widest text-primary-foreground/50">
             {label}
           </span>
-          {/* Deskripsi — diperpendek untuk mobile */}
           <p
             className="
-            text-[9px] md:text-xs
-            text-primary-foreground/90
-            text-center leading-snug
-          "
+              text-[9px] md:text-xs
+              text-primary-foreground/90
+              text-center leading-snug
+            "
           >
             {desc}
           </p>
@@ -177,7 +201,20 @@ function FeatureCard({
 }
 
 export function FeaturesGrid() {
-  const [activeIdx, setActiveIdx] = useState<number | null>(null);
+  const [activeIdx, setActiveIdx] = useState<number | null>(0);
+
+  useEffect(() => {
+    if (activeIdx === null) return;
+
+    const interval = setInterval(() => {
+      setActiveIdx((prev) => {
+        if (prev === null) return 0;
+        return (prev + 1) % features.length;
+      });
+    }, 4200);
+
+    return () => clearInterval(interval);
+  }, [activeIdx]);
 
   const handleFlip = (idx: number) => {
     setActiveIdx((prev) => (prev === idx ? null : idx));
@@ -192,6 +229,7 @@ export function FeaturesGrid() {
           label={feature.label}
           desc={feature.desc}
           flipped={activeIdx === idx}
+          active={activeIdx === idx}
           onFlip={() => handleFlip(idx)}
         />
       ))}
