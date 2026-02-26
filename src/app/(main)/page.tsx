@@ -7,6 +7,7 @@
 //   - Semua fetching, data transform, section lain TIDAK DIUBAH
 // ============================================================
 
+import { OrderProcedure } from "@/components/order-procedure";
 import { FeaturesGrid } from "@/components/feature-card";
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -349,6 +350,15 @@ export default async function HomePage() {
         {/* END PRODUCTS BY CATEGORY SECTION                              */}
         {/* ============================================================ */}
       </div>
+
+      {/* ============================================================ */}
+      {/* ORDER PROCEDURE SECTION                                        */}
+      {/* Posisi: di bawah products by category, di luar max-w container */}
+      {/* ============================================================ */}
+      <OrderProcedure />
+      {/* ============================================================ */}
+      {/* END ORDER PROCEDURE SECTION                                    */}
+      {/* ============================================================ */}
 
       {/* BottomNav — navigasi mobile (TIDAK DIUBAH) */}
       <BottomNav />
