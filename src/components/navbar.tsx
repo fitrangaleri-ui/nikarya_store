@@ -1,3 +1,6 @@
+// ============================================================
+// FILE: src/components/navbar.tsx
+// ============================================================
 "use client";
 
 import Link from "next/link";
@@ -8,8 +11,8 @@ import {
   User,
   LogOut,
   ChevronDown,
-  Menu,
   X,
+  ArrowRight,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,22 +20,34 @@ import { useAuth } from "@/components/auth-provider";
 import { useCart } from "@/context/cart-context";
 import { useState, useRef, useEffect } from "react";
 
+// ── Custom Burger Menu Icon ───────────────────────────────────
+// SVG inline, viewBox di-crop agar 3 garis memenuhi ruang icon
+function MenuBurgerIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="64 128 384 256"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M64,384h384v-42.666H64V384z M64,277.334h384v-42.667H64V277.334z M64,128v42.666h384V128H64z" />
+    </svg>
+  );
+}
+
 export function Navbar() {
-  // State & context: autentikasi user
+  // ── State & context ───────────────────────────────────────
   const { user, isLoading, signOut } = useAuth();
-  // State & context: keranjang belanja
   const { openCart, cartCount } = useCart();
-  // State dropdown user (avatar)
   const [showDropdown, setShowDropdown] = useState(false);
-  // State untuk toggle search bar di mobile
   const [showMobileSearch, setShowMobileSearch] = useState(false);
 
-  // Ref untuk mendeteksi klik di luar dropdown user
+  // ── Refs ──────────────────────────────────────────────────
   const dropdownRef = useRef<HTMLDivElement>(null);
-  // Ref untuk auto-focus input search di mobile
   const mobileSearchRef = useRef<HTMLInputElement>(null);
 
-  // Listener untuk menutup dropdown saat klik di luar area dropdown
+  // Tutup dropdown saat klik di luar
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -46,48 +61,45 @@ export function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Auto-focus input search ketika search mobile dibuka
+  // Auto-focus input search mobile saat dibuka
   useEffect(() => {
     if (showMobileSearch && mobileSearchRef.current) {
       mobileSearchRef.current.focus();
     }
   }, [showMobileSearch]);
 
-  // Handler untuk sign out user
+  // ── Handlers ─────────────────────────────────────────────
   const handleSignOut = async () => {
     setShowDropdown(false);
     await signOut();
   };
 
-  // Nama yang ditampilkan pada avatar / dropdown
+  // Nama tampilan avatar / dropdown
   const displayName =
     user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/60 backdrop-blur-md shadow-sm">
-      {/* ── Baris utama navbar (logo, nav, search, icon) ───────────────── */}
-      {/*    Tinggi: mobile h-[84px] (56×1.5), desktop h-24 (64×1.5)       */}
-      <div className="container mx-auto px-4 h-[84px] md:h-24 flex items-center justify-between gap-3">
-        {/* ── Kiri: Logo + navigasi desktop ───────────────────────────── */}
+      {/* ── Baris utama navbar — py-2 (8px atas bawah) ── */}
+      <div className="container mx-auto px-4 py-2 flex items-center justify-between gap-3">
+        {/* ════════════════════════════════════════════════ */}
+        {/* KIRI — Logo + Navigasi Desktop                  */}
+        {/* ════════════════════════════════════════════════ */}
         <div className="flex items-center gap-4 shrink-0">
-          {/* Link ke halaman utama — hover: scale naik + opacity turun */}
           <Link href="/" className="flex items-center group">
-            <div className="flex items-center">
-              {/* Logo brand — diperbesar + animasi hover scale & opacity */}
-              <Image
-                src="/logo-nikarya.png"
-                alt="Logo Brand"
-                width={56}
-                height={56}
-                priority
-                className="h-11 w-11 md:h-12 md:w-12 object-contain shrink-0
-                           transition-all duration-200
-                           group-hover:scale-110 group-hover:opacity-80"
-              />
-            </div>
+            <Image
+              src="/logo-nikarya.png"
+              alt="Logo Brand"
+              width={56}
+              height={56}
+              priority
+              className="h-11 w-11 md:h-12 md:w-12 object-contain shrink-0
+                         transition-all duration-200
+                         group-hover:scale-110 group-hover:opacity-80"
+            />
           </Link>
 
-          {/* Navigasi utama (Produk, Promo) — hanya tampil di desktop */}
+          {/* Navigasi Produk & Promo — hanya desktop */}
           <nav className="hidden md:flex items-center gap-1 text-sm font-medium">
             <Link
               href="/products"
@@ -104,9 +116,11 @@ export function Navbar() {
           </nav>
         </div>
 
-        {/* ── Kanan: Search, cart, user, hamburger ───────────────────── */}
+        {/* ════════════════════════════════════════════════ */}
+        {/* KANAN — Search, Cart, User, Hamburger           */}
+        {/* ════════════════════════════════════════════════ */}
         <div className="flex items-center gap-1 flex-1 justify-end">
-          {/* Search bar full-width — hanya tampil di desktop */}
+          {/* Search bar — hanya desktop (Tinggi: h-9) */}
           <div className="relative w-full max-w-[320px] hidden md:block group mr-2">
             <Input
               type="search"
@@ -116,30 +130,27 @@ export function Navbar() {
                          hover:border-primary/40 hover:bg-muted/60
                          transition-all text-sm"
             />
-            {/* Icon search desktop — berubah warna saat input fokus */}
             <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
           </div>
 
-          {/* Tombol toggle search — hanya tampil di mobile               */}
-          {/* Hover: warna primary + scale + background teal tipis        */}
+          {/* Tombol toggle search — hanya mobile (42px) */}
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden h-10 w-10 text-primary hover:text-primary
+            className="md:hidden h-[42px] w-[42px] text-primary hover:text-primary
                        hover:bg-primary/15 rounded-full
                        transition-all duration-200 hover:scale-110 active:scale-95"
             onClick={() => setShowMobileSearch(!showMobileSearch)}
             aria-label="Cari"
           >
             {showMobileSearch ? (
-              <X className="h-5 w-5" />
+              <X className="h-[22px] w-[22px]" />
             ) : (
-              <Search className="h-5 w-5" />
+              <Search className="h-[22px] w-[22px]" />
             )}
           </Button>
 
-          {/* Tombol cart — hidden di mobile, visible di desktop          */}
-          {/* Hover: warna primary + scale + background teal tipis        */}
+          {/* Tombol cart — hanya desktop */}
           <Button
             variant="ghost"
             size="icon"
@@ -150,7 +161,7 @@ export function Navbar() {
             aria-label="Buka keranjang"
           >
             <ShoppingCart className="h-5 w-5" />
-            {/* Badge jumlah item di keranjang */}
+            {/* Badge jumlah item keranjang */}
             {cartCount > 0 && (
               <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground ring-2 ring-background">
                 {cartCount > 99 ? "99+" : cartCount}
@@ -158,10 +169,13 @@ export function Navbar() {
             )}
           </Button>
 
-          {/* Bagian user (avatar / tombol masuk) — hanya di desktop ─── */}
+          {/* ════════════════════════════════════════════════ */}
+          {/* USER SECTION — hanya desktop                    */}
+          {/* Tiga kondisi: loading | sudah login | belum login */}
+          {/* ════════════════════════════════════════════════ */}
           <div className="hidden md:block ml-1">
             {isLoading ? (
-              // State loading: tampilkan ikon user dengan animasi pulse
+              /* Loading: icon user dengan animasi pulse */
               <Button
                 variant="ghost"
                 size="icon"
@@ -171,7 +185,7 @@ export function Navbar() {
                 <User className="h-5 w-5 animate-pulse" />
               </Button>
             ) : user ? (
-              // Saat user sudah login: tampilkan avatar + dropdown
+              /* Sudah login: avatar + dropdown (Tinggi: h-9) */
               <div className="relative" ref={dropdownRef}>
                 <Button
                   variant="ghost"
@@ -179,24 +193,25 @@ export function Navbar() {
                   className="flex items-center gap-1.5 text-foreground hover:text-primary hover:bg-primary/10 px-2 h-9 rounded-full transition-colors"
                   onClick={() => setShowDropdown(!showDropdown)}
                 >
-                  {/* Avatar dengan inisial user */}
+                  {/* Avatar inisial */}
                   <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/15 text-primary shrink-0">
                     <span className="text-xs font-semibold">
                       {displayName.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  {/* Nama user (disembunyikan di layar kecil desktop) */}
+                  {/* Nama user */}
                   <span className="hidden lg:inline text-sm font-medium max-w-[100px] truncate">
                     {displayName}
                   </span>
-                  {/* Icon chevron dengan animasi rotate saat dropdown terbuka */}
+                  {/* Chevron rotasi saat dropdown terbuka */}
                   <ChevronDown
-                    className={`h-3.5 w-3.5 opacity-50 transition-transform duration-200 ${showDropdown ? "rotate-180" : ""
-                      }`}
+                    className={`h-3.5 w-3.5 opacity-50 transition-transform duration-200 ${
+                      showDropdown ? "rotate-180" : ""
+                    }`}
                   />
                 </Button>
 
-                {/* Panel dropdown user */}
+                {/* Panel dropdown */}
                 {showDropdown && (
                   <div className="absolute right-0 top-full mt-1.5 w-52 rounded-xl border border-border/50 bg-background/95 backdrop-blur-md py-1.5 shadow-lg shadow-black/5 z-50 animate-in fade-in zoom-in-95 duration-200">
                     {/* Info singkat user */}
@@ -208,7 +223,7 @@ export function Navbar() {
                         {user.email}
                       </p>
                     </div>
-                    {/* Link ke dashboard */}
+                    {/* Link dashboard */}
                     <Link
                       href="/dashboard"
                       className="flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-primary/10 hover:text-primary transition-colors"
@@ -229,40 +244,64 @@ export function Navbar() {
                 )}
               </div>
             ) : (
-              // Jika belum login: tampilkan tombol Masuk
+              /* ══ Belum login: tombol Masuk pill (Tinggi: h-9) ══ */
               <Link href="/login">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-9 gap-1.5 text-foreground hover:text-primary hover:bg-primary/10 rounded-full transition-colors px-3"
+                <button
+                  className="
+                    flex items-center gap-2
+                    pl-4 pr-1 h-9
+                    rounded-full
+                    bg-primary
+                    hover:bg-primary/90
+                    transition-all duration-200
+                    hover:scale-[1.03] active:scale-[0.98]
+                    shadow-sm shadow-primary/30
+                    group
+                  "
                 >
-                  <User className="h-4 w-4" />
-                  <span className="text-sm font-medium">Masuk</span>
-                </Button>
+                  {/* Teks Login */}
+                  <span className="text-sm font-medium text-primary-foreground tracking-wide">
+                    Login
+                  </span>
+                  {/* Icon panah dalam bubble putih (diperkecil agar proporsional dengan h-9) */}
+                  <span
+                    className="
+                      flex items-center justify-center
+                      w-7 h-7 rounded-full
+                      bg-primary-foreground
+                      text-primary
+                      transition-colors duration-200
+                      shrink-0
+                    "
+                  >
+                    <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} />
+                  </span>
+                </button>
               </Link>
             )}
           </div>
 
-          {/* Hamburger / menu icon — hanya tampil di mobile              */}
-          {/* Hover: warna primary + scale + background teal tipis        */}
+          {/* ════════════════════════════════════════════════ */}
+          {/* HAMBURGER — hanya mobile (42px)                 */}
+          {/* ════════════════════════════════════════════════ */}
           <Link href="/menu" className="md:hidden ml-1">
             <Button
               variant="ghost"
               size="icon"
-              className="h-10 w-10 text-primary hover:text-primary
+              className="h-[42px] w-[42px] text-primary hover:text-primary
                          hover:bg-primary/15 rounded-full
                          transition-all duration-200 hover:scale-110 active:scale-95"
               aria-label="Menu"
             >
-              <Menu className="h-5 w-5" />
+              <MenuBurgerIcon className="h-[22px] w-[22px]" />
             </Button>
           </Link>
         </div>
       </div>
 
-      {/* ── Search bar untuk mobile (expandable di bawah navbar) ─────── */}
+      {/* ── Search bar mobile expandable ── */}
       {showMobileSearch && (
-        <div className="md:hidden px-4 pb-4 animate-in slide-in-from-top-2 fade-in duration-200">
+        <div className="md:hidden px-4 pb-3 animate-in slide-in-from-top-2 fade-in duration-200">
           <div className="relative group">
             <Input
               ref={mobileSearchRef}
