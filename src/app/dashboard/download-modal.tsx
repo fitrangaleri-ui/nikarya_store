@@ -1,15 +1,13 @@
 // ============================================================
 // FILE: src/app/dashboard/download-modal.tsx
-// PERUBAHAN: Redesign visual — konsisten dengan dashboard/page.tsx
+// PERUBAHAN: Ganti <button> native di footer → <PrimaryButton>
 //            Logika, state, dan handler tidak diubah
 // ============================================================
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   X,
   Download,
-  Loader2,
   ExternalLink,
   ShieldCheck,
   Copy,
@@ -19,6 +17,7 @@ import {
   AlertOctagon,
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
+import { PrimaryButton } from "@/components/ui/primary-button";
 
 const MAX_DOWNLOADS = 25;
 
@@ -41,24 +40,39 @@ export function DownloadModal({
   orderDate,
   orderDisplayId,
 }: DownloadModalProps) {
-  // ── State — tidak diubah ────────────────────────────────
+  // ── State — tidak diubah ─────────────────────────────────
   const [loading, setLoading] = useState(false);
   const [count, setCount] = useState(initialCount);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const remaining = MAX_DOWNLOADS - count;
   const isMaxed = count >= MAX_DOWNLOADS;
   const progress = (count / MAX_DOWNLOADS) * 100;
 
-  // Sync when props change — tidak diubah
+  // ── Effects — tidak diubah ───────────────────────────────
   useEffect(() => {
     setCount(initialCount);
     setError(null);
     setSuccess(false);
   }, [initialCount, isOpen]);
 
-  // Close on Escape — tidak diubah
+  useEffect(() => {
+    if (isOpen) {
+      setMounted(true);
+      const enterFrame = requestAnimationFrame(() => {
+        requestAnimationFrame(() => setVisible(true));
+      });
+      return () => cancelAnimationFrame(enterFrame);
+    } else {
+      setVisible(false);
+      const exitTimer = setTimeout(() => setMounted(false), 300);
+      return () => clearTimeout(exitTimer);
+    }
+  }, [isOpen]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -73,7 +87,7 @@ export function DownloadModal({
     };
   }, [isOpen, onClose]);
 
-  // Handler download — tidak diubah
+  // ── Handler — tidak diubah ───────────────────────────────
   const handleOpenFile = useCallback(async () => {
     if (isMaxed || loading) return;
     setLoading(true);
@@ -99,7 +113,7 @@ export function DownloadModal({
     }
   }, [orderId, isMaxed, loading]);
 
-  if (!isOpen) return null;
+  if (!mounted) return null;
 
   const formattedDate = new Date(orderDate).toLocaleDateString("id-ID", {
     day: "numeric",
@@ -107,7 +121,6 @@ export function DownloadModal({
     year: "numeric",
   });
 
-  // Warna dinamis progress & kuota
   const progressColor = isMaxed
     ? "bg-red-500"
     : remaining <= 5
@@ -126,26 +139,35 @@ export function DownloadModal({
 
   return (
     <>
-      {/* ── Backdrop ── */}
+      {/* Backdrop */}
       <div
-        className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+        className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+        style={{
+          transition: "opacity 300ms ease",
+          opacity: visible ? 1 : 0,
+        }}
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* ── Modal container ── */}
+      {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
         <div
-          className="relative pointer-events-auto w-full max-w-md rounded-3xl overflow-hidden bg-background/95 backdrop-blur-2xl border border-border/50 shadow-2xl shadow-black/20 animate-in fade-in zoom-in-95 duration-200"
+          className="relative pointer-events-auto w-full max-w-md rounded-3xl overflow-hidden bg-background/95 backdrop-blur-2xl border border-border/50 shadow-2xl shadow-black/20"
           role="dialog"
           aria-label="Download File"
           onClick={(e) => e.stopPropagation()}
+          style={{
+            transition:
+              "opacity 300ms ease, transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+            opacity: visible ? 1 : 0,
+            transform: visible
+              ? "scale(1) translateY(0px)"
+              : "scale(0.95) translateY(12px)",
+          }}
         >
-          {/* ════════════════════════════════════════════════ */}
-          {/* HEADER BANNER — bg-primary, gaya dashboard      */}
-          {/* ════════════════════════════════════════════════ */}
+          {/* ── Header Banner ── */}
           <div className="relative bg-primary px-6 pt-6 pb-5 overflow-hidden">
-            {/* Ambient glow */}
             <div
               aria-hidden
               className="absolute -top-8 -right-8 w-40 h-40 rounded-full pointer-events-none blur-[60px]"
@@ -156,7 +178,6 @@ export function DownloadModal({
               className="absolute bottom-0 left-1/4 w-32 h-32 rounded-full pointer-events-none blur-[50px]"
               style={{ background: "rgba(255,255,255,0.05)" }}
             />
-            {/* Glass shimmer */}
             <div
               aria-hidden
               className="absolute inset-0 pointer-events-none"
@@ -165,7 +186,6 @@ export function DownloadModal({
                   "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
               }}
             />
-            {/* Stroke border bawah */}
             <div
               aria-hidden
               className="absolute inset-0 pointer-events-none"
@@ -176,11 +196,9 @@ export function DownloadModal({
               }}
             />
 
-            {/* Konten header */}
             <div className="relative z-10 flex items-start justify-between gap-3">
               <div>
-                {/* Badge label */}
-                <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-white/15 text-primary-foreground text-[10px] font-bold uppercase tracking-[-0.005em] mb-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-white/15 text-primary-foreground text-[10px] font-bold uppercase tracking-widest mb-2">
                   <Download className="w-3 h-3" />
                   Akses File
                 </span>
@@ -192,7 +210,6 @@ export function DownloadModal({
                 </p>
               </div>
 
-              {/* Tombol close */}
               <button
                 onClick={onClose}
                 className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-white/15 hover:bg-white/25 text-primary-foreground/80 hover:text-primary-foreground transition-all active:scale-95 border border-white/20"
@@ -203,19 +220,16 @@ export function DownloadModal({
             </div>
           </div>
 
-          {/* ════════════════════════════════════════════════ */}
-          {/* BODY                                             */}
-          {/* ════════════════════════════════════════════════ */}
+          {/* ── Body ── */}
           <div className="px-6 py-5 space-y-4">
-            {/* ── Info produk ── */}
+            {/* Info produk */}
             <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
-              {/* Nama produk */}
               <div className="flex items-start gap-3 px-4 py-3 border-b border-border/40">
                 <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
                   <Package className="h-3.5 w-3.5 text-primary" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[10px] font-bold uppercase tracking-[-0.005em] text-muted-foreground">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     Produk
                   </p>
                   <p className="text-sm font-bold text-foreground line-clamp-2 mt-0.5">
@@ -224,12 +238,11 @@ export function DownloadModal({
                 </div>
               </div>
 
-              {/* Order ID + Tanggal */}
               <div className="grid grid-cols-2 divide-x divide-border/40">
                 <div className="flex items-start gap-2 px-4 py-3">
                   <Hash className="h-3.5 w-3.5 text-muted-foreground mt-0.5 shrink-0" />
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[-0.005em] text-muted-foreground">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                       Order ID
                     </p>
                     <p className="text-xs font-mono text-foreground mt-0.5">
@@ -240,7 +253,7 @@ export function DownloadModal({
                 <div className="flex items-start gap-2 px-4 py-3">
                   <CalendarDays className="h-3.5 w-3.5 text-muted-foreground mt-0.5 shrink-0" />
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[-0.005em] text-muted-foreground">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                       Tanggal Beli
                     </p>
                     <p className="text-xs text-foreground mt-0.5">
@@ -250,7 +263,6 @@ export function DownloadModal({
                 </div>
               </div>
 
-              {/* Status lunas */}
               <div className="flex items-center gap-2 px-4 py-2.5 bg-emerald-500/5 border-t border-emerald-500/10">
                 <ShieldCheck className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
                 <span className="text-xs font-semibold text-emerald-600">
@@ -259,7 +271,7 @@ export function DownloadModal({
               </div>
             </div>
 
-            {/* ── Kuota download ── */}
+            {/* Kuota download */}
             <div className="rounded-2xl bg-muted/20 border border-border/40 px-4 py-3 space-y-2">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-semibold text-muted-foreground">
@@ -285,15 +297,12 @@ export function DownloadModal({
                   </span>
                 </div>
               </div>
-
-              {/* Progress bar */}
               <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-500 ease-out ${progressColor}`}
                   style={{ width: `${Math.min(progress, 100)}%` }}
                 />
               </div>
-
               <p className="text-[11px] text-muted-foreground text-center">
                 {isMaxed
                   ? "Kuota download habis."
@@ -301,7 +310,7 @@ export function DownloadModal({
               </p>
             </div>
 
-            {/* ── Instruksi — hanya tampil jika belum maxed ── */}
+            {/* Instruksi */}
             {!isMaxed && (
               <div className="rounded-2xl bg-primary/5 border border-primary/10 px-4 py-3 space-y-1.5">
                 <p className="text-xs font-bold text-primary flex items-center gap-1.5">
@@ -316,7 +325,7 @@ export function DownloadModal({
               </div>
             )}
 
-            {/* ── Error message ── */}
+            {/* Error */}
             {error && (
               <div className="rounded-2xl bg-red-500/5 border border-red-500/20 px-4 py-3 flex items-start gap-2">
                 <AlertOctagon className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
@@ -324,7 +333,7 @@ export function DownloadModal({
               </div>
             )}
 
-            {/* ── Success message ── */}
+            {/* Success */}
             {success && (
               <div className="rounded-2xl bg-emerald-500/5 border border-emerald-500/20 px-4 py-3 flex items-start gap-2">
                 <ShieldCheck className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
@@ -336,65 +345,24 @@ export function DownloadModal({
           </div>
 
           {/* ════════════════════════════════════════════════ */}
-          {/* FOOTER — tombol aksi                            */}
+          {/* FOOTER — pakai PrimaryButton                    */}
           {/* ════════════════════════════════════════════════ */}
           <div className="px-6 pb-6 pt-2">
             {isMaxed ? (
-              <button
-                disabled
-                className="w-full h-12 rounded-2xl bg-muted text-muted-foreground cursor-not-allowed flex items-center justify-center gap-2 text-sm font-semibold border border-border/40"
-              >
+              <PrimaryButton variant="disabled-outline" size="lg">
                 <AlertOctagon className="h-4 w-4" />
                 Limit Tercapai ({MAX_DOWNLOADS}/{MAX_DOWNLOADS})
-              </button>
+              </PrimaryButton>
             ) : (
-              <button
+              <PrimaryButton
+                size="lg"
+                loading={loading}
                 onClick={handleOpenFile}
-                disabled={loading}
-                className="
-                  relative w-full h-12 rounded-2xl overflow-hidden
-                  bg-primary hover:bg-primary/90
-                  text-primary-foreground text-sm font-bold
-                  flex items-center justify-center gap-2
-                  transition-all duration-200
-                  hover:scale-[1.01] active:scale-[0.98]
-                  disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100
-                "
+                disabled={isMaxed}
               >
-                {/* Glass shimmer pada tombol */}
-                <div
-                  aria-hidden
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
-                  }}
-                />
-                <div
-                  aria-hidden
-                  className="absolute inset-0 rounded-2xl pointer-events-none"
-                  style={{
-                    boxShadow:
-                      "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
-                    border: "1px solid rgba(255,255,255,0.15)",
-                  }}
-                />
-
-                {/* Label */}
-                <span className="relative flex items-center gap-2">
-                  {loading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Memproses...
-                    </>
-                  ) : (
-                    <>
-                      <ExternalLink className="h-4 w-4" />
-                      Buka File
-                    </>
-                  )}
-                </span>
-              </button>
+                <ExternalLink className="h-4 w-4" />
+                Buka File
+              </PrimaryButton>
             )}
           </div>
         </div>

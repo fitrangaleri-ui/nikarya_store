@@ -1,9 +1,14 @@
+// ============================================================
+// FILE: src/app/dashboard/download-button.tsx
+// PERUBAHAN: Ganti <button> native → <PrimaryButton> komponen
+//            Logika & konfigurasi tidak diubah
+// ============================================================
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Download, AlertOctagon } from "lucide-react";
 import { useState } from "react";
 import { DownloadModal } from "./download-modal";
+import { PrimaryButton } from "@/components/ui/primary-button";
 
 const MAX_DOWNLOADS = 25;
 
@@ -23,31 +28,25 @@ export function DownloadButton({
   const [modalOpen, setModalOpen] = useState(false);
   const isMaxed = downloadCount >= MAX_DOWNLOADS;
 
+  // ── Tombol disabled (limit tercapai) ─────────────────────
   if (isMaxed) {
     return (
-      <Button
-        disabled
-        variant="outline"
-        size="sm"
-        className="w-full bg-muted/50 text-muted-foreground border-border cursor-not-allowed"
-      >
-        <AlertOctagon className="mr-2 h-4 w-4" />
+      <PrimaryButton variant="disabled-outline" size="md">
+        <AlertOctagon className="h-4 w-4" />
         Limit Tercapai
-      </Button>
+      </PrimaryButton>
     );
   }
 
+  // ── Tombol aksi (buka modal) ──────────────────────────────
   return (
     <>
-      <Button
-        onClick={() => setModalOpen(true)}
-        size="sm"
-        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground hover:shadow-md transition-all active:scale-[0.98]"
-      >
-        <Download className="mr-2 h-4 w-4" />
+      <PrimaryButton size="md" onClick={() => setModalOpen(true)}>
+        <Download className="h-4 w-4" />
         Akses File
-      </Button>
+      </PrimaryButton>
 
+      {/* Modal — logika tidak diubah */}
       <DownloadModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
