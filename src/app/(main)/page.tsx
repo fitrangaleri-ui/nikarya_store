@@ -8,6 +8,7 @@
 // ============================================================
 
 import { OrderProcedure } from "@/components/order-procedure";
+import { FaqSection } from "@/components/faq-section";
 import { FeaturesGrid } from "@/components/feature-card";
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -358,6 +359,14 @@ export default async function HomePage() {
       <OrderProcedure />
       {/* ============================================================ */}
       {/* END ORDER PROCEDURE SECTION                                    */}
+      {/* ============================================================ */}
+
+      {/* ============================================================ */}
+      {/* FAQ SECTION                                                    */}
+      {/* ============================================================ */}
+      <FaqSection />
+      {/* ============================================================ */}
+      {/* END FAQ SECTION                                               */}
       {/* ============================================================ */}
 
       {/* BottomNav — navigasi mobile (TIDAK DIUBAH) */}
