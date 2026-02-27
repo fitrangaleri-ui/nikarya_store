@@ -1,3 +1,9 @@
+// ============================================================
+// FILE: src/components/product-card.tsx
+// PERUBAHAN: Hapus semua className override pada Button
+//            → cukup pakai variant & size yang sudah ada
+// ============================================================
+
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -26,7 +32,6 @@ export function ProductCard({ product }: { product: any }) {
   return (
     <div className="group flex flex-col bg-card/60 backdrop-blur-sm border border-border/50 rounded-2xl overflow-hidden transition-all duration-300 h-full relative hover:shadow-lg hover:shadow-primary/5 hover:border-primary/30">
       {/* 1. IMAGE */}
-      {/* Rasio dikunci ke 1:1 (aspect-square) untuk semua breakpoints */}
       <div className="relative aspect-square bg-muted/30 overflow-hidden border-b border-border/40">
         <Link
           href={`/products/${product.slug}`}
@@ -48,7 +53,7 @@ export function ProductCard({ product }: { product: any }) {
           <div className="absolute inset-0 bg-background/0 group-hover:bg-background/10 transition-colors duration-300" />
         </Link>
 
-        {/* Badge: Tag — Pindah ke atas kiri */}
+        {/* Badge: Tag */}
         {firstTag && (
           <div className="absolute top-2 left-2 z-10">
             <span className="inline-flex items-center bg-background/80 backdrop-blur-md text-foreground text-[8px] md:text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-widest shadow-sm border border-border/50">
@@ -69,7 +74,7 @@ export function ProductCard({ product }: { product: any }) {
 
       {/* 2. INFO PRODUK */}
       <div className="p-3 md:p-4 flex flex-col flex-1 gap-2">
-        {/* Title & SKU (Inline / Sejajar) */}
+        {/* Title & SKU */}
         <Link href={`/products/${product.slug}`} className="flex-1">
           <h3 className="text-xs md:text-sm font-bold text-foreground leading-snug group-hover:text-primary transition-colors line-clamp-2">
             {product.sku && (
@@ -81,7 +86,7 @@ export function ProductCard({ product }: { product: any }) {
           </h3>
         </Link>
 
-        {/* Price (Harga coret dihilangkan, ukuran teks diperbesar) */}
+        {/* Price */}
         <div className="flex items-baseline mt-1">
           <span className="text-base md:text-lg font-extrabold text-foreground tracking-tight">
             Rp {Number(displayPrice).toLocaleString("id-ID")}
@@ -98,37 +103,22 @@ export function ProductCard({ product }: { product: any }) {
               rel="noopener noreferrer"
               className="w-full"
             >
-              {/* DIBERSIHKAN: uppercase, font-bold, tracking-widest dihapus karena sudah bawaan global */}
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full rounded-xl text-[10px] md:text-xs border-border/60 text-muted-foreground hover:bg-primary/5 hover:text-primary hover:border-primary/40 transition-all h-8 md:h-9"
-              >
-                <Eye className="mr-1.5 h-3 w-3 md:h-3.5 md:w-3.5" />
+              <Button variant="outline" size="sm" className="w-full">
+                <Eye />
                 Preview
               </Button>
             </a>
           ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              disabled
-              className="w-full rounded-full text-[10px] md:text-xs border-border/30 text-muted-foreground/50 h-8 md:h-9"
-            >
-              <Eye className="mr-1.5 h-3 w-3 md:h-3.5 md:w-3.5" />
+            <Button variant="outline" size="sm" disabled className="w-full">
+              <Eye />
               Preview
             </Button>
           )}
 
           {/* Tombol Order */}
           <Link href={`/products/${product.slug}`} className="w-full">
-            {/* DIBERSIHKAN: uppercase, font-bold, tracking-widest dihapus karena sudah bawaan global */}
-            <Button
-              variant="brand" // Menggunakan variant "brand" yang ada di komponen Button (teal)
-              size="sm"
-              className="w-full rounded-full text-[10px] md:text-xs h-9 md:h-10 transition-transform active:scale-[0.98]"
-            >
-              <ShoppingCart className="mr-1.5 h-3.5 w-3.5 md:h-4 md:w-4" />
+            <Button variant="brand" size="sm" className="w-full">
+              <ShoppingCart />
               Order Now
             </Button>
           </Link>
