@@ -1,3 +1,8 @@
+// ============================================================
+// FILE: src/components/cart-sidebar.tsx
+// PERUBAHAN: Hapus className override pada tombol checkout &
+//            tombol "Mulai Belanja" — cukup pakai variant & size
+// ============================================================
 "use client";
 
 import { X, ShoppingBag, ArrowRight, Loader2, Minus, Plus } from "lucide-react";
@@ -5,7 +10,6 @@ import { useCart } from "@/context/cart-context";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
 import Image from "next/image";
 
 export function CartSidebar() {
@@ -29,12 +33,13 @@ export function CartSidebar() {
 
   return (
     <>
-      {/* Overlay (Liquid Glass) */}
+      {/* Overlay */}
       <div
-        className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${isCartOpen
-          ? "opacity-100 pointer-events-auto"
-          : "opacity-0 pointer-events-none"
-          }`}
+        className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
+          isCartOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
         onClick={closeCart}
         aria-hidden="true"
       />
@@ -42,12 +47,12 @@ export function CartSidebar() {
       {/* Sidebar */}
       <aside
         className={`fixed top-0 right-0 h-full z-50 flex flex-col bg-background/95 backdrop-blur-2xl border-l border-border/50 transition-transform duration-300 ease-out shadow-2xl
-                    w-[90%] sm:w-[400px] ${isCartOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+                    w-[90%] sm:w-[400px] ${
+                      isCartOpen ? "translate-x-0" : "translate-x-full"
+                    }`}
         role="dialog"
         aria-label="Keranjang Belanja"
       >
-        {/* Aksen Pendaran di sudut Sidebar */}
         <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 blur-[60px] rounded-full pointer-events-none -z-10" />
 
         {/* ── HEADER ── */}
@@ -87,10 +92,13 @@ export function CartSidebar() {
               <p className="text-sm text-muted-foreground mt-2 max-w-[200px]">
                 Mari tambahkan produk luar biasa ke keranjang Anda.
               </p>
+
+              {/* ── Tombol Mulai Belanja — hapus className override ── */}
               <Button
                 onClick={closeCart}
                 variant="outline"
-                className="mt-6 rounded-full px-8 border-border/60 hover:bg-primary/5 hover:text-primary transition-colors"
+                size="default"
+                className="mt-6"
               >
                 Mulai Belanja
               </Button>
@@ -102,9 +110,8 @@ export function CartSidebar() {
                   key={item.id}
                   className="flex gap-4 p-3 bg-card/20 hover:bg-card/40 rounded-2xl transition-colors group relative"
                 >
-                  {/* Thumbnail Container */}
+                  {/* Thumbnail */}
                   <div className="relative w-20 h-20 flex-shrink-0">
-                    {/* Tombol X Hapus Item di Pojok Kiri Atas Gambar */}
                     <button
                       onClick={() => removeFromCart(item.id)}
                       className="absolute -top-2 -left-2 z-20 w-6 h-6 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-all shadow-sm opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
@@ -112,7 +119,6 @@ export function CartSidebar() {
                     >
                       <X className="h-3 w-3" />
                     </button>
-
                     <div className="w-full h-full rounded-xl overflow-hidden bg-muted/30 border border-border/50 shadow-sm relative">
                       {item.thumbnail_url ? (
                         <Image
@@ -140,7 +146,7 @@ export function CartSidebar() {
                       </p>
                     </div>
 
-                    {/* Quantity Controls (Pill Shape) */}
+                    {/* Quantity Controls */}
                     <div className="inline-flex items-center bg-background border border-border/60 rounded-full h-7 mt-2 w-fit shadow-sm">
                       <button
                         onClick={() => decreaseQuantity(item.id)}
@@ -167,7 +173,7 @@ export function CartSidebar() {
           )}
         </div>
 
-        {/* ── FOOTER: Subtotal + Tombol Checkout ── */}
+        {/* ── FOOTER ── */}
         {cartItems.length > 0 && (
           <div className="border-t border-border/40 p-5 bg-card/60 backdrop-blur-md relative z-10 shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.1)]">
             <div className="flex items-end justify-between mb-4">
@@ -179,25 +185,26 @@ export function CartSidebar() {
               </span>
             </div>
 
+            {/* ── Tombol Checkout — hapus semua className override ── */}
             <Button
               onClick={handleCheckoutAll}
               disabled={loading}
               variant="brand"
               size="lg"
-              className="w-full h-14 rounded-full hover:shadow-[0_6px_20px_rgba(13,148,136,0.23)] hover:-translate-y-0.5 transition-all"
+              className="w-full"
             >
               {loading ? (
                 <>
-                  <Loader2 className="mr-2.5 h-5 w-5 animate-spin" />
+                  <Loader2 className="h-5 w-5 animate-spin" />
                   Memproses...
                 </>
               ) : (
-                <div className="flex items-center justify-between w-full px-2">
-                  <span>Pembayaran</span>
-                  <div className="w-8 h-8 rounded-full bg-background/20 flex items-center justify-center backdrop-blur-sm">
+                <>
+                  Pembayaran
+                  <span className="brand-pill__icon">
                     <ArrowRight className="h-4 w-4" />
-                  </div>
-                </div>
+                  </span>
+                </>
               )}
             </Button>
           </div>
