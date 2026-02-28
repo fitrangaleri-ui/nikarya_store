@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Copy, CheckCircle, Clock, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Suspense } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 interface ManualMethodInfo {
   id: string;
@@ -285,9 +286,16 @@ function PaymentInstructionContent() {
           if (result.paymentStatus === "PAID") {
             if (pollRef.current) clearInterval(pollRef.current);
             // Brief delay so user sees the "confirmed" UI
-            setTimeout(() => {
-              // Redirect to dashboard (auth system handles verified/unverified)
-              router.push("/dashboard");
+            setTimeout(async () => {
+              // Check if user email is verified
+              const supabase = createClient();
+              const { data: { user } } = await supabase.auth.getUser();
+              if (user && !user.email_confirmed_at) {
+                // Guest user — needs verification before login
+                router.push("/dashboard/verify-email");
+              } else {
+                router.push("/dashboard");
+              }
             }, 2000);
           } else if (result.paymentStatus === "EXPIRED") {
             if (pollRef.current) clearInterval(pollRef.current);
@@ -411,8 +419,8 @@ function PaymentInstructionContent() {
           {!isPaid && data.paymentDeadline && (
             <div
               className={`rounded-2xl p-6 text-center border shadow-sm transition-all ${isExpired
-                  ? "bg-destructive/5 border-destructive/20"
-                  : "bg-background/50 border-border/50"
+                ? "bg-destructive/5 border-destructive/20"
+                : "bg-background/50 border-border/50"
                 }`}
             >
               {isExpired ? (
@@ -452,7 +460,7 @@ function PaymentInstructionContent() {
                 Pembayaran Dikonfirmasi!
               </p>
               <p className="text-sm font-medium text-primary/80">
-                Pesanan Anda sedang diproses. Mengalihkan ke dashboard...
+                Pesanan Anda sedang diproses. Mengalihkan...
               </p>
             </div>
           )}
@@ -492,8 +500,8 @@ function PaymentInstructionContent() {
                 <button
                   onClick={() => handleCopy(String(data.totalAmount), "amount")}
                   className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all ${copiedField === "amount"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-primary/10 text-primary hover:bg-primary/20"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-primary/10 text-primary hover:bg-primary/20"
                     }`}
                 >
                   {copiedField === "amount" ? (
@@ -530,8 +538,8 @@ function PaymentInstructionContent() {
                 <button
                   onClick={() => handleCopy(data.paymentCode!, "va")}
                   className={`flex items-center justify-center w-10 h-10 rounded-full transition-all flex-shrink-0 ${copiedField === "va"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted hover:bg-primary/10 hover:text-primary text-muted-foreground"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted hover:bg-primary/10 hover:text-primary text-muted-foreground"
                     }`}
                   title="Salin nomor"
                 >
@@ -630,8 +638,8 @@ function PaymentInstructionContent() {
                         handleCopy(data.manualMethod!.account_number, "account")
                       }
                       className={`flex items-center justify-center w-10 h-10 rounded-full transition-all flex-shrink-0 ${copiedField === "account"
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted hover:bg-primary/10 hover:text-primary text-muted-foreground"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted hover:bg-primary/10 hover:text-primary text-muted-foreground"
                         }`}
                       title="Salin nomor"
                     >
@@ -686,11 +694,19 @@ function PaymentInstructionContent() {
           <div className="pt-4">
             {isPaid ? (
               <Button
-                onClick={() => router.push("/dashboard")}
+                onClick={async () => {
+                  const supabase = createClient();
+                  const { data: { user } } = await supabase.auth.getUser();
+                  if (user && !user.email_confirmed_at) {
+                    router.push("/dashboard/verify-email");
+                  } else {
+                    router.push("/dashboard");
+                  }
+                }}
                 variant="brand"
                 className="w-full rounded-full h-12 shadow-md shadow-primary/20 transition-all active:scale-95"
               >
-                Lihat Dashboard
+                Lanjutkan
               </Button>
             ) : (
               <Button

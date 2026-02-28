@@ -27,8 +27,8 @@ export default function VerifyEmailPage() {
             }
 
             if (user.email_confirmed_at) {
-                // Already verified — go to dashboard
-                router.push("/dashboard");
+                // Already verified — go to login page
+                router.push("/login");
                 return;
             }
 
@@ -45,7 +45,7 @@ export default function VerifyEmailPage() {
                 data: { user },
             } = await supabase.auth.getUser();
             if (user?.email_confirmed_at) {
-                router.push("/dashboard");
+                router.push("/login");
             }
         }, 5000);
 
@@ -61,7 +61,7 @@ export default function VerifyEmailPage() {
                 type: "signup",
                 email,
                 options: {
-                    emailRedirectTo: `${window.location.origin}/auth/confirm?next=/dashboard`,
+                    emailRedirectTo: `${window.location.origin}/auth/confirm?next=/login`,
                 },
             });
             setResent(true);
