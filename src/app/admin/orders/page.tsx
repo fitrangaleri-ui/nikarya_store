@@ -47,24 +47,26 @@ export default async function AdminOrdersPage({
   // Client-side search filter (search by email, name, or product title)
   const filteredOrders = search
     ? orders?.filter((order) => {
-        const profile = order.profiles as {
-          email: string;
-          full_name: string | null;
-        } | null;
-        const product = order.products as { title: string } | null;
-        const searchLower = search.toLowerCase();
-        return (
-          profile?.email?.toLowerCase().includes(searchLower) ||
-          profile?.full_name?.toLowerCase().includes(searchLower) ||
-          product?.title?.toLowerCase().includes(searchLower) ||
-          order.midtrans_order_id?.toLowerCase().includes(searchLower) ||
-          order.id.toLowerCase().includes(searchLower)
-        );
-      })
+      const profile = order.profiles as {
+        email: string;
+        full_name: string | null;
+      } | null;
+      const product = order.products as { title: string } | null;
+      const searchLower = search.toLowerCase();
+      return (
+        profile?.email?.toLowerCase().includes(searchLower) ||
+        profile?.full_name?.toLowerCase().includes(searchLower) ||
+        product?.title?.toLowerCase().includes(searchLower) ||
+        order.midtrans_order_id?.toLowerCase().includes(searchLower) ||
+        order.id.toLowerCase().includes(searchLower)
+      );
+    })
     : orders;
 
   const statusColors: Record<string, string> = {
     PENDING:
+      "bg-amber-500/10 text-amber-600 border border-amber-500/20 rounded-full shadow-none font-bold px-3 py-1",
+    PENDING_MANUAL:
       "bg-amber-500/10 text-amber-600 border border-amber-500/20 rounded-full shadow-none font-bold px-3 py-1",
     PAID: "bg-primary/10 text-primary border border-primary/20 rounded-full shadow-none font-bold px-3 py-1",
     FAILED:
@@ -112,6 +114,7 @@ export default async function AdminOrdersPage({
               options={[
                 { value: "", label: "Semua Status" },
                 { value: "PENDING", label: "Pending" },
+                { value: "PENDING_MANUAL", label: "Pending Manual" },
                 { value: "PAID", label: "Dibayar" },
                 { value: "FAILED", label: "Gagal" },
               ]}
@@ -189,10 +192,10 @@ export default async function AdminOrdersPage({
                         <TableCell className="py-4">
                           <div>
                             <p className="text-sm font-bold text-foreground line-clamp-1">
-                              {profile?.full_name || "—"}
+                              {profile?.full_name || order.guest_name || "—"}
                             </p>
                             <p className="text-[11px] font-semibold text-muted-foreground mt-0.5 truncate max-w-[200px]">
-                              {profile?.email || "—"}
+                              {profile?.email || order.guest_email || "—"}
                             </p>
                           </div>
                         </TableCell>
@@ -211,7 +214,7 @@ export default async function AdminOrdersPage({
                               "rounded-full shadow-none font-bold whitespace-nowrap px-3 py-1"
                             }
                           >
-                            {order.payment_status}
+                            {order.payment_status === "PENDING_MANUAL" ? "PENDING" : order.payment_status}
                           </Badge>
                         </TableCell>
                         <TableCell className="py-4">

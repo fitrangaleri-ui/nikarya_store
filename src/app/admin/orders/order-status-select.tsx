@@ -18,6 +18,11 @@ const statusOptions = [
     className: "text-amber-600 font-bold hover:bg-amber-50 focus:bg-amber-50",
   },
   {
+    value: "PENDING_MANUAL",
+    label: "Pending Manual",
+    className: "text-amber-600 font-bold hover:bg-amber-50 focus:bg-amber-50",
+  },
+  {
     value: "PAID",
     label: "Dibayar",
     className: "text-primary font-bold hover:bg-primary/10 focus:bg-primary/10",
@@ -34,6 +39,7 @@ const statusOptions = [
 const getTriggerColor = (status: string) => {
   switch (status) {
     case "PENDING":
+    case "PENDING_MANUAL":
       return "border-amber-500/30 bg-amber-500/10 text-amber-600 focus:ring-amber-500";
     case "PAID":
       return "border-primary/30 bg-primary/10 text-primary focus:ring-primary";
