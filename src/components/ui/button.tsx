@@ -92,7 +92,7 @@ function Button({
     asChild?: boolean;
   }) {
   const Comp = asChild ? Slot.Root : "button";
-  const needsShimmer = SHIMMER_VARIANTS.has(variant as string);
+  const needsShimmer = SHIMMER_VARIANTS.has(variant as string) && !asChild;
 
   return (
     <Comp

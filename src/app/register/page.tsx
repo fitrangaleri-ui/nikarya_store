@@ -1,21 +1,31 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
 import { register } from "../(auth)/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UserPlus, MailCheck } from "lucide-react";
+import {
+  UserPlus,
+  MailCheck,
+  Mail,
+  Lock,
+  User,
+  AlertOctagon,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 
-// 1. Definisikan tipe data state secara eksplisit
 type RegisterState = {
   error?: string;
   success?: boolean;
 } | null;
 
 export default function RegisterPage() {
-  // 2. Gunakan tipe data tersebut pada useActionState
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [state, formAction, isPending] = useActionState<
     RegisterState,
     FormData
@@ -31,165 +41,299 @@ export default function RegisterPage() {
       return { error: "Password minimal 6 karakter." };
     }
 
-    // Pastikan fungsi register di actions.ts mengembalikan object yang sesuai
     const result = await register(formData);
-
-    // Mengubah kembalian 'undefined' menjadi 'null' agar sesuai tipe data
     return result || null;
   }, null);
 
-  // 3. Sekarang TypeScript tahu bahwa state bisa punya properti success
+  // ── State sukses ──
   if (state?.success) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
-        <div className="w-full max-w-sm bg-background/95 backdrop-blur-xl border border-border/40 shadow-2xl rounded-3xl p-8 text-center relative overflow-hidden animate-in fade-in zoom-in-95 duration-500">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] rounded-full pointer-events-none -z-10" />
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] -z-10" />
 
-          <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 border border-primary/20">
-            <MailCheck className="h-10 w-10 text-primary" />
+        <div className="w-full max-w-[420px] bg-background/95 backdrop-blur-2xl border border-border/50 shadow-2xl shadow-black/20 rounded-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-500">
+          {/* Header Banner — sukses */}
+          <div className="relative bg-primary px-6 pt-6 pb-5 overflow-hidden">
+            <div
+              aria-hidden
+              className="absolute -top-8 -right-8 w-40 h-40 rounded-full pointer-events-none blur-[60px]"
+              style={{ background: "rgba(255,255,255,0.08)" }}
+            />
+            <div
+              aria-hidden
+              className="absolute bottom-0 left-1/4 w-32 h-32 rounded-full pointer-events-none blur-[50px]"
+              style={{ background: "rgba(255,255,255,0.05)" }}
+            />
+            <div
+              aria-hidden
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
+              }}
+            />
+            <div
+              aria-hidden
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                boxShadow:
+                  "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
+                border: "1px solid rgba(255,255,255,0.15)",
+              }}
+            />
+            <div className="relative z-10">
+              <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-white/15 text-primary-foreground text-[10px] font-bold uppercase tracking-widest mb-2">
+                <MailCheck className="w-3 h-3" />
+                Registrasi Berhasil
+              </span>
+              <h2 className="text-xl font-extrabold text-primary-foreground leading-tight tracking-tight">
+                Cek Email Anda
+              </h2>
+              <p className="mt-0.5 text-xs text-primary-foreground/70">
+                Link verifikasi telah dikirim ke email Anda.
+              </p>
+            </div>
           </div>
-          <h2 className="text-2xl font-bold text-foreground tracking-tight mb-2">
-            Cek Email Anda
-          </h2>
-          <p className="text-sm text-muted-foreground leading-relaxed mb-8">
-            Kami telah mengirimkan link verifikasi ke alamat email yang Anda
-            daftarkan. Silakan klik link tersebut untuk mengaktifkan akun.
-          </p>
-          <Button
-            asChild
-            size="lg"
-            variant="brand"
-            className="w-full rounded-full h-12 shadow-md shadow-primary/20"
-          >
-            <Link href="/login">Masuk ke Akun</Link>
-          </Button>
+
+          {/* Body sukses */}
+          <div className="px-6 py-6 space-y-5">
+            <div className="flex flex-col items-center text-center gap-3">
+              <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+                <MailCheck className="h-8 w-8 text-primary" />
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Kami telah mengirimkan link verifikasi ke alamat email yang Anda
+                daftarkan. Silakan klik link tersebut untuk mengaktifkan akun.
+              </p>
+            </div>
+
+            <Button asChild size="lg" variant="brand" className="w-full">
+              <Link href="/login">Masuk ke Akun</Link>
+            </Button>
+          </div>
         </div>
       </div>
     );
   }
 
+  // ── Form register normal ──
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4 relative overflow-hidden">
-      {/* Background Ornamen Halus */}
+      {/* Background blobs */}
       <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10" />
       <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] -z-10" />
 
-      <div className="w-full max-w-[400px] bg-background/95 backdrop-blur-xl border border-border/40 shadow-2xl rounded-3xl overflow-hidden relative animate-in fade-in zoom-in-95 duration-500">
-        {/* Glow Akses Dalam Box */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] rounded-full pointer-events-none -z-10" />
+      <div className="w-full max-w-[420px] bg-background/95 backdrop-blur-2xl border border-border/50 shadow-2xl shadow-black/20 rounded-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-500">
+        {/* ── Header Banner ── */}
+        <div className="relative bg-primary px-6 pt-6 pb-5 overflow-hidden">
+          <div
+            aria-hidden
+            className="absolute -top-8 -right-8 w-40 h-40 rounded-full pointer-events-none blur-[60px]"
+            style={{ background: "rgba(255,255,255,0.08)" }}
+          />
+          <div
+            aria-hidden
+            className="absolute bottom-0 left-1/4 w-32 h-32 rounded-full pointer-events-none blur-[50px]"
+            style={{ background: "rgba(255,255,255,0.05)" }}
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
+            }}
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              boxShadow:
+                "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
+              border: "1px solid rgba(255,255,255,0.15)",
+            }}
+          />
 
-        <div className="text-center px-6 pt-10 pb-4">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 border border-primary/20 mb-5">
-            <UserPlus className="h-7 w-7 text-primary" />
+          <div className="relative z-10">
+            <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-white/15 text-primary-foreground text-[10px] font-bold uppercase tracking-widest mb-2">
+              <UserPlus className="w-3 h-3" />
+              Buat Akun
+            </span>
+            <h1 className="text-xl font-extrabold text-primary-foreground leading-tight tracking-tight">
+              Buat Akun Baru
+            </h1>
+            <p className="mt-0.5 text-xs text-primary-foreground/70">
+              Daftar untuk mulai menyimpan koleksi favorit.
+            </p>
           </div>
-          <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1.5">
-            Buat Akun Baru
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Daftar untuk mulai menyimpan koleksi favorit.
-          </p>
         </div>
 
-        <div className="px-6 pb-8 space-y-5">
+        {/* ── Body ── */}
+        <form action={formAction} className="px-6 py-5 space-y-3">
+          {/* Error */}
           {state?.error && (
-            <div className="rounded-xl bg-destructive/10 p-3 text-sm text-center text-destructive border border-destructive/20 animate-in fade-in zoom-in-95">
-              {state.error}
+            <div className="rounded-2xl bg-red-500/5 border border-red-500/20 px-4 py-3 flex items-start gap-2 animate-in fade-in zoom-in-95">
+              <AlertOctagon className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
+              <p className="text-sm text-red-600">{state.error}</p>
             </div>
           )}
 
-          <form action={formAction} className="space-y-4">
-            <div className="space-y-1.5 text-left">
-              <Label
-                htmlFor="fullName"
-                className="text-xs font-semibold text-muted-foreground ml-1"
-              >
-                Nama Lengkap <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="fullName"
-                name="fullName"
-                type="text"
-                placeholder="John Doe"
-                required
-                className="h-11 rounded-xl border-border/50 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-sm"
-              />
+          {/* Nama Lengkap */}
+          <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
+            <div className="flex items-center gap-3 px-4 py-3">
+              <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <User className="h-3.5 w-3.5 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <Label
+                  htmlFor="fullName"
+                  className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
+                >
+                  Nama Lengkap <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="fullName"
+                  name="fullName"
+                  type="text"
+                  placeholder="John Doe"
+                  required
+                  className="h-7 p-0 border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm font-medium text-foreground placeholder:text-muted-foreground/50 mt-0.5"
+                />
+              </div>
             </div>
+          </div>
 
-            <div className="space-y-1.5 text-left">
-              <Label
-                htmlFor="email"
-                className="text-xs font-semibold text-muted-foreground ml-1"
-              >
-                Alamat Email <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="nama@email.com"
-                required
-                className="h-11 rounded-xl border-border/50 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-sm"
-              />
+          {/* Email */}
+          <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
+            <div className="flex items-center gap-3 px-4 py-3">
+              <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Mail className="h-3.5 w-3.5 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <Label
+                  htmlFor="email"
+                  className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
+                >
+                  Alamat Email <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="nama@email.com"
+                  required
+                  className="h-7 p-0 border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm font-medium text-foreground placeholder:text-muted-foreground/50 mt-0.5"
+                />
+              </div>
             </div>
+          </div>
 
-            {/* Grid 2 Kolom untuk Password */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5 text-left">
+          {/* Kata Sandi */}
+          <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
+            <div className="flex items-center gap-3 px-4 py-3">
+              <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Lock className="h-3.5 w-3.5 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
                 <Label
                   htmlFor="password"
-                  className="text-xs font-semibold text-muted-foreground ml-1"
+                  className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
                 >
                   Kata Sandi <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   required
-                  className="h-11 rounded-xl border-border/50 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-sm"
+                  className="h-7 p-0 border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm font-medium text-foreground placeholder:text-muted-foreground/50 mt-0.5"
                 />
               </div>
-              <div className="space-y-1.5 text-left">
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="shrink-0 w-7 h-7 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
+                aria-label={
+                  showPassword
+                    ? "Sembunyikan kata sandi"
+                    : "Tampilkan kata sandi"
+                }
+              >
+                {showPassword ? (
+                  <EyeOff className="h-3.5 w-3.5" />
+                ) : (
+                  <Eye className="h-3.5 w-3.5" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Konfirmasi Kata Sandi */}
+          <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
+            <div className="flex items-center gap-3 px-4 py-3">
+              <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Lock className="h-3.5 w-3.5 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
                 <Label
                   htmlFor="confirmPassword"
-                  className="text-xs font-semibold text-muted-foreground ml-1"
+                  className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
                 >
-                  Konfirmasi <span className="text-destructive">*</span>
+                  Konfirmasi Sandi <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
-                  type="password"
+                  type={showConfirmPassword ? "text" : "password"}
                   placeholder="••••••••"
                   required
-                  className="h-11 rounded-xl border-border/50 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-sm"
+                  className="h-7 p-0 border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm font-medium text-foreground placeholder:text-muted-foreground/50 mt-0.5"
                 />
               </div>
-            </div>
-
-            <div className="pt-2">
-              <Button
-                type="submit"
-                variant="brand"
-                className="w-full rounded-full h-11"
-                disabled={isPending}
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="shrink-0 w-7 h-7 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
+                aria-label={
+                  showConfirmPassword
+                    ? "Sembunyikan konfirmasi"
+                    : "Tampilkan konfirmasi"
+                }
               >
-                {isPending ? "Memproses..." : "Daftar Sekarang"}
-              </Button>
+                {showConfirmPassword ? (
+                  <EyeOff className="h-3.5 w-3.5" />
+                ) : (
+                  <Eye className="h-3.5 w-3.5" />
+                )}
+              </button>
             </div>
+          </div>
 
-            <p className="text-xs text-muted-foreground text-center pt-2">
-              Sudah memiliki akun?{" "}
-              <Link
-                href="/login"
-                className="text-primary hover:text-primary/80 font-medium transition-colors"
-              >
-                Masuk di sini
-              </Link>
-            </p>
-          </form>
-        </div>
+          {/* Submit */}
+          <Button
+            type="submit"
+            variant="brand"
+            size="lg"
+            className="w-full"
+            disabled={isPending}
+          >
+            <UserPlus className="h-4 w-4" />
+            {isPending ? "Memproses..." : "Daftar Sekarang"}
+          </Button>
+
+          {/* Login Link */}
+          <p className="text-xs text-muted-foreground text-center pt-1 pb-1">
+            Sudah memiliki akun?{" "}
+            <Link
+              href="/login"
+              className="text-primary hover:text-primary/80 font-semibold transition-colors"
+            >
+              Masuk di sini
+            </Link>
+          </p>
+        </form>
       </div>
     </div>
   );

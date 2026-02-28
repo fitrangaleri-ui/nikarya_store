@@ -1,12 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import Link from "next/link";
 import { forgotPassword } from "../(auth)/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { KeyRound, MailCheck } from "lucide-react";
+import { KeyRound, MailCheck, Mail, AlertOctagon } from "lucide-react";
 
 type FormState = {
   error?: string;
@@ -14,6 +15,8 @@ type FormState = {
 } | null;
 
 export default function ForgotPasswordPage() {
+  const router = useRouter(); // ← deklarasi router di dalam component
+
   const [state, formAction, isPending] = useActionState<FormState, FormData>(
     async (prevState, formData) => {
       const result = await forgotPassword(formData);
@@ -25,28 +28,75 @@ export default function ForgotPasswordPage() {
   // ── STATE SUKSES ──
   if (state?.success) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-        <div className="w-full max-w-sm bg-background/95 backdrop-blur-xl border border-border/40 shadow-2xl rounded-3xl p-8 text-center relative overflow-hidden animate-in fade-in zoom-in-95 duration-500">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] rounded-full pointer-events-none -z-10" />
+      <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] -z-10" />
 
-          <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 border border-primary/20">
-            <MailCheck className="h-10 w-10 text-primary" />
+        <div className="w-full max-w-[420px] bg-background/95 backdrop-blur-2xl border border-border/50 shadow-2xl shadow-black/20 rounded-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-500">
+          {/* Header Banner — sukses */}
+          <div className="relative bg-primary px-6 pt-6 pb-5 overflow-hidden">
+            <div
+              aria-hidden
+              className="absolute -top-8 -right-8 w-40 h-40 rounded-full pointer-events-none blur-[60px]"
+              style={{ background: "rgba(255,255,255,0.08)" }}
+            />
+            <div
+              aria-hidden
+              className="absolute bottom-0 left-1/4 w-32 h-32 rounded-full pointer-events-none blur-[50px]"
+              style={{ background: "rgba(255,255,255,0.05)" }}
+            />
+            <div
+              aria-hidden
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
+              }}
+            />
+            <div
+              aria-hidden
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                boxShadow:
+                  "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
+                border: "1px solid rgba(255,255,255,0.15)",
+              }}
+            />
+            <div className="relative z-10">
+              <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-white/15 text-primary-foreground text-[10px] font-bold uppercase tracking-widest mb-2">
+                <MailCheck className="w-3 h-3" />
+                Email Terkirim
+              </span>
+              <h2 className="text-xl font-extrabold text-primary-foreground leading-tight tracking-tight">
+                Cek Email Anda
+              </h2>
+              <p className="mt-0.5 text-xs text-primary-foreground/70">
+                Instruksi reset kata sandi telah dikirim.
+              </p>
+            </div>
           </div>
-          <h2 className="text-2xl font-bold text-foreground tracking-tight mb-2">
-            Cek Email Anda
-          </h2>
-          <p className="text-sm text-muted-foreground leading-relaxed mb-8">
-            Kami telah mengirimkan instruksi untuk mengatur ulang kata sandi ke
-            email Anda. Silakan periksa kotak masuk atau folder spam.
-          </p>
-          <Button
-            asChild
-            size="lg"
-            variant="brand"
-            className="w-full rounded-full h-12 shadow-md shadow-primary/20"
-          >
-            <Link href="/login">Kembali ke Login</Link>
-          </Button>
+
+          {/* Body sukses */}
+          <div className="px-6 py-6 space-y-5">
+            <div className="flex flex-col items-center text-center gap-3">
+              <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+                <MailCheck className="h-8 w-8 text-primary" />
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Kami telah mengirimkan instruksi untuk mengatur ulang kata sandi
+                ke email Anda. Silakan periksa kotak masuk atau folder spam.
+              </p>
+            </div>
+
+            <Button
+              size="lg"
+              variant="brand"
+              className="w-full"
+              onClick={() => router.push("/login")}
+            >
+              Kembali ke Login
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -54,72 +104,114 @@ export default function ForgotPasswordPage() {
 
   // ── FORM DEFAULT ──
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-      <div className="w-full max-w-sm bg-background/95 backdrop-blur-xl border border-border/40 shadow-2xl rounded-3xl overflow-hidden relative animate-in fade-in zoom-in-95 duration-500">
-        {/* Glow Aksen */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] rounded-full pointer-events-none -z-10" />
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
+      {/* Background blobs */}
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10" />
+      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] -z-10" />
 
-        <div className="text-center px-6 pt-10 pb-4">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 border border-primary/20 mb-5">
-            <KeyRound className="h-7 w-7 text-primary" />
+      <div className="w-full max-w-[420px] bg-background/95 backdrop-blur-2xl border border-border/50 shadow-2xl shadow-black/20 rounded-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-500">
+        {/* ── Header Banner ── */}
+        <div className="relative bg-primary px-6 pt-6 pb-5 overflow-hidden">
+          <div
+            aria-hidden
+            className="absolute -top-8 -right-8 w-40 h-40 rounded-full pointer-events-none blur-[60px]"
+            style={{ background: "rgba(255,255,255,0.08)" }}
+          />
+          <div
+            aria-hidden
+            className="absolute bottom-0 left-1/4 w-32 h-32 rounded-full pointer-events-none blur-[50px]"
+            style={{ background: "rgba(255,255,255,0.05)" }}
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
+            }}
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              boxShadow:
+                "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
+              border: "1px solid rgba(255,255,255,0.15)",
+            }}
+          />
+
+          <div className="relative z-10">
+            <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-white/15 text-primary-foreground text-[10px] font-bold uppercase tracking-widest mb-2">
+              <KeyRound className="w-3 h-3" />
+              Lupa Kata Sandi
+            </span>
+            <h1 className="text-xl font-extrabold text-primary-foreground leading-tight tracking-tight">
+              Lupa Kata Sandi?
+            </h1>
+            <p className="mt-0.5 text-xs text-primary-foreground/70">
+              Masukkan email Anda untuk memulihkan akun.
+            </p>
           </div>
-          <h1 className="text-2xl font-bold text-foreground tracking-tight mb-2">
-            Lupa Kata Sandi?
-          </h1>
-          <p className="text-sm text-muted-foreground px-2">
-            Masukkan email Anda dan kami akan mengirimkan link untuk memulihkan
-            akun.
-          </p>
         </div>
 
-        <div className="px-6 pb-10">
-          <form action={formAction} className="space-y-5">
-            {state?.error && (
-              <div className="rounded-xl bg-destructive/10 p-3 text-sm text-center text-destructive border border-destructive/20 animate-in fade-in zoom-in-95">
-                {state.error}
-              </div>
-            )}
-
-            <div className="space-y-1.5 text-left">
-              <Label
-                htmlFor="email"
-                className="text-xs font-semibold text-muted-foreground ml-1"
-              >
-                Alamat Email <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="nama@email.com"
-                required
-                className="h-12 rounded-xl border-border/50 bg-muted/30 focus:bg-background focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-sm"
-              />
+        {/* ── Body ── */}
+        <form action={formAction} className="px-6 py-5 space-y-4">
+          {/* Error */}
+          {state?.error && (
+            <div className="rounded-2xl bg-red-500/5 border border-red-500/20 px-4 py-3 flex items-start gap-2 animate-in fade-in zoom-in-95">
+              <AlertOctagon className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
+              <p className="text-sm text-red-600">{state.error}</p>
             </div>
+          )}
 
-            <div className="pt-2 space-y-4">
-              <Button
-                type="submit"
-                size="lg"
-                variant="brand"
-                className="w-full rounded-full h-12 shadow-md shadow-primary/20"
-                disabled={isPending}
-              >
-                {isPending ? "Memproses..." : "Kirim Link Reset"}
-              </Button>
-
-              <div className="text-center text-xs font-medium text-muted-foreground">
-                Ingat kata sandi Anda?{" "}
-                <Link
-                  href="/login"
-                  className="text-primary hover:text-primary/80 font-bold transition-colors"
+          {/* Email Field */}
+          <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
+            <div className="flex items-center gap-3 px-4 py-3">
+              <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Mail className="h-3.5 w-3.5 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <Label
+                  htmlFor="email"
+                  className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
                 >
-                  Masuk kembali
-                </Link>
+                  Alamat Email <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="nama@email.com"
+                  required
+                  className="h-7 p-0 border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm font-medium text-foreground placeholder:text-muted-foreground/50 mt-0.5"
+                />
               </div>
             </div>
-          </form>
-        </div>
+          </div>
+
+          {/* Submit */}
+          <Button
+            type="submit"
+            size="lg"
+            variant="brand"
+            className="w-full"
+            disabled={isPending}
+          >
+            <KeyRound className="h-4 w-4" />
+            {isPending ? "Memproses..." : "Kirim Link Reset"}
+          </Button>
+
+          {/* Back to Login */}
+          <p className="text-xs text-muted-foreground text-center pt-1 pb-1">
+            Ingat kata sandi Anda?{" "}
+            <Link
+              href="/login"
+              className="text-primary hover:text-primary/80 font-semibold transition-colors"
+            >
+              Masuk kembali
+            </Link>
+          </p>
+        </form>
       </div>
     </div>
   );
