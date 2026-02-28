@@ -64,7 +64,7 @@ export default async function ProductsPage() {
         {/* Konten */}
         <div className="relative z-10 flex items-start justify-between gap-4">
           <div>
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-white/15 text-primary-foreground text-[11px] font-bold uppercase tracking-widest mb-3">
+            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-white/15 text-primary-foreground text-[11px] font-bold uppercase tracking-[-0.005em] mb-3">
               <Download className="w-3 h-3" />
               Produk Saya
             </span>
@@ -95,14 +95,6 @@ export default async function ProductsPage() {
       {/* ════════════════════════════════════════════════════ */}
       {uniquePaidProducts.length > 0 ? (
         <>
-          {/* Section label */}
-          <div className="flex items-center gap-2">
-            <span className="w-1 h-5 rounded-full bg-primary block" />
-            <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
-              Daftar Produk
-            </h2>
-          </div>
-
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {uniquePaidProducts.map((order) => {
               const product = order.products as {

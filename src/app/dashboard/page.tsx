@@ -72,7 +72,7 @@ export default async function DashboardPage() {
         <div className="relative z-10 flex items-start justify-between gap-4">
           <div>
             {/* Badge label */}
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-white/15 text-primary-foreground text-[11px] font-bold uppercase tracking-widest mb-3">
+            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-white/15 text-primary-foreground text-[11px] font-bold uppercase tracking-[-0.005em] mb-3">
               <LayoutDashboard className="w-3 h-3" />
               Dashboard Saya
             </span>
@@ -100,7 +100,7 @@ export default async function DashboardPage() {
         <div className="relative rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden group hover:border-primary/30 hover:shadow-md hover:shadow-primary/5 transition-all duration-200">
           <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-primary/8 blur-xl pointer-events-none" />
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            <p className="text-xs font-semibold uppercase tracking-[-0.005em] text-muted-foreground">
               Total Pesanan
             </p>
             <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -117,7 +117,7 @@ export default async function DashboardPage() {
         <div className="relative rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden group hover:border-emerald-500/30 hover:shadow-md hover:shadow-emerald-500/5 transition-all duration-200">
           <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-emerald-500/8 blur-xl pointer-events-none" />
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            <p className="text-xs font-semibold uppercase tracking-[-0.005em] text-muted-foreground">
               Pesanan Lunas
             </p>
             <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center">
@@ -136,7 +136,7 @@ export default async function DashboardPage() {
         <div className="relative rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden group hover:border-violet-500/30 hover:shadow-md hover:shadow-violet-500/5 transition-all duration-200">
           <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-violet-500/8 blur-xl pointer-events-none" />
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            <p className="text-xs font-semibold uppercase tracking-[-0.005em] text-muted-foreground">
               Total Belanja
             </p>
             <div className="w-8 h-8 rounded-xl bg-violet-500/10 flex items-center justify-center">
@@ -155,7 +155,7 @@ export default async function DashboardPage() {
         <div className="relative rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden group hover:border-primary/30 hover:shadow-md hover:shadow-primary/5 transition-all duration-200">
           <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-primary/8 blur-xl pointer-events-none" />
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            <p className="text-xs font-semibold uppercase tracking-[-0.005em] text-muted-foreground">
               Produk Tersedia
             </p>
             <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -176,7 +176,7 @@ export default async function DashboardPage() {
         {/* Section label */}
         <div className="flex items-center gap-2 mb-4">
           <span className="w-1 h-5 rounded-full bg-primary block" />
-          <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
+          <h2 className="text-sm font-bold uppercase tracking-[-0.005em] text-muted-foreground">
             Menu Utama
           </h2>
         </div>
