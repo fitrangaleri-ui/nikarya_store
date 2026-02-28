@@ -7,8 +7,8 @@ export async function GET(request: NextRequest) {
   const token_hash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
   const code = searchParams.get("code");
-  // Default ke /reset-password jika parameter next hilang
-  const next = searchParams.get("next") ?? "/reset-password";
+  // Default ke /dashboard jika parameter next hilang
+  const next = searchParams.get("next") ?? "/dashboard";
 
   console.log("🔍 Confirm Route Hit:", {
     token_hash: token_hash ? "PRESENT" : "MISSING",

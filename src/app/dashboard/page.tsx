@@ -4,6 +4,7 @@
 // ============================================================
 
 import Link from "next/link";
+import { Suspense } from "react";
 import {
   LayoutDashboard,
   Package,
@@ -14,6 +15,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { getDashboardData, formatCurrency } from "./lib";
+import { VerifiedToast } from "./verified-toast";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +28,10 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
+      {/* Verified toast notification */}
+      <Suspense fallback={null}>
+        <VerifiedToast />
+      </Suspense>
       {/* ════════════════════════════════════════════════════ */}
       {/* HEADER — Welcome banner dengan ambient glow         */}
       {/* ════════════════════════════════════════════════════ */}

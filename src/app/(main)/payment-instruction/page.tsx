@@ -291,8 +291,14 @@ function PaymentInstructionContent() {
               const supabase = createClient();
               const { data: { user } } = await supabase.auth.getUser();
               if (user && !user.email_confirmed_at) {
-                // Guest user — needs verification before login
-                router.push("/dashboard/verify-email");
+                // Guest user — needs verification
+                const emailParam = user.email ? `?email=${encodeURIComponent(user.email)}` : "";
+                router.push(`/confirm-email${emailParam}`);
+              } else if (!user) {
+                // Not signed in (guest) — redirect to confirm-email with guest email from order
+                const guestEmail = result.guestEmail || "";
+                const emailParam = guestEmail ? `?email=${encodeURIComponent(guestEmail)}` : "";
+                router.push(`/confirm-email${emailParam}`);
               } else {
                 router.push("/dashboard");
               }
@@ -698,7 +704,10 @@ function PaymentInstructionContent() {
                   const supabase = createClient();
                   const { data: { user } } = await supabase.auth.getUser();
                   if (user && !user.email_confirmed_at) {
-                    router.push("/dashboard/verify-email");
+                    const emailParam = user.email ? `?email=${encodeURIComponent(user.email)}` : "";
+                    router.push(`/confirm-email${emailParam}`);
+                  } else if (!user) {
+                    router.push("/confirm-email");
                   } else {
                     router.push("/dashboard");
                   }

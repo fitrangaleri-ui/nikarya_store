@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
         // Fetch the first order row with this midtrans_order_id
         const { data: order, error: orderError } = await supabase
             .from("orders")
-            .select("midtrans_order_id, total_price, payment_status, payment_deadline, manual_payment_method_id, quantity, payment_code, payment_type, payment_gateway, payment_method, midtrans_transaction_id, discount_amount, original_total, promo_code")
+            .select("midtrans_order_id, total_price, payment_status, payment_deadline, manual_payment_method_id, quantity, payment_code, payment_type, payment_gateway, payment_method, midtrans_transaction_id, discount_amount, original_total, promo_code, guest_email")
             .eq("midtrans_order_id", orderId)
             .limit(1)
             .maybeSingle();
@@ -79,6 +79,7 @@ export async function GET(request: NextRequest) {
             paymentCode: order.payment_code, // VA number, QR string, deeplink
             transactionId: order.midtrans_transaction_id,
             manualMethod,
+            guestEmail: order.guest_email || null,
         });
     } catch (err) {
         console.error("Payment instruction error:", err);
