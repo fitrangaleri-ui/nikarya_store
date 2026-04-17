@@ -102,7 +102,7 @@ function AccordionItem({
           variant="body-base"
           as="span"
           className={`
-            font-bold leading-snug transition-colors duration-200
+            font-medium leading-snug transition-colors duration-200
             ${isOpen ? "!text-primary-foreground" : "text-foreground group-hover:text-primary"}
           `}
         >
@@ -194,7 +194,7 @@ export function FaqSection() {
           <Typography variant="h2" className="text-center">
             Ada yang ingin ditanyakan?
           </Typography>
-          <Typography variant="body-base" className="text-sm mt-2 text-center md:text-base text-muted-foreground max-w-md mx-auto leading-relaxed">
+          <Typography variant="body-base" className="text-sm mt-2 text-center md:text-base text-muted-foreground/80 max-w-md mx-auto leading-relaxed">
             Temukan jawaban atas pertanyaan umum seputar layanan kami di sini.
           </Typography>
         </div>

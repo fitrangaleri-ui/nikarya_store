@@ -8,8 +8,8 @@
 // ============================================================
 
 import { HeroSection } from "@/components/hero-section";
-import { OrderProcedure } from "@/components/order-procedure";
 import { FaqSection } from "@/components/faq-section";
+import { WarnSection } from "@/components/warn";
 import { FeaturesGrid } from "@/components/feature-card";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { ProductCard } from "@/components/product-card";
@@ -170,17 +170,9 @@ export default async function HomePage() {
       </div>
 
       {/* ============================================================ */}
-      {/* ORDER PROCEDURE SECTION                                        */}
-      {/* Posisi: di bawah products by category, di luar max-w container */}
-      {/* ============================================================ */}
-      <OrderProcedure />
-      {/* ============================================================ */}
-      {/* END ORDER PROCEDURE SECTION                                    */}
-      {/* ============================================================ */}
-
-      {/* ============================================================ */}
       {/* FAQ SECTION                                                    */}
       {/* ============================================================ */}
+      <WarnSection />
       <FaqSection />
       {/* ============================================================ */}
       {/* END FAQ SECTION                                               */}
