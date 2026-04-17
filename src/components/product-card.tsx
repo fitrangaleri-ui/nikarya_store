@@ -1,7 +1,6 @@
 // ============================================================
 // FILE: src/components/product-card.tsx
-// PERUBAHAN: Hapus semua className override pada Button
-//            → cukup pakai variant & size yang sudah ada
+// PERUBAHAN: Support multiple demo links via DemoLinksModal
 // ============================================================
 
 import Link from "next/link";
@@ -9,6 +8,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ImageIcon, Eye, ShoppingCart } from "lucide-react";
 import { resolveImageSrc } from "@/lib/resolve-image";
+import { DemoLinksModal } from "@/components/demo-links-modal";
 
 export function ProductCard({ product }: { product: any }) {
   const price = Number(product.price) || 0;
@@ -28,6 +28,19 @@ export function ProductCard({ product }: { product: any }) {
 
   const displayPrice = discountPrice || price;
   const imageSrc = resolveImageSrc(product.thumbnail_url);
+
+  // Build demo links array from new table or fallback to old column
+  const demoLinks: { label: string; url: string }[] =
+    product.product_demo_links && product.product_demo_links.length > 0
+      ? product.product_demo_links.map((d: any) => ({
+        label: d.label || "Demo",
+        url: d.url,
+      }))
+      : product.demo_link
+        ? [{ label: "Demo", url: product.demo_link }]
+        : [];
+
+  const hasDemoLinks = demoLinks.length > 0;
 
   return (
     <div className="group flex flex-col bg-card/60 backdrop-blur-sm border border-border/50 rounded-2xl overflow-hidden transition-all duration-300 h-full relative hover:shadow-lg hover:shadow-primary/5 hover:border-primary/30">
@@ -96,18 +109,13 @@ export function ProductCard({ product }: { product: any }) {
         {/* ACTION BUTTONS */}
         <div className="flex flex-col gap-2 mt-auto pt-3">
           {/* Tombol Preview */}
-          {product.demo_link ? (
-            <a
-              href={product.demo_link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full"
-            >
+          {hasDemoLinks ? (
+            <DemoLinksModal demoLinks={demoLinks}>
               <Button variant="outline" size="sm" className="w-full">
                 <Eye />
                 Preview
               </Button>
-            </a>
+            </DemoLinksModal>
           ) : (
             <Button variant="outline" size="sm" disabled className="w-full">
               <Eye />
@@ -127,3 +135,4 @@ export function ProductCard({ product }: { product: any }) {
     </div>
   );
 }
+

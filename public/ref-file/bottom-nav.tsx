@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useCallback } from "react";
 import { HomeIcon, FunnelIcon, UserCircleIcon, ShoppingCartIcon, SwatchIcon } from "@heroicons/react/24/solid";
 import { Badge } from "@/components/ui/badge";
-import { Typography } from "@/components/ui/typography";
 import { openWhatsAppPreview } from "@/components/whatsapp-button";
 import { useAuth } from "@/components/auth-provider";
 import { useCart } from "@/context/cart-context";
@@ -28,7 +27,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
 
 const baseItemClass =
   "inline-flex flex-col items-center justify-center px-1 transition-all group active:scale-95 duration-200";
-const labelClassName = "text-[9px] tracking-tight text-inherit";
+const labelClassName = "text-[9px] tracking-tight";
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -65,7 +64,7 @@ export function BottomNav() {
           </Badge>
         )}
       </span>
-      <Typography variant="caption" as="span" className={labelClassName}>Keranjang</Typography>
+      <span className={labelClassName}>Keranjang</span>
     </button>
   );
 
@@ -80,7 +79,7 @@ export function BottomNav() {
       aria-label="Buka chat WhatsApp"
     >
       <WhatsAppIcon className="w-5 h-5 mb-1.5 text-emerald-500/90 transition-transform" />
-      <Typography variant="caption" as="span" className={labelClassName}>Chat</Typography>
+      <span className={labelClassName}>Chat</span>
     </button>
   );
 
@@ -93,8 +92,8 @@ export function BottomNav() {
             className={cn(baseItemClass, "text-muted-foreground hover:text-accent")}
             aria-label="Buka halaman Home"
           >
-            <HomeIcon className="w-5 h-5 mb-1.5 transition-transform text-inherit" />
-            <Typography variant="caption" as="span" className={labelClassName}>Home</Typography>
+            <HomeIcon className="w-5 h-5 mb-1.5 transition-transform" />
+            <span className={labelClassName}>Home</span>
           </Link>
 
           <button
@@ -103,8 +102,8 @@ export function BottomNav() {
             className={cn(baseItemClass, "text-muted-foreground hover:text-accent")}
             aria-label="Buka filter"
           >
-            <FunnelIcon className="w-5 h-5 mb-1.5 transition-transform text-inherit" />
-            <Typography variant="caption" as="span" className={labelClassName}>Filter</Typography>
+            <FunnelIcon className="w-5 h-5 mb-1.5 transition-transform" />
+            <span className={labelClassName}>Filter</span>
           </button>
 
           <Link
@@ -119,11 +118,11 @@ export function BottomNav() {
           >
             <UserCircleIcon
               className={cn(
-                "w-5 h-5 mb-1.5 transition-transform text-inherit",
+                "w-5 h-5 mb-1.5 transition-transform",
                 pathname === akunHref && "scale-110",
               )}
             />
-            <Typography variant="caption" as="span" className={labelClassName}>Akun</Typography>
+            <span className={labelClassName}>Akun</span>
           </Link>
 
           {cartNavItem}
@@ -142,11 +141,11 @@ export function BottomNav() {
           >
             <SwatchIcon
               className={cn(
-                "w-5 h-5 mb-1.5 transition-transform text-inherit",
+                "w-5 h-5 mb-1.5 transition-transform",
                 pathname === "/products" && "scale-110",
               )}
             />
-            <Typography variant="caption" as="span" className={labelClassName}>Tema</Typography>
+            <span className={labelClassName}>Tema</span>
           </Link>
 
           <Link
@@ -161,11 +160,11 @@ export function BottomNav() {
           >
             <UserCircleIcon
               className={cn(
-                "w-5 h-5 mb-1.5 transition-transform text-inherit",
+                "w-5 h-5 mb-1.5 transition-transform",
                 pathname === akunHref && "scale-110",
               )}
             />
-            <Typography variant="caption" as="span" className={labelClassName}>Akun</Typography>
+            <span className={labelClassName}>Akun</span>
           </Link>
 
           {cartNavItem}

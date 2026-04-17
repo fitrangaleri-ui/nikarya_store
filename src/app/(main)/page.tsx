@@ -7,28 +7,18 @@
 //   - Semua fetching, data transform, section lain TIDAK DIUBAH
 // ============================================================
 
-import { PrimaryButton } from "@/components/ui/primary-button";
+import { HeroSection } from "@/components/hero-section";
 import { OrderProcedure } from "@/components/order-procedure";
 import { FaqSection } from "@/components/faq-section";
 import { FeaturesGrid } from "@/components/feature-card";
-import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { Button } from "@/components/ui/button";
-import { BottomNav } from "@/components/bottom-nav";
 import { ProductCard } from "@/components/product-card";
 import { CategoryCarousel } from "@/components/category-carousel";
 import { CategorySection } from "@/components/category-section";
-import { Star, ArrowRight } from "lucide-react";
-// ↑ Icons untuk features (Users, Music, MapPin, dst) DIHAPUS dari sini
-//   karena sudah dipindah ke src/components/feature-card.tsx
+import { BottomNav } from "@/components/bottom-nav";
+import { Typography } from "@/components/ui/typography";
 
 export const dynamic = "force-dynamic";
-
-// ─── const features[] DIHAPUS ─────────────────────────────────
-// Dipindah sepenuhnya ke src/components/feature-card.tsx
-// agar tidak terjadi error passing class/function dari
-// Server Component ke Client Component
-// ──────────────────────────────────────────────────────────────
 
 export default async function HomePage() {
   // ─── Data Fetching (TIDAK DIUBAH) ─────────────────────────
@@ -51,7 +41,8 @@ export default async function HomePage() {
         `id, name, slug,
          products (
            id, title, slug, price, discount_price, thumbnail_url, sku, tags, demo_link,
-           categories(name)
+           categories(name),
+           product_demo_links(id, label, url, sort_order)
          )`,
       )
       .not("products", "is", null)
@@ -60,7 +51,7 @@ export default async function HomePage() {
     supabase
       .from("products")
       .select(
-        "id, title, slug, price, discount_price, thumbnail_url, sku, tags, demo_link, categories(name)",
+        "id, title, slug, price, discount_price, thumbnail_url, sku, tags, demo_link, categories(name), product_demo_links(id, label, url, sort_order)",
       )
       .eq("is_active", true)
       .contains("tags", ["new"])
@@ -83,182 +74,7 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen bg-background text-foreground pb-24 md:pb-20 overflow-x-hidden">
       <div className="flex flex-col gap-12 md:gap-20">
-        {/* ============================================================ */}
-        {/* HERO SECTION                                                  */}
-        {/* Layout  : 60:40 — teks kiri (60%), video kanan (40%)         */}
-        {/* ============================================================ */}
-        <section className="relative w-full overflow-hidden">
-          {/* ── Blob dekoratif ── */}
-          <div
-            aria-hidden
-            className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-primary/8 blur-[140px] rounded-full pointer-events-none -z-10 animate-blob"
-          />
-          <div
-            aria-hidden
-            className="absolute -top-20 right-0 w-[400px] h-[400px] bg-primary/5 blur-[100px] rounded-full pointer-events-none -z-10 animate-blob animation-delay-2000"
-          />
-          <div
-            aria-hidden
-            className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-primary/5 blur-[80px] rounded-full pointer-events-none -z-10 animate-blob animation-delay-4000"
-          />
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-grid-pattern -z-10 opacity-40"
-          />
-
-          <div className="flex flex-col md:flex-row md:items-center gap-0 min-h-[calc(100vh-4rem)]">
-            {/* ── Kolom Kiri ── */}
-            <div
-              className="
-        w-full md:w-[60%]
-        px-4 md:pl-[max(2rem,calc((100vw-72rem)/2))] md:pr-12
-        flex flex-col justify-center
-        gap-6 md:gap-7
-        text-left relative z-10
-        pt-12 pb-8 md:pt-0 md:pb-0
-      "
-            >
-              <div className="inline-flex items-center gap-2 w-fit rounded-full px-3.5 py-1.5 bg-primary/10 border border-primary/20 text-primary">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                <span className="text-[11px] font-bold uppercase tracking-[-0.005em]">
-                  Platform E-Invitation Indonesia
-                </span>
-              </div>
-
-              <div className="space-y-2">
-                <h1 className="font-sans text-4xl sm:text-6xl md:text-[3rem] lg:text-[3.5rem] font-bold text-foreground leading-[1.1] tracking-tight">
-                  Praktis, Elegan
-                </h1>
-                <h1 className="font-sans text-4xl sm:text-6xl md:text-[3rem] lg:text-[3.5rem] font-bold leading-[1.1] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary to-primary/50">
-                  & Penuh Kesan
-                </h1>
-              </div>
-
-              <p className="text-sm md:text-base leading-relaxed text-muted-foreground max-w-[400px]">
-                <strong className="text-foreground font-semibold">
-                  Nikarya Digital
-                </strong>{" "}
-                adalah solusi terbaik buat Anda yang ingin membuat undangan
-                digital. Kami menyediakan layanan jasa pembuatan undangan
-                digital untuk acara{" "}
-                <span className="text-foreground font-medium">pernikahan</span>,{" "}
-                <span className="text-foreground font-medium">ulang tahun</span>
-                , dan{" "}
-                <span className="text-foreground font-medium">
-                  acara khusus
-                </span>{" "}
-                lainnya.
-              </p>
-
-              {/* ── CTA Button — PrimaryButton + SVG custom ── */}
-              <div className="flex items-center">
-                <Link href="/products">
-                  <PrimaryButton size="lg" className="w-fit min-w-40 gap-2.5">
-                    Lihat Tema
-                    <img
-                      src="/arrow-circle-right.svg"
-                      alt=""
-                      aria-hidden="true"
-                      className="w-5 h-5 brightness-0 invert transition-transform duration-300 group-hover:translate-x-0.5"
-                    />
-                  </PrimaryButton>
-                </Link>
-              </div>
-
-              <div className="flex items-center gap-0 pt-2">
-                <div className="flex flex-col gap-1 pr-6 border-r border-border/50">
-                  <div className="flex items-center gap-1">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <Star
-                        key={i}
-                        className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400"
-                      />
-                    ))}
-                  </div>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-xl font-black text-foreground">
-                      4.9
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      /5 rating
-                    </span>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-1 px-6 border-r border-border/50">
-                  <div className="flex items-baseline gap-0.5">
-                    <span className="text-xl font-black text-foreground">
-                      17K
-                    </span>
-                    <span className="text-xs text-primary font-bold">+</span>
-                  </div>
-                  <span className="text-xs text-muted-foreground">
-                    Mempelai puas
-                  </span>
-                </div>
-                <div className="flex flex-col gap-1 pl-6">
-                  <div className="flex items-baseline gap-0.5">
-                    <span className="text-xl font-black text-foreground">
-                      200
-                    </span>
-                    <span className="text-xs text-primary font-bold">+</span>
-                  </div>
-                  <span className="text-xs text-muted-foreground">
-                    Pilihan tema
-                  </span>
-                </div>
-              </div>
-            </div>
-            {/* ── End Kolom Kiri ── */}
-
-            {/* ── Kolom Kanan ── */}
-            <div className="w-full md:w-[40%] flex items-stretch justify-end relative">
-              <div
-                aria-hidden
-                className="hidden md:block absolute -left-8 top-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-primary/10 pointer-events-none"
-              />
-              <div
-                aria-hidden
-                className="hidden md:block absolute -left-16 top-1/2 -translate-y-1/2 w-96 h-96 rounded-full border border-primary/5 pointer-events-none"
-              />
-              <div className="relative w-full aspect-[3/4] md:h-[calc(100vh-4rem)] md:max-h-[720px] overflow-hidden md:rounded-l-[2rem] bg-muted/20">
-                <video
-                  className="w-full h-full object-contain"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="auto"
-                >
-                  <source src="/hero-video.webm" type="video/webm" />
-                  <source src="/hero.mp4" type="video/mp4" />
-                  Browser kamu tidak mendukung pemutaran video.
-                </video>
-                <div className="absolute top-4 left-4 flex items-center gap-2 bg-background/80 backdrop-blur-md border border-border/60 rounded-full px-3 py-1.5 shadow-md">
-                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  <span className="text-[11px] font-semibold text-foreground">
-                    Live Demo
-                  </span>
-                </div>
-                <div className="absolute bottom-6 left-4 right-4 glass rounded-2xl px-4 py-3 flex items-center justify-between shadow-lg">
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-xs font-bold text-foreground">
-                      Floral Elegant Series
-                    </span>
-                    <span className="text-[10px] text-primary font-medium uppercase tracking-wider">
-                      Best Seller · 2.3K Terjual
-                    </span>
-                  </div>
-                  <Link href="/products">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center bg-primary text-primary-foreground hover:scale-110 transition-transform cursor-pointer shadow-md shadow-primary/30">
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </div>
-                  </Link>
-                </div>
-              </div>
-            </div>
-            {/* ── End Kolom Kanan ── */}
-          </div>
-        </section>
+        <HeroSection />
         {/* ============================================================ */}
         {/* END HERO SECTION                                             */}
         {/* ============================================================ */}
@@ -272,13 +88,13 @@ export default async function HomePage() {
         >
           {/* ── Section Header ── */}
           <div className="mb-8 md:mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight mb-2">
+            <Typography variant="h2" className="mb-2">
               Miliki Semua Fiturnya
-            </h2>
-            <p className="text-sm md:text-base text-muted-foreground max-w-xl">
+            </Typography>
+            <Typography variant="body-base" color="muted" className="max-w-xl">
               Fitur-fitur kami dirancang untuk menghadirkan pengalaman undangan
               digital yang informatif, interaktif dan tak terlupakan.
-            </p>
+            </Typography>
           </div>
 
           {/* ── Grid Fitur — semua logic ada di FeaturesGrid ── */}
@@ -295,9 +111,9 @@ export default async function HomePage() {
           <div className="mx-auto max-w-6xl px-4 md:px-0">
             <div className="mb-6 md:mb-8 flex items-center gap-3">
               <span className="w-1.5 h-6 bg-primary rounded-full block" />
-              <h3 className="text-xl md:text-2xl font-bold text-foreground tracking-tight">
+              <Typography variant="h3">
                 Kategori Populer
-              </h3>
+              </Typography>
             </div>
             <CategoryCarousel categories={carouselCategories} />
           </div>
@@ -313,9 +129,9 @@ export default async function HomePage() {
           <div className="mx-auto max-w-6xl px-4 md:px-0">
             <div className="flex items-center gap-3 mb-6 md:mb-8">
               <span className="w-1.5 h-6 bg-primary rounded-full block" />
-              <h3 className="text-xl md:text-2xl font-bold text-foreground tracking-tight">
+              <Typography variant="h3">
                 Baru Rilis
-              </h3>
+              </Typography>
             </div>
             {newArrivals && newArrivals.length > 0 ? (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
@@ -325,9 +141,9 @@ export default async function HomePage() {
               </div>
             ) : (
               <div className="py-16 text-center border border-dashed border-border/50 rounded-2xl bg-card/30 backdrop-blur-sm">
-                <p className="text-muted-foreground text-sm">
+                <Typography variant="body-sm" color="muted">
                   Belum ada produk baru saat ini.
-                </p>
+                </Typography>
               </div>
             )}
           </div>

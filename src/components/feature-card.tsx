@@ -1,6 +1,8 @@
 // src/components/feature-card.tsx
 "use client";
 
+import { cn } from "@/lib/utils";
+
 import { useEffect, useState } from "react";
 import {
   Users,
@@ -16,6 +18,7 @@ import {
   MousePointerClick,
   Clock,
 } from "lucide-react";
+import { Typography } from "@/components/ui/typography";
 
 const features = [
   {
@@ -95,28 +98,11 @@ function FeatureCard({
 }: FeatureCardProps) {
   return (
     <div
-      className={`
-        cursor-pointer
-        h-[100px] md:h-[140px]
-        [perspective:800px]
-        transition-transform duration-300
-        rounded-xl
-        ${active ? "scale-[1.04]" : "scale-100"}
-      `}
-      style={
-        active
-          ? {
-              outline:
-                "2px solid color-mix(in oklch, var(--primary) 85%, transparent)",
-              outlineOffset: "3px",
-              animation: "outline-pulse 1.6s ease-in-out infinite",
-            }
-          : {
-              outline: "2px solid transparent",
-              outlineOffset: "3px",
-              transition: "outline-color 0.4s ease, transform 0.3s ease",
-            }
-      }
+      className={cn(
+        "cursor-pointer h-[100px] md:h-[140px] [perspective:800px] transition-transform duration-300 rounded-xl relative",
+        active ? "scale-[1.04]" : "scale-100",
+        active ? "outline-[3px] outline-offset-4 animate-outline-pulse" : "outline-transparent"
+      )}
       onClick={onFlip}
       role="button"
       tabIndex={0}
@@ -125,12 +111,10 @@ function FeatureCard({
       onKeyDown={(e) => e.key === "Enter" && onFlip()}
     >
       <div
-        className="
-          relative w-full h-full
-          [transform-style:preserve-3d]
-          transition-transform duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]
-        "
-        style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
+        className={cn(
+          "relative w-full h-full [transform-style:preserve-3d] transition-transform duration-[900ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]",
+          flipped && "[transform:rotateY(180deg)]"
+        )}
       >
         {/* ════ SISI DEPAN ════ */}
         <div
@@ -143,40 +127,27 @@ function FeatureCard({
             overflow-hidden
           "
         >
-          {/* ── Glass shimmer overlay — subtle saja di atas bg solid ── */}
+          {/* ── Glass shimmer overlay ── */}
           <div
             aria-hidden
-            className="absolute inset-0 rounded-xl pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0.0) 100%)",
-            }}
+            className="absolute inset-0 bg-gradient-to-br from-white/10 via-white/5 to-transparent rounded-xl pointer-events-none"
           />
-          {/* ── Stroke border teal terang di atas bg ── */}
+          {/* ── Border ── */}
           <div
             aria-hidden
-            className="absolute inset-0 rounded-xl pointer-events-none"
-            style={{
-              boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
-              border: "1px solid rgba(255,255,255,0.15)",
-            }}
+            className="absolute inset-0 rounded-xl border border-white/15 shadow-[inset_0_1px_0_rgba(255,255,255,0.2),_inset_0_-1px_0_rgba(0,0,0,0.08)] pointer-events-none"
           />
 
           <Icon
             className="w-5 h-5 md:w-7 md:h-7 text-primary-foreground shrink-0 relative z-10"
             strokeWidth={1.5}
           />
-          <span
-            className="
-              text-[9px] md:text-xs font-semibold
-              text-primary-foreground
-              text-center leading-tight
-              relative z-10
-            "
+          <Typography
+            as="span"
+            className="text-[9px] md:text-xs font-semibold text-primary-foreground text-center leading-tight relative z-10"
           >
             {label}
-          </span>
+          </Typography>
         </div>
 
         {/* ════ SISI BELAKANG ════ */}
@@ -185,41 +156,42 @@ function FeatureCard({
             absolute inset-0
             flex flex-col items-center justify-center
             gap-1 md:gap-2 p-2.5 md:p-5
-            bg-primary/80 rounded-xl
+            bg-primary/90 rounded-xl
+            backdrop-blur-sm
             [backface-visibility:hidden]
             [transform:rotateY(180deg)]
             overflow-hidden
           "
         >
-          {/* ── Glass shimmer overlay sisi belakang ── */}
+          {/* ── Glass shimmer overlay sides ── */}
           <div
             aria-hidden
-            className="absolute inset-0 rounded-xl pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
-            }}
+            className="absolute inset-0 bg-gradient-to-br from-white/8 to-white/2 rounded-xl pointer-events-none"
           />
-          {/* ── Stroke border ── */}
+          {/* ── Border ── */}
           <div
             aria-hidden
-            className="absolute inset-0 rounded-xl pointer-events-none"
-            style={{
-              boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
-              border: "1px solid rgba(255,255,255,0.15)",
-            }}
+            className="absolute inset-0 rounded-xl border border-white/15 shadow-[inset_0_1px_0_rgba(255,255,255,0.2),_inset_0_-1px_0_rgba(0,0,0,0.08)] pointer-events-none"
           />
 
-          <span className="hidden md:block text-[10px] font-bold uppercase tracking-widest text-primary-foreground/70 relative z-10">
+          <Typography
+            as="span"
+            className="hidden md:block text-[10px] font-black uppercase tracking-widest text-primary-foreground/60 relative z-10"
+          >
             {label}
-          </span>
-          <p className="text-[9px] md:text-xs text-primary-foreground/95 text-center leading-snug relative z-10">
+          </Typography>
+          <Typography
+            variant="body-sm"
+            className="text-[10px] md:text-xs text-primary-foreground text-center leading-snug relative z-10 px-1"
+          >
             {desc}
-          </p>
-          <span className="text-[8px] md:text-[10px] text-primary-foreground/50 mt-0.5 relative z-10">
+          </Typography>
+          <Typography
+            as="span"
+            className="text-[8px] md:text-[10px] font-medium text-primary-foreground/40 mt-1 relative z-10"
+          >
             tap lagi ↩
-          </span>
+          </Typography>
         </div>
       </div>
     </div>

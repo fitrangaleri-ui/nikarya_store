@@ -85,7 +85,7 @@ export default async function ProductsPage({
   let query = supabase
     .from("products")
     .select(
-      "id, title, slug, price, discount_price, thumbnail_url, sku, tags, demo_link, category_id, categories(name, slug)",
+      "id, title, slug, price, discount_price, thumbnail_url, sku, tags, demo_link, category_id, categories(name, slug), product_demo_links(id, label, url, sort_order)",
       { count: "exact" },
     )
     .eq("is_active", true);

@@ -107,6 +107,25 @@ export async function importProducts(rows: ImportRow[]) {
         return { error: `Import gagal: ${error.message}` };
     }
 
+    // Insert demo links for imported products
+    if (data) {
+        const demoInserts = data
+            .map((product, i) => {
+                const demoLink = rows[i]?.demo_link?.trim();
+                if (!demoLink) return null;
+                return {
+                    product_id: product.id,
+                    label: "Demo",
+                    url: demoLink,
+                    sort_order: 0,
+                };
+            })
+            .filter(Boolean);
+        if (demoInserts.length > 0) {
+            await admin.from("product_demo_links").insert(demoInserts);
+        }
+    }
+
     revalidatePath("/admin/products");
     return { success: true, count: data?.length || 0 };
 }
@@ -119,7 +138,7 @@ export async function exportProducts() {
 
     const { data: products, error } = await admin
         .from("products")
-        .select("*, categories(name)")
+        .select("*, categories(name), product_demo_links(label, url, sort_order)")
         .order("created_at", { ascending: false });
 
     if (error) {
@@ -127,23 +146,32 @@ export async function exportProducts() {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const rows = (products || []).map((p: any) => ({
-        title: p.title,
-        description: p.description || "",
-        price: p.price,
-        category: p.categories?.name || "",
-        product_code: p.product_code || "",
-        sku: p.sku || "",
-        badge: p.badge || "",
-        tags: (p.tags || []).join(", "),
-        original_price: p.original_price || "",
-        discount_percent: p.discount_percent || "",
-        discount_price: p.discount_price || "",
-        thumbnail_url: p.thumbnail_url || "",
-        drive_file_url: p.drive_file_url || "",
-        demo_link: p.demo_link || "",
-        is_active: p.is_active ? "true" : "false",
-    }));
+    const rows = (products || []).map((p: any) => {
+        // Serialize demo links as pipe-separated (label:url)
+        const demoLinksArr = (p.product_demo_links || [])
+            .sort((a: any, b: any) => a.sort_order - b.sort_order);
+        const demoLinkStr = demoLinksArr.length > 0
+            ? demoLinksArr.map((d: any) => d.url).join(" | ")
+            : p.demo_link || "";
+
+        return {
+            title: p.title,
+            description: p.description || "",
+            price: p.price,
+            category: p.categories?.name || "",
+            product_code: p.product_code || "",
+            sku: p.sku || "",
+            badge: p.badge || "",
+            tags: (p.tags || []).join(", "),
+            original_price: p.original_price || "",
+            discount_percent: p.discount_percent || "",
+            discount_price: p.discount_price || "",
+            thumbnail_url: p.thumbnail_url || "",
+            drive_file_url: p.drive_file_url || "",
+            demo_link: demoLinkStr,
+            is_active: p.is_active ? "true" : "false",
+        };
+    });
 
     return { success: true, data: rows };
 }

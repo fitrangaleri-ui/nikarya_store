@@ -1,16 +1,18 @@
 // src/app/layout.tsx
 
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Quicksand, Orbitron } from "next/font/google";
+import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import { AuthProvider } from "@/components/auth-provider";
 import { CartProvider } from "@/context/cart-context";
+import { ThemeProvider } from "@/components/theme-provider";
 import { CartSidebar } from "@/components/cart-sidebar";
-import { SiteFooter } from "@/components/site-footer"; // ← tambahkan
+import { MenuSidebar } from "@/components/menu-sidebar";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
-const inter = Inter({
+const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
 });
@@ -20,18 +22,6 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
-const quicksand = Quicksand({
-  variable: "--font-quicksand",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-const orbitron = Orbitron({
-  variable: "--font-orbitron",
-  subsets: ["latin"],
-  weight: ["700"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Custom Galeri Store",
@@ -46,12 +36,12 @@ export default function RootLayout({
   authModal: React.ReactNode;
 }>) {
   return (
-    <html lang="id">
+    <html lang="id" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} ${quicksand.variable} ${orbitron.variable} font-sans antialiased`}
+        className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
         <NextTopLoader
-          color="#0d9488"
+          color="#01696f"
           height={3}
           showSpinner={false}
           shadow={false}
@@ -61,14 +51,21 @@ export default function RootLayout({
 
         <AuthProvider>
           <CartProvider>
-            {children}
-            {authModal}
-            <CartSidebar />
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light"
+              enableSystem={false}
+              disableTransitionOnChange
+              storageKey="nikarya-theme"
+            >
+              {children}
+              {authModal}
+              <CartSidebar />
+              <MenuSidebar />
+              <WhatsAppButton />
+            </ThemeProvider>
           </CartProvider>
         </AuthProvider>
-
-        {/* ── Global Footer — tampil di semua halaman ── */}
-        <SiteFooter />
 
         <Script
           src={process.env.NEXT_PUBLIC_MIDTRANS_API_URL}

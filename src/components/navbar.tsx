@@ -1,53 +1,92 @@
-// ============================================================
-// FILE: src/components/navbar.tsx
-// ============================================================
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
-  Search,
-  ShoppingCart,
-  User,
-  LogOut,
-  ChevronDown,
-  X,
-  ArrowRight,
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
+  MagnifyingGlassIcon,
+  ShoppingCartIcon,
+  UserIcon,
+  ArrowRightOnRectangleIcon,
+  ChevronDownIcon,
+  ArrowRightIcon,
+} from "@heroicons/react/24/outline";
+import { Typography } from "@/components/ui/typography";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useAuth } from "@/components/auth-provider";
+import { useMenuSidebar } from "@/components/menu-sidebar";
 import { useCart } from "@/context/cart-context";
-import { useState, useRef, useEffect } from "react";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
-// ── Custom Burger Menu Icon ───────────────────────────────────
-// SVG inline, viewBox di-crop agar 3 garis memenuhi ruang icon
-function MenuBurgerIcon({ className }: { className?: string }) {
+function AnimatedNavIcon({
+  isOpen,
+  className,
+}: {
+  isOpen: boolean;
+  className?: string;
+}) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="64 128 384 256"
-      fill="currentColor"
-      className={className}
+    <div
+      className={`relative flex h-full w-full items-center justify-center ${className}`}
       aria-hidden="true"
     >
-      <path d="M64,384h384v-42.666H64V384z M64,277.334h384v-42.667H64V277.334z M64,128v42.666h384V128H64z" />
-    </svg>
+      <div className="relative h-4 w-5">
+        <span
+          className={`absolute left-0 top-0 h-[2.5px] w-5 origin-center rounded-full bg-current transition-all duration-300 ease-out ${isOpen ? "translate-y-[6px] rotate-45" : "translate-y-0"
+            }`}
+        />
+        <span
+          className={`absolute left-0 top-[6px] h-[2.5px] w-5 origin-center rounded-full bg-current transition-all duration-300 ease-out ${isOpen ? "scale-x-0 opacity-0" : "scale-x-100 opacity-100"
+            }`}
+        />
+        <span
+          className={`absolute left-0 top-3 h-[2.5px] w-5 origin-center rounded-full bg-current transition-all duration-300 ease-out ${isOpen ? "-translate-y-[6px] -rotate-45" : "translate-y-0"
+            }`}
+        />
+      </div>
+    </div>
+  );
+}
+
+function DesktopNavLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group rounded-full px-3 py-1.5 transition-colors hover:bg-primary/10"
+    >
+      <Typography
+        variant="body-sm"
+        as="span"
+        className="font-semibold text-muted-foreground group-hover:text-primary transition-colors"
+      >
+        {children}
+      </Typography>
+    </Link>
   );
 }
 
 export function Navbar() {
-  // ── State & context ───────────────────────────────────────
+  const router = useRouter();
   const { user, isLoading, signOut } = useAuth();
   const { openCart, cartCount } = useCart();
+  const { isOpen, toggle } = useMenuSidebar();
+
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [signOutError, setSignOutError] = useState<string | null>(null);
 
-  // ── Refs ──────────────────────────────────────────────────
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const mobileSearchRef = useRef<HTMLInputElement>(null);
+  const dropdownButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Tutup dropdown saat klik di luar
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -57,264 +96,247 @@ export function Navbar() {
         setShowDropdown(false);
       }
     }
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Auto-focus input search mobile saat dibuka
   useEffect(() => {
-    if (showMobileSearch && mobileSearchRef.current) {
-      mobileSearchRef.current.focus();
+    function handleEscapeKey(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setShowDropdown(false);
+        dropdownButtonRef.current?.focus();
+      }
     }
-  }, [showMobileSearch]);
 
-  // ── Handlers ─────────────────────────────────────────────
+    if (!showDropdown) {
+      return;
+    }
+
+    document.addEventListener("keydown", handleEscapeKey);
+    return () => document.removeEventListener("keydown", handleEscapeKey);
+  }, [showDropdown]);
+
   const handleSignOut = async () => {
-    setShowDropdown(false);
-    await signOut();
+    setSignOutError(null);
+
+    try {
+      await signOut();
+      setShowDropdown(false);
+    } catch (error) {
+      setSignOutError(
+        error instanceof Error ? error.message : "Gagal keluar. Coba lagi.",
+      );
+    }
   };
 
-  // Nama tampilan avatar / dropdown
-  const displayName =
-    user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmedQuery = searchQuery.trim();
+
+    if (trimmedQuery) {
+      router.push(`/products?q=${encodeURIComponent(trimmedQuery)}`);
+      setSearchQuery("");
+    }
+  };
+
+  const fullName = user?.user_metadata?.full_name?.trim();
+  const emailName = user?.email?.split("@")[0]?.trim();
+  const displayName = fullName || emailName || "User";
+  const userInitial = displayName.charAt(0).toUpperCase();
+  const dropdownId = "navbar-user-dropdown";
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/60 backdrop-blur-md shadow-sm">
-      {/* ── Baris utama navbar — py-2 (8px atas bawah) ── */}
-      <div className="container mx-auto px-4 py-2 flex items-center justify-between gap-3">
-        {/* ════════════════════════════════════════════════ */}
-        {/* KIRI — Logo + Navigasi Desktop                  */}
-        {/* ════════════════════════════════════════════════ */}
-        <div className="flex items-center gap-4 shrink-0">
-          <Link href="/" className="flex items-center group">
+    <header className="fixed inset-x-0 top-0 z-50 w-full border-b border-border/40 bg-background/70 shadow-sm backdrop-blur-lg transition-all duration-300 flex items-center justify-center">
+      <div className="container mx-auto flex h-16 w-full items-center justify-between gap-3 px-4 md:px-6">
+        <div className="flex shrink-0 items-center">
+          <Link href="/" className="group flex items-center">
             <Image
               src="/logo-nikarya.png"
               alt="Logo Brand"
               width={56}
               height={56}
               priority
-              className="h-11 w-11 md:h-12 md:w-12 object-contain shrink-0
-                         transition-all duration-200
-                         group-hover:scale-110 group-hover:opacity-80"
+              quality={100}
+              unoptimized
+              className="h-11 w-11 md:h-12 md:w-12 shrink-0 object-contain transition-all duration-200 group-hover:scale-110 group-hover:opacity-80"
             />
           </Link>
-
-          {/* Navigasi Produk & Promo — hanya desktop */}
-          <nav className="hidden md:flex items-center gap-1 text-sm font-medium">
-            <Link
-              href="/products"
-              className="px-3 py-1.5 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-            >
-              Produk
-            </Link>
-            <Link
-              href="/promo"
-              className="px-3 py-1.5 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-            >
-              Promo
-            </Link>
-          </nav>
         </div>
 
-        {/* ════════════════════════════════════════════════ */}
-        {/* KANAN — Search, Cart, User, Hamburger           */}
-        {/* ════════════════════════════════════════════════ */}
-        <div className="flex items-center gap-1 flex-1 justify-end">
-          {/* Search bar — hanya desktop (Tinggi: h-9) */}
-          <div className="relative w-full max-w-[320px] hidden md:block group mr-2">
+        <div className="flex flex-1 items-center justify-end gap-1 md:gap-2">
+          <nav className="mr-2 hidden items-center gap-1 text-sm font-medium md:flex">
+            <DesktopNavLink href="/products">Produk</DesktopNavLink>
+            <DesktopNavLink href="/promo">Promo</DesktopNavLink>
+          </nav>
+
+          <form
+            onSubmit={handleSearch}
+            className="group relative mr-2 hidden w-full max-w-[280px] md:block lg:max-w-[320px]"
+          >
             <Input
               type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Cari Undangan..."
-              className="w-full pl-4 pr-10 h-9 rounded-full border-border/50 bg-muted/40
-                         focus:bg-background focus:ring-1 focus:ring-primary
-                         hover:border-primary/40 hover:bg-muted/60
-                         transition-all text-sm"
+              className="h-9 w-full rounded-full border-border/50 bg-muted/40 pl-4 pr-10 text-sm transition-all hover:border-primary/40 hover:bg-muted/60 focus:bg-background focus:ring-1 focus:ring-primary"
             />
-            <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-          </div>
+            <Button
+              type="submit"
+              variant="ghost"
+              size="icon-xs"
+              aria-label="Cari"
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full text-muted-foreground group-focus-within:text-primary hover:bg-transparent hover:text-primary"
+            >
+              <MagnifyingGlassIcon className="h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-primary hover:text-primary" />
+            </Button>
+          </form>
 
-          {/* Tombol toggle search — hanya mobile (42px) */}
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden h-[42px] w-[42px] text-primary hover:text-primary
-                       hover:bg-primary/15 rounded-full
-                       transition-all duration-200 hover:scale-110 active:scale-95"
-            onClick={() => setShowMobileSearch(!showMobileSearch)}
-            aria-label="Cari"
-          >
-            {showMobileSearch ? (
-              <X className="h-[22px] w-[22px]" />
-            ) : (
-              <Search className="h-[22px] w-[22px]" />
-            )}
-          </Button>
-
-          {/* Tombol cart — hanya desktop */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative h-10 w-10 text-primary hover:text-primary
-                       hover:bg-primary/15 hidden md:inline-flex rounded-full
-                       transition-all duration-200 hover:scale-110 active:scale-95"
+            className="relative hidden h-10 w-10 rounded-full text-primary transition-all duration-200 hover:scale-110 hover:bg-primary/15 hover:text-primary active:scale-95 md:inline-flex"
             onClick={openCart}
             aria-label="Buka keranjang"
           >
-            <ShoppingCart className="h-5 w-5" />
-            {/* Badge jumlah item keranjang */}
+            <ShoppingCartIcon className="h-5 w-5" />
             {cartCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground ring-2 ring-background">
+              <Badge className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary p-0 text-[9px] font-bold text-primary-foreground ring-2 ring-background">
                 {cartCount > 99 ? "99+" : cartCount}
-              </span>
+              </Badge>
             )}
           </Button>
 
-          {/* ════════════════════════════════════════════════ */}
-          {/* USER SECTION — hanya desktop                    */}
-          {/* Tiga kondisi: loading | sudah login | belum login */}
-          {/* ════════════════════════════════════════════════ */}
-          <div className="hidden md:block ml-1">
+          <div className="ml-1 hidden md:block">
             {isLoading ? (
-              /* Loading: icon user dengan animasi pulse */
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-9 w-9 text-muted-foreground rounded-full"
+                className="h-9 w-9 rounded-full text-muted-foreground"
                 disabled
               >
-                <User className="h-5 w-5 animate-pulse" />
+                <UserIcon className="h-5 w-5 animate-pulse" />
               </Button>
             ) : user ? (
-              /* Sudah login: avatar + dropdown (Tinggi: h-9) */
               <div className="relative" ref={dropdownRef}>
                 <Button
+                  ref={dropdownButtonRef}
                   variant="ghost"
                   size="sm"
-                  className="flex items-center gap-1.5 text-foreground hover:text-primary hover:bg-primary/10 px-2 h-9 rounded-full transition-colors"
-                  onClick={() => setShowDropdown(!showDropdown)}
+                  className="flex h-9 items-center gap-1.5 rounded-full px-2 text-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                  onClick={() => {
+                    setSignOutError(null);
+                    setShowDropdown((current) => !current);
+                  }}
+                  aria-haspopup="menu"
+                  aria-expanded={showDropdown}
+                  aria-controls={dropdownId}
                 >
-                  {/* Avatar inisial */}
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/15 text-primary shrink-0">
-                    <span className="text-xs font-semibold">
-                      {displayName.charAt(0).toUpperCase()}
-                    </span>
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/15">
+                    <Typography
+                      variant="caption"
+                      as="span"
+                      className="font-bold text-primary"
+                      aria-hidden="true"
+                    >
+                      {userInitial}
+                    </Typography>
                   </div>
-                  {/* Nama user */}
-                  <span className="hidden lg:inline text-sm font-medium max-w-[100px] truncate">
+                  <Typography
+                    variant="body-sm"
+                    as="span"
+                    className="hidden max-w-[100px] truncate font-semibold text-foreground lg:inline-flex"
+                  >
                     {displayName}
-                  </span>
-                  {/* Chevron rotasi saat dropdown terbuka */}
-                  <ChevronDown
-                    className={`h-3.5 w-3.5 opacity-50 transition-transform duration-200 ${
-                      showDropdown ? "rotate-180" : ""
-                    }`}
+                  </Typography>
+                  <ChevronDownIcon
+                    className={`h-4 w-4 opacity-50 transition-transform duration-200 ${showDropdown ? "rotate-180" : ""}`}
                   />
                 </Button>
 
-                {/* Panel dropdown */}
                 {showDropdown && (
-                  <div className="absolute right-0 top-full mt-1.5 w-52 rounded-xl border border-border/50 bg-background/95 backdrop-blur-md py-1.5 shadow-lg shadow-black/5 z-50 animate-in fade-in zoom-in-95 duration-200">
-                    {/* Info singkat user */}
-                    <div className="px-3 py-2 border-b border-border/50">
-                      <p className="text-sm font-medium text-foreground truncate">
+                  <div
+                    id={dropdownId}
+                    role="menu"
+                    aria-label="Menu akun"
+                    className="absolute right-0 top-full z-50 mt-1.5 w-52 animate-in rounded-xl border border-border/50 bg-background/95 py-1.5 shadow-lg shadow-black/5 backdrop-blur-md fade-in zoom-in-95 duration-200"
+                  >
+                    <div className="border-b border-border/50 px-3.5 py-2.5">
+                      <Typography variant="body-sm" className="truncate font-bold text-foreground">
                         {displayName}
-                      </p>
-                      <p className="text-xs text-muted-foreground truncate">
+                      </Typography>
+                      <Typography variant="caption" className="truncate text-muted-foreground/70">
                         {user.email}
-                      </p>
+                      </Typography>
                     </div>
-                    {/* Link dashboard */}
                     <Link
                       href="/dashboard"
-                      className="flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-primary/10 hover:text-primary transition-colors"
-                      onClick={() => setShowDropdown(false)}
+                      role="menuitem"
+                      className="flex items-center gap-2 px-3 py-2 text-sm text-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                      onClick={() => {
+                        setSignOutError(null);
+                        setShowDropdown(false);
+                      }}
                     >
-                      <User className="h-4 w-4" />
-                      Dashboard
+                      <UserIcon className="h-4 w-4" />
+                      <Typography variant="body-sm">Dashboard</Typography>
                     </Link>
-                    {/* Tombol logout */}
-                    <button
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
                       onClick={handleSignOut}
-                      className="flex w-full items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-destructive/10 transition-colors"
+                      role="menuitem"
+                      className="flex h-auto w-full justify-start gap-2 rounded-none px-3.5 py-2.5 text-destructive hover:bg-destructive/10 hover:text-destructive"
                     >
-                      <LogOut className="h-4 w-4" />
-                      Keluar
-                    </button>
+                      <ArrowRightOnRectangleIcon className="h-4 w-4" />
+                      <Typography variant="body-sm">Keluar</Typography>
+                    </Button>
+                    {signOutError && (
+                      <Typography variant="caption" className="px-3.5 pt-1 text-destructive" role="alert">
+                        {signOutError}
+                      </Typography>
+                    )}
                   </div>
                 )}
               </div>
             ) : (
-              /* ══ Belum login: tombol Masuk pill (Tinggi: h-9) ══ */
-              <Link href="/login">
-                <button
-                  className="
-                    flex items-center gap-2
-                    pl-4 pr-1 h-9
-                    rounded-full
-                    bg-primary
-                    hover:bg-primary/90
-                    transition-all duration-200
-                    hover:scale-[1.03] active:scale-[0.98]
-                    shadow-sm shadow-primary/30
-                    group
-                  "
+              <Button variant="brand-pill" size="md" asChild>
+                <Link
+                  href="/login"
+                  className="group flex items-center justify-between gap-3 pr-1"
                 >
-                  {/* Teks Login */}
-                  <span className="text-sm font-medium text-primary-foreground tracking-wide">
-                    Login
-                  </span>
-                  {/* Icon panah dalam bubble putih (diperkecil agar proporsional dengan h-9) */}
-                  <span
-                    className="
-                      flex items-center justify-center
-                      w-7 h-7 rounded-full
-                      bg-primary-foreground
-                      text-primary
-                      transition-colors duration-200
-                      shrink-0
-                    "
+                  <Typography
+                    variant="body-sm"
+                    className="font-bold tracking-tight transition-transform duration-200 ease-out group-active:translate-x-[2px] group-active:translate-y-[1px]"
                   >
-                    <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} />
+                    Login
+                  </Typography>
+
+                  <span className="brand-pill__icon flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-background transition-colors duration-300 ease-out group-hover:bg-primary-foreground">
+                    <ArrowRightIcon
+                      className="h-4 w-4 text-foreground transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:translate-x-[2px] group-hover:scale-110 group-hover:text-primary group-active:translate-x-[4px]"
+                      strokeWidth={2}
+                    />
                   </span>
-                </button>
-              </Link>
+                </Link>
+              </Button>
             )}
           </div>
 
-          {/* ════════════════════════════════════════════════ */}
-          {/* HAMBURGER — hanya mobile (42px)                 */}
-          {/* ════════════════════════════════════════════════ */}
-          <Link href="/menu" className="md:hidden ml-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-[42px] w-[42px] text-primary hover:text-primary
-                         hover:bg-primary/15 rounded-full
-                         transition-all duration-200 hover:scale-110 active:scale-95"
-              aria-label="Menu"
-            >
-              <MenuBurgerIcon className="h-[22px] w-[22px]" />
-            </Button>
-          </Link>
+          <ThemeToggle />
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-1 flex h-10 w-10 items-center justify-center text-primary/80 transition-all duration-200 hover:bg-transparent hover:text-primary active:scale-90 md:hidden"
+            onClick={toggle}
+            aria-label={isOpen ? "Tutup menu" : "Buka menu"}
+          >
+            <AnimatedNavIcon isOpen={isOpen} className="h-5 w-5" />
+          </Button>
         </div>
       </div>
-
-      {/* ── Search bar mobile expandable ── */}
-      {showMobileSearch && (
-        <div className="md:hidden px-4 pb-3 animate-in slide-in-from-top-2 fade-in duration-200">
-          <div className="relative group">
-            <Input
-              ref={mobileSearchRef}
-              type="search"
-              placeholder="Cari Undangan..."
-              className="w-full pl-4 pr-10 h-10 rounded-full border-border/50 bg-muted/40
-                         focus:bg-background focus:ring-1 focus:ring-primary
-                         transition-all text-sm"
-            />
-            <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-          </div>
-        </div>
-      )}
     </header>
   );
 }

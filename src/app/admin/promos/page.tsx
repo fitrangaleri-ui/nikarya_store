@@ -192,18 +192,32 @@ export default function AdminPromosPage() {
 
     return (
         <div className="space-y-6 md:space-y-8 pb-10">
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <div className="flex items-center gap-3 mb-1">
-                        <span className="w-1.5 h-8 bg-primary rounded-full block" />
-                        <h1 className="text-2xl md:text-3xl font-black tracking-tight text-foreground">
-                            Promo
-                        </h1>
+            {/* Header — Primary banner */}
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                <div className="relative flex-1 rounded-3xl overflow-hidden bg-primary px-6 py-8 md:px-10 shadow-lg shadow-primary/20">
+                    <div aria-hidden className="absolute -top-10 -right-10 w-64 h-64 rounded-full pointer-events-none blur-[80px]" style={{ background: "rgba(255,255,255,0.08)" }} />
+                    <div aria-hidden className="absolute bottom-0 left-1/3 w-48 h-48 rounded-full pointer-events-none blur-[60px]" style={{ background: "rgba(255,255,255,0.05)" }} />
+                    <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)" }} />
+                    <div aria-hidden className="absolute inset-0 rounded-3xl pointer-events-none" style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)", border: "1px solid rgba(255,255,255,0.15)" }} />
+
+                    <div className="relative z-10 flex items-start justify-between gap-4">
+                        <div>
+                            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-white/15 text-primary-foreground text-[11px] font-bold uppercase tracking-[-0.005em] mb-3">
+                                <Ticket className="w-3 h-3" />
+                                Manajemen Promo
+                            </span>
+                            <h1 className="text-2xl md:text-3xl font-extrabold text-primary-foreground leading-tight tracking-tight">
+                                Promo
+                            </h1>
+                            <p className="mt-1.5 text-sm text-primary-foreground/70 leading-relaxed">
+                                Kelola kode promo dan lihat analitik.
+                            </p>
+                        </div>
+
+                        <div className="hidden md:flex shrink-0 w-14 h-14 rounded-2xl bg-white/15 items-center justify-center border border-white/20">
+                            <Ticket className="w-6 h-6 text-primary-foreground" />
+                        </div>
                     </div>
-                    <p className="text-sm font-medium text-muted-foreground ml-4.5">
-                        Kelola kode promo dan lihat analitik.
-                    </p>
                 </div>
                 <Button
                     variant="brand"
@@ -217,82 +231,78 @@ export default function AdminPromosPage() {
 
             {/* Stats Cards */}
             <div className="grid gap-4 sm:gap-6 grid-cols-2 lg:grid-cols-4">
-                <Card className="rounded-3xl border border-border/40 bg-card/60 backdrop-blur-md shadow-sm">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6">
-                        <CardTitle className="text-xs sm:text-sm font-bold text-muted-foreground uppercase tracking-widest">
+                <div className="relative rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden group hover:border-primary/30 hover:shadow-md hover:shadow-primary/5 transition-all duration-200">
+                    <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-primary/8 blur-xl pointer-events-none" />
+                    <div className="flex items-center justify-between mb-3">
+                        <p className="text-xs font-semibold uppercase tracking-[-0.005em] text-muted-foreground">
                             Total Promo
-                        </CardTitle>
-                        <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                            <Ticket className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-                        </div>
-                    </CardHeader>
-                    <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-                        <div className="text-2xl sm:text-4xl font-black text-foreground tracking-tight">
-                            {totalPromos}
-                        </div>
-                        <p className="text-[10px] sm:text-xs font-medium text-muted-foreground mt-2">
-                            {activePromos} aktif
                         </p>
-                    </CardContent>
-                </Card>
+                        <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
+                            <Ticket className="h-4 w-4 text-primary" />
+                        </div>
+                    </div>
+                    <p className="text-3xl font-extrabold text-foreground tracking-tight">
+                        {totalPromos}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground mt-1">
+                        {activePromos} aktif
+                    </p>
+                </div>
 
-                <Card className="rounded-3xl border border-border/40 bg-card/60 backdrop-blur-md shadow-sm">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6">
-                        <CardTitle className="text-xs sm:text-sm font-bold text-muted-foreground uppercase tracking-widest">
+                <div className="relative rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden group hover:border-primary/30 hover:shadow-md hover:shadow-primary/5 transition-all duration-200">
+                    <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-primary/8 blur-xl pointer-events-none" />
+                    <div className="flex items-center justify-between mb-3">
+                        <p className="text-xs font-semibold uppercase tracking-[-0.005em] text-muted-foreground">
                             Penggunaan
-                        </CardTitle>
-                        <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                            <Hash className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-                        </div>
-                    </CardHeader>
-                    <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-                        <div className="text-2xl sm:text-4xl font-black text-foreground tracking-tight">
-                            {promos.reduce((s, p) => s + p.stats.usage_count, 0)}
-                        </div>
-                        <p className="text-[10px] sm:text-xs font-medium text-muted-foreground mt-2">
-                            Total kali digunakan
                         </p>
-                    </CardContent>
-                </Card>
+                        <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
+                            <Hash className="h-4 w-4 text-primary" />
+                        </div>
+                    </div>
+                    <p className="text-3xl font-extrabold text-foreground tracking-tight">
+                        {promos.reduce((s, p) => s + p.stats.usage_count, 0)}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground mt-1">
+                        Total kali digunakan
+                    </p>
+                </div>
 
-                <Card className="rounded-3xl border border-border/40 bg-card/60 backdrop-blur-md shadow-sm">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6">
-                        <CardTitle className="text-xs sm:text-sm font-bold text-muted-foreground uppercase tracking-widest">
+                <div className="relative rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden group hover:border-emerald-500/30 hover:shadow-md hover:shadow-emerald-500/5 transition-all duration-200">
+                    <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-emerald-500/8 blur-xl pointer-events-none" />
+                    <div className="flex items-center justify-between mb-3">
+                        <p className="text-xs font-semibold uppercase tracking-[-0.005em] text-muted-foreground">
                             Diskon
-                        </CardTitle>
-                        <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                            <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-                        </div>
-                    </CardHeader>
-                    <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-                        <div className="text-xl sm:text-3xl font-black text-foreground tracking-tight">
-                            {fmt(totalDiscountGiven)}
-                        </div>
-                        <p className="text-[10px] sm:text-xs font-medium text-muted-foreground mt-2">
-                            Total diskon diberikan
                         </p>
-                    </CardContent>
-                </Card>
+                        <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                            <DollarSign className="h-4 w-4 text-emerald-600" />
+                        </div>
+                    </div>
+                    <p className="text-2xl font-extrabold text-foreground tracking-tight">
+                        {fmt(totalDiscountGiven)}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground mt-1">
+                        Total diskon diberikan
+                    </p>
+                </div>
 
-                <Card className="rounded-3xl border border-border/40 bg-card/60 backdrop-blur-md shadow-sm">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6">
-                        <CardTitle className="text-xs sm:text-sm font-bold text-muted-foreground uppercase tracking-widest">
+                <div className="relative rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden group hover:border-violet-500/30 hover:shadow-md hover:shadow-violet-500/5 transition-all duration-200">
+                    <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-violet-500/8 blur-xl pointer-events-none" />
+                    <div className="flex items-center justify-between mb-3">
+                        <p className="text-xs font-semibold uppercase tracking-[-0.005em] text-muted-foreground">
                             Revenue
-                        </CardTitle>
-                        <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                            <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-                        </div>
-                    </CardHeader>
-                    <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-                        <div className="text-xl sm:text-3xl font-black text-foreground tracking-tight">
-                            {fmt(totalRevenue)}
-                        </div>
-                        <p className="text-[10px] sm:text-xs text-primary font-bold mt-2 flex items-center gap-1.5">
-                            <BarChart3 className="h-3.5 w-3.5" />
-                            Dari orderan promo
                         </p>
-                    </CardContent>
-                </Card>
+                        <div className="w-8 h-8 rounded-xl bg-violet-500/10 flex items-center justify-center">
+                            <TrendingUp className="h-4 w-4 text-violet-600" />
+                        </div>
+                    </div>
+                    <p className="text-2xl font-extrabold text-foreground tracking-tight">
+                        {fmt(totalRevenue)}
+                    </p>
+                    <p className="text-[11px] text-primary font-bold mt-1 flex items-center gap-1.5">
+                        <BarChart3 className="h-3.5 w-3.5" />
+                        Dari orderan promo
+                    </p>
+                </div>
             </div>
 
             {/* Promos Table */}

@@ -29,6 +29,7 @@ import {
   ImageIcon,
   X,
   ExternalLink,
+  Trash2,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -48,6 +49,7 @@ type Product = {
   discount_price?: number | null;
   sku?: string | null;
   demo_link?: string | null;
+  demo_links?: { id: string; label: string; url: string; sort_order: number }[];
   tags?: string[] | null;
   category_id: string | null;
   thumbnail_url: string | null;
@@ -71,6 +73,11 @@ export function ProductForm({
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [, startCategoryTransition] = useTransition();
+
+  // Demo links state
+  const [demoLinks, setDemoLinks] = useState<{ label: string; url: string }[]>(
+    product?.demo_links?.map((d) => ({ label: d.label, url: d.url })) || []
+  );
 
   const generateSlug = (title: string) => {
     return title
@@ -332,25 +339,83 @@ export function ProductForm({
             </div>
 
             <div className="space-y-2.5">
-              <Label htmlFor="demoLink" className="text-foreground font-bold">
-                Demo Preview Link{" "}
+              <Label className="text-foreground font-bold">
+                Demo Preview Links{" "}
                 <span className="font-medium text-muted-foreground text-xs ml-1">
                   (Opsional)
                 </span>
               </Label>
-              <div className="relative">
-                <ExternalLink className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="demoLink"
-                  name="demoLink"
-                  type="url"
-                  defaultValue={product?.demo_link || ""}
-                  placeholder="https://preview-undangan.com/..."
-                  className={`h-11 pl-11 ${inputClass}`}
-                />
+
+              {/* Hidden input to serialize demo links as JSON */}
+              <input
+                type="hidden"
+                name="demoLinks"
+                value={JSON.stringify(demoLinks)}
+              />
+
+              <div className="space-y-3">
+                {demoLinks.map((link, index) => (
+                  <div
+                    key={index}
+                    className="flex items-start gap-2 rounded-2xl border border-border/50 bg-background/30 p-3"
+                  >
+                    <div className="flex-1 space-y-2">
+                      <Input
+                        placeholder={`Label (mis: Demo ${index + 1})`}
+                        value={link.label}
+                        onChange={(e) => {
+                          const updated = [...demoLinks];
+                          updated[index] = { ...updated[index], label: e.target.value };
+                          setDemoLinks(updated);
+                        }}
+                        className={`h-9 ${inputClass}`}
+                      />
+                      <div className="relative">
+                        <ExternalLink className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          type="url"
+                          placeholder="https://preview-undangan.com/..."
+                          value={link.url}
+                          onChange={(e) => {
+                            const updated = [...demoLinks];
+                            updated[index] = { ...updated[index], url: e.target.value };
+                            setDemoLinks(updated);
+                          }}
+                          className={`h-9 pl-11 ${inputClass}`}
+                        />
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDemoLinks(demoLinks.filter((_, i) => i !== index));
+                      }}
+                      className="mt-1 p-2 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    setDemoLinks([
+                      ...demoLinks,
+                      { label: "", url: "" },
+                    ])
+                  }
+                  className="w-full rounded-2xl border-dashed border-border/50 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5"
+                >
+                  <Plus className="h-4 w-4 mr-1.5" />
+                  Tambah Demo Link
+                </Button>
               </div>
+
               <p className="text-[11px] font-medium text-muted-foreground ml-1">
-                Link live preview agar pembeli bisa mencoba dulu.
+                Tambahkan satu atau lebih link live preview agar pembeli bisa mencoba dulu.
               </p>
             </div>
           </div>

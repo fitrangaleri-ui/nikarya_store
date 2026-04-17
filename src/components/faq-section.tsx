@@ -3,6 +3,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import { Plus, Minus } from "lucide-react";
+import { Typography } from "./ui/typography";
 
 const faqs = [
   {
@@ -84,10 +85,9 @@ function AccordionItem({
       className={`
         group rounded-2xl overflow-hidden
         transition-all duration-300
-        ${
-          isOpen
-            ? "bg-primary shadow-lg shadow-primary/20"
-            : "bg-card border border-border hover:border-primary/30 hover:shadow-md hover:shadow-primary/5"
+        ${isOpen
+          ? "bg-primary shadow-lg shadow-primary/20"
+          : "bg-card border border-border hover:border-primary/30 hover:shadow-md hover:shadow-primary/5"
         }
       `}
     >
@@ -111,10 +111,9 @@ function AccordionItem({
           className={`
             shrink-0 w-7 h-7 rounded-full flex items-center justify-center
             transition-all duration-300
-            ${
-              isOpen
-                ? "bg-primary-foreground/15 text-primary-foreground rotate-0"
-                : "bg-primary/8 text-primary border border-primary/20"
+            ${isOpen
+              ? "bg-primary-foreground/15 text-primary-foreground rotate-0"
+              : "bg-primary/8 text-primary border border-primary/20"
             }
           `}
         >
@@ -186,12 +185,12 @@ export function FaqSection() {
             <span className="w-1.5 h-1.5 rounded-full bg-primary" />
             Pertanyaan Umum
           </span>
-          <h2 className="text-2xl md:text-4xl font-extrabold text-foreground tracking-tight mb-3">
+          <Typography variant="h2">
             Ada yang ingin ditanyakan?
-          </h2>
-          <p className="text-sm md:text-base text-muted-foreground max-w-md mx-auto leading-relaxed">
+          </Typography>
+          <Typography variant="body-base" className="text-sm md:text-base text-muted-foreground max-w-md mx-auto leading-relaxed">
             Temukan jawaban atas pertanyaan umum seputar layanan kami di sini.
-          </p>
+          </Typography>
         </div>
 
         {/* ── Grid 2 kolom ── */}

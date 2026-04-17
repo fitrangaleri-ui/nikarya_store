@@ -10,16 +10,17 @@ export default async function EditProductPage({
   const { id } = await params;
   const admin = createAdminClient();
 
-  const [{ data: product }, { data: categories }] = await Promise.all([
+  const [{ data: product }, { data: categories }, { data: demoLinks }] = await Promise.all([
     admin.from("products").select("*").eq("id", id).single(),
     admin.from("categories").select("id, name, slug").order("name"),
+    admin.from("product_demo_links").select("id, label, url, sort_order").eq("product_id", id).order("sort_order"),
   ]);
 
   if (!product) notFound();
 
   return (
     <div className="w-full max-w-full relative overflow-hidden">
-      <ProductForm product={product} categories={categories || []} />
+      <ProductForm product={{ ...product, demo_links: demoLinks || [] }} categories={categories || []} />
     </div>
   );
 }

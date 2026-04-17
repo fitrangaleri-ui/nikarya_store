@@ -29,6 +29,7 @@ import { BuyButton } from "./buy-button";
 import { ProductCard } from "@/components/product-card";
 import { useCart } from "@/context/cart-context";
 import { resolveImageSrc } from "@/lib/resolve-image";
+import { DemoLinksModal } from "@/components/demo-links-modal";
 
 // ── Custom Cart Icon — tidak diubah ──────────────────────────
 function CartAddIcon({ className }: { className?: string }) {
@@ -57,6 +58,7 @@ interface ProductData {
   discount_price: number | null;
   sku: string | null;
   demo_link: string | null;
+  demo_links: { label: string; url: string }[];
   tags: string[] | null;
   thumbnail_url: string | null;
   category_id: string | null;
@@ -82,9 +84,9 @@ export function ProductDetailClient({
   const isDiscounted = !!product.discount_price;
   const discountPercentage = isDiscounted
     ? Math.round(
-        ((product.price - Number(product.discount_price)) / product.price) *
-          100,
-      )
+      ((product.price - Number(product.discount_price)) / product.price) *
+      100,
+    )
     : 0;
 
   // ── Handler — tidak diubah ───────────────────────────────
@@ -148,27 +150,37 @@ export function ProductDetailClient({
                 </div>
               )}
               <div className="absolute inset-0 bg-background/0 group-hover:bg-background/5 transition-colors duration-300 pointer-events-none" />
-              {product.demo_link && (
-                <a
-                  href={product.demo_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="
-                    absolute bottom-3 right-3
-                    inline-flex items-center gap-1.5
-                    px-3 py-1.5 rounded-full
-                    bg-background/80 backdrop-blur-md
-                    border border-border/60
-                    text-xs font-semibold text-foreground
-                    shadow-md z-10
-                    hover:bg-primary hover:text-primary-foreground hover:border-primary
-                    transition-all duration-200 hover:scale-105
-                  "
-                >
-                  <Eye className="w-3.5 h-3.5 shrink-0" />
-                  Lihat Demo
-                </a>
-              )}
+              {(() => {
+                // Build demo links from new table or fallback
+                const dLinks: { label: string; url: string }[] =
+                  product.demo_links && product.demo_links.length > 0
+                    ? product.demo_links
+                    : product.demo_link
+                      ? [{ label: "Demo", url: product.demo_link }]
+                      : [];
+                if (dLinks.length === 0) return null;
+                return (
+                  <DemoLinksModal demoLinks={dLinks}>
+                    <span
+                      className="
+                        absolute bottom-3 right-3
+                        inline-flex items-center gap-1.5
+                        px-3 py-1.5 rounded-full
+                        bg-background/80 backdrop-blur-md
+                        border border-border/60
+                        text-xs font-semibold text-foreground
+                        shadow-md z-10
+                        hover:bg-primary hover:text-primary-foreground hover:border-primary
+                        transition-all duration-200 hover:scale-105
+                        cursor-pointer
+                      "
+                    >
+                      <Eye className="w-3.5 h-3.5 shrink-0" />
+                      Lihat Demo
+                    </span>
+                  </DemoLinksModal>
+                );
+              })()}
             </div>
 
             {/* ════════════════════════════════════════════ */}
@@ -355,17 +367,15 @@ export function ProductDetailClient({
                   </h2>
                 </div>
                 <ChevronDown
-                  className={`w-6 h-6 text-muted-foreground transition-transform duration-300 ${
-                    isDescOpen ? "rotate-180" : ""
-                  }`}
+                  className={`w-6 h-6 text-muted-foreground transition-transform duration-300 ${isDescOpen ? "rotate-180" : ""
+                    }`}
                 />
               </button>
               <div
-                className={`grid transition-all duration-300 ease-in-out ${
-                  isDescOpen
+                className={`grid transition-all duration-300 ease-in-out ${isDescOpen
                     ? "grid-rows-[1fr] opacity-100"
                     : "grid-rows-[0fr] opacity-0"
-                }`}
+                  }`}
               >
                 <div className="overflow-hidden">
                   <div className="p-6 md:p-8 pt-0 md:pt-0">

@@ -38,7 +38,7 @@ export function PrimaryButton({
         disabled
         className={cn(
           "w-full rounded-full bg-muted text-muted-foreground cursor-not-allowed",
-          "flex items-center justify-center gap-2 font-semibold border border-border/40",
+          "flex items-center justify-center gap-2 font-medium border border-border/40",
           sizeMap[size],
           className,
         )}
@@ -56,7 +56,7 @@ export function PrimaryButton({
       className={cn(
         "relative w-full rounded-full overflow-hidden",
         "bg-primary hover:bg-primary/90",
-        "text-primary-foreground font-bold",
+        "text-primary-foreground font-medium",
         "flex items-center justify-center gap-2",
         "transition-all duration-200",
         "hover:scale-[1.01] active:scale-[0.98]",

@@ -1,4 +1,6 @@
 // src/components/order-procedure.tsx
+import { Badge } from "@/components/ui/badge";
+import { Typography } from "@/components/ui/typography";
 
 const steps = [
   {
@@ -61,21 +63,26 @@ export function OrderProcedure() {
 
       <div className="mx-auto max-w-5xl px-5 md:px-0 relative z-10">
         {/* ── Section Header ── */}
-        <div className="text-center mb-14 md:mb-24">
-          <span className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground/90 text-[11px] font-bold uppercase tracking-widest mb-5 backdrop-blur-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-foreground opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-foreground" />
-            </span>
+        <div className="text-center mb-14 md:mb-24 flex flex-col items-center">
+          <Badge variant="glass">
             Cara Pemesanan
-          </span>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-primary-foreground tracking-tight mb-4">
+          </Badge>
+
+          <Typography
+            as="h2"
+            variant="h2"
+            className="text-primary-foreground mb-4 md:mb-6"
+          >
             Prosedur Pemesanan
-          </h2>
-          <p className="text-sm md:text-base text-primary-foreground/65 max-w-lg mx-auto leading-relaxed">
+          </Typography>
+
+          <Typography
+            variant="body-base"
+            className="text-primary-foreground/60 text-center justify-center"
+          >
             Langkah mudah dari konsultasi hingga undangan dikirim. Kami pastikan
             prosesnya lancar dan menyenangkan.
-          </p>
+          </Typography>
         </div>
 
         {/* ══════════════════════════════════════════════════════ */}
@@ -136,9 +143,12 @@ export function OrderProcedure() {
                           "0 0 0 4px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.2)",
                       }}
                     >
-                      <span className="text-3xl font-black text-primary-foreground leading-none">
+                      <Typography
+                        as="span"
+                        className="text-3xl font-black text-primary-foreground leading-none"
+                      >
                         {step.number}
-                      </span>
+                      </Typography>
                     </div>
                   </div>
 
@@ -194,19 +204,27 @@ export function OrderProcedure() {
                 </div>
 
                 {/* Angka aktif kiri atas */}
-                <span
-                  className="text-5xl font-black leading-none mb-4 relative z-10"
-                  style={{ color: "rgba(255,255,255,0.9)" }}
+                <Typography
+                  as="span"
+                  className="text-5xl font-black leading-none mb-4 relative z-10 text-white/90"
                 >
                   {String(step.number).padStart(2, "0")}
-                </span>
+                </Typography>
 
-                <h4 className="text-sm font-bold text-primary-foreground mb-2 leading-tight relative z-10">
+                <Typography
+                  as="h4"
+                  variant="h6"
+                  className="font-bold text-primary-foreground mb-2 leading-tight relative z-10"
+                >
                   {step.title}
-                </h4>
-                <p className="text-xs text-primary-foreground/65 leading-relaxed relative z-10">
+                </Typography>
+
+                <Typography
+                  variant="body-sm"
+                  className="text-primary-foreground/65 leading-relaxed relative z-10"
+                >
                   {step.desc}
-                </p>
+                </Typography>
               </div>
             ))}
           </div>
@@ -282,12 +300,20 @@ function StepCardDesktop({
         {step.number}
       </div>
 
-      <h4 className="text-base font-bold text-primary-foreground mb-2 relative z-10 group-hover:text-white transition-colors">
+      <Typography
+        as="h4"
+        variant="h5"
+        className="font-bold text-primary-foreground mb-2 relative z-10 group-hover:text-white transition-colors"
+      >
         {step.title}
-      </h4>
-      <p className="text-sm text-primary-foreground/70 leading-relaxed relative z-10 group-hover:text-primary-foreground/90 transition-colors">
+      </Typography>
+
+      <Typography
+        variant="body-sm"
+        className="text-primary-foreground/70 leading-relaxed relative z-10 group-hover:text-primary-foreground/90 transition-colors"
+      >
         {step.desc}
-      </p>
+      </Typography>
     </div>
   );
 }

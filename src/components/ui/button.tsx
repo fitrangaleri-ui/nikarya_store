@@ -15,23 +15,24 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm",
+          "bg-primary text-primary-foreground hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 font-semibold",
         destructive:
-          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 shadow-sm",
+          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 transition-all hover:scale-105 active:scale-95 font-semibold",
         outline:
-          "border border-input bg-white text-primary shadow-xs hover:bg-background dark:bg-accent dark:border-input dark:hover:bg-input/30",
+          "border border-input bg-white text-primary hover:bg-background dark:bg-accent dark:border-input dark:hover:bg-input/30 transition-all hover:scale-105 active:scale-95 font-semibold",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm",
+          "bg-white text-primary hover:bg-white/90 transition-all hover:scale-105 active:scale-95 font-bold",
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 transition-all active:scale-95 font-semibold",
         link: "text-primary underline-offset-4 hover:underline",
+        glass:
+          "border border-white/30 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm transition-all hover:scale-105 active:scale-95 font-bold",
 
         brand: [
           "relative overflow-hidden",
           "bg-primary hover:bg-primary/90",
           "text-primary-foreground font-bold",
-          "shadow-md hover:shadow-lg",
-          "active:scale-[0.98]",
+          "transition-all hover:scale-105 active:scale-95",
         ].join(" "),
 
         "brand-pill": [
@@ -42,8 +43,7 @@ const buttonVariants = cva(
           "pl-6 pr-1.5",
           "gap-4",
           "justify-between",
-          "shadow-md hover:shadow-lg",
-          "active:scale-[0.98]",
+          "transition-all hover:scale-[1.02] active:scale-95",
           "[&_.brand-pill__icon]:flex",
           "[&_.brand-pill__icon]:items-center",
           "[&_.brand-pill__icon]:justify-center",
@@ -60,9 +60,9 @@ const buttonVariants = cva(
 
       size: {
         // rounded-md DIHAPUS dari sm & icon-xs — ikut rounded-full base
-        xs: "h-8 gap-1 px-2.5 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-10 gap-1.5 px-4 has-[>svg]:px-3",
-        default: "h-11 px-5 py-2 has-[>svg]:px-4",
+        xs: "h-8 gap-1 px-3 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-10 gap-1.5 px-5 has-[>svg]:px-3",
+        default: "h-11 px-6 py-2 has-[>svg]:px-4",
         lg: "h-12 px-8 has-[>svg]:px-5 text-base",
         pill: "h-14 py-2 text-sm",
         icon: "size-11",
@@ -102,32 +102,36 @@ function Button({
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     >
-      {needsShimmer && (
-        <>
-          <div
-            aria-hidden
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
-            }}
-          />
-          <div
-            aria-hidden
-            className="absolute inset-0 rounded-full pointer-events-none"
-            style={{
-              boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
-              border: "1px solid rgba(255,255,255,0.15)",
-            }}
-          />
-        </>
-      )}
-
-      {needsShimmer ? (
-        <span className="relative flex items-center gap-2">{children}</span>
-      ) : (
+      {asChild ? (
         children
+      ) : (
+        <>
+          {needsShimmer && (
+            <>
+              <div
+                aria-hidden
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background:
+                    "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
+                }}
+              />
+              <div
+                aria-hidden
+                className="absolute inset-0 rounded-full pointer-events-none"
+                style={{
+                  border: "1px solid rgba(255,255,255,0.15)",
+                }}
+              />
+            </>
+          )}
+
+          {needsShimmer ? (
+            <span className="relative flex items-center gap-2">{children}</span>
+          ) : (
+            children
+          )}
+        </>
       )}
     </Comp>
   );

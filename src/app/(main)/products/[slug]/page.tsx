@@ -14,7 +14,7 @@ export default async function ProductDetailPage({
   const { data: product } = await adminClient
     .from("products")
     .select(
-      "id, title, slug, description, price, discount_price, sku, demo_link, tags, thumbnail_url, category_id, categories(name)",
+      "id, title, slug, description, price, discount_price, sku, demo_link, tags, thumbnail_url, category_id, categories(name), product_demo_links(id, label, url, sort_order)",
     )
     .eq("slug", slug)
     .eq("is_active", true)
@@ -32,7 +32,7 @@ export default async function ProductDetailPage({
   if (product.category_id) {
     const { data: related } = await adminClient
       .from("products")
-      .select("id, title, slug, price, discount_price, sku, demo_link, tags, thumbnail_url")
+      .select("id, title, slug, price, discount_price, sku, demo_link, tags, thumbnail_url, product_demo_links(id, label, url, sort_order)")
       .eq("category_id", product.category_id)
       .eq("is_active", true)
       .neq("id", product.id)
@@ -52,6 +52,7 @@ export default async function ProductDetailPage({
         discount_price: product.discount_price,
         sku: product.sku,
         demo_link: product.demo_link,
+        demo_links: (product.product_demo_links || []).sort((a: any, b: any) => a.sort_order - b.sort_order).map((d: any) => ({ label: d.label, url: d.url })),
         tags: product.tags,
         thumbnail_url: product.thumbnail_url,
         category_id: product.category_id,

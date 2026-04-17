@@ -47,7 +47,11 @@ export async function createProduct(formData: FormData) {
   const discountPrice = discountPriceRaw ? parseFloat(discountPriceRaw) : null;
 
   const sku = (formData.get("sku") as string) || null;
-  const demoLink = (formData.get("demoLink") as string) || null;
+  const demoLinksRaw = formData.get("demoLinks") as string;
+  let demoLinks: { label: string; url: string }[] = [];
+  try {
+    if (demoLinksRaw) demoLinks = JSON.parse(demoLinksRaw);
+  } catch { /* ignore parse errors */ }
 
   const tagsRaw = formData.get("tags") as string;
   // Convert string "tag1, tag2" menjadi array ["tag1", "tag2"]
@@ -87,23 +91,33 @@ export async function createProduct(formData: FormData) {
     thumbnailUrl = publicUrl.publicUrl;
   }
 
-  const { error } = await admin.from("products").insert({
+  const { data: inserted, error } = await admin.from("products").insert({
     title,
     slug,
     description,
     price,
-    discount_price: discountPrice, // Insert field baru
+    discount_price: discountPrice,
     sku,
-    demo_link: demoLink,
     tags: tags.length > 0 ? tags : null,
     category_id: categoryId || null,
     drive_file_url: driveFileUrl,
     is_active: isActive,
     thumbnail_url: thumbnailUrl || null,
-  });
+  }).select("id").single();
 
-  if (error) {
-    return { error: error.message };
+  if (error || !inserted) {
+    return { error: error?.message || "Insert failed" };
+  }
+
+  // Insert demo links
+  if (demoLinks.length > 0) {
+    const demoRows = demoLinks.map((d, i) => ({
+      product_id: inserted.id,
+      label: d.label || `Demo ${i + 1}`,
+      url: d.url,
+      sort_order: i,
+    }));
+    await admin.from("product_demo_links").insert(demoRows);
   }
 
   revalidatePath("/admin/products");
@@ -126,7 +140,11 @@ export async function updateProduct(productId: string, formData: FormData) {
   const discountPrice = discountPriceRaw ? parseFloat(discountPriceRaw) : null;
 
   const sku = (formData.get("sku") as string) || null;
-  const demoLink = (formData.get("demoLink") as string) || null;
+  const demoLinksRaw = formData.get("demoLinks") as string;
+  let demoLinks: { label: string; url: string }[] = [];
+  try {
+    if (demoLinksRaw) demoLinks = JSON.parse(demoLinksRaw);
+  } catch { /* ignore parse errors */ }
 
   const tagsRaw = formData.get("tags") as string;
   const tags = tagsRaw
@@ -180,9 +198,8 @@ export async function updateProduct(productId: string, formData: FormData) {
       slug,
       description,
       price,
-      discount_price: discountPrice, // Update field baru
+      discount_price: discountPrice,
       sku,
-      demo_link: demoLink,
       tags: tags.length > 0 ? tags : null,
       category_id: categoryId || null,
       drive_file_url: driveFileUrl,
@@ -193,6 +210,18 @@ export async function updateProduct(productId: string, formData: FormData) {
 
   if (error) {
     return { error: error.message };
+  }
+
+  // Replace demo links: delete old, insert new
+  await admin.from("product_demo_links").delete().eq("product_id", productId);
+  if (demoLinks.length > 0) {
+    const demoRows = demoLinks.map((d, i) => ({
+      product_id: productId,
+      label: d.label || `Demo ${i + 1}`,
+      url: d.url,
+      sort_order: i,
+    }));
+    await admin.from("product_demo_links").insert(demoRows);
   }
 
   revalidatePath("/admin/products");

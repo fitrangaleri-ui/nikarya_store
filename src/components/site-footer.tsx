@@ -8,6 +8,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { ArrowRight, Instagram, Youtube } from "lucide-react";
+import { Typography } from "@/components/ui/typography";
 
 // ── Data Fetching ─────────────────────────────────────────────
 // Fetch kategori (maks 6) dan produk terbaru (maks 3)
@@ -80,9 +81,12 @@ export async function SiteFooter() {
           {/* Menampilkan daftar kategori produk              */}
           {/* ════════════════════════════════════════════════ */}
           <div className="flex flex-col gap-4">
-            <h4 className="text-[11px] font-bold uppercase tracking-[-0.002em] text-foreground/50">
+            <Typography
+              variant="caption"
+              className="font-bold uppercase tracking-wider text-foreground/45"
+            >
               Kategori
-            </h4>
+            </Typography>
 
             <ul className="flex flex-col gap-2.5">
               {categories.length > 0 ? (
@@ -90,17 +94,21 @@ export async function SiteFooter() {
                   <li key={cat.id}>
                     <Link
                       href={`/products?category=${cat.slug}`}
-                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors duration-200 group/link"
+                      className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors duration-200 group/link"
                     >
                       {/* Arrow muncul saat hover */}
                       <ArrowRight className="w-3 h-3 shrink-0 opacity-0 -translate-x-1 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-200" />
-                      {cat.name}
+                      <Typography variant="body-sm" as="span" className="inherit">
+                        {cat.name}
+                      </Typography>
                     </Link>
                   </li>
                 ))
               ) : (
-                <li className="text-xs text-muted-foreground/40">
-                  Belum ada kategori.
+                <li>
+                  <Typography variant="caption" className="text-muted-foreground/40 italic">
+                    Belum ada kategori.
+                  </Typography>
                 </li>
               )}
             </ul>
@@ -111,9 +119,12 @@ export async function SiteFooter() {
           {/* Menampilkan 3 produk terbaru dengan thumbnail   */}
           {/* ════════════════════════════════════════════════ */}
           <div className="flex flex-col gap-4">
-            <h4 className="text-[11px] font-bold uppercase tracking-[-0.002em] text-foreground/50">
+            <Typography
+              variant="caption"
+              className="font-bold uppercase tracking-wider text-foreground/45"
+            >
               Rekomendasi
-            </h4>
+            </Typography>
 
             <div className="flex flex-col gap-3">
               {products.length > 0 ? (
@@ -144,21 +155,29 @@ export async function SiteFooter() {
                       </div>
 
                       {/* Info produk: judul + harga */}
-                      <div className="flex flex-col gap-1 min-w-0">
-                        <span className="text-sm font-medium text-foreground group-hover/prod:text-primary transition-colors duration-200 leading-snug line-clamp-1">
+                      <div className="flex flex-col gap-0.5 min-w-0">
+                        <Typography
+                          variant="body-sm"
+                          as="span"
+                          className="font-medium text-foreground group-hover/prod:text-primary transition-colors duration-200 line-clamp-1"
+                        >
                           {product.title}
-                        </span>
-                        <span className="text-xs text-primary font-semibold">
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          as="span"
+                          className="text-primary font-bold"
+                        >
                           {formatPrice(displayPrice)}
-                        </span>
+                        </Typography>
                       </div>
                     </Link>
                   );
                 })
               ) : (
-                <p className="text-xs text-muted-foreground/40">
+                <Typography variant="caption" className="text-muted-foreground/40 italic">
                   Belum ada produk.
-                </p>
+                </Typography>
               )}
             </div>
           </div>
@@ -168,9 +187,12 @@ export async function SiteFooter() {
           {/* Icon sosial media + tagline singkat             */}
           {/* ════════════════════════════════════════════════ */}
           <div className="flex flex-col gap-4">
-            <h4 className="text-[11px] font-bold uppercase tracking-[-0.002em] text-foreground/50">
+            <Typography
+              variant="caption"
+              className="font-bold uppercase tracking-wider text-foreground/45"
+            >
               Ikuti kami
-            </h4>
+            </Typography>
 
             {/* Icon sosmed — rounded-full, warna primary */}
             <div className="flex items-center gap-2.5">
@@ -195,9 +217,9 @@ export async function SiteFooter() {
             </div>
 
             {/* Tagline */}
-            <p className="text-xs text-muted-foreground/70 leading-relaxed">
+            <Typography variant="body-sm" className="text-muted-foreground/80 leading-relaxed">
               Ikuti kami untuk inspirasi undangan dan penawaran terbaru.
-            </p>
+            </Typography>
           </div>
         </div>
       </div>
@@ -206,11 +228,11 @@ export async function SiteFooter() {
       {/* COPYRIGHT BAR                                       */}
       {/* Latar belakang primary — pembatas bawah footer      */}
       {/* ════════════════════════════════════════════════════ */}
-      <div className="border-t border-border/40 bg-primary">
-        <div className="mx-auto max-w-6xl px-4 md:px-0 py-3.5 flex items-center justify-center">
-          <p className="text-xs text-background text-center">
-            © Copyright {new Date().getFullYear()} | Nikarya Digital
-          </p>
+      <div className="border-t border-white/10 bg-primary">
+        <div className="mx-auto max-w-6xl px-4 md:px-0 py-4 flex items-center justify-center">
+          <Typography variant="caption" className="text-primary-foreground/90 text-center font-medium">
+            © {new Date().getFullYear()} Nikarya Digital | All Rights Reserved
+          </Typography>
         </div>
       </div>
     </footer>
