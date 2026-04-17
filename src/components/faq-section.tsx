@@ -2,8 +2,9 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { Plus, Minus } from "lucide-react";
-import { Typography } from "./ui/typography";
+import { PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
+import { Typography } from "@/components/ui/typography";
+import { Badge } from "@/components/ui/badge";
 
 const faqs = [
   {
@@ -97,14 +98,16 @@ function AccordionItem({
         className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left"
       >
         {/* Nomor + Pertanyaan */}
-        <span
+        <Typography
+          variant="body-base"
+          as="span"
           className={`
-            text-sm font-semibold leading-snug transition-colors duration-200
-            ${isOpen ? "text-primary-foreground" : "text-foreground group-hover:text-primary"}
+            font-bold leading-snug transition-colors duration-200
+            ${isOpen ? "!text-primary-foreground" : "text-foreground group-hover:text-primary"}
           `}
         >
           {question}
-        </span>
+        </Typography>
 
         {/* Icon Plus/Minus */}
         <span
@@ -118,9 +121,9 @@ function AccordionItem({
           `}
         >
           {isOpen ? (
-            <Minus className="w-3.5 h-3.5" />
+            <MinusIcon className="w-4 h-4" strokeWidth={2.5} />
           ) : (
-            <Plus className="w-3.5 h-3.5" />
+            <PlusIcon className="w-4 h-4" strokeWidth={2.5} />
           )}
         </span>
       </button>
@@ -141,14 +144,16 @@ function AccordionItem({
               ${isOpen ? "border-primary-foreground/15" : "border-border"}
             `}
           />
-          <p
+          <Typography
+            variant="body-sm"
+            as="p"
             className={`
-              px-5 py-4 text-sm leading-relaxed transition-colors duration-300
-              ${isOpen ? "text-primary-foreground/80" : "text-muted-foreground"}
+              px-5 py-4 leading-relaxed transition-colors duration-300
+              ${isOpen ? "!text-primary-foreground/80" : "text-muted-foreground"}
             `}
           >
             {answer}
-          </p>
+          </Typography>
         </div>
       </div>
     </div>
@@ -171,24 +176,25 @@ export function FaqSection() {
       {/* ── Ambient glow ── */}
       <div
         aria-hidden
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(circle, color-mix(in oklch, var(--primary) 6%, transparent) 0%, transparent 70%)",
-        }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full pointer-events-none opacity-20 bg-[radial-gradient(circle_at_center,var(--primary)_0%,transparent_70%)]"
       />
 
       <div className="mx-auto max-w-6xl px-4 md:px-0 relative z-10">
         {/* ── Header ── */}
         <div className="text-center mb-12 md:mb-16">
-          <span className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 bg-primary/10 border border-primary/20 text-primary text-[11px] font-bold uppercase tracking-[-0.005em] mb-4">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-            Pertanyaan Umum
-          </span>
-          <Typography variant="h2">
+          <div className="flex justify-center mb-6">
+            <Badge
+              variant="outline"
+              className="bg-primary/8 border-primary/15 text-primary px-4 py-1.5 rounded-full hover:bg-primary/12 transition-colors duration-300"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse mr-2" />
+              Pertanyaan Umum
+            </Badge>
+          </div>
+          <Typography variant="h2" className="text-center">
             Ada yang ingin ditanyakan?
           </Typography>
-          <Typography variant="body-base" className="text-sm md:text-base text-muted-foreground max-w-md mx-auto leading-relaxed">
+          <Typography variant="body-base" className="text-sm mt-2 text-center md:text-base text-muted-foreground max-w-md mx-auto leading-relaxed">
             Temukan jawaban atas pertanyaan umum seputar layanan kami di sini.
           </Typography>
         </div>
