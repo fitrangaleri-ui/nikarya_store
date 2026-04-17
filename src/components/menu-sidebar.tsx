@@ -105,6 +105,30 @@ export function MenuSidebar() {
     await signOut();
   };
 
+  // ── Swipe to close logic ──
+  const touchStart = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStart.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStart.current === null) return;
+    const touchCurrent = e.touches[0].clientX;
+    const deltaX = touchStart.current - touchCurrent;
+
+    // Jika geser ke kiri (kembali ke sisi asal) lebih dari 70px, maka tutup
+    if (deltaX > 70) {
+      close();
+      touchStart.current = null;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    touchStart.current = null;
+  };
+
+
   // ── Nav items ──
   const navItems = [
     { href: "/products", label: "Produk" },
@@ -116,6 +140,10 @@ export function MenuSidebar() {
       <SheetContent
         side="left"
         hideClose
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
         className="flex flex-col h-full p-0 border-r border-border/40 bg-background/92 backdrop-blur-2xl w-[78%] max-w-[320px] overflow-hidden shadow-none"
       >
         {/* Decorative blur */}

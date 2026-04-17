@@ -10,12 +10,43 @@ import {
   UserCircle,
   CreditCard,
   Store,
-  Menu,
-  X,
   Ticket,
   ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Typography } from "@/components/ui/typography";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+
+function AnimatedNavIcon({
+  isOpen,
+  className,
+}: {
+  isOpen: boolean;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`relative flex h-full w-full items-center justify-center ${className}`}
+      aria-hidden="true"
+    >
+      <div className="relative h-4 w-5">
+        <span
+          className={`absolute left-0 top-0 h-[2.5px] w-5 origin-center rounded-full bg-current transition-all duration-300 ease-out ${isOpen ? "translate-y-[6px] rotate-45" : "translate-y-0"
+            }`}
+        />
+        <span
+          className={`absolute left-0 top-[6px] h-[2.5px] w-5 origin-center rounded-full bg-current transition-all duration-300 ease-out ${isOpen ? "scale-x-0 opacity-0" : "scale-x-100 opacity-100"
+            }`}
+        />
+        <span
+          className={`absolute left-0 top-3 h-[2.5px] w-5 origin-center rounded-full bg-current transition-all duration-300 ease-out ${isOpen ? "-translate-y-[6px] -rotate-45" : "translate-y-0"
+            }`}
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function AdminLayout({
   children,
@@ -39,10 +70,91 @@ export default function AdminLayout({
   const isAccount = pathname.startsWith("/admin/account");
 
   const getLinkClass = (active: boolean) =>
-    `group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${active
+    `group flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${active
       ? "bg-primary/15 text-primary shadow-sm"
       : "text-muted-foreground hover:bg-primary/8 hover:text-foreground"
     }`;
+
+  const sidebarContent = (
+    <>
+      <div className="flex h-16 shrink-0 items-center justify-between border-b border-[var(--glass-border)] px-4">
+        <Link
+          href="/admin"
+          className="flex items-center gap-2.5 hover:opacity-80 transition-opacity"
+        >
+          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Store className="h-4 w-4 text-primary" />
+          </div>
+          <Typography variant="h6" as="span" className="font-black tracking-tight text-foreground">
+            Admin
+          </Typography>
+        </Link>
+      </div>
+
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto custom-scrollbar">
+        <Typography variant="caption" as="p" className="px-3 font-bold text-muted-foreground/70 uppercase tracking-widest mb-1.5 mt-2">
+          Menu Utama
+        </Typography>
+
+        <Link href="/admin" className={getLinkClass(isDashboard)}>
+          <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isDashboard ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
+            <LayoutDashboard className={`h-[16px] w-[16px] transition-colors ${isDashboard ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+          </div>
+          <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Dashboard</Typography>
+        </Link>
+
+        <Link href="/admin/products" className={getLinkClass(isProducts)}>
+          <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isProducts ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
+            <Package className={`h-[16px] w-[16px] transition-colors ${isProducts ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+          </div>
+          <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Produk</Typography>
+        </Link>
+
+        <Link href="/admin/orders" className={getLinkClass(isOrders)}>
+          <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isOrders ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
+            <ShoppingCart className={`h-[16px] w-[16px] transition-colors ${isOrders ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+          </div>
+          <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Pesanan</Typography>
+        </Link>
+
+        <Link href="/admin/promos" className={getLinkClass(isPromos)}>
+          <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isPromos ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
+            <Ticket className={`h-[16px] w-[16px] transition-colors ${isPromos ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+          </div>
+          <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Promo</Typography>
+        </Link>
+
+        <div className="h-px w-full bg-[var(--glass-border)] my-2" />
+
+        <Typography variant="caption" as="p" className="px-3 font-bold text-muted-foreground/70 uppercase tracking-widest mb-1.5 mt-2">
+          Pengaturan
+        </Typography>
+
+        <Link href="/admin/payment-gateway" className={getLinkClass(isPayment)}>
+          <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isPayment ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
+            <CreditCard className={`h-[16px] w-[16px] transition-colors ${isPayment ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+          </div>
+          <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Metode Bayar</Typography>
+        </Link>
+
+        <Link href="/admin/account" className={getLinkClass(isAccount)}>
+          <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isAccount ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
+            <UserCircle className={`h-[16px] w-[16px] transition-colors ${isAccount ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+          </div>
+          <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Akun</Typography>
+        </Link>
+
+        <div className="h-px w-full bg-[var(--glass-border)] my-2" />
+
+        <a href="/" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-muted-foreground hover:bg-primary/8 hover:text-foreground">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 bg-muted/50 group-hover:bg-primary/10">
+            <ExternalLink className="h-[16px] w-[16px] transition-colors text-muted-foreground group-hover:text-primary" />
+          </div>
+          <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Lihat Toko</Typography>
+        </a>
+      </nav>
+    </>
+  );
 
   return (
     // PENGUNCIAN 1: Tambahkan overflow-x-hidden di root div untuk cegah horizontal scroll body
@@ -51,125 +163,51 @@ export default function AdminLayout({
       <header className="md:hidden fixed top-0 left-0 right-0 h-16 bg-background/80 backdrop-blur-xl border-b border-border/50 z-30 flex items-center justify-between px-4 shadow-sm w-full">
         <Link
           href="/admin"
-          className="flex items-center gap-2.5 font-black text-lg text-foreground tracking-tight"
+          className="flex items-center gap-2.5"
         >
           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
             <Store className="h-4 w-4 text-primary" />
           </div>
-          <span>Admin Panel</span>
+          <Typography variant="h6" as="span" className="font-black tracking-tight text-foreground">
+            Admin Panel
+          </Typography>
         </Link>
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-full h-10 w-10 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all active:scale-95"
-          onClick={() => setIsMobileMenuOpen(true)}
+          className="rounded-full h-10 w-10 text-primary/80 hover:text-primary hover:bg-transparent transition-all active:scale-90"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label={isMobileMenuOpen ? "Tutup menu" : "Buka menu"}
         >
-          <Menu className="h-5 w-5" />
-          <span className="sr-only">Buka menu</span>
+          <AnimatedNavIcon isOpen={isMobileMenuOpen} className="h-5 w-5" />
         </Button>
       </header>
 
-      {/* ── OVERLAY GELAP (Saat sidebar terbuka di Mobile) ── */}
-      <div
-        className={`md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity duration-300 ${isMobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
-          }`}
-        onClick={() => setIsMobileMenuOpen(false)}
-      />
+      {/* ── SIDEBAR MOBILE (Menggunakan Sheet) ── */}
+      <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+        <SheetContent
+          side="left"
+          hideClose
+          className="flex flex-col h-full p-0 border-r border-border/40 bg-background w-[78%] max-w-[320px] overflow-hidden shadow-none md:hidden"
+        >
+          <VisuallyHidden>
+            <SheetHeader>
+              <SheetTitle>Admin Menu</SheetTitle>
+            </SheetHeader>
+          </VisuallyHidden>
+          
+          {/* Decorative Glow */}
+          <div className="absolute top-0 left-0 w-full h-32 bg-primary/5 blur-[50px] pointer-events-none -z-10" />
+          
+          {sidebarContent}
+        </SheetContent>
+      </Sheet>
 
-      {/* ── SIDEBAR (Hidden di Mobile, Fixed di Desktop) ── */}
-      <aside
-        className={`dashboard-sidebar fixed inset-y-0 left-0 z-50 w-64 flex flex-col transform transition-transform duration-300 ease-out ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-          } md:translate-x-0`}
-      >
+      {/* ── SIDEBAR DESKTOP (Pesistent) ── */}
+      <aside className="hidden md:flex flex-col dashboard-sidebar fixed inset-y-0 left-0 z-40 w-64 border-r border-border/50 bg-background/50 backdrop-blur-xl">
         {/* Decorative Glow */}
         <div className="absolute top-0 left-0 w-full h-32 bg-primary/5 blur-[50px] pointer-events-none -z-10" />
-
-        {/* Header Sidebar */}
-        <div className="flex h-16 items-center justify-between border-b border-[var(--glass-border)] px-4">
-          <Link
-            href="/admin"
-            className="flex items-center gap-2.5 font-black text-xl text-foreground tracking-tight hover:opacity-80 transition-opacity"
-          >
-            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Store className="h-4 w-4 text-primary" />
-            </div>
-            <span>Admin</span>
-          </Link>
-          {/* Tombol Tutup Sidebar untuk Mobile */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden rounded-full h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <X className="h-5 w-5" />
-            <span className="sr-only">Tutup menu</span>
-          </Button>
-        </div>
-
-        {/* Navigasi */}
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto custom-scrollbar">
-          <p className="px-3 text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest mb-1.5 mt-2">
-            Menu Utama
-          </p>
-
-          <Link href="/admin" className={getLinkClass(isDashboard)}>
-            <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isDashboard ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
-              <LayoutDashboard className={`h-[16px] w-[16px] transition-colors ${isDashboard ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
-            </div>
-            <span className="truncate">Dashboard</span>
-          </Link>
-
-          <Link href="/admin/products" className={getLinkClass(isProducts)}>
-            <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isProducts ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
-              <Package className={`h-[16px] w-[16px] transition-colors ${isProducts ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
-            </div>
-            <span className="truncate">Produk</span>
-          </Link>
-
-          <Link href="/admin/orders" className={getLinkClass(isOrders)}>
-            <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isOrders ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
-              <ShoppingCart className={`h-[16px] w-[16px] transition-colors ${isOrders ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
-            </div>
-            <span className="truncate">Pesanan</span>
-          </Link>
-
-          <Link href="/admin/promos" className={getLinkClass(isPromos)}>
-            <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isPromos ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
-              <Ticket className={`h-[16px] w-[16px] transition-colors ${isPromos ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
-            </div>
-            <span className="truncate">Promo</span>
-          </Link>
-
-          <div className="h-px w-full bg-[var(--glass-border)] my-2" />
-
-          <p className="px-3 text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest mb-1.5 mt-2">
-            Pengaturan
-          </p>
-
-          <Link href="/admin/payment-gateway" className={getLinkClass(isPayment)}>
-            <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isPayment ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
-              <CreditCard className={`h-[16px] w-[16px] transition-colors ${isPayment ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
-            </div>
-            <span className="truncate">Metode Bayar</span>
-          </Link>
-
-          <Link href="/admin/account" className={getLinkClass(isAccount)}>
-            <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isAccount ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
-              <UserCircle className={`h-[16px] w-[16px] transition-colors ${isAccount ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
-            </div>
-            <span className="truncate">Akun</span>
-          </Link>
-
-          <div className="h-px w-full bg-[var(--glass-border)] my-2" />
-
-          <a href="/" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-muted-foreground hover:bg-primary/8 hover:text-foreground">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 bg-muted/50 group-hover:bg-primary/10">
-              <ExternalLink className="h-[16px] w-[16px] transition-colors text-muted-foreground group-hover:text-primary" />
-            </div>
-            <span className="truncate">Lihat Toko</span>
-          </a>
-        </nav>
+        {sidebarContent}
       </aside>
 
       {/* ── KONTEN UTAMA ── */}
