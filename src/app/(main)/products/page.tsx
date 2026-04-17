@@ -7,7 +7,7 @@ import { CategorySidebar } from "./category-sidebar";
 import { ProductsToolbar } from "./products-toolbar";
 import { MobileSortDropdown } from "./mobile-sort-dropdown";
 import { Pagination } from "./pagination";
-import { FilterDrawerProvider } from "@/context/filter-drawer-context";
+
 
 export const dynamic = "force-dynamic";
 
@@ -132,7 +132,6 @@ export default async function ProductsPage({
   const totalPages = Math.ceil(totalCount / PER_PAGE);
 
   return (
-    <FilterDrawerProvider>
       <main className="min-h-screen bg-background text-foreground pb-24 md:pb-20 overflow-x-hidden">
         {/* Mengembalikan padding atas global agar tidak mepet */}
         <div className="flex flex-col gap-6 md:gap-8 pt-6 md:pt-10">
@@ -250,6 +249,5 @@ export default async function ProductsPage({
           </div>
         </div>
       </main>
-    </FilterDrawerProvider>
   );
 }

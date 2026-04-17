@@ -1,11 +1,25 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
-import { FolderOpen, Search, X, ListFilter, RotateCcw } from "lucide-react";
+import {
+  FolderOpenIcon,
+  MagnifyingGlassIcon,
+  AdjustmentsHorizontalIcon,
+  ArrowPathIcon
+} from "@heroicons/react/24/outline";
+import { FolderOpenIcon as FolderOpenSolidIcon } from "@heroicons/react/24/solid";
 import { useFilterDrawer } from "@/context/filter-drawer-context";
 import { Button } from "@/components/ui/button";
+import { Typography } from "@/components/ui/typography";
+import { Input } from "@/components/ui/input";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle
+} from "@/components/ui/sheet";
 
 type Category = {
   id: string;
@@ -51,10 +65,10 @@ function buildCategoryHref(
 function CountBadge({ count, active }: { count: number; active: boolean }) {
   return (
     <span
-      className={`flex-shrink-0 inline-flex items-center justify-center min-w-[22px] px-1.5 py-0.5 rounded-full text-[9px] font-bold tabular-nums leading-none transition-all
+      className={`flex-shrink-0 inline-flex items-center justify-center min-w-[22px] px-1.5 py-0.5 rounded-full text-[9px] font-bold font-mono tabular-nums leading-none transition-all shadow-none
         ${
           active
-            ? "bg-primary text-primary-foreground shadow-sm"
+            ? "bg-primary text-primary-foreground"
             : "bg-background/80 border border-border/60 text-muted-foreground"
         }`}
     >
@@ -95,12 +109,12 @@ function PriceRangeSlider({
         />
         {/* Thumb Min */}
         <div
-          className="absolute top-1/2 w-5 h-5 -translate-y-1/2 -translate-x-1/2 rounded-full bg-card border-2 border-primary shadow-md pointer-events-none transition-transform hover:scale-110"
+          className="absolute top-1/2 w-5 h-5 -translate-y-1/2 -translate-x-1/2 rounded-full bg-card border-2 border-primary shadow-none pointer-events-none transition-transform hover:scale-110"
           style={{ left: `${minPct}%`, zIndex: 2 }}
         />
         {/* Thumb Max */}
         <div
-          className="absolute top-1/2 w-5 h-5 -translate-y-1/2 -translate-x-1/2 rounded-full bg-card border-2 border-primary shadow-md pointer-events-none transition-transform hover:scale-110"
+          className="absolute top-1/2 w-5 h-5 -translate-y-1/2 -translate-x-1/2 rounded-full bg-card border-2 border-primary shadow-none pointer-events-none transition-transform hover:scale-110"
           style={{ left: `${maxPct}%`, zIndex: 2 }}
         />
         <input
@@ -166,6 +180,29 @@ export function CategorySidebar({
     setLocalPriceMax(currentPriceMax);
   }, [currentPriceMin, currentPriceMax]);
 
+  // ── Swipe to close logic ──
+  const touchStart = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStart.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStart.current === null) return;
+    const touchCurrent = e.touches[0].clientX;
+    const deltaX = touchStart.current - touchCurrent;
+
+    // Jika geser ke kiri (kembali ke sisi asal) lebih dari 70px, maka tutup
+    if (deltaX > 70) {
+      close();
+      touchStart.current = null;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    touchStart.current = null;
+  };
+
   const tree = buildTree(categories);
 
   function updateParam(key: string, value: string) {
@@ -218,18 +255,18 @@ export function CategorySidebar({
     <div className="flex flex-col gap-6 p-5">
       {/* CARI PRODUK */}
       <div>
-        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">
+        <Typography variant="caption" className="font-bold uppercase tracking-widest mb-3" color="muted">
           Cari Produk
-        </p>
-        <form onSubmit={handleSearch} className="relative">
-          <input
+        </Typography>
+        <form onSubmit={handleSearch} className="relative group">
+          <Input
             name="search"
-            type="text"
+            type="search"
             defaultValue={currentSearch}
             placeholder="Ketik nama produk..."
-            className="w-full rounded-2xl border border-border/50 bg-background/50 pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:bg-background focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all shadow-sm"
+            className="h-11 w-full rounded-2xl border-border/50 bg-background/50 pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:bg-background focus:ring-1 focus:ring-primary hover:bg-muted/40 transition-all shadow-none outline-none"
           />
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/70" />
+          <MagnifyingGlassIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/70 group-hover:text-primary/70 transition-colors" />
         </form>
       </div>
 
@@ -238,17 +275,17 @@ export function CategorySidebar({
       {/* HARGA */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+          <Typography variant="caption" className="font-bold uppercase tracking-widest" color="muted">
             Rentang Harga
-          </p>
+          </Typography>
           {activePriceFilter && (
             <button
               onClick={resetPriceFilter}
               aria-label="Reset filter harga"
               title="Reset harga"
-              className="w-6 h-6 flex items-center justify-center rounded-full text-muted-foreground bg-muted/50 hover:bg-primary/10 hover:text-primary transition-all active:scale-95"
+              className="w-6 h-6 flex items-center justify-center rounded-full text-muted-foreground bg-muted/50 hover:bg-primary/10 hover:text-primary transition-all active:scale-95 shadow-none"
             >
-              <RotateCcw className="h-3 w-3" />
+              <ArrowPathIcon className="h-4 w-4" />
             </button>
           )}
         </div>
@@ -263,11 +300,11 @@ export function CategorySidebar({
         />
 
         <div className="flex items-center justify-between mt-3 mb-4">
-          <div className="bg-muted/40 border border-border/50 rounded-xl px-2.5 py-1 text-xs font-semibold text-foreground">
+          <div className="bg-muted/40 border border-border/50 rounded-xl px-2.5 py-1 text-[10px] font-mono font-bold text-foreground">
             Rp {localPriceMin.toLocaleString("id-ID")}
           </div>
           <span className="text-muted-foreground/40">—</span>
-          <div className="bg-muted/40 border border-border/50 rounded-xl px-2.5 py-1 text-xs font-semibold text-foreground">
+          <div className="bg-muted/40 border border-border/50 rounded-xl px-2.5 py-1 text-[10px] font-mono font-bold text-foreground">
             Rp {localPriceMax.toLocaleString("id-ID")}
           </div>
         </div>
@@ -276,7 +313,7 @@ export function CategorySidebar({
           onClick={applyPriceFilter}
           variant="brand"
           size="sm"
-          className="w-full rounded-full h-10 shadow-sm"
+          className="w-full rounded-full h-10 shadow-none"
         >
           Terapkan Harga
         </Button>
@@ -286,24 +323,26 @@ export function CategorySidebar({
 
       {/* KATEGORI */}
       <div>
-        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">
+        <Typography variant="caption" className="font-bold uppercase tracking-widest mb-3" color="muted">
           Kategori Desain
-        </p>
+        </Typography>
 
         <div className="mb-2.5">
           <Link
             href={buildCategoryHref(searchParams, null)}
             onClick={close}
-            className={`flex flex-row items-center justify-between gap-2 w-full rounded-2xl border px-3 py-2 text-xs font-semibold transition-all shadow-sm
+            className={`flex flex-row items-center justify-between gap-2 w-full rounded-2xl border px-3 py-2 transition-all shadow-none
               ${
                 !activeSlug
-                  ? "border-primary/30 bg-primary/10 text-primary shadow-primary/5"
+                  ? "border-primary/30 bg-primary/10 text-primary"
                   : "border-border/40 bg-background/50 text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-primary/5"
               }`}
           >
             <span className="flex items-center gap-2 min-w-0 truncate">
-              <FolderOpen className="h-4 w-4 flex-shrink-0" />
-              Semua Produk
+              {!activeSlug ? <FolderOpenSolidIcon className="h-4 w-4 flex-shrink-0" /> : <FolderOpenIcon className="h-4 w-4 flex-shrink-0" />}
+              <Typography variant="body-sm" as="span" className="font-semibold truncate">
+                Semua Produk
+              </Typography>
             </span>
             <CountBadge count={totalCount} active={!activeSlug} />
           </Link>
@@ -315,16 +354,16 @@ export function CategorySidebar({
               key={node.id}
               href={buildCategoryHref(searchParams, node.slug)}
               onClick={close}
-              className={`flex flex-row items-center justify-between gap-1.5 rounded-2xl border px-3 py-2 text-[11px] font-semibold transition-all shadow-sm
+              className={`flex flex-row items-center justify-between gap-1.5 rounded-2xl border px-3 py-2 transition-all shadow-none
                 ${
                   activeSlug === node.slug
-                    ? "border-primary/30 bg-primary/10 text-primary shadow-primary/5"
+                    ? "border-primary/30 bg-primary/10 text-primary"
                     : "border-border/40 bg-background/50 text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-primary/5"
                 }`}
             >
-              <span className="truncate leading-tight min-w-0">
+              <Typography variant="caption" as="span" className="font-semibold truncate leading-tight min-w-0">
                 {node.name}
-              </span>
+              </Typography>
               {categoryCounts[node.id] !== undefined && (
                 <CountBadge
                   count={categoryCounts[node.id]}
@@ -342,26 +381,26 @@ export function CategorySidebar({
               .filter((n) => n.children.length > 0)
               .map((node) => (
                 <div key={`children-${node.id}`}>
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 pl-1 flex items-center gap-1.5">
+                  <Typography variant="caption" as="p" className="font-bold uppercase tracking-widest mb-2 pl-1 flex items-center gap-1.5" color="muted">
                     <span className="w-1 h-3 bg-primary/60 rounded-full inline-block"></span>
                     {node.name}
-                  </p>
+                  </Typography>
                   <div className="grid grid-cols-2 gap-2">
                     {node.children.map((child) => (
                       <Link
                         key={child.id}
                         href={buildCategoryHref(searchParams, child.slug)}
                         onClick={close}
-                        className={`flex flex-row items-center justify-between gap-1.5 rounded-xl border px-2.5 py-1.5 text-[10px] font-medium transition-all shadow-sm
+                        className={`flex flex-row items-center justify-between gap-1.5 rounded-xl border px-2.5 py-1.5 transition-all shadow-none
                           ${
                             activeSlug === child.slug
-                              ? "border-primary/30 bg-primary/10 text-primary shadow-primary/5"
+                              ? "border-primary/30 bg-primary/10 text-primary"
                               : "border-border/40 bg-background/30 text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-primary/5"
                           }`}
                       >
-                        <span className="truncate leading-tight min-w-0">
+                        <Typography variant="caption" as="span" className="font-medium truncate leading-tight min-w-0">
                           {child.name}
-                        </span>
+                        </Typography>
                         {categoryCounts[child.id] !== undefined && (
                           <CountBadge
                             count={categoryCounts[child.id]}
@@ -381,64 +420,52 @@ export function CategorySidebar({
 
   return (
     <>
-      {/* ── MOBILE: overlay ── */}
-      <div
-        className={`lg:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
-          mobileOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
-        onClick={close}
-        aria-hidden="true"
-      />
+      <Sheet open={mobileOpen} onOpenChange={(val) => !val && close()}>
+        <SheetContent
+          side="left"
+          hideClose
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          className="lg:hidden flex flex-col h-full p-0 border-r border-border/40 bg-background/95 backdrop-blur-2xl w-[85%] max-w-[340px] overflow-hidden shadow-none"
+        >
+          {/* Aksen Blur Mobile Drawer */}
+          <div className="absolute top-0 left-0 w-40 h-40 bg-primary/10 blur-[50px] rounded-full pointer-events-none -z-10" />
 
-      {/* ── MOBILE: drawer ── */}
-      <aside
-        className={`lg:hidden fixed top-0 left-0 h-full z-50 flex flex-col bg-background/95 backdrop-blur-2xl border-r border-border/50 shadow-2xl transition-transform duration-300 ease-out
-          w-[85%] max-w-[340px] ${
-            mobileOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-        role="dialog"
-        aria-label="Filter Produk"
-      >
-        {/* Aksen Blur Mobile Drawer */}
-        <div className="absolute top-0 left-0 w-40 h-40 bg-primary/10 blur-[50px] rounded-full pointer-events-none -z-10" />
-
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border/40 bg-card/30 backdrop-blur-md relative z-10 flex-shrink-0">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-              <ListFilter className="w-4 h-4 text-primary" />
+          <SheetHeader className="flex flex-row items-center justify-between px-5 py-4 border-b border-border/40 bg-card/30 backdrop-blur-md relative z-10 flex-shrink-0 space-y-0 text-left">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+                <AdjustmentsHorizontalIcon className="w-4 h-4 text-primary" />
+              </div>
+              <SheetTitle asChild>
+                <Typography variant="body-sm" as="h2" className="font-bold uppercase tracking-widest">
+                  Filter & Cari
+                </Typography>
+              </SheetTitle>
             </div>
-            <h2 className="text-xs font-bold text-foreground uppercase tracking-widest">
-              Filter & Cari
-            </h2>
+
+          </SheetHeader>
+
+          <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10">
+            {panelContent}
           </div>
-          <button
-            onClick={close}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-all active:scale-95"
-            aria-label="Tutup filter"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10">
-          {panelContent}
-        </div>
-      </aside>
+        </SheetContent>
+      </Sheet>
 
       {/* ── DESKTOP: sticky sidebar ── */}
       <aside className="hidden lg:block w-64 flex-shrink-0 relative">
         {/* Aksen Pendaran Halus di Belakang Sidebar */}
         <div className="absolute top-10 left-10 w-32 h-32 bg-primary/10 blur-[50px] rounded-full pointer-events-none -z-10" />
 
-        <div className="sticky top-24 rounded-3xl border border-border/40 bg-card/40 backdrop-blur-xl shadow-xl shadow-primary/5 overflow-hidden">
+        <div className="sticky top-24 rounded-3xl border border-border/40 bg-card/40 backdrop-blur-xl shadow-none overflow-hidden">
           <div className="px-5 py-4 border-b border-border/40 bg-muted/10 flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
-              <ListFilter className="h-3.5 w-3.5 text-primary" />
+              <AdjustmentsHorizontalIcon className="h-3.5 w-3.5 text-primary" />
             </div>
-            <h2 className="text-xs font-bold text-foreground uppercase tracking-widest">
+            <Typography variant="body-sm" as="h2" className="font-bold uppercase tracking-widest">
               Saring Produk
-            </h2>
+            </Typography>
           </div>
           <div className="max-h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar pb-4">
             {panelContent}
@@ -448,3 +475,4 @@ export function CategorySidebar({
     </>
   );
 }
+

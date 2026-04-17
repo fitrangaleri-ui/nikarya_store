@@ -55,7 +55,7 @@ export function CartSidebar() {
       <SheetContent
         side="right"
         hideClose
-        className="flex flex-col h-full p-0 border-l border-border/40 bg-background/92 backdrop-blur-2xl w-[90%] sm:w-[400px] shadow-none overflow-hidden"
+        className="flex flex-col h-full p-0 border-l border-border/40 bg-background/92 backdrop-blur-2xl w-[70%] sm:w-[400px] shadow-none overflow-hidden"
       >
         <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 blur-[60px] rounded-full pointer-events-none -z-10" />
         <div className="pointer-events-none absolute left-0 bottom-32 h-32 w-32 rounded-full bg-primary/5 blur-3xl transition-opacity duration-500" />

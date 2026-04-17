@@ -32,9 +32,9 @@ const labelClassName = "text-[9px] tracking-tight text-inherit";
 
 export function BottomNav() {
   const pathname = usePathname();
-  const { openCart, cartCount } = useCart();
+  const { openCart, cartCount, isCartOpen } = useCart();
   const { user } = useAuth();
-  const { open: openFilter } = useFilterDrawer();
+  const { open: openFilter, isOpen: isFilterOpen } = useFilterDrawer();
 
   const isProductsPage = pathname.startsWith("/products");
   const akunHref = user ? "/dashboard" : "/login";
@@ -53,12 +53,20 @@ export function BottomNav() {
       onClick={handleCartClick}
       className={cn(
         baseItemClass,
-        "relative z-10 text-muted-foreground hover:text-accent pointer-events-auto touch-manipulation",
+        isCartOpen
+          ? "text-primary-hover font-bold"
+          : "text-muted-foreground hover:text-primary",
+        "relative z-10 pointer-events-auto touch-manipulation",
       )}
       aria-label="Buka keranjang"
     >
       <span className="relative">
-        <ShoppingCartIcon className="w-5 h-5 mb-1.5 transition-transform" />
+        <ShoppingCartIcon
+          className={cn(
+            "w-5 h-5 mb-1.5 transition-transform text-inherit",
+            isCartOpen && "scale-110",
+          )}
+        />
         {cartCount > 0 && (
           <Badge className="absolute -top-1.5 -right-2.5 h-4 min-w-[16px] px-1 bg-primary text-[9px] font-bold text-primary-foreground ring-2 ring-background shadow-sm animate-in zoom-in">
             {cartCount > 99 ? "99+" : cartCount}
@@ -75,11 +83,11 @@ export function BottomNav() {
       onClick={handleChatClick}
       className={cn(
         baseItemClass,
-        "relative z-10 text-muted-foreground hover:text-accent pointer-events-auto touch-manipulation",
+        "relative z-10 text-muted-foreground hover:text-primary pointer-events-auto touch-manipulation",
       )}
       aria-label="Buka chat WhatsApp"
     >
-      <WhatsAppIcon className="w-5 h-5 mb-1.5 text-emerald-500/90 transition-transform" />
+      <WhatsAppIcon className="w-5 h-5 mb-1.5 text-inherit transition-transform" />
       <Typography variant="caption" as="span" className={labelClassName}>Chat</Typography>
     </button>
   );
@@ -90,7 +98,7 @@ export function BottomNav() {
         <div className="grid h-[68px] grid-cols-5 mx-auto px-2">
           <Link
             href="/"
-            className={cn(baseItemClass, "text-muted-foreground hover:text-accent")}
+            className={cn(baseItemClass, "text-muted-foreground hover:text-primary")}
             aria-label="Buka halaman Home"
           >
             <HomeIcon className="w-5 h-5 mb-1.5 transition-transform text-inherit" />
@@ -100,10 +108,20 @@ export function BottomNav() {
           <button
             type="button"
             onClick={openFilter}
-            className={cn(baseItemClass, "text-muted-foreground hover:text-accent")}
+            className={cn(
+              baseItemClass,
+              isFilterOpen
+                ? "text-primary-hover font-bold"
+                : "text-muted-foreground hover:text-primary",
+            )}
             aria-label="Buka filter"
           >
-            <FunnelIcon className="w-5 h-5 mb-1.5 transition-transform text-inherit" />
+            <FunnelIcon
+              className={cn(
+                "w-5 h-5 mb-1.5 transition-transform text-inherit",
+                isFilterOpen && "scale-110",
+              )}
+            />
             <Typography variant="caption" as="span" className={labelClassName}>Filter</Typography>
           </button>
 
@@ -112,8 +130,8 @@ export function BottomNav() {
             className={cn(
               baseItemClass,
               pathname === akunHref
-                ? "text-accent font-bold"
-                : "text-muted-foreground hover:text-accent",
+                ? "text-primary-hover font-bold"
+                : "text-muted-foreground hover:text-primary",
             )}
             aria-label="Buka halaman akun"
           >
@@ -136,8 +154,8 @@ export function BottomNav() {
             className={cn(
               baseItemClass,
               pathname === "/products"
-                ? "text-accent font-bold"
-                : "text-muted-foreground hover:text-accent",
+                ? "text-primary-hover font-bold"
+                : "text-muted-foreground hover:text-primary",
             )}
           >
             <SwatchIcon
@@ -154,8 +172,8 @@ export function BottomNav() {
             className={cn(
               baseItemClass,
               pathname === akunHref
-                ? "text-accent font-bold"
-                : "text-muted-foreground hover:text-accent",
+                ? "text-primary-hover font-bold"
+                : "text-muted-foreground hover:text-primary",
             )}
             aria-label="Buka halaman akun"
           >
