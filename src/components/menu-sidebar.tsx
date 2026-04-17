@@ -23,11 +23,11 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/components/auth-provider";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Typography } from "@/components/ui/typography";
-import { 
-  Sheet, 
-  SheetContent, 
-  SheetHeader, 
-  SheetTitle 
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 
@@ -120,9 +120,10 @@ export function MenuSidebar() {
 
   return (
     <Sheet open={isOpen} onOpenChange={(val) => !val && close()}>
-      <SheetContent 
-        side="left" 
-        className="flex flex-col h-full p-0 border-r border-border/40 bg-background/92 backdrop-blur-2xl w-[78%] max-w-[320px] overflow-hidden"
+      <SheetContent
+        side="left"
+        hideClose
+        className="flex flex-col h-full p-0 border-r border-border/40 bg-background/92 backdrop-blur-2xl w-[78%] max-w-[320px] overflow-hidden shadow-none"
       >
         {/* Decorative blur */}
         <div className="pointer-events-none absolute -left-10 top-0 h-40 w-40 rounded-full bg-primary/10 blur-3xl" />
@@ -131,7 +132,7 @@ export function MenuSidebar() {
         {/* ── HEADER ── */}
         <SheetHeader className="relative z-10 h-16 border-b border-border/40 bg-gradient-to-b from-primary/[0.08] via-card/70 to-transparent px-5 flex flex-row items-center justify-between text-left sm:text-left space-y-0">
           <SheetTitle asChild>
-            <Typography variant="h6" as="h2" className="uppercase tracking-wider font-extrabold text-foreground">
+            <Typography variant="h6" as="h2" className="font-semibold uppercase">
               Menu
             </Typography>
           </SheetTitle>
@@ -196,9 +197,9 @@ export function MenuSidebar() {
           </div>
 
           {/* ── User Section ── */}
-          <div className="px-3 pb-6">
+          <div className="px-5 pb-8">
             {isLoading ? (
-              <div className="rounded-3xl border border-border/50 bg-card/60 px-4 py-4">
+              <div className="rounded-2xl border border-border/50 bg-card/60 p-4">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-2xl bg-muted/50 animate-pulse" />
                   <div className="space-y-2">
@@ -208,19 +209,23 @@ export function MenuSidebar() {
                 </div>
               </div>
             ) : user ? (
-              <div className="rounded-3xl border border-border/50 bg-card/60 p-2 shadow-sm shadow-primary/5">
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-secondary-foreground p-1">
+                {/* Decorative Circles (Hero Style) */}
+                <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-white/10 pointer-events-none" />
+                <div className="absolute -left-4 -bottom-4 h-16 w-16 rounded-full bg-white/5 pointer-events-none" />
+
                 {/* Info user */}
-                <div className="flex items-center gap-3 rounded-2xl px-3 py-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary shrink-0 ring-1 ring-primary/20">
-                    <Typography variant="caption" className="font-bold">
+                <div className="relative z-10 flex items-center gap-3 rounded-xl px-4 py-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 text-white shrink-0 ring-1 ring-white/20 backdrop-blur-md">
+                    <Typography variant="h6" as="span" className="font-bold !text-white">
                       {displayName.charAt(0).toUpperCase()}
                     </Typography>
                   </div>
                   <div className="min-w-0">
-                    <Typography variant="body-sm" className="font-bold truncate text-foreground">
+                    <Typography variant="body-sm" className="font-bold truncate !text-white">
                       {displayName}
                     </Typography>
-                    <Typography variant="caption" color="muted" className="truncate">
+                    <Typography variant="caption" className="truncate !text-white/60">
                       {user.email}
                     </Typography>
                   </div>
@@ -230,43 +235,43 @@ export function MenuSidebar() {
                 <Link
                   href="/dashboard"
                   onClick={close}
-                  className="flex items-center gap-3 border-b border-border/40 px-5 py-4 text-foreground transition-colors hover:bg-muted/30 hover:text-primary group"
+                  className="relative z-10 flex items-center gap-3 border-t border-white/10 px-5 py-4 !text-white/90 transition-all hover:bg-white/10 group"
                 >
-                  <Typography variant="body-sm" as="span" className="flex-1 font-semibold">
+                  <Typography variant="body-sm" as="span" className="flex-1 font-semibold !text-white">
                     Dashboard
                   </Typography>
-                  <ArrowRightOutlineIcon className="h-4 w-4 opacity-40 group-hover:opacity-100 transition-opacity" />
+                  <ArrowRightOutlineIcon className="h-4 w-4 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-white" />
                 </Link>
 
                 <button
                   onClick={handleSignOut}
-                  className="flex w-full items-center gap-3 px-5 py-4 text-destructive transition-colors hover:bg-destructive/10 rounded-b-2xl group"
+                  className="relative z-10 flex w-full items-center gap-3 px-5 py-4 !text-white/80 transition-all hover:bg-white/10 rounded-b-xl group"
                 >
-                  <Typography variant="body-sm" as="span" className="flex-1 text-left font-semibold" color="destructive">
+                  <Typography variant="body-sm" as="span" className="flex-1 text-left font-semibold !text-white">
                     Keluar
                   </Typography>
-                  <ArrowLeftStartOnRectangleIcon className="h-4 w-4 opacity-60 group-hover:opacity-100 transition-opacity" />
+                  <ArrowLeftStartOnRectangleIcon className="h-4 w-4 opacity-40 group-hover:opacity-100 transition-opacity text-white" />
                 </button>
               </div>
             ) : (
               /* Belum login */
-              <div className="rounded-3xl border border-border/50 bg-card/60 p-6 shadow-sm shadow-primary/5">
-                <div className="mb-5">
-                  <Typography variant="body-sm" className="font-extrabold mb-1">
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-secondary-foreground p-6">
+                {/* Decorative Circles (Hero Style) */}
+                <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-white/10 pointer-events-none" />
+                <div className="absolute -left-6 -bottom-6 h-20 w-20 rounded-full bg-white/5 pointer-events-none" />
+
+                <div className="relative z-10 mb-5">
+                  <Typography variant="body-sm" className="font-extrabold mb-1 !text-white">
                     Login untuk lanjut
                   </Typography>
-                  <Typography variant="caption" color="muted">
+                  <Typography variant="caption" className="!text-white/70">
                     Masuk ke dashboard dan kelola pesananmu lebih cepat.
                   </Typography>
                 </div>
-                <Button variant="brand-icon" size="lg" asChild className="w-fit">
+                <Button variant="secondary" size="lg" asChild className="relative z-10 w-fit">
                   <Link href="/login" onClick={close}>
-                    <div className="brand-icon__symbol">
-                      <UserSolidIcon className="h-4 w-4" />
-                    </div>
-                    <span className="pr-4 font-bold">
-                      Login
-                    </span>
+                    <UserSolidIcon className="mr-2 h-4 w-4" />
+                    Login
                   </Link>
                 </Button>
               </div>

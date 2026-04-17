@@ -1,16 +1,35 @@
 // ============================================================
 // FILE: src/components/cart-sidebar.tsx
-// PERUBAHAN: Hapus className override pada tombol checkout &
-//            tombol "Mulai Belanja" — cukup pakai variant & size
+// PERUBAHAN: Gunakan komponen Sheet, Typography, dan Heroicons
+// agar konsisten dengan design system & menu-sidebar.tsx
 // ============================================================
 "use client";
 
-import { X, ShoppingBag, ArrowRight, Loader2, Minus, Plus } from "lucide-react";
-import { useCart } from "@/context/cart-context";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useCart } from "@/context/cart-context";
+
+import { Loader2 } from "lucide-react";
+import {
+  ShoppingBagIcon as ShoppingBagSolidIcon,
+} from "@heroicons/react/24/solid";
+import {
+  XMarkIcon,
+  ShoppingBagIcon as ShoppingBagOutlineIcon,
+  ArrowRightIcon,
+  MinusIcon,
+  PlusIcon,
+} from "@heroicons/react/24/outline";
+
+import { Button } from "@/components/ui/button";
+import { Typography } from "@/components/ui/typography";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 export function CartSidebar() {
   const {
@@ -32,68 +51,48 @@ export function CartSidebar() {
   };
 
   return (
-    <>
-      {/* Overlay */}
-      <div
-        className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
-          isCartOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
-        onClick={closeCart}
-        aria-hidden="true"
-      />
-
-      {/* Sidebar */}
-      <aside
-        className={`fixed top-0 right-0 h-full z-50 flex flex-col bg-background/95 backdrop-blur-2xl border-l border-border/50 transition-transform duration-300 ease-out shadow-2xl
-                    w-[90%] sm:w-[400px] ${
-                      isCartOpen ? "translate-x-0" : "translate-x-full"
-                    }`}
-        role="dialog"
-        aria-label="Keranjang Belanja"
+    <Sheet open={isCartOpen} onOpenChange={(val) => !val && closeCart()}>
+      <SheetContent
+        side="right"
+        hideClose
+        className="flex flex-col h-full p-0 border-l border-border/40 bg-background/92 backdrop-blur-2xl w-[90%] sm:w-[400px] shadow-none overflow-hidden"
       >
         <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 blur-[60px] rounded-full pointer-events-none -z-10" />
+        <div className="pointer-events-none absolute left-0 bottom-32 h-32 w-32 rounded-full bg-primary/5 blur-3xl transition-opacity duration-500" />
 
         {/* ── HEADER ── */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border/40 bg-card/30 backdrop-blur-md relative z-10">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-              <ShoppingBag className="w-4 h-4 text-primary" />
+        <SheetHeader className="relative z-10 h-[68px] border-b border-border/40 bg-gradient-to-b from-primary/[0.08] via-card/70 to-transparent px-5 flex flex-row items-center text-left sm:text-left space-y-0">
+          <SheetTitle asChild>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+                <ShoppingBagSolidIcon className="w-4 h-4 text-primary" />
+              </div>
+              <Typography variant="h6" as="h2" className="font-semibold uppercase">
+                Keranjang Saya
+              </Typography>
+              {cartItems.length > 0 && (
+                <span className="bg-primary text-primary-foreground text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ml-1">
+                  {cartItems.length}
+                </span>
+              )}
             </div>
-            <h2 className="text-sm font-bold text-foreground tracking-tight">
-              Keranjang Saya
-            </h2>
-            {cartItems.length > 0 && (
-              <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full ml-1">
-                {cartItems.length}
-              </span>
-            )}
-          </div>
-          <button
-            onClick={closeCart}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-all active:scale-95"
-            aria-label="Tutup keranjang"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
+          </SheetTitle>
+        </SheetHeader>
 
         {/* ── BODY ── */}
         <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10">
           {cartItems.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full py-20 px-6 text-center">
-              <div className="w-20 h-20 rounded-full bg-muted/50 border border-border/50 flex items-center justify-center mb-5 shadow-sm">
-                <ShoppingBag className="h-8 w-8 text-muted-foreground/50" />
+              <div className="w-20 h-20 rounded-full bg-primary/[0.08] border border-border/50 flex items-center justify-center mb-5">
+                <ShoppingBagOutlineIcon className="h-8 w-8 text-primary/60" />
               </div>
-              <p className="text-lg font-bold text-foreground tracking-tight">
+              <Typography variant="h6" as="p" className="font-bold tracking-tight">
                 Keranjang masih kosong
-              </p>
-              <p className="text-sm text-muted-foreground mt-2 max-w-[200px]">
+              </Typography>
+              <Typography variant="body-sm" color="muted" className="text-center mt-2 max-w-[200px]">
                 Mari tambahkan produk luar biasa ke keranjang Anda.
-              </p>
+              </Typography>
 
-              {/* ── Tombol Mulai Belanja — hapus className override ── */}
               <Button
                 onClick={closeCart}
                 variant="outline"
@@ -104,22 +103,22 @@ export function CartSidebar() {
               </Button>
             </div>
           ) : (
-            <ul className="divide-y divide-border/40 p-3">
+            <ul className="divide-y divide-border/40 p-3 pt-1">
               {cartItems.map((item) => (
                 <li
                   key={item.id}
-                  className="flex gap-4 p-3 bg-card/20 hover:bg-card/40 rounded-2xl transition-colors group relative"
+                  className="flex gap-4 p-3 bg-card/20 hover:bg-card/40 rounded-2xl transition-colors group relative border border-transparent hover:border-border/50 mt-2 first:mt-0"
                 >
                   {/* Thumbnail */}
                   <div className="relative w-20 h-20 flex-shrink-0">
                     <button
                       onClick={() => removeFromCart(item.id)}
-                      className="absolute -top-2 -left-2 z-20 w-6 h-6 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-all shadow-sm opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+                      className="absolute -top-2 -left-2 z-20 w-6 h-6 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-all opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
                       aria-label="Hapus item"
                     >
-                      <X className="h-3 w-3" />
+                      <XMarkIcon className="h-4 w-4" />
                     </button>
-                    <div className="w-full h-full rounded-xl overflow-hidden bg-muted/30 border border-border/50 shadow-sm relative">
+                    <div className="w-full h-full rounded-xl overflow-hidden bg-muted/30 border border-border/50 relative">
                       {item.thumbnail_url ? (
                         <Image
                           src={item.thumbnail_url}
@@ -129,7 +128,7 @@ export function CartSidebar() {
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
-                          <ShoppingBag className="h-5 w-5 text-muted-foreground/40" />
+                          <ShoppingBagOutlineIcon className="h-6 w-6 text-muted-foreground/40" />
                         </div>
                       )}
                     </div>
@@ -138,32 +137,32 @@ export function CartSidebar() {
                   {/* Info */}
                   <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
                     <div>
-                      <p className="text-xs md:text-sm font-bold text-foreground leading-snug line-clamp-2 pr-1">
+                      <Typography variant="body-sm" className="font-bold leading-snug line-clamp-2 pr-1">
                         {item.title}
-                      </p>
-                      <p className="text-xs font-semibold text-primary mt-1">
+                      </Typography>
+                      <Typography variant="caption" className="font-mono font-semibold text-primary mt-1 block">
                         Rp {Number(item.price).toLocaleString("id-ID")}
-                      </p>
+                      </Typography>
                     </div>
 
                     {/* Quantity Controls */}
-                    <div className="inline-flex items-center bg-background border border-border/60 rounded-full h-7 mt-2 w-fit shadow-sm">
+                    <div className="inline-flex items-center bg-background border border-border/60 rounded-full h-7 mt-2 w-fit">
                       <button
                         onClick={() => decreaseQuantity(item.id)}
                         className="w-7 h-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-l-full transition-colors"
                         aria-label="Kurangi"
                       >
-                        <Minus className="h-3 w-3" />
+                        <MinusIcon className="h-3 w-3" />
                       </button>
-                      <span className="w-6 text-center text-[11px] font-bold text-foreground">
+                      <Typography variant="caption" as="span" className="w-6 text-center font-mono font-bold">
                         {item.quantity}
-                      </span>
+                      </Typography>
                       <button
                         onClick={() => increaseQuantity(item.id)}
                         className="w-7 h-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-r-full transition-colors"
                         aria-label="Tambah"
                       >
-                        <Plus className="h-3 w-3" />
+                        <PlusIcon className="h-3 w-3" />
                       </button>
                     </div>
                   </div>
@@ -175,17 +174,16 @@ export function CartSidebar() {
 
         {/* ── FOOTER ── */}
         {cartItems.length > 0 && (
-          <div className="border-t border-border/40 p-5 bg-card/60 backdrop-blur-md relative z-10 shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.1)]">
+          <div className="border-t border-border/40 p-5 bg-card/60 backdrop-blur-md relative z-10">
             <div className="flex items-end justify-between mb-4">
-              <span className="text-sm font-semibold text-muted-foreground">
+              <Typography variant="body-sm" color="muted" className="font-semibold">
                 Total Pembayaran
-              </span>
-              <span className="text-xl md:text-2xl font-bold text-primary tracking-tight">
+              </Typography>
+              <Typography variant="h6" className="font-mono font-bold text-primary tracking-tight">
                 Rp {subtotal.toLocaleString("id-ID")}
-              </span>
+              </Typography>
             </div>
 
-            {/* ── Tombol Checkout — hapus semua className override ── */}
             <Button
               onClick={handleCheckoutAll}
               disabled={loading}
@@ -195,21 +193,22 @@ export function CartSidebar() {
             >
               {loading ? (
                 <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <Loader2 className="h-5 w-5 animate-spin mr-2" />
                   Memproses...
                 </>
               ) : (
                 <>
-                  Pembayaran
-                  <span className="brand-pill__icon">
-                    <ArrowRight className="h-4 w-4" />
-                  </span>
+                  <span className="flex-1 text-center font-semibold text-[15px]">Lanjut Pembayaran</span>
+                  <div className="brand-pill__icon !ml-0">
+                    <ArrowRightIcon className="h-4 w-4" />
+                  </div>
                 </>
               )}
             </Button>
           </div>
         )}
-      </aside>
-    </>
+      </SheetContent>
+    </Sheet>
   );
 }
+
