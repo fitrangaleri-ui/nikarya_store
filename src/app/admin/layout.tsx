@@ -13,6 +13,7 @@ import {
   Ticket,
   ExternalLink,
 } from "lucide-react";
+import { PhotoIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Typography } from "@/components/ui/typography";
@@ -66,6 +67,7 @@ export default function AdminLayout({
   const isProducts = pathname.startsWith("/admin/products");
   const isOrders = pathname.startsWith("/admin/orders");
   const isPromos = pathname.startsWith("/admin/promos");
+  const isMedia = pathname.startsWith("/admin/media");
   const isPayment = pathname.startsWith("/admin/payment-gateway");
   const isAccount = pathname.startsWith("/admin/account");
 
@@ -122,6 +124,13 @@ export default function AdminLayout({
             <Ticket className={`h-[16px] w-[16px] transition-colors ${isPromos ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
           </div>
           <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Promo</Typography>
+        </Link>
+
+        <Link href="/admin/media" className={getLinkClass(isMedia)}>
+          <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isMedia ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
+            <PhotoIcon className={`h-[16px] w-[16px] transition-colors ${isMedia ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+          </div>
+          <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Media</Typography>
         </Link>
 
         <div className="h-px w-full bg-[var(--glass-border)] my-2" />

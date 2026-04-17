@@ -89,7 +89,7 @@ export function ProductCard({ product }: { product: any }) {
       <div className="p-3 md:p-4 flex flex-col flex-1 gap-2">
         {/* Title & SKU */}
         <Link href={`/products/${product.slug}`} className="flex-1">
-          <h3 className="text-xs md:text-sm font-bold text-foreground leading-snug group-hover:text-primary transition-colors line-clamp-2">
+          <h3 className="text-normal md:text-sm font-bold text-foreground leading-snug group-hover:text-primary transition-colors line-clamp-2">
             {product.sku && (
               <span className="inline-block align-middle bg-primary/10 text-primary text-[8px] md:text-[9px] font-bold px-1.5 py-0.5 rounded-md tracking-widest mr-1.5 -mt-0.5">
                 {product.sku}
@@ -111,13 +111,13 @@ export function ProductCard({ product }: { product: any }) {
           {/* Tombol Preview */}
           {hasDemoLinks ? (
             <DemoLinksModal demoLinks={demoLinks}>
-              <Button variant="outline" size="sm" className="w-full">
+              <Button variant="outline" size="lg" className="w-full">
                 <Eye />
                 Preview
               </Button>
             </DemoLinksModal>
           ) : (
-            <Button variant="outline" size="sm" disabled className="w-full">
+            <Button variant="outline" size="lg" disabled className="w-full">
               <Eye />
               Preview
             </Button>

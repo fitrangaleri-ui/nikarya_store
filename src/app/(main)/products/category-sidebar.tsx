@@ -66,10 +66,9 @@ function CountBadge({ count, active }: { count: number; active: boolean }) {
   return (
     <span
       className={`flex-shrink-0 inline-flex items-center justify-center min-w-[22px] px-1.5 py-0.5 rounded-full text-[9px] font-bold font-mono tabular-nums leading-none transition-all shadow-none
-        ${
-          active
-            ? "bg-primary text-primary-foreground"
-            : "bg-background/80 border border-border/60 text-muted-foreground"
+        ${active
+          ? "bg-primary text-primary-foreground"
+          : "bg-background/80 border border-border/60 text-muted-foreground"
         }`}
     >
       {count}
@@ -255,7 +254,7 @@ export function CategorySidebar({
     <div className="flex flex-col gap-6 p-5">
       {/* CARI PRODUK */}
       <div>
-        <Typography variant="caption" className="font-bold uppercase tracking-widest mb-3" color="muted">
+        <Typography variant="caption" className="font-bold uppercase tracking-tight mb-3" color="muted">
           Cari Produk
         </Typography>
         <form onSubmit={handleSearch} className="relative group">
@@ -275,7 +274,7 @@ export function CategorySidebar({
       {/* HARGA */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <Typography variant="caption" className="font-bold uppercase tracking-widest" color="muted">
+          <Typography variant="caption" className="font-bold uppercase tracking-tight" color="muted">
             Rentang Harga
           </Typography>
           {activePriceFilter && (
@@ -323,7 +322,7 @@ export function CategorySidebar({
 
       {/* KATEGORI */}
       <div>
-        <Typography variant="caption" className="font-bold uppercase tracking-widest mb-3" color="muted">
+        <Typography variant="caption" className="font-bold uppercase tracking-tight mb-3" color="muted">
           Kategori Desain
         </Typography>
 
@@ -332,10 +331,9 @@ export function CategorySidebar({
             href={buildCategoryHref(searchParams, null)}
             onClick={close}
             className={`flex flex-row items-center justify-between gap-2 w-full rounded-2xl border px-3 py-2 transition-all shadow-none
-              ${
-                !activeSlug
-                  ? "border-primary/30 bg-primary/10 text-primary"
-                  : "border-border/40 bg-background/50 text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-primary/5"
+              ${!activeSlug
+                ? "border-primary/30 bg-primary/10 text-primary"
+                : "border-border/40 bg-background/50 text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-primary/5"
               }`}
           >
             <span className="flex items-center gap-2 min-w-0 truncate">
@@ -355,10 +353,9 @@ export function CategorySidebar({
               href={buildCategoryHref(searchParams, node.slug)}
               onClick={close}
               className={`flex flex-row items-center justify-between gap-1.5 rounded-2xl border px-3 py-2 transition-all shadow-none
-                ${
-                  activeSlug === node.slug
-                    ? "border-primary/30 bg-primary/10 text-primary"
-                    : "border-border/40 bg-background/50 text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-primary/5"
+                ${activeSlug === node.slug
+                  ? "border-primary/30 bg-primary/10 text-primary"
+                  : "border-border/40 bg-background/50 text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-primary/5"
                 }`}
             >
               <Typography variant="caption" as="span" className="font-semibold truncate leading-tight min-w-0">
@@ -381,7 +378,7 @@ export function CategorySidebar({
               .filter((n) => n.children.length > 0)
               .map((node) => (
                 <div key={`children-${node.id}`}>
-                  <Typography variant="caption" as="p" className="font-bold uppercase tracking-widest mb-2 pl-1 flex items-center gap-1.5" color="muted">
+                  <Typography variant="caption" as="p" className="font-bold uppercase tracking-tight mb-2 pl-1 flex items-center gap-1.5" color="muted">
                     <span className="w-1 h-3 bg-primary/60 rounded-full inline-block"></span>
                     {node.name}
                   </Typography>
@@ -392,10 +389,9 @@ export function CategorySidebar({
                         href={buildCategoryHref(searchParams, child.slug)}
                         onClick={close}
                         className={`flex flex-row items-center justify-between gap-1.5 rounded-xl border px-2.5 py-1.5 transition-all shadow-none
-                          ${
-                            activeSlug === child.slug
-                              ? "border-primary/30 bg-primary/10 text-primary"
-                              : "border-border/40 bg-background/30 text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-primary/5"
+                          ${activeSlug === child.slug
+                            ? "border-primary/30 bg-primary/10 text-primary"
+                            : "border-border/40 bg-background/30 text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-primary/5"
                           }`}
                       >
                         <Typography variant="caption" as="span" className="font-medium truncate leading-tight min-w-0">
@@ -439,7 +435,7 @@ export function CategorySidebar({
                 <AdjustmentsHorizontalIcon className="w-4 h-4 text-primary" />
               </div>
               <SheetTitle asChild>
-                <Typography variant="body-sm" as="h2" className="font-bold uppercase tracking-widest">
+                <Typography variant="h6" as="h2" className="font-semibold uppercase">
                   Filter & Cari
                 </Typography>
               </SheetTitle>
@@ -463,7 +459,7 @@ export function CategorySidebar({
             <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
               <AdjustmentsHorizontalIcon className="h-3.5 w-3.5 text-primary" />
             </div>
-            <Typography variant="body-sm" as="h2" className="font-bold uppercase tracking-widest">
+            <Typography variant="body-sm" as="h2" className="font-bold uppercase tracking-tight">
               Saring Produk
             </Typography>
           </div>
