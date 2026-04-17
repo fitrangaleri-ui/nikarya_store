@@ -310,3 +310,202 @@ export async function deleteProductImage(productId: string) {
   return { success: true };
 }
 
+export async function duplicateProduct(productId: string) {
+  const user = await verifyAdmin();
+  if (!user) return { error: "Unauthorized" };
+
+  const admin = createAdminClient();
+
+  // Fetch the original product
+  const { data: original, error: fetchError } = await admin
+    .from("products")
+    .select("*")
+    .eq("id", productId)
+    .single();
+
+  if (fetchError || !original) {
+    return { error: fetchError?.message || "Product not found" };
+  }
+
+  // Generate unique slug
+  const baseSlug = original.slug || slugify(original.title);
+  const newSlug = `${baseSlug}-copy-${Date.now()}`;
+
+  // Insert the duplicated product
+  const { data: inserted, error: insertError } = await admin
+    .from("products")
+    .insert({
+      title: `${original.title} (Salinan)`,
+      slug: newSlug,
+      description: original.description,
+      price: original.price,
+      discount_price: original.discount_price,
+      sku: original.sku ? `${original.sku}-COPY` : null,
+      tags: original.tags,
+      category_id: original.category_id,
+      drive_file_url: original.drive_file_url,
+      is_active: false, // Start as inactive so admin can review
+      thumbnail_url: original.thumbnail_url, // Reuse the same image URL
+    })
+    .select("id")
+    .single();
+
+  if (insertError || !inserted) {
+    return { error: insertError?.message || "Duplicate failed" };
+  }
+
+  // Duplicate demo links
+  const { data: demoLinks } = await admin
+    .from("product_demo_links")
+    .select("label, url, sort_order")
+    .eq("product_id", productId)
+    .order("sort_order");
+
+  if (demoLinks && demoLinks.length > 0) {
+    const demoRows = demoLinks.map((d) => ({
+      product_id: inserted.id,
+      label: d.label,
+      url: d.url,
+      sort_order: d.sort_order,
+    }));
+    await admin.from("product_demo_links").insert(demoRows);
+  }
+
+  // Duplicate gallery images
+  const { data: galleryImages } = await admin
+    .from("product_images")
+    .select("image_url, sort_order")
+    .eq("product_id", productId)
+    .order("sort_order");
+
+  if (galleryImages && galleryImages.length > 0) {
+    const galleryRows = galleryImages.map((img) => ({
+      product_id: inserted.id,
+      image_url: img.image_url,
+      sort_order: img.sort_order,
+    }));
+    await admin.from("product_images").insert(galleryRows);
+  }
+
+  revalidatePath("/admin/products");
+  return { success: true, newProductId: inserted.id };
+}
+
+export async function uploadGalleryImages(productId: string, formData: FormData) {
+  const user = await verifyAdmin();
+  if (!user) return { error: "Unauthorized" };
+
+  const admin = createAdminClient();
+  const files = formData.getAll("gallery") as File[];
+
+  if (!files || files.length === 0) {
+    return { error: "No files selected" };
+  }
+
+  // Get current max sort_order
+  const { data: existing } = await admin
+    .from("product_images")
+    .select("sort_order")
+    .eq("product_id", productId)
+    .order("sort_order", { ascending: false })
+    .limit(1);
+
+  let sortOrder = (existing?.[0]?.sort_order ?? -1) + 1;
+  const uploadedUrls: string[] = [];
+
+  for (const file of files) {
+    if (!file || file.size === 0) continue;
+
+    const fileExt = file.name.split(".").pop();
+    const fileName = `gallery-${productId}-${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+
+    const { error: uploadError } = await admin.storage
+      .from("product-images")
+      .upload(fileName, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (uploadError) {
+      console.error("Gallery upload error:", uploadError.message);
+      continue;
+    }
+
+    const { data: publicUrl } = admin.storage
+      .from("product-images")
+      .getPublicUrl(fileName);
+
+    // Insert into product_images table
+    await admin.from("product_images").insert({
+      product_id: productId,
+      image_url: publicUrl.publicUrl,
+      sort_order: sortOrder++,
+    });
+
+    uploadedUrls.push(publicUrl.publicUrl);
+  }
+
+  revalidatePath("/admin/products");
+  revalidatePath(`/admin/products/${productId}/edit`);
+  return { success: true, urls: uploadedUrls };
+}
+
+export async function deleteGalleryImage(imageId: string) {
+  const user = await verifyAdmin();
+  if (!user) return { error: "Unauthorized" };
+
+  const admin = createAdminClient();
+
+  // Look up the image record
+  const { data: image } = await admin
+    .from("product_images")
+    .select("image_url, product_id")
+    .eq("id", imageId)
+    .single();
+
+  if (image?.image_url) {
+    // Check if this URL is used by another record (e.g. as a thumbnail)
+    const { data: otherUsage } = await admin
+      .from("product_images")
+      .select("id")
+      .eq("image_url", image.image_url)
+      .neq("id", imageId)
+      .limit(1);
+
+    const { data: thumbUsage } = await admin
+      .from("products")
+      .select("id")
+      .eq("thumbnail_url", image.image_url)
+      .limit(1);
+
+    const isUsedElsewhere =
+      (otherUsage && otherUsage.length > 0) ||
+      (thumbUsage && thumbUsage.length > 0);
+
+    // Only delete from storage if not used elsewhere
+    if (!isUsedElsewhere) {
+      const fileName = image.image_url.split("/").pop();
+      if (fileName) {
+        const decodedName = decodeURIComponent(fileName.split("?")[0]);
+        await admin.storage.from("product-images").remove([decodedName]);
+      }
+    }
+  }
+
+  // Delete the DB record
+  const { error } = await admin
+    .from("product_images")
+    .delete()
+    .eq("id", imageId);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/admin/products");
+  if (image?.product_id) {
+    revalidatePath(`/admin/products/${image.product_id}/edit`);
+  }
+  return { success: true };
+}
+

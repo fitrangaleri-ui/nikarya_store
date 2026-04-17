@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Plus, Pencil, ImageIcon, Package, Search } from "lucide-react";
-import { DeleteProductButton, ToggleStatusButton } from "./delete-button";
+import { DeleteProductButton, DuplicateProductButton, ToggleStatusButton } from "./delete-button";
 import { FilterSelect } from "../filter-select";
 import { CategorySection } from "./category-section";
 import { ImportExportSection } from "./import-export";
@@ -244,6 +244,7 @@ export default async function AdminProductsPage({
                       <span className="sr-only">Edit Produk</span>
                     </Button>
                   </Link>
+                  <DuplicateProductButton productId={product.id} />
                   <DeleteProductButton
                     productId={product.id}
                     productTitle={product.title}
@@ -369,6 +370,7 @@ export default async function AdminProductsPage({
                               <span className="sr-only">Edit Produk</span>
                             </Button>
                           </Link>
+                          <DuplicateProductButton productId={product.id} />
                           <DeleteProductButton
                             productId={product.id}
                             productTitle={product.title}

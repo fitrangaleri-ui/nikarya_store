@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,24 +20,31 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { createProduct, updateProduct } from "./actions";
+import { createProduct, updateProduct, uploadGalleryImages, deleteGalleryImage } from "./actions";
 import { createCategory } from "../categories/actions";
 import {
-  Plus,
-  ArrowLeft,
-  Upload,
-  ImageIcon,
-  X,
-  ExternalLink,
-  Trash2,
-} from "lucide-react";
+  PlusIcon,
+  ArrowLeftIcon,
+  ArrowUpTrayIcon,
+  PhotoIcon,
+  XMarkIcon,
+  ArrowTopRightOnSquareIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Image from "next/image";
+import { Typography } from "@/components/ui/typography";
 
 type Category = {
   id: string;
   name: string;
   slug: string;
+};
+
+type GalleryImage = {
+  id: string;
+  image_url: string;
+  sort_order: number;
 };
 
 type Product = {
@@ -55,6 +62,7 @@ type Product = {
   thumbnail_url: string | null;
   drive_file_url: string | null;
   is_active: boolean;
+  gallery_images?: GalleryImage[];
 };
 
 export function ProductForm({
@@ -73,6 +81,14 @@ export function ProductForm({
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [, startCategoryTransition] = useTransition();
+  const thumbnailInputRef = useRef<HTMLInputElement>(null);
+
+  // Gallery state
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>(
+    product?.gallery_images || []
+  );
+  const [isUploadingGallery, startGalleryTransition] = useTransition();
+  const galleryInputRef = useRef<HTMLInputElement>(null);
 
   // Demo links state
   const [demoLinks, setDemoLinks] = useState<{ label: string; url: string }[]>(
@@ -103,6 +119,10 @@ export function ProductForm({
 
   const handleRemoveImage = () => {
     setPreviewUrl("");
+    // Reset the file input so it can detect re-selecting the same file
+    if (thumbnailInputRef.current) {
+      thumbnailInputRef.current.value = "";
+    }
   };
 
   const handleAddCategory = async (formData: FormData) => {
@@ -119,6 +139,44 @@ export function ProductForm({
         };
         setCategoryList((prev) => [...prev, newCat]);
         setCategoryDialogOpen(false);
+      }
+    });
+  };
+
+  // Gallery upload handler
+  const handleGalleryUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0 || !product?.id) return;
+
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append("gallery", files[i]);
+    }
+
+    startGalleryTransition(async () => {
+      const result = await uploadGalleryImages(product.id, formData);
+      if (result?.success && result.urls) {
+        // Optimistic update: add the new images to local state
+        const newImages = result.urls.map((url, i) => ({
+          id: `temp-${Date.now()}-${i}`,
+          image_url: url,
+          sort_order: galleryImages.length + i,
+        }));
+        setGalleryImages((prev) => [...prev, ...newImages]);
+      }
+      // Reset file input
+      if (galleryInputRef.current) {
+        galleryInputRef.current.value = "";
+      }
+    });
+  };
+
+  // Gallery delete handler
+  const handleDeleteGalleryImage = (imageId: string) => {
+    startGalleryTransition(async () => {
+      const result = await deleteGalleryImage(imageId);
+      if (result?.success) {
+        setGalleryImages((prev) => prev.filter((img) => img.id !== imageId));
       }
     });
   };
@@ -153,17 +211,17 @@ export function ProductForm({
           href="/admin/products"
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/50 text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors mb-4"
         >
-          <ArrowLeft className="h-3.5 w-3.5" />
+          <ArrowLeftIcon className="h-3.5 w-3.5" />
           Kembali
         </Link>
-        <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
+        <Typography variant="h3" as="h1">
           {isEdit ? "Edit Produk" : "Tambah Produk Baru"}
-        </h1>
-        <p className="mt-1.5 text-sm font-medium text-muted-foreground">
+        </Typography>
+        <Typography variant="body-sm" color="muted" className="mt-1.5 font-medium">
           {isEdit
             ? "Perbarui informasi produk di bawah ini."
             : "Lengkapi informasi produk baru di bawah ini."}
-        </p>
+        </Typography>
       </div>
 
       <form
@@ -181,12 +239,12 @@ export function ProductForm({
           )}
 
           {/* ── Informasi Dasar ── */}
-          <div className="space-y-5 rounded-3xl border border-border/40 bg-card/60 backdrop-blur-md p-5 md:p-7 shadow-sm">
+          <div className="space-y-5 rounded-2xl border border-border bg-card p-5 md:p-7">
             <div className="flex items-center gap-3 mb-2">
               <span className="w-1.5 h-6 bg-primary rounded-full block flex-shrink-0" />
-              <h2 className="text-lg font-black text-foreground tracking-tight">
+              <Typography variant="h6" as="h2">
                 Informasi Dasar
-              </h2>
+              </Typography>
             </div>
 
             <div className="space-y-2.5">
@@ -217,9 +275,9 @@ export function ProductForm({
                 placeholder="nama-produk"
                 className={`h-11 ${inputClass}`}
               />
-              <p className="text-[11px] font-medium text-muted-foreground ml-1">
+              <Typography variant="caption" color="muted" className="ml-1 font-medium">
                 Auto-generated dari nama produk, tetap bisa diubah manual.
-              </p>
+              </Typography>
             </div>
 
             <div className="space-y-2.5">
@@ -241,12 +299,12 @@ export function ProductForm({
           </div>
 
           {/* ── Harga & Inventaris ── */}
-          <div className="space-y-5 rounded-3xl border border-border/40 bg-card/60 backdrop-blur-md p-5 md:p-7 shadow-sm">
+          <div className="space-y-5 rounded-2xl border border-border bg-card p-5 md:p-7">
             <div className="flex items-center gap-3 mb-2">
               <span className="w-1.5 h-6 bg-primary rounded-full block flex-shrink-0" />
-              <h2 className="text-lg font-black text-foreground tracking-tight">
+              <Typography variant="h6" as="h2">
                 Harga &amp; Inventaris
-              </h2>
+              </Typography>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2">
@@ -286,9 +344,9 @@ export function ProductForm({
                   placeholder="Contoh: 75000"
                   className={`h-11 ${inputClass}`}
                 />
-                <p className="text-[11px] font-medium text-muted-foreground ml-1">
+                <Typography variant="caption" color="muted" className="ml-1 font-medium">
                   Isi jika sedang diskon (harga asli sebelum diskon).
-                </p>
+                </Typography>
               </div>
             </div>
 
@@ -309,12 +367,12 @@ export function ProductForm({
           </div>
 
           {/* ── File & Demo ── */}
-          <div className="space-y-5 rounded-3xl border border-border/40 bg-card/60 backdrop-blur-md p-5 md:p-7 shadow-sm">
+          <div className="space-y-5 rounded-2xl border border-border bg-card p-5 md:p-7">
             <div className="flex items-center gap-3 mb-2">
               <span className="w-1.5 h-6 bg-primary rounded-full block flex-shrink-0" />
-              <h2 className="text-lg font-black text-foreground tracking-tight">
+              <Typography variant="h6" as="h2">
                 File &amp; Demo
-              </h2>
+              </Typography>
             </div>
 
             <div className="space-y-2.5">
@@ -332,10 +390,10 @@ export function ProductForm({
                 placeholder="https://drive.google.com/file/d/..."
                 className={`h-11 ${inputClass}`}
               />
-              <p className="text-[11px] font-medium text-muted-foreground ml-1">
+              <Typography variant="caption" color="muted" className="ml-1 font-medium">
                 Link download file asli yang akan diterima pembeli setelah
                 bayar.
-              </p>
+              </Typography>
             </div>
 
             <div className="space-y-2.5">
@@ -371,7 +429,7 @@ export function ProductForm({
                         className={`h-9 ${inputClass}`}
                       />
                       <div className="relative">
-                        <ExternalLink className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <ArrowTopRightOnSquareIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                           type="url"
                           placeholder="https://preview-undangan.com/..."
@@ -392,7 +450,7 @@ export function ProductForm({
                       }}
                       className="mt-1 p-2 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <TrashIcon className="h-4 w-4" />
                     </button>
                   </div>
                 ))}
@@ -409,14 +467,14 @@ export function ProductForm({
                   }
                   className="w-full rounded-2xl border-dashed border-border/50 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5"
                 >
-                  <Plus className="h-4 w-4 mr-1.5" />
+                  <PlusIcon className="h-4 w-4 mr-1.5" />
                   Tambah Demo Link
                 </Button>
               </div>
 
-              <p className="text-[11px] font-medium text-muted-foreground ml-1">
+              <Typography variant="caption" color="muted" className="ml-1 font-medium">
                 Tambahkan satu atau lebih link live preview agar pembeli bisa mencoba dulu.
-              </p>
+              </Typography>
             </div>
           </div>
         </div>
@@ -426,12 +484,12 @@ export function ProductForm({
             ══════════════════════════════════ */}
         <div className="space-y-5 md:space-y-6">
           {/* ── Status & Organisasi ── */}
-          <div className="space-y-5 rounded-3xl border border-border/40 bg-card/60 backdrop-blur-md p-5 md:p-7 shadow-sm">
+          <div className="space-y-5 rounded-2xl border border-border bg-card p-5 md:p-7">
             <div className="flex items-center gap-3 mb-2">
               <span className="w-1.5 h-6 bg-primary rounded-full block flex-shrink-0" />
-              <h2 className="text-lg font-black text-foreground tracking-tight">
+              <Typography variant="h6" as="h2">
                 Organisasi
-              </h2>
+              </Typography>
             </div>
 
             {/* Status Toggle */}
@@ -440,9 +498,9 @@ export function ProductForm({
                 <Label className="text-sm font-bold text-foreground cursor-pointer">
                   Status Aktif
                 </Label>
-                <p className="text-[11px] font-medium text-muted-foreground">
+                <Typography variant="caption" color="muted" className="font-medium">
                   Tampilkan di toko
-                </p>
+                </Typography>
               </div>
               <Switch
                 checked={isActive}
@@ -488,10 +546,10 @@ export function ProductForm({
                       size="icon"
                       className="h-11 w-11 flex-shrink-0 rounded-2xl border-border/50 bg-background/50 text-muted-foreground hover:bg-primary/10 hover:text-primary hover:border-primary/30 shadow-sm transition-all"
                     >
-                      <Plus className="h-5 w-5" />
+                      <PlusIcon className="h-5 w-5" />
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="rounded-3xl border-border/40 bg-card/95 backdrop-blur-xl p-6 sm:max-w-md">
+                  <DialogContent className="rounded-2xl border-border bg-card/95 backdrop-blur-xl p-6 sm:max-w-md">
                     <DialogHeader>
                       <DialogTitle className="text-xl text-foreground font-black tracking-tight mb-2">
                         Tambah Kategori
@@ -537,23 +595,23 @@ export function ProductForm({
                 placeholder="wedding, luxury, gold"
                 className={`h-11 ${inputClass}`}
               />
-              <p className="text-[11px] font-medium text-muted-foreground ml-1">
+              <Typography variant="caption" color="muted" className="ml-1 font-medium">
                 Pisahkan dengan koma (contoh: tag1, tag2).
-              </p>
+              </Typography>
             </div>
           </div>
 
-          {/* ── Media ── */}
-          <div className="space-y-5 rounded-3xl border border-border/40 bg-card/60 backdrop-blur-md p-5 md:p-7 shadow-sm">
+          {/* ── Media: Thumbnail ── */}
+          <div className="space-y-5 rounded-2xl border border-border bg-card p-5 md:p-7">
             <div className="flex items-center gap-3 mb-2">
               <span className="w-1.5 h-6 bg-primary rounded-full block flex-shrink-0" />
-              <h2 className="text-lg font-black text-foreground tracking-tight">
-                Media
-              </h2>
+              <Typography variant="h6" as="h2">
+                Thumbnail
+              </Typography>
             </div>
             <div className="space-y-3">
               <Label className="text-foreground font-bold">
-                Thumbnail Gambar
+                Gambar Utama
               </Label>
               <div className="flex flex-col gap-3">
                 <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-border/50 bg-background/30">
@@ -570,15 +628,15 @@ export function ProductForm({
                         onClick={handleRemoveImage}
                         className="absolute top-2 right-2 h-8 w-8 rounded-full bg-destructive/90 backdrop-blur-sm text-destructive-foreground flex items-center justify-center shadow-md hover:bg-destructive hover:scale-105 transition-all"
                       >
-                        <X className="h-4 w-4" />
+                        <XMarkIcon className="h-4 w-4" />
                       </button>
                     </>
                   ) : (
                     <div className="flex flex-col items-center gap-2 text-muted-foreground/60">
-                      <ImageIcon className="h-8 w-8 mb-1" />
-                      <span className="text-xs font-semibold">
+                      <PhotoIcon className="h-8 w-8 mb-1" />
+                      <Typography variant="caption" as="span" color="muted" className="font-semibold">
                         Belum ada gambar
-                      </span>
+                      </Typography>
                     </div>
                   )}
                 </div>
@@ -587,7 +645,7 @@ export function ProductForm({
                   htmlFor="thumbnail"
                   className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl border border-border/50 bg-background/50 h-11 px-4 text-sm font-bold text-muted-foreground shadow-sm transition hover:bg-primary/10 hover:text-primary hover:border-primary/30"
                 >
-                  <Upload className="h-4 w-4" />
+                  <ArrowUpTrayIcon className="h-4 w-4" />
                   {previewUrl ? "Ganti Gambar" : "Upload Gambar"}
                 </label>
                 <input
@@ -596,14 +654,83 @@ export function ProductForm({
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
+                  ref={thumbnailInputRef}
                   className="hidden"
                 />
-                <p className="text-center text-[11px] font-medium text-muted-foreground mt-1">
+                <Typography variant="caption" color="muted" align="center" className="mt-1 font-medium">
                   Direkomendasikan: PNG, JPG, WebP — Max 2MB
-                </p>
+                </Typography>
               </div>
             </div>
           </div>
+
+          {/* ── Media: Gallery Images (Only in edit mode) ── */}
+          {isEdit && product && (
+            <div className="space-y-5 rounded-2xl border border-border bg-card p-5 md:p-7">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="w-1.5 h-6 bg-primary rounded-full block flex-shrink-0" />
+                <Typography variant="h6" as="h2">
+                  Galeri Produk
+                </Typography>
+              </div>
+
+              <Typography variant="caption" color="muted" className="font-medium">
+                Tambahkan gambar tambahan untuk ditampilkan di halaman detail produk. Maksimal beberapa gambar.
+              </Typography>
+
+              {/* Gallery Grid */}
+              {galleryImages.length > 0 && (
+                <div className="grid grid-cols-3 gap-2">
+                  {galleryImages.map((img) => (
+                    <div key={img.id} className="group/gallery relative aspect-square rounded-xl overflow-hidden border border-border bg-muted/30">
+                      <Image
+                        src={img.image_url}
+                        alt="Gallery"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 33vw, 120px"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteGalleryImage(img.id)}
+                        disabled={isUploadingGallery}
+                        className="absolute top-1 right-1 h-6 w-6 rounded-full bg-destructive/90 backdrop-blur-sm text-destructive-foreground flex items-center justify-center opacity-0 group-hover/gallery:opacity-100 transition-all hover:scale-110"
+                      >
+                        <XMarkIcon className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Upload Button */}
+              <label
+                htmlFor="gallery-upload"
+                className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border/50 bg-background/30 h-20 px-4 text-sm font-bold text-muted-foreground transition hover:bg-primary/5 hover:text-primary hover:border-primary/30 ${isUploadingGallery ? "opacity-50 pointer-events-none" : ""}`}
+              >
+                {isUploadingGallery ? (
+                  <>
+                    <span className="w-4 h-4 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+                    Mengupload...
+                  </>
+                ) : (
+                  <>
+                    <PlusIcon className="h-5 w-5" />
+                    Tambah Gambar Galeri
+                  </>
+                )}
+              </label>
+              <input
+                id="gallery-upload"
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleGalleryUpload}
+                ref={galleryInputRef}
+                className="hidden"
+              />
+            </div>
+          )}
 
           {/* ── Desktop Action Buttons ── */}
           <div className="hidden md:flex flex-col gap-3 pt-2">
