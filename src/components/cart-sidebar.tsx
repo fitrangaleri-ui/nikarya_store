@@ -61,7 +61,7 @@ export function CartSidebar() {
         <div className="pointer-events-none absolute left-0 bottom-32 h-32 w-32 rounded-full bg-primary/5 blur-3xl transition-opacity duration-500" />
 
         {/* ── HEADER ── */}
-        <SheetHeader className="relative z-10 h-[68px] border-b border-border/40 bg-gradient-to-b from-primary/[0.08] via-card/70 to-transparent px-5 flex flex-row items-center text-left sm:text-left space-y-0">
+        <SheetHeader className="relative z-10 h-16 border-b border-border/40 bg-gradient-to-b from-primary/[0.08] via-card/70 to-transparent px-5 flex flex-row items-center text-left sm:text-left space-y-0">
           <SheetTitle asChild>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">

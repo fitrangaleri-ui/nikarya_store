@@ -7,7 +7,7 @@ import { Typography } from "@/components/ui/typography";
 
 const WHATSAPP_BASE_URL = "https://wa.me/6285155201380";
 const WHATSAPP_TOGGLE_EVENT = "whatsapp:toggle";
-const DEFAULT_WHATSAPP_MESSAGE = "Halo, saya ingin memesan undangan digital ?";
+const DEFAULT_WHATSAPP_MESSAGE = "Halo, saya ingin memesan template json ?";
 
 type WhatsAppToggleDetail = {
   message?: string;
@@ -162,11 +162,11 @@ export function WhatsAppButton() {
               }`}
           >
             {/* Header */}
-            <div className="flex items-start justify-between bg-[#1f6a6b]/95 px-4 py-5 text-white">
+            <div className="flex items-start justify-between bg-gradient-to-br from-[#01696f] to-[#0c4e54] px-4 py-5 text-white">
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border-2 border-white/20">
                   <Image
-                    src="/customer.jpg"
+                    src="/icon/logo-nikarya.jpg"
                     alt="Admin Profile"
                     width={48}
                     height={48}
@@ -175,7 +175,7 @@ export function WhatsAppButton() {
                 </div>
                 <div className="leading-tight">
                   <div className="flex items-center gap-1.5">
-                    <Typography variant="body-base" as="p" className="text-base font-semibold text-white">Custom Galeri Store</Typography>
+                    <Typography variant="body-base" as="p" className="text-base font-semibold text-white">Nikarya Digital</Typography>
                     <Image
                       src="/icon/verify.png"
                       alt="Verified"

@@ -91,13 +91,6 @@ export function MenuSidebar() {
     }
   };
 
-  // Auto-focus search saat sidebar dibuka
-  useEffect(() => {
-    if (isOpen && searchInputRef.current) {
-      const timer = setTimeout(() => searchInputRef.current?.focus(), 300);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen]);
 
   // Tutup sidebar ketika navigasi berubah
   useEffect(() => {
