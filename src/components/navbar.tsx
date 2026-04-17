@@ -301,7 +301,7 @@ export function Navbar() {
                 )}
               </div>
             ) : (
-              <Button variant="brand-pill" size="md" asChild>
+              <Button variant="brand-pill" size="default" asChild>
                 <Link
                   href="/login"
                   className="group flex items-center justify-between gap-3 pr-1"
