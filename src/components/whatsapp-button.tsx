@@ -175,7 +175,7 @@ export function WhatsAppButton() {
                 </div>
                 <div className="leading-tight">
                   <div className="flex items-center gap-1.5">
-                    <Typography variant="body" as="p" className="text-base font-semibold text-white">Custom Galeri Store</Typography>
+                    <Typography variant="body-base" as="p" className="text-base font-semibold text-white">Custom Galeri Store</Typography>
                     <Image
                       src="/icon/verify.png"
                       alt="Verified"
