@@ -56,6 +56,26 @@ const buttonVariants = cva(
           "[&_.brand-pill__icon]:transition-colors",
           "hover:[&_.brand-pill__icon]:bg-white/30",
         ].join(" "),
+        "brand-icon": [
+          "relative overflow-hidden",
+          "bg-primary hover:bg-primary/90",
+          "text-primary-foreground font-bold",
+          "rounded-full",
+          "pl-1.5 pr-6",
+          "gap-4",
+          "justify-start",
+          "transition-all hover:scale-[1.02] active:scale-95",
+          "[&_.brand-icon__symbol]:flex",
+          "[&_.brand-icon__symbol]:items-center",
+          "[&_.brand-icon__symbol]:justify-center",
+          "[&_.brand-icon__symbol]:w-8",
+          "[&_.brand-icon__symbol]:h-8",
+          "[&_.brand-icon__symbol]:rounded-full",
+          "[&_.brand-icon__symbol]:bg-white/20",
+          "[&_.brand-icon__symbol]:text-white",
+          "[&_.brand-icon__symbol]:flex-shrink-0",
+          "hover:[&_.brand-icon__symbol]:bg-white/30",
+        ].join(" "),
       },
 
       size: {
@@ -78,7 +98,7 @@ const buttonVariants = cva(
   },
 );
 
-const SHIMMER_VARIANTS = new Set(["brand", "brand-pill"]);
+const SHIMMER_VARIANTS = new Set(["brand", "brand-pill", "brand-icon"]);
 
 function Button({
   className,

@@ -10,7 +10,7 @@ import { Typography } from "@/components/ui/typography";
 export function HeroSection() {
   return (
     <div className="w-full px-4 md:px-6 pt-6 md:pt-8 mx-auto max-w-7xl">
-      <section className="relative overflow-hidden rounded-[2.5rem] border border-border bg-gradient-to-br from-[#01696f] to-[#0c4e54] px-6 py-12 text-white shadow-xl md:px-12 md:py-20">
+      <section className="relative overflow-hidden mt-16 rounded-xl border border-border bg-gradient-to-br from-[#01696f] to-[#0c4e54] px-6 py-12 text-white shadow-xl md:px-12 md:py-20">
         {/* Decorative Circles from Reference */}
         <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10 pointer-events-none" />
         <div className="absolute bottom-[-20px] left-[20%] h-32 w-32 rounded-full bg-white/5 pointer-events-none" />

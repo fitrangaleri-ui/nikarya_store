@@ -2,7 +2,7 @@
 
 import { Dialog as DialogPrimitive } from "radix-ui"
 import { cva, type VariantProps } from "class-variance-authority"
-import { X } from "lucide-react"
+import { XMarkIcon } from "@heroicons/react/24/outline"
 
 import { cn } from "@/lib/utils"
 
@@ -74,7 +74,7 @@ function SheetContent({
       >
         {children}
         <DialogPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:pointer-events-none">
-          <X className="size-4" />
+          <XMarkIcon className="size-5" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
       </DialogPrimitive.Content>

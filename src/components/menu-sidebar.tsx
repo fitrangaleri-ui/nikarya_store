@@ -7,11 +7,29 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ArrowRight, LogOut, Palette, Search, Tag, User, X } from "lucide-react";
+import {
+  ArrowRightIcon,
+  MagnifyingGlassIcon,
+  XMarkIcon,
+  ArrowLeftStartOnRectangleIcon,
+  UserIcon as UserSolidIcon
+} from "@heroicons/react/24/solid";
+import {
+  ArrowRightIcon as ArrowRightOutlineIcon,
+  MagnifyingGlassIcon as SearchOutlineIcon
+} from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/components/auth-provider";
 import { useState, useRef, useEffect, useCallback } from "react";
+import { Typography } from "@/components/ui/typography";
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetHeader, 
+  SheetTitle 
+} from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
 
 // ── Hook toggle shared state ──────────────────────────────────
 let sidebarIsOpen = false;
@@ -76,7 +94,6 @@ export function MenuSidebar() {
   // Auto-focus search saat sidebar dibuka
   useEffect(() => {
     if (isOpen && searchInputRef.current) {
-      // Delay sedikit agar animasi slide selesai
       const timer = setTimeout(() => searchInputRef.current?.focus(), 300);
       return () => clearTimeout(timer);
     }
@@ -86,18 +103,6 @@ export function MenuSidebar() {
   useEffect(() => {
     close();
   }, [pathname, close]);
-
-  // Lock body scroll saat sidebar terbuka
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
 
   const displayName =
     user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
@@ -114,35 +119,23 @@ export function MenuSidebar() {
   ];
 
   return (
-    <>
-      {/* ── Overlay ── */}
-      <div
-        className={`fixed inset-0 z-40 bg-background/20 backdrop-blur-md transition-all duration-300 ${isOpen
-          ? "opacity-100 pointer-events-auto"
-          : "opacity-0 pointer-events-none"
-          }`}
-        onClick={close}
-        aria-hidden="true"
-      />
-
-      {/* ── Sidebar — slide dari kiri ── */}
-      <aside
-        className={`fixed top-0 left-0 h-full z-50 flex flex-col overflow-hidden border-r border-border/40 bg-background/92 backdrop-blur-2xl shadow-2xl transition-all duration-300 ease-out
-                    w-[78%] max-w-[320px] ${isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
-          }`}
-        role="dialog"
-        aria-label="Menu Navigasi"
+    <Sheet open={isOpen} onOpenChange={(val) => !val && close()}>
+      <SheetContent 
+        side="left" 
+        className="flex flex-col h-full p-0 border-r border-border/40 bg-background/92 backdrop-blur-2xl w-[78%] max-w-[320px] overflow-hidden"
       >
         {/* Decorative blur */}
         <div className="pointer-events-none absolute -left-10 top-0 h-40 w-40 rounded-full bg-primary/10 blur-3xl" />
-        <div className="pointer-events-none absolute right-0 top-32 h-32 w-32 rounded-full bg-primary/5 blur-3xl" />
+        <div className="pointer-events-none absolute right-0 top-32 h-32 w-32 rounded-full bg-primary/5 blur-3xl transition-opacity duration-500" />
 
         {/* ── HEADER ── */}
-        <div className="relative z-10 h-16 border-b border-border/40 bg-gradient-to-b from-primary/[0.08] via-card/70 to-transparent px-5 flex items-center">
-          <h2 className="text-xl font-bold text-foreground uppercase">
-            Menu
-          </h2>
-        </div>
+        <SheetHeader className="relative z-10 h-16 border-b border-border/40 bg-gradient-to-b from-primary/[0.08] via-card/70 to-transparent px-5 flex flex-row items-center justify-between text-left sm:text-left space-y-0">
+          <SheetTitle asChild>
+            <Typography variant="h6" as="h2" className="uppercase tracking-wider font-extrabold text-foreground">
+              Menu
+            </Typography>
+          </SheetTitle>
+        </SheetHeader>
 
         {/* ── BODY ── */}
         <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10">
@@ -154,7 +147,7 @@ export function MenuSidebar() {
                 ref={searchInputRef}
                 type="search"
                 placeholder="Cari Undangan..."
-                className="h-11 w-full rounded-full border-border/50 bg-muted/40 pl-4 pr-11
+                className="h-11 w-full rounded-full border-border/50 bg-muted/40 pl-4 pr-11 
                            focus:bg-background focus:ring-1 focus:ring-primary
                            hover:bg-muted/60 transition-all text-sm"
               />
@@ -163,9 +156,10 @@ export function MenuSidebar() {
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
                 aria-label="Cari"
               >
-                <Search className="h-4 w-4" />
+                <SearchOutlineIcon className="h-4 w-4" />
               </button>
             </form>
+            <Separator className="mt-6 bg-border/40" />
           </div>
 
           <nav className="px-0 py-1">
@@ -177,13 +171,15 @@ export function MenuSidebar() {
                     <Link
                       href={item.href}
                       onClick={close}
-                      className={`group flex items-center gap-3 px-5 py-4 text-sm font-medium transition-all duration-200 ${isActive
+                      className={`group flex items-center gap-3 px-5 py-4 transition-all duration-200 ${isActive
                         ? "bg-primary/[0.03] text-primary"
                         : "text-foreground hover:bg-muted/30 hover:text-primary"
                         }`}
                     >
-                      <span className="flex-1">{item.label}</span>
-                      <ArrowRight className={`h-4 w-4 transition-all duration-200 ${isActive
+                      <Typography variant="body-sm" as="span" className="flex-1 font-semibold">
+                        {item.label}
+                      </Typography>
+                      <ArrowRightOutlineIcon className={`h-4 w-4 transition-all duration-200 ${isActive
                         ? "translate-x-0 opacity-100"
                         : "opacity-0 -translate-x-1 group-hover:translate-x-0 group-hover:opacity-100"
                         }`} />
@@ -195,11 +191,12 @@ export function MenuSidebar() {
           </nav>
 
           {/* ── Divider ── */}
-          <div className="mx-5 my-4 border-t border-border/40" />
+          <div className="px-5 my-4">
+            <Separator className="bg-border/40" />
+          </div>
 
           {/* ── User Section ── */}
           <div className="px-3 pb-6">
-
             {isLoading ? (
               <div className="rounded-3xl border border-border/50 bg-card/60 px-4 py-4">
                 <div className="flex items-center gap-3">
@@ -214,18 +211,18 @@ export function MenuSidebar() {
               <div className="rounded-3xl border border-border/50 bg-card/60 p-2 shadow-sm shadow-primary/5">
                 {/* Info user */}
                 <div className="flex items-center gap-3 rounded-2xl px-3 py-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/15 text-primary shrink-0 ring-1 ring-primary/10">
-                    <span className="text-xs font-semibold">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary shrink-0 ring-1 ring-primary/20">
+                    <Typography variant="caption" className="font-bold">
                       {displayName.charAt(0).toUpperCase()}
-                    </span>
+                    </Typography>
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-foreground truncate">
+                    <Typography variant="body-sm" className="font-bold truncate text-foreground">
                       {displayName}
-                    </p>
-                    <p className="text-xs text-muted-foreground truncate">
+                    </Typography>
+                    <Typography variant="caption" color="muted" className="truncate">
                       {user.email}
-                    </p>
+                    </Typography>
                   </div>
                 </div>
 
@@ -233,45 +230,42 @@ export function MenuSidebar() {
                 <Link
                   href="/dashboard"
                   onClick={close}
-                  className="flex items-center gap-3 border-b border-border/40 px-5 py-4 text-sm font-medium text-foreground transition-colors hover:bg-muted/30 hover:text-primary"
+                  className="flex items-center gap-3 border-b border-border/40 px-5 py-4 text-foreground transition-colors hover:bg-muted/30 hover:text-primary group"
                 >
-                  <span className="flex-1">Dashboard</span>
-                  <ArrowRight className="h-4 w-4 opacity-60" />
+                  <Typography variant="body-sm" as="span" className="flex-1 font-semibold">
+                    Dashboard
+                  </Typography>
+                  <ArrowRightOutlineIcon className="h-4 w-4 opacity-40 group-hover:opacity-100 transition-opacity" />
                 </Link>
 
                 <button
                   onClick={handleSignOut}
-                  className="flex w-full items-center gap-3 px-5 py-4 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10"
+                  className="flex w-full items-center gap-3 px-5 py-4 text-destructive transition-colors hover:bg-destructive/10 rounded-b-2xl group"
                 >
-                  <span className="flex-1 text-left">Keluar</span>
+                  <Typography variant="body-sm" as="span" className="flex-1 text-left font-semibold" color="destructive">
+                    Keluar
+                  </Typography>
+                  <ArrowLeftStartOnRectangleIcon className="h-4 w-4 opacity-60 group-hover:opacity-100 transition-opacity" />
                 </button>
               </div>
             ) : (
               /* Belum login */
-              <div className="rounded-3xl border border-border/50 bg-card/60 p-4 shadow-sm shadow-primary/5">
-                <div className="mb-3">
-                  <p className="text-sm font-semibold text-foreground">
+              <div className="rounded-3xl border border-border/50 bg-card/60 p-6 shadow-sm shadow-primary/5">
+                <div className="mb-5">
+                  <Typography variant="body-sm" className="font-extrabold mb-1">
                     Login untuk lanjut
-                  </p>
-                  <p className="text-xs text-muted-foreground">
+                  </Typography>
+                  <Typography variant="caption" color="muted">
                     Masuk ke dashboard dan kelola pesananmu lebih cepat.
-                  </p>
+                  </Typography>
                 </div>
-                <Button
-                  variant="brand-pill"
-                  size="pill"
-                  asChild
-                  className="w-full"
-                >
+                <Button variant="brand-icon" size="lg" asChild className="w-fit">
                   <Link href="/login" onClick={close}>
-                    <span className="tracking-tight transition-transform duration-200 ease-out group-active:translate-x-[2px] group-active:translate-y-[1px]">
+                    <div className="brand-icon__symbol">
+                      <UserSolidIcon className="h-4 w-4" />
+                    </div>
+                    <span className="pr-4 font-bold">
                       Login
-                    </span>
-                    <span className="brand-pill__icon bg-background w-8 h-8 flex items-center justify-center rounded-full overflow-hidden transition-colors duration-300 ease-out group-hover:bg-primary-foreground">
-                      <ArrowRight
-                        className="text-foreground w-4 h-4 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:translate-x-[2px] group-hover:text-primary group-active:translate-x-[4px]"
-                        strokeWidth={3}
-                      />
                     </span>
                   </Link>
                 </Button>
@@ -279,7 +273,7 @@ export function MenuSidebar() {
             )}
           </div>
         </div>
-      </aside>
-    </>
+      </SheetContent>
+    </Sheet>
   );
 }

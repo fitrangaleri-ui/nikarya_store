@@ -18,6 +18,7 @@ import {
   Sun,
   Moon,
 } from "lucide-react"
+import { UserIcon } from "@heroicons/react/24/solid"
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -446,6 +447,149 @@ export default function DesignSystemPage() {
             </CardContent>
           </Card>
         </section>
+
+        <section className="grid w-full gap-6">
+          <Card className="min-w-0 border-border/70">
+            <CardHeader>
+              <CardTitle>Button System</CardTitle>
+              <CardDescription>
+                Daftar lengkap varian button yang tersedia dalam sistem desain Nikarya Store.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-12">
+              {/* Base Button Variants */}
+              <div className="space-y-6">
+                <Typography variant="h4" className="border-b pb-2">Base Button Variants (button.tsx)</Typography>
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex flex-col items-center gap-2">
+                    <Button variant="default">Default</Button>
+                    <Typography variant="caption" color="muted">default</Typography>
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <Button variant="brand">Brand Shimmer</Button>
+                    <Typography variant="caption" color="muted">brand</Typography>
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <Button variant="secondary">Secondary Bold</Button>
+                    <Typography variant="caption" color="muted">secondary</Typography>
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <Button variant="outline">Outline Primary</Button>
+                    <Typography variant="caption" color="muted">outline</Typography>
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <Button variant="ghost">Ghost Accent</Button>
+                    <Typography variant="caption" color="muted">ghost</Typography>
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <Button variant="destructive">Destructive</Button>
+                    <Typography variant="caption" color="muted">destructive</Typography>
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <Button variant="link">Link Style</Button>
+                    <Typography variant="caption" color="muted">link</Typography>
+                  </div>
+                  <div className="rounded-xl bg-teal-900/10 p-4 flex flex-col items-center gap-2">
+                    <Button variant="glass">Glass Morph</Button>
+                    <Typography variant="caption" className="text-teal-700 dark:text-teal-300">glass</Typography>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-4">
+                  <div className="flex flex-col items-start gap-2">
+                    <Button variant="brand-pill">
+                      <span>Explore Templates</span>
+                      <div className="brand-pill__icon">
+                        <ArrowRight className="size-4" />
+                      </div>
+                    </Button>
+                    <Typography variant="caption" color="muted">brand-pill (with icon wrapper)</Typography>
+                  </div>
+
+                  <div className="flex flex-col items-start gap-2">
+                    <Button variant="brand-icon">
+                      <div className="brand-icon__symbol">
+                        <UserIcon className="size-4" />
+                      </div>
+                      <span className="pr-4">Akun Saya</span>
+                    </Button>
+                    <Typography variant="caption" color="muted">brand-icon (prefix symbol)</Typography>
+                  </div>
+                </div>
+              </div>
+
+              {/* Base Button Sizes */}
+              <div className="space-y-6">
+                <Typography variant="h4" className="border-b pb-2">Base Button Sizes</Typography>
+                <div className="flex flex-wrap items-end gap-6">
+                  <div className="flex flex-col items-center gap-2">
+                    <Button size="xs" variant="brand">Extra Small</Button>
+                    <Typography variant="caption" color="muted">xs (h-8)</Typography>
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <Button size="sm">Small Button</Button>
+                    <Typography variant="caption" color="muted">sm (h-10)</Typography>
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <Button size="default">Default Size</Button>
+                    <Typography variant="caption" color="muted">default (h-11)</Typography>
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <Button size="lg" variant="brand">Large Action</Button>
+                    <Typography variant="caption" color="muted">lg (h-12)</Typography>
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <Button size="pill" className="px-10">Pill Style</Button>
+                    <Typography variant="caption" color="muted">pill (h-14)</Typography>
+                  </div>
+                </div>
+
+                <div className="mt-8 flex flex-wrap items-end gap-6">
+                  <div className="flex flex-col items-center gap-2">
+                    <Button size="icon-xs" variant="outline"><Settings /></Button>
+                    <Typography variant="caption" color="muted">icon-xs</Typography>
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <Button size="icon-sm" variant="outline"><Settings /></Button>
+                    <Typography variant="caption" color="muted">icon-sm</Typography>
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <Button size="icon" variant="outline"><Settings /></Button>
+                    <Typography variant="caption" color="muted">icon (default)</Typography>
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <Button size="icon-lg" variant="outline"><Settings /></Button>
+                    <Typography variant="caption" color="muted">icon-lg</Typography>
+                  </div>
+                </div>
+              </div>
+
+              {/* Primary Button Showcase */}
+              <div className="space-y-6">
+                <Typography variant="h4" className="border-b pb-2">Primary Button (primary-button.tsx)</Typography>
+                <div className="grid gap-8 md:grid-cols-2">
+                  <div className="space-y-4">
+                    <Typography variant="body-sm" className="font-bold">Variant & States</Typography>
+                    <div className="flex flex-col gap-4">
+                      <PrimaryButton>Standard Primary</PrimaryButton>
+                      <PrimaryButton loading>Loading State</PrimaryButton>
+                      <PrimaryButton variant="disabled-outline">Disabled Outline</PrimaryButton>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <Typography variant="body-sm" className="font-bold">Sizes (Full Width by Default)</Typography>
+                    <div className="flex flex-col gap-4">
+                      <PrimaryButton size="sm">Small Primary</PrimaryButton>
+                      <PrimaryButton size="md">Medium Primary</PrimaryButton>
+                      <PrimaryButton size="lg">Large Primary</PrimaryButton>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
 
         <section className="grid w-full gap-6 xl:grid-cols-[1.05fr_0.95fr]">
           <Card className="min-w-0 border-border/70">
