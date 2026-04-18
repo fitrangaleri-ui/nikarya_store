@@ -21,7 +21,7 @@ export function StickyHeader({
   children,
 }: StickyHeaderProps) {
   return (
-    <div className="sticky top-16 md:top-0 z-30 overflow-hidden border-b border-white/10 bg-gradient-to-br from-primary to-secondary-foreground px-6 py-6 md:px-10 md:py-8 transition-all">
+    <div className="sticky md:top-0 z-30 overflow-hidden border-b border-white/10 bg-gradient-to-br from-primary to-secondary-foreground mb-5 px-6 py-6 md:px-10 md:py-8 transition-all">
       {/* Decorative Circles from HeroSection style */}
       <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10 pointer-events-none" />
       <div className="absolute bottom-[-20px] left-[20%] h-32 w-32 rounded-full bg-white/5 pointer-events-none" />
