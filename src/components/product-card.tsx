@@ -6,9 +6,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ImageIcon, Eye, ShoppingCart } from "lucide-react";
+import { PhotoIcon, EyeIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { Typography } from "@/components/ui/typography";
+import { Badge } from "@/components/ui/badge";
 import { resolveImageSrc } from "@/lib/resolve-image";
 import { DemoLinksModal } from "@/components/demo-links-modal";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CarouselDots } from "@/components/ui/carousel";
 
 export function ProductCard({ product }: { product: any }) {
   const price = Number(product.price) || 0;
@@ -42,45 +45,87 @@ export function ProductCard({ product }: { product: any }) {
 
   const hasDemoLinks = demoLinks.length > 0;
 
+  // Build gallery images array
+  const productImages =
+    product.product_images && Array.isArray(product.product_images) && product.product_images.length > 0
+      ? [...product.product_images].sort((a: any, b: any) => a.sort_order - b.sort_order)
+      : [];
+
+  const rawImages = productImages.length > 0
+    ? productImages.map((img: any) => img.image_url)
+    : [product.thumbnail_url];
+
+  const galleryImages = rawImages.map(img => resolveImageSrc(img)).filter(Boolean) as string[];
+
   return (
-    <div className="group flex flex-col bg-card/60 backdrop-blur-sm border border-border/50 rounded-2xl overflow-hidden transition-all duration-300 h-full relative hover:shadow-lg hover:shadow-primary/5 hover:border-primary/30">
+    <div className="group flex flex-col glass rounded-2xl overflow-hidden transition-all duration-500 h-full relative hover:shadow-elevation-lg hover:translate-y-[-4px] hover:border-primary/40">
       {/* 1. IMAGE */}
-      <div className="relative aspect-square bg-muted/30 overflow-hidden border-b border-border/40">
-        <Link
-          href={`/products/${product.slug}`}
-          className="block w-full h-full"
-        >
-          {imageSrc ? (
-            <Image
-              src={imageSrc}
-              alt={product.title || "Product image"}
-              fill
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className="object-cover group-hover:scale-110 group-hover:rotate-1 transition-transform duration-700 ease-out"
+      <div className="relative aspect-square bg-muted/30 overflow-hidden border-b border-border/40 group/carousel isolate w-full">
+        {galleryImages.length > 1 ? (
+          <Carousel opts={{ loop: true }} className="w-full h-full static">
+            <CarouselContent className="-ml-0 h-full">
+              {galleryImages.map((src, i) => (
+                <CarouselItem key={i} className="pl-0 relative h-full aspect-square">
+                  <Link href={`/products/${product.slug}`} className="block w-full h-full relative group/img">
+                    <Image
+                      src={src}
+                      alt={`${product.title || "Product image"} - Slide ${i + 1}`}
+                      fill
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                      className="object-cover group-hover/img:scale-110 group-hover/img:rotate-1 transition-transform duration-700 ease-out"
+                    />
+                    <div className="absolute inset-0 bg-background/0 group-hover/img:bg-background/10 transition-colors duration-300" />
+                  </Link>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious
+              className="absolute left-2 top-1/2 -translate-y-1/2 size-7 md:size-8 opacity-0 group-hover/carousel:opacity-100 transition-opacity disabled:opacity-0 bg-background/80 hover:bg-background/90 z-20"
             />
-          ) : (
-            <div className="flex h-full items-center justify-center text-muted-foreground/30">
-              <ImageIcon className="h-8 w-8 md:h-10 md:w-10" />
+            <CarouselNext
+              className="absolute right-2 top-1/2 -translate-y-1/2 size-7 md:size-8 opacity-0 group-hover/carousel:opacity-100 transition-opacity disabled:opacity-0 bg-background/80 hover:bg-background/90 z-20"
+            />
+            <div className="absolute bottom-3 left-0 right-0 z-20 pointer-events-none">
+              <CarouselDots className="pointer-events-auto" />
             </div>
-          )}
-          <div className="absolute inset-0 bg-background/0 group-hover:bg-background/10 transition-colors duration-300" />
-        </Link>
+          </Carousel>
+        ) : (
+          <Link
+            href={`/products/${product.slug}`}
+            className="block w-full h-full relative group/img"
+          >
+            {galleryImages[0] ? (
+              <Image
+                src={galleryImages[0]}
+                alt={product.title || "Product image"}
+                fill
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                className="object-cover group-hover/img:scale-110 group-hover/img:rotate-1 transition-transform duration-700 ease-out"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center text-muted-foreground/30">
+                <PhotoIcon className="size-10 opacity-20" />
+              </div>
+            )}
+            <div className="absolute inset-0 bg-background/0 group-hover/img:bg-background/10 transition-colors duration-300" />
+          </Link>
+        )}
 
         {/* Badge: Tag */}
         {firstTag && (
-          <div className="absolute top-2 left-2 z-10">
-            <span className="inline-flex items-center bg-background/80 backdrop-blur-md text-foreground text-[8px] md:text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-widest shadow-sm border border-border/50">
+          <div className="absolute top-3 left-3 z-10">
+            <Badge variant="outline" className="bg-background/80 backdrop-blur-md border-border/50 font-medium lowercase tracking-tight">
               {firstTag}
-            </span>
+            </Badge>
           </div>
         )}
 
         {/* Badge: Discount */}
         {discountPercentage > 0 && (
-          <div className="absolute top-2 right-2 z-10">
-            <span className="bg-destructive/90 backdrop-blur-sm text-destructive-foreground text-[9px] font-bold px-2 py-1 rounded-full tracking-wide shadow-sm">
+          <div className="absolute top-3 right-3 z-10">
+            <Badge variant="destructive">
               -{discountPercentage}%
-            </span>
+            </Badge>
           </div>
         )}
       </div>
@@ -88,22 +133,29 @@ export function ProductCard({ product }: { product: any }) {
       {/* 2. INFO PRODUK */}
       <div className="p-3 md:p-4 flex flex-col flex-1 gap-2">
         {/* Title & SKU */}
-        <Link href={`/products/${product.slug}`} className="flex-1">
-          <h3 className="text-normal md:text-sm font-bold text-foreground leading-snug group-hover:text-primary transition-colors line-clamp-2">
+        <Link href={`/products/${product.slug}`} className="flex-1 block">
+          <Typography
+            variant="h6"
+            as="h3"
+            className="font-semibold leading-tight group-hover:text-primary transition-colors line-clamp-2"
+          >
             {product.sku && (
-              <span className="inline-block align-middle bg-primary/10 text-primary text-[8px] md:text-[9px] font-bold px-1.5 py-0.5 rounded-md tracking-widest mr-1.5 -mt-0.5">
+              <Badge variant="default" className="h-8 text-primary-foreground border-none mr-2 align-middle px-4 py-0">
                 {product.sku}
-              </span>
+              </Badge>
             )}
             {product.title}
-          </h3>
+          </Typography>
         </Link>
 
         {/* Price */}
-        <div className="flex items-baseline mt-1">
-          <span className="text-base md:text-lg font-extrabold text-foreground tracking-tight">
+        <div className="mt-1">
+          <Typography
+            variant="h5"
+            className="font-bold tracking-tight"
+          >
             Rp {Number(displayPrice).toLocaleString("id-ID")}
-          </span>
+          </Typography>
         </div>
 
         {/* ACTION BUTTONS */}
@@ -112,22 +164,21 @@ export function ProductCard({ product }: { product: any }) {
           {hasDemoLinks ? (
             <DemoLinksModal demoLinks={demoLinks}>
               <Button variant="outline" size="lg" className="w-full">
-                <Eye />
+                <EyeIcon className="size-4" />
                 Preview
               </Button>
             </DemoLinksModal>
           ) : (
             <Button variant="outline" size="lg" disabled className="w-full">
-              <Eye />
+              <EyeIcon className="size-4" />
               Preview
             </Button>
           )}
 
           {/* Tombol Order */}
           <Link href={`/products/${product.slug}`} className="w-full">
-            <Button variant="brand" size="sm" className="w-full">
-              <ShoppingCart />
-              Order Now
+            <Button variant="brand" size="lg" className="w-full">
+              Order Sekarang
             </Button>
           </Link>
         </div>

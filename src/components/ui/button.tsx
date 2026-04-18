@@ -31,7 +31,7 @@ const buttonVariants = cva(
         brand: [
           "relative overflow-hidden",
           "bg-primary hover:bg-primary/90",
-          "text-primary-foreground font-bold",
+          "text-primary-foreground font-medium",
           "transition-all hover:scale-105 active:scale-95",
         ].join(" "),
 

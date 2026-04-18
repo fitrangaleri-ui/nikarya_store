@@ -8,7 +8,8 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Eye, ExternalLink } from "lucide-react";
+import { EyeIcon, ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
+import { Typography } from "@/components/ui/typography";
 
 interface DemoLink {
     label: string;
@@ -54,13 +55,15 @@ export function DemoLinksModal({ demoLinks, children }: DemoLinksModalProps) {
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="rounded-3xl border-border/40 bg-card/95 backdrop-blur-xl p-0 sm:max-w-md overflow-hidden">
                     <DialogHeader className="px-6 pt-6 pb-2">
-                        <DialogTitle className="text-xl text-foreground font-black tracking-tight flex items-center gap-2">
-                            <Eye className="h-5 w-5 text-primary" />
-                            Pilih Demo
+                        <DialogTitle asChild>
+                            <Typography variant="h4" className="flex items-center gap-2">
+                                <EyeIcon className="size-5 text-primary" />
+                                Pilih Demo
+                            </Typography>
                         </DialogTitle>
-                        <p className="text-sm text-muted-foreground mt-1">
+                        <Typography variant="body-sm" color="muted" className="mt-1">
                             Produk ini memiliki beberapa versi demo. Pilih salah satu:
-                        </p>
+                        </Typography>
                     </DialogHeader>
                     <div className="px-6 pb-6 space-y-2">
                         {demoLinks.map((link, index) => (
@@ -74,15 +77,15 @@ export function DemoLinksModal({ demoLinks, children }: DemoLinksModalProps) {
                             >
                                 <div className="flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:bg-primary/20 transition-colors">
-                                        <span className="text-xs font-bold text-primary">
+                                        <Typography variant="caption" className="font-bold text-primary">
                                             {index + 1}
-                                        </span>
+                                        </Typography>
                                     </div>
-                                    <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                                    <Typography variant="body-sm" className="font-semibold group-hover:text-primary transition-colors">
                                         {link.label || `Demo ${index + 1}`}
-                                    </span>
+                                    </Typography>
                                 </div>
-                                <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                                <ArrowTopRightOnSquareIcon className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
                             </a>
                         ))}
                     </div>

@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import useEmblaCarousel, { type UseEmblaCarouselType } from "embla-carousel-react"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -26,6 +26,8 @@ type CarouselContextProps = {
   canScrollPrev: boolean
   canScrollNext: boolean
   orientation: "horizontal" | "vertical"
+  selectedIndex: number
+  scrollSnaps: number[]
 }
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null)
@@ -58,6 +60,8 @@ function Carousel({
   )
   const [canScrollPrev, setCanScrollPrev] = React.useState(false)
   const [canScrollNext, setCanScrollNext] = React.useState(false)
+  const [selectedIndex, setSelectedIndex] = React.useState(0)
+  const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([])
 
   const onSelect = React.useCallback((currentApi: CarouselApi) => {
     if (!currentApi) {
@@ -66,6 +70,7 @@ function Carousel({
 
     setCanScrollPrev(currentApi.canScrollPrev())
     setCanScrollNext(currentApi.canScrollNext())
+    setSelectedIndex(currentApi.selectedScrollSnap())
   }, [])
 
   const scrollPrev = React.useCallback(() => {
@@ -105,12 +110,19 @@ function Carousel({
     }
 
     onSelect(api)
-    api.on("reInit", onSelect)
+    setScrollSnaps(api.scrollSnapList())
+
+    const handleReInit = (currentApi: CarouselApi) => {
+      onSelect(currentApi)
+      setScrollSnaps(currentApi.scrollSnapList())
+    }
+
+    api.on("reInit", handleReInit)
     api.on("select", onSelect)
 
     return () => {
       api.off("select", onSelect)
-      api.off("reInit", onSelect)
+      api.off("reInit", handleReInit)
     }
   }, [api, onSelect])
 
@@ -124,6 +136,8 @@ function Carousel({
         scrollNext,
         canScrollPrev,
         canScrollNext,
+        selectedIndex,
+        scrollSnaps,
       }}
     >
       <div
@@ -200,7 +214,7 @@ function CarouselPrevious({
       onClick={scrollPrev}
       {...props}
     >
-      <ArrowLeft className="size-4" />
+      <ChevronLeftIcon className="size-4" />
       <span className="sr-only">Previous slide</span>
     </Button>
   )
@@ -230,9 +244,38 @@ function CarouselNext({
       onClick={scrollNext}
       {...props}
     >
-      <ArrowRight className="size-4" />
+      <ChevronRightIcon className="size-4" />
       <span className="sr-only">Next slide</span>
     </Button>
+  )
+}
+
+function CarouselDots({ className, ...props }: React.ComponentProps<"div">) {
+  const { api, scrollSnaps, selectedIndex } = useCarousel()
+
+  if (scrollSnaps.length <= 1) return null
+
+  return (
+    <div
+      data-slot="carousel-dots"
+      className={cn("flex items-center justify-center gap-1.5", className)}
+      {...props}
+    >
+      {scrollSnaps.map((_, index) => (
+        <button
+          key={index}
+          type="button"
+          aria-label={`Go to slide ${index + 1}`}
+          className={cn(
+            "size-1.5 rounded-full transition-all duration-300",
+            index === selectedIndex
+              ? "bg-primary w-4"
+              : "bg-primary/20 hover:bg-primary/40"
+          )}
+          onClick={() => api?.scrollTo(index)}
+        />
+      ))}
+    </div>
   )
 }
 
@@ -242,5 +285,6 @@ export {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  CarouselDots,
   type CarouselApi,
 }

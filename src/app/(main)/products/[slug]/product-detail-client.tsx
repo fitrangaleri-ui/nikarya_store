@@ -30,6 +30,7 @@ import { ProductCard } from "@/components/product-card";
 import { useCart } from "@/context/cart-context";
 import { resolveImageSrc } from "@/lib/resolve-image";
 import { DemoLinksModal } from "@/components/demo-links-modal";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CarouselDots } from "@/components/ui/carousel";
 
 // ── Custom Cart Icon — tidak diubah ──────────────────────────
 function CartAddIcon({ className }: { className?: string }) {
@@ -61,6 +62,7 @@ interface ProductData {
   demo_links: { label: string; url: string }[];
   tags: string[] | null;
   thumbnail_url: string | null;
+  product_images?: { image_url: string; sort_order: number }[];
   category_id: string | null;
   categories: { name: string } | null;
 }
@@ -134,21 +136,64 @@ export function ProductDetailClient({
             {/* ════════════════════════════════════════════ */}
             {/* KIRI — Gambar Produk                         */}
             {/* ════════════════════════════════════════════ */}
-            <div className="relative aspect-square overflow-hidden rounded-3xl bg-muted/20 border border-border/40 shadow-xl shadow-primary/5 group">
-              {resolveImageSrc(product.thumbnail_url) ? (
-                <Image
-                  src={resolveImageSrc(product.thumbnail_url)!}
-                  alt={product.title}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover transition-transform duration-700 hover:scale-105"
-                  priority
-                />
-              ) : (
-                <div className="flex h-full items-center justify-center">
-                  <ShoppingBag className="h-16 w-16 text-muted-foreground/30" />
-                </div>
-              )}
+            <div className="relative aspect-square overflow-hidden rounded-3xl bg-muted/20 border border-border/40 shadow-xl shadow-primary/5 group/carousel">
+              {(() => {
+                const pImages =
+                  product.product_images && Array.isArray(product.product_images) && product.product_images.length > 0
+                    ? [...product.product_images].sort((a: any, b: any) => a.sort_order - b.sort_order)
+                    : [];
+              
+                const rImages = pImages.length > 0
+                  ? pImages.map((img: any) => img.image_url)
+                  : [product.thumbnail_url];
+              
+                const galleryImages = rImages.map(img => resolveImageSrc(img)).filter(Boolean) as string[];
+
+                if (galleryImages.length > 1) {
+                  return (
+                    <Carousel opts={{ loop: true }} className="w-full h-full static">
+                      <CarouselContent className="-ml-0 h-full">
+                        {galleryImages.map((src, i) => (
+                          <CarouselItem key={i} className="pl-0 relative h-full aspect-square">
+                            <Image
+                              src={src}
+                              alt={`${product.title} - Slide ${i + 1}`}
+                              fill
+                              sizes="(max-width: 1024px) 100vw, 50vw"
+                              className="object-cover transition-transform duration-700 hover:scale-105"
+                              priority={i === 0}
+                            />
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+                      <CarouselPrevious 
+                        className="absolute left-4 top-1/2 -translate-y-1/2 size-10 opacity-0 group-hover/carousel:opacity-100 transition-opacity disabled:opacity-0 bg-background/80 hover:bg-background/90" 
+                      />
+                      <CarouselNext 
+                        className="absolute right-4 top-1/2 -translate-y-1/2 size-10 opacity-0 group-hover/carousel:opacity-100 transition-opacity disabled:opacity-0 bg-background/80 hover:bg-background/90" 
+                      />
+                      <div className="absolute bottom-4 left-0 right-0 z-20 pointer-events-none">
+                        <CarouselDots className="pointer-events-auto" />
+                      </div>
+                    </Carousel>
+                  );
+                }
+
+                return galleryImages[0] ? (
+                  <Image
+                    src={galleryImages[0]}
+                    alt={product.title}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover transition-transform duration-700 hover:scale-105"
+                    priority
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center">
+                    <ShoppingBag className="h-16 w-16 text-muted-foreground/30" />
+                  </div>
+                );
+              })()}
               <div className="absolute inset-0 bg-background/0 group-hover:bg-background/5 transition-colors duration-300 pointer-events-none" />
               {(() => {
                 // Build demo links from new table or fallback

@@ -42,7 +42,8 @@ export default async function HomePage() {
          products (
            id, title, slug, price, discount_price, thumbnail_url, sku, tags, demo_link,
            categories(name),
-           product_demo_links(id, label, url, sort_order)
+           product_demo_links(id, label, url, sort_order),
+           product_images(image_url, sort_order)
          )`,
       )
       .not("products", "is", null)
@@ -51,7 +52,7 @@ export default async function HomePage() {
     supabase
       .from("products")
       .select(
-        "id, title, slug, price, discount_price, thumbnail_url, sku, tags, demo_link, categories(name), product_demo_links(id, label, url, sort_order)",
+        "id, title, slug, price, discount_price, thumbnail_url, sku, tags, demo_link, categories(name), product_demo_links(id, label, url, sort_order), product_images(image_url, sort_order)",
       )
       .eq("is_active", true)
       .contains("tags", ["new"])
