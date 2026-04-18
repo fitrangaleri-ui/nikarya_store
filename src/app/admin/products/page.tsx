@@ -12,6 +12,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationEllipsis,
+} from "@/components/ui/pagination";
 import { PlusIcon, PencilIcon, PhotoIcon, CubeIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Typography } from "@/components/ui/typography";
 import { DeleteProductButton, DuplicateProductButton, ToggleStatusButton } from "./delete-button";
@@ -29,15 +46,21 @@ export default async function AdminProductsPage({
     search?: string;
     status?: string;
     category?: string;
+    page?: string;
   }>;
 }) {
-  const { search, status, category } = await searchParams;
+  const { search, status, category, page } = await searchParams;
   const admin = createAdminClient();
+
+  const currentPage = parseInt(page || "1", 10);
+  const limit = 10;
+  const offset = (currentPage - 1) * limit;
 
   let query = admin
     .from("products")
-    .select("*, categories(name)")
-    .order("created_at", { ascending: false });
+    .select("*, categories(name)", { count: "exact" })
+    .order("created_at", { ascending: false })
+    .range(offset, offset + limit - 1);
 
   if (search) query = query.ilike("title", `%${search}%`);
   if (status === "active") query = query.eq("is_active", true);
@@ -45,7 +68,7 @@ export default async function AdminProductsPage({
   if (category) query = query.eq("category_id", category);
 
   const [
-    { data: products, error },
+    { data: products, error, count },
     { data: categories },
     { data: allProducts },
   ] = await Promise.all([
@@ -69,6 +92,33 @@ export default async function AdminProductsPage({
     productCount: countMap[cat.id] || 0,
   }));
 
+  const totalPages = Math.ceil((count || 0) / limit);
+
+  const createQueryString = (newPage: number) => {
+    const params = new URLSearchParams();
+    if (search) params.set("search", search);
+    if (status) params.set("status", status);
+    if (category) params.set("category", category);
+    params.set("page", String(newPage));
+    return `/admin/products?${params.toString()}`;
+  };
+
+  const getPageNumbers = () => {
+    const pages = [];
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      if (currentPage <= 3) {
+        pages.push(1, 2, 3, 4, -1, totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1, -1, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pages.push(1, -1, currentPage - 1, currentPage, currentPage + 1, -1, totalPages);
+      }
+    }
+    return pages;
+  };
+
   if (error) {
     return (
       <div className="w-full rounded-xl border border-destructive/20 bg-destructive/10 p-4 sm:p-6 animate-in fade-in zoom-in-95">
@@ -84,7 +134,7 @@ export default async function AdminProductsPage({
       {/* ── Sticky Header ── */}
       <StickyHeader
         title="Produk"
-        description={`${products?.length || 0} produk terdaftar`}
+        description={`${count || 0} produk terdaftar`}
       >
         <div className="flex items-center gap-2.5">
           <ImportExportSection />
@@ -98,6 +148,18 @@ export default async function AdminProductsPage({
       </StickyHeader>
 
       <div className="p-4 sm:p-6 md:p-8 space-y-5 md:space-y-6">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/admin">Dashboard</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="font-bold text-foreground">Produk</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
         {/* ── Search & Filter Bar ── */}
         <div className="rounded-xl border border-border bg-card overflow-hidden">
           <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20">
@@ -399,6 +461,45 @@ export default async function AdminProductsPage({
             </div>
           </div>
         </div>
+
+        {/* ── Pagination ── */}
+        {totalPages > 1 && (
+          <div className="flex justify-center w-full pt-4">
+            <Pagination>
+              <PaginationContent className="bg-card border border-border p-1 rounded-xl shadow-sm">
+                <PaginationItem>
+                  <PaginationPrevious
+                    href={currentPage > 1 ? createQueryString(currentPage - 1) : "#"}
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "font-bold text-muted-foreground hover:text-primary"}
+                  />
+                </PaginationItem>
+
+                {getPageNumbers().map((pageNum, idx) => (
+                  <PaginationItem key={idx}>
+                    {pageNum === -1 ? (
+                      <PaginationEllipsis className="text-muted-foreground mx-1" />
+                    ) : (
+                      <PaginationLink
+                        href={createQueryString(pageNum)}
+                        isActive={currentPage === pageNum}
+                        className={currentPage === pageNum ? "font-black" : "font-bold text-muted-foreground hover:text-primary"}
+                      >
+                        {pageNum}
+                      </PaginationLink>
+                    )}
+                  </PaginationItem>
+                ))}
+
+                <PaginationItem>
+                  <PaginationNext
+                    href={currentPage < totalPages ? createQueryString(currentPage + 1) : "#"}
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "font-bold text-muted-foreground hover:text-primary"}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
 
         {/* ── Category Management Section ── */}
         <CategorySection categories={categoriesWithCount} />

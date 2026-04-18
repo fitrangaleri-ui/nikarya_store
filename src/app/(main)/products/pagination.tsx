@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { Typography } from "@/components/ui/typography";
 
 function buildPageHref(params: URLSearchParams, page: number): string {
   const newParams = new URLSearchParams(params.toString());
@@ -48,27 +49,30 @@ export function Pagination({
       {currentPage > 1 ? (
         <Link
           href={buildPageHref(searchParams, currentPage - 1)}
-          className="flex items-center justify-center h-10 w-10 rounded-full border border-border/60 bg-background/50 backdrop-blur-sm text-muted-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-primary transition-all shadow-sm active:scale-95"
+          className="flex items-center justify-center h-10 w-10 rounded-full border border-border/60 bg-background/50 backdrop-blur-sm text-muted-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-primary transition-all active:scale-95"
           aria-label="Halaman sebelumnya"
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeftIcon className="h-4 w-4" />
         </Link>
       ) : (
         <span className="flex items-center justify-center h-10 w-10 rounded-full border border-border/30 bg-muted/20 text-muted-foreground/30 cursor-not-allowed">
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeftIcon className="h-4 w-4" />
         </span>
       )}
 
       {/* Pages Container (Liquid Pill) */}
-      <div className="flex items-center gap-1 bg-card/40 backdrop-blur-md border border-border/50 rounded-full px-2 py-1 shadow-sm">
+      <div className="flex items-center gap-1 bg-card/40 backdrop-blur-md border border-border/50 rounded-full px-2 py-1">
         {pages.map((p, i) =>
           p === "..." ? (
-            <span
+            <Typography
               key={`dots-${i}`}
-              className="flex items-center justify-center h-8 w-8 text-sm font-medium text-muted-foreground/50 select-none"
+              variant="body-sm"
+              as="span"
+              color="muted"
+              className="flex items-center justify-center h-8 w-8 select-none opacity-50"
             >
               …
-            </span>
+            </Typography>
           ) : (
             <Link
               key={p}
@@ -77,7 +81,7 @@ export function Pagination({
                 flex items-center justify-center h-8 min-w-[32px] px-1 rounded-full text-sm font-bold transition-all
                 ${
                   p === currentPage
-                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 pointer-events-none"
+                    ? "bg-primary text-primary-foreground pointer-events-none"
                     : "bg-transparent text-muted-foreground hover:bg-muted/60 hover:text-foreground active:scale-95"
                 }
               `}
@@ -93,14 +97,14 @@ export function Pagination({
       {currentPage < totalPages ? (
         <Link
           href={buildPageHref(searchParams, currentPage + 1)}
-          className="flex items-center justify-center h-10 w-10 rounded-full border border-border/60 bg-background/50 backdrop-blur-sm text-muted-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-primary transition-all shadow-sm active:scale-95"
+          className="flex items-center justify-center h-10 w-10 rounded-full border border-border/60 bg-background/50 backdrop-blur-sm text-muted-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-primary transition-all active:scale-95"
           aria-label="Halaman selanjutnya"
         >
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRightIcon className="h-4 w-4" />
         </Link>
       ) : (
         <span className="flex items-center justify-center h-10 w-10 rounded-full border border-border/30 bg-muted/20 text-muted-foreground/30 cursor-not-allowed">
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRightIcon className="h-4 w-4" />
         </span>
       )}
     </nav>

@@ -105,7 +105,7 @@ export function ProductDetailClient({
 
   return (
     <main className="min-h-screen bg-background pb-24 md:pb-20 overflow-x-hidden">
-      <div className="flex flex-col gap-8 pt-6 md:pt-10">
+      <div className="flex flex-col gap-8 pt-24 md:pt-32">
         {/* ── BREADCRUMB ── */}
         <div className="container mx-auto max-w-6xl px-4 md:px-6">
           <nav className="flex items-center gap-1.5 text-xs md:text-sm text-muted-foreground bg-card/40 backdrop-blur-sm border border-border/50 rounded-full px-4 py-2.5 w-fit shadow-sm">
@@ -454,7 +454,7 @@ export function ProductDetailClient({
                 Produk Terkait
               </h2>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-6">
               {relatedProducts.map((rp: any) => (
                 <ProductCard key={rp.id} product={rp} />
               ))}

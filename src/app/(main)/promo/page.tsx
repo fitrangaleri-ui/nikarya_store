@@ -25,7 +25,7 @@ export default async function PromoPage() {
   }
 
   return (
-    <main className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-24 overflow-x-hidden">
+    <main className="w-full max-w-7xl mx-auto px-4 pt-24 md:pt-32 pb-24 overflow-x-hidden">
       <PromoClient initialPromos={promos || []} />
     </main>
   );

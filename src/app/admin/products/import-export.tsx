@@ -180,8 +180,8 @@ function ImportDialog() {
     >
       <DialogTrigger asChild>
         <Button
-          variant="outline"
-          className="h-11 rounded-2xl border-border/50 bg-background/50 text-muted-foreground font-bold hover:text-primary hover:bg-primary/10 shadow-sm transition-all"
+          variant="default"
+          className="h-11 border-border/50 bg-background/50 text-muted-foreground font-bold hover:text-primary hover:bg-primary/10 shadow-sm transition-all"
         >
           <ArrowUpTrayIcon className="mr-2 h-4 w-4" />
           <span className="hidden sm:inline">Import</span>
@@ -269,7 +269,7 @@ function ImportDialog() {
                   variant="ghost"
                   size="sm"
                   onClick={resetForm}
-                  className="text-muted-foreground font-semibold hover:text-foreground rounded-xl"
+                  className="text-muted-foreground font-semibold hover:text-foreground"
                 >
                   Ganti File
                 </Button>
@@ -335,7 +335,7 @@ function ImportDialog() {
 
               <Button
                 onClick={handleImport}
-                className="w-full h-11 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-black shadow-sm active:scale-[0.98] transition-all"
+                className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-black shadow-sm active:scale-[0.98] transition-all"
                 disabled={isPending}
               >
                 {isPending
@@ -405,7 +405,7 @@ function ExportDropdown() {
     <div className="relative">
       <Button
         variant="outline"
-        className="h-11 rounded-2xl border-border/50 bg-background/50 text-muted-foreground font-bold hover:text-primary hover:bg-primary/10 shadow-sm transition-all"
+        className="h-11 border-border/50 bg-background/50 text-muted-foreground font-bold hover:text-primary hover:bg-primary/10 shadow-sm transition-all"
         onClick={() => setMenuOpen(!menuOpen)}
         disabled={isPending}
       >

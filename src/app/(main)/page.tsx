@@ -135,7 +135,7 @@ export default async function HomePage() {
               </Typography>
             </div>
             {newArrivals && newArrivals.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-6">
                 {newArrivals.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}

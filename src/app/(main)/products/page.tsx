@@ -1,12 +1,17 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { ShoppingBag, Home, ChevronRight } from "lucide-react";
+import {
+  ShoppingBagIcon,
+  HomeIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/24/outline";
 import { ProductCard } from "@/components/product-card";
 import { CategorySidebar } from "./category-sidebar";
 import { ProductsToolbar } from "./products-toolbar";
 import { MobileSortDropdown } from "./mobile-sort-dropdown";
 import { Pagination } from "./pagination";
+import { Typography } from "@/components/ui/typography";
 
 
 export const dynamic = "force-dynamic";
@@ -132,122 +137,122 @@ export default async function ProductsPage({
   const totalPages = Math.ceil(totalCount / PER_PAGE);
 
   return (
-      <main className="min-h-screen bg-background text-foreground pb-24 md:pb-20 overflow-x-hidden">
-        {/* Mengembalikan padding atas global agar tidak mepet */}
-        <div className="flex flex-col gap-6 md:gap-8 pt-6 md:pt-10">
-          {/* ... breadcrumb ... */}
-          {/* ... header ... */}
-          {/* ... sidebar ... */}
-          <div className="container mx-auto max-w-6xl px-4 md:px-6">
-            <nav className="flex items-center gap-1.5 text-xs md:text-sm text-muted-foreground bg-card/40 backdrop-blur-sm border border-border/50 rounded-full px-4 py-2.5 w-fit shadow-sm">
-              <Link
-                href="/"
-                className="flex items-center gap-1.5 hover:text-primary transition-colors"
-              >
-                <Home className="h-4 w-4" />
-                Beranda
-              </Link>
-              <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40" />
-              {activeCategory ? (
-                <>
-                  <Link
-                    href="/products"
-                    className="hover:text-primary transition-colors"
-                  >
-                    Produk
-                  </Link>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40" />
-                  <span className="text-foreground font-semibold line-clamp-1 max-w-[150px] md:max-w-[200px]">
-                    {activeCategory.name}
-                  </span>
-                </>
-              ) : (
-                <span className="text-foreground font-semibold">Produk</span>
-              )}
-            </nav>
+    <main className="min-h-screen mb-20 bg-background text-foreground pb-24 md:pb-20 overflow-x-hidden">
+      {/* Mengembalikan padding atas global agar tidak mepet */}
+      <div className="flex flex-col gap-6 md:gap-8 pt-24 md:pt-32">
+        {/* ... breadcrumb ... */}
+        {/* ... header ... */}
+        {/* ... sidebar ... */}
+        <div className="container mx-auto max-w-6xl px-4 md:px-6">
+          <nav className="flex items-center gap-1.5 text-muted-foreground bg-card/40 backdrop-blur-sm border border-border/50 rounded-full px-4 py-2.5 w-fit">
+            <Link
+              href="/"
+              className="flex items-center gap-1.5 hover:text-primary transition-colors"
+            >
+              <HomeIcon className="h-4 w-4" />
+              <Typography variant="caption" as="span" className="font-medium">Beranda</Typography>
+            </Link>
+            <ChevronRightIcon className="h-3.5 w-3.5 text-muted-foreground/40" />
+            {activeCategory ? (
+              <>
+                <Link
+                  href="/products"
+                  className="hover:text-primary transition-colors"
+                >
+                  <Typography variant="caption" as="span" className="font-medium">Produk</Typography>
+                </Link>
+                <ChevronRightIcon className="h-3.5 w-3.5 text-muted-foreground/40" />
+                <Typography variant="caption" as="span" className="text-foreground font-semibold line-clamp-1 max-w-[150px] md:max-w-[200px]">
+                  {activeCategory.name}
+                </Typography>
+              </>
+            ) : (
+              <Typography variant="caption" as="span" className="text-foreground font-semibold">Produk</Typography>
+            )}
+          </nav>
+        </div>
+
+        {/* ── HEADER ── */}
+        <div className="container mx-auto max-w-6xl px-4 md:px-6">
+          <div className="flex items-center gap-3">
+            <span className="w-1.5 h-6 md:h-7 bg-primary rounded-full block" />
+            <Typography variant="h3" as="h1">
+              {activeCategory ? activeCategory.name : "Semua Produk"}
+            </Typography>
           </div>
+          <Typography variant="body-sm" color="muted" className="mt-2">
+            {activeCategory
+              ? `Menampilkan koleksi terbaik untuk kategori ${activeCategory.name}.`
+              : "Temukan desain undangan website terbaik untuk momen spesial Anda."}
+          </Typography>
+        </div>
 
-          {/* ── HEADER ── */}
-          <div className="container mx-auto max-w-6xl px-4 md:px-6">
-            <div className="flex items-center gap-3">
-              <span className="w-1.5 h-6 md:h-7 bg-primary rounded-full block" />
-              <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
-                {activeCategory ? activeCategory.name : "Semua Produk"}
-              </h1>
-            </div>
-            <p className="mt-2 text-sm md:text-base text-muted-foreground">
-              {activeCategory
-                ? `Menampilkan koleksi terbaik untuk kategori ${activeCategory.name}.`
-                : "Temukan desain undangan website terbaik untuk momen spesial Anda."}
-            </p>
-          </div>
+        {/* ── LAYOUT: Sidebar + Products ── */}
+        <div className="container mx-auto max-w-6xl px-4 md:px-6">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            {/* Sidebar */}
+            <Suspense
+              fallback={
+                <div className="hidden lg:block w-64 h-64 animate-pulse bg-muted rounded-2xl border border-border/50" />
+              }
+            >
+              <CategorySidebar
+                categories={categories || []}
+                totalCount={totalCount}
+                globalMin={globalMin}
+                globalMax={globalMax}
+                currentPriceMin={currentPriceMin}
+                currentPriceMax={currentPriceMax}
+                categoryCounts={categoryCounts}
+              />
+            </Suspense>
 
-          {/* ── LAYOUT: Sidebar + Products ── */}
-          <div className="container mx-auto max-w-6xl px-4 md:px-6">
-            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-              {/* Sidebar */}
-              <Suspense
-                fallback={
-                  <div className="hidden lg:block w-64 h-64 animate-pulse bg-muted rounded-2xl border border-border/50" />
-                }
-              >
-                <CategorySidebar
-                  categories={categories || []}
-                  totalCount={totalCount}
-                  globalMin={globalMin}
-                  globalMax={globalMax}
-                  currentPriceMin={currentPriceMin}
-                  currentPriceMax={currentPriceMax}
-                  categoryCounts={categoryCounts}
-                />
-              </Suspense>
-
-              <div className="flex-1 min-w-0">
-                {/* Desktop: toolbar */}
-                <div className="hidden md:block">
-                  <Suspense fallback={null}>
-                    <ProductsToolbar totalCount={totalCount} />
-                  </Suspense>
-                </div>
-
-                {/* Mobile: sort dropdown */}
+            <div className="flex-1 min-w-0">
+              {/* Desktop: toolbar */}
+              <div className="hidden md:block">
                 <Suspense fallback={null}>
-                  <MobileSortDropdown />
-                </Suspense>
-
-                {products && products.length > 0 ? (
-                  /* Grid Produk */
-                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-4 md:mt-0">
-                    {products.map((product) => (
-                      <ProductCard key={product.id} product={product} />
-                    ))}
-                  </div>
-                ) : (
-                  /* Empty State (Liquid Glass) */
-                  <div className="py-20 mt-4 text-center border border-dashed border-border/50 rounded-3xl bg-card/30 backdrop-blur-sm">
-                    <div className="w-16 h-16 mx-auto bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center mb-4">
-                      <ShoppingBag className="h-8 w-8 text-primary/60" />
-                    </div>
-                    <p className="font-bold text-foreground text-lg tracking-tight">
-                      {search
-                        ? `Tidak ditemukan produk untuk "${search}"`
-                        : "Belum ada produk tersedia."}
-                    </p>
-                    <p className="mt-1.5 text-sm text-muted-foreground">
-                      {search
-                        ? "Coba kata kunci lain atau reset filter pencarian."
-                        : "Produk baru akan segera hadir untuk Anda."}
-                    </p>
-                  </div>
-                )}
-
-                <Suspense fallback={null}>
-                  <Pagination currentPage={currentPage} totalPages={totalPages} />
+                  <ProductsToolbar totalCount={totalCount} />
                 </Suspense>
               </div>
+
+              {/* Mobile: sort dropdown */}
+              <Suspense fallback={null}>
+                <MobileSortDropdown />
+              </Suspense>
+
+              {products && products.length > 0 ? (
+                /* Grid Produk */
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 mt-4 md:mt-0">
+                  {products.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              ) : (
+                /* Empty State (Liquid Glass) */
+                <div className="py-20 mt-4 text-center border border-dashed border-border/50 rounded-3xl bg-card/30 backdrop-blur-sm">
+                  <div className="w-16 h-16 mx-auto bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center mb-4">
+                    <ShoppingBagIcon className="h-8 w-8 text-primary/60" />
+                  </div>
+                  <Typography variant="h6" as="p" className="font-bold">
+                    {search
+                      ? `Tidak ditemukan produk untuk "${search}"`
+                      : "Belum ada produk tersedia."}
+                  </Typography>
+                  <Typography variant="body-sm" color="muted" className="mt-1.5">
+                    {search
+                      ? "Coba kata kunci lain atau reset filter pencarian."
+                      : "Produk baru akan segera hadir untuk Anda."}
+                  </Typography>
+                </div>
+              )}
+
+              <Suspense fallback={null}>
+                <Pagination currentPage={currentPage} totalPages={totalPages} />
+              </Suspense>
             </div>
           </div>
         </div>
-      </main>
+      </div>
+    </main>
   );
 }

@@ -179,7 +179,7 @@ export function ProductCard({ product }: { product: any }) {
             </Typography>
           )}
           <Typography
-            variant="h5"
+            variant="h4"
             className="font-bold font-mono tracking-tight"
           >
             Rp {Number(displayPrice).toLocaleString("id-ID")}

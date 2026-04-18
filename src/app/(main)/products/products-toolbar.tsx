@@ -1,7 +1,8 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { PackageSearch } from "lucide-react";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { Typography } from "@/components/ui/typography";
 
 export function ProductsToolbar({ totalCount }: { totalCount: number }) {
   const searchParams = useSearchParams();
@@ -10,30 +11,30 @@ export function ProductsToolbar({ totalCount }: { totalCount: number }) {
   return (
     // Hanya tampil di desktop (md ke atas), diselaraskan ke bentuk kapsul elegan
     <div className="hidden md:flex items-center mb-6">
-      <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-card/60 backdrop-blur-sm border border-border/50 rounded-full shadow-sm">
+      <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-card/60 backdrop-blur-sm border border-border/50 rounded-full">
         {/* Ikon Aksen */}
         <div className="w-6 h-6 flex items-center justify-center rounded-full bg-primary/10">
-          <PackageSearch className="w-3.5 h-3.5 text-primary" />
+          <MagnifyingGlassIcon className="w-3.5 h-3.5 text-primary" />
         </div>
 
-        <p className="text-sm text-muted-foreground font-medium">
+        <Typography variant="body-sm" color="muted" as="p" className="font-medium">
           {currentSearch ? (
             <>
               Hasil pencarian &ldquo;
-              <span className="font-bold text-foreground">{currentSearch}</span>
+              <Typography variant="body-sm" as="span" className="font-bold">{currentSearch}</Typography>
               &rdquo; <span className="text-muted-foreground/50 mx-1">•</span>
               Ditemukan{" "}
-              <span className="font-bold text-primary">{totalCount}</span>{" "}
+              <Typography variant="body-sm" as="span" color="primary" className="font-bold">{totalCount}</Typography>{" "}
               produk
             </>
           ) : (
             <>
               Menampilkan{" "}
-              <span className="font-bold text-primary">{totalCount}</span>{" "}
+              <Typography variant="body-sm" as="span" color="primary" className="font-bold">{totalCount}</Typography>{" "}
               produk unggulan
             </>
           )}
-        </p>
+        </Typography>
       </div>
     </div>
   );

@@ -7,9 +7,9 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { EyeIcon, ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
+import { EyeIcon, DevicePhoneMobileIcon } from "@heroicons/react/24/outline";
 import { Typography } from "@/components/ui/typography";
+import { useDemoPreview } from "@/components/demo-preview-provider";
 
 interface DemoLink {
     label: string;
@@ -23,27 +23,31 @@ interface DemoLinksModalProps {
 
 export function DemoLinksModal({ demoLinks, children }: DemoLinksModalProps) {
     const [open, setOpen] = useState(false);
+    const { openPreview } = useDemoPreview();
 
     // No demo links → render children as-is (disabled state handled by parent)
     if (!demoLinks || demoLinks.length === 0) {
         return <>{children}</>;
     }
 
-    // Single demo link → open directly, no modal
+    // Single demo link → open preview directly, no modal
     if (demoLinks.length === 1) {
         return (
-            <a
-                href={demoLinks[0].url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full"
+            <div
+                className="w-full cursor-pointer"
+                onClick={() =>
+                    openPreview({
+                        label: demoLinks[0].label || "Demo",
+                        url: demoLinks[0].url,
+                    })
+                }
             >
                 {children}
-            </a>
+            </div>
         );
     }
 
-    // Multiple demo links → show modal
+    // Multiple demo links → show picker modal, then open preview
     return (
         <>
             <div
@@ -62,18 +66,22 @@ export function DemoLinksModal({ demoLinks, children }: DemoLinksModalProps) {
                             </Typography>
                         </DialogTitle>
                         <Typography variant="body-sm" color="muted" className="mt-1">
-                            Produk ini memiliki beberapa versi demo. Pilih salah satu:
+                            Produk ini memiliki beberapa versi demo. Pilih salah satu untuk preview:
                         </Typography>
                     </DialogHeader>
                     <div className="px-6 pb-6 space-y-2">
                         {demoLinks.map((link, index) => (
-                            <a
+                            <button
                                 key={index}
-                                href={link.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                type="button"
                                 className="flex items-center justify-between w-full rounded-2xl border border-border/50 bg-background/50 hover:bg-primary/5 hover:border-primary/30 px-4 py-3.5 transition-all duration-200 group"
-                                onClick={() => setOpen(false)}
+                                onClick={() => {
+                                    setOpen(false);
+                                    openPreview({
+                                        label: link.label || `Demo ${index + 1}`,
+                                        url: link.url,
+                                    });
+                                }}
                             >
                                 <div className="flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:bg-primary/20 transition-colors">
@@ -85,8 +93,8 @@ export function DemoLinksModal({ demoLinks, children }: DemoLinksModalProps) {
                                         {link.label || `Demo ${index + 1}`}
                                     </Typography>
                                 </div>
-                                <ArrowTopRightOnSquareIcon className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                            </a>
+                                <DevicePhoneMobileIcon className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                            </button>
                         ))}
                     </div>
                 </DialogContent>

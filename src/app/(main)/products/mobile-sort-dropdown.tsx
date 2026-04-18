@@ -1,7 +1,8 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowsUpDownIcon } from "@heroicons/react/24/outline";
+import { Typography } from "@/components/ui/typography";
 import {
   Select,
   SelectContent,
@@ -34,22 +35,22 @@ export function MobileSortDropdown() {
   return (
     <div className="md:hidden flex items-center justify-between mb-4 px-1">
       <div className="flex items-center gap-1.5">
-        <ArrowUpDown className="w-3.5 h-3.5 text-muted-foreground/70" />
-        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+        <ArrowsUpDownIcon className="w-3.5 h-3.5 text-muted-foreground/70" />
+        <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase tracking-wider">
           Urutkan
-        </span>
+        </Typography>
       </div>
 
       <div className="relative">
         <Select value={current} onValueChange={onChange}>
           <SelectTrigger
-            className="w-[150px] h-9 text-xs font-bold text-foreground border-border/50 rounded-full bg-card/60 backdrop-blur-sm focus:ring-1 focus:ring-primary focus:border-primary transition-all shadow-sm hover:bg-muted/40 outline-none"
+            className="w-[150px] h-9 text-xs font-bold text-foreground border-border/50 rounded-full bg-card/60 backdrop-blur-sm focus:ring-1 focus:ring-primary focus:border-primary transition-all hover:bg-muted/40 outline-none"
             aria-label="Urutkan Produk"
           >
             <SelectValue placeholder="Pilih Urutan" />
           </SelectTrigger>
           <SelectContent
-            className="rounded-xl border-border/50 bg-background/95 backdrop-blur-xl shadow-lg animate-in fade-in zoom-in-95"
+            className="rounded-xl border-border/50 bg-background/95 backdrop-blur-xl animate-in fade-in zoom-in-95"
             position="popper"
           >
             {OPTIONS.map((o) => (
