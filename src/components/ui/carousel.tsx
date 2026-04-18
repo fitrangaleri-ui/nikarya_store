@@ -113,6 +113,7 @@ function Carousel({
     setScrollSnaps(api.scrollSnapList())
 
     const handleReInit = (currentApi: CarouselApi) => {
+      if (!currentApi) return
       onSelect(currentApi)
       setScrollSnaps(currentApi.scrollSnapList())
     }
