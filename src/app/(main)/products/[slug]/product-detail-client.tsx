@@ -138,16 +138,26 @@ export function ProductDetailClient({
             {/* ════════════════════════════════════════════ */}
             <div className="relative aspect-square overflow-hidden rounded-3xl bg-muted/20 border border-border/40 shadow-xl shadow-primary/5 group/carousel">
               {(() => {
-                const pImages =
+                const thumbnailSrc = resolveImageSrc(product.thumbnail_url);
+                const galleryRaw =
                   product.product_images && Array.isArray(product.product_images) && product.product_images.length > 0
-                    ? [...product.product_images].sort((a: any, b: any) => a.sort_order - b.sort_order)
+                    ? [...product.product_images]
+                        .sort((a: any, b: any) => a.sort_order - b.sort_order)
+                        .map((img: any) => resolveImageSrc(img.image_url))
+                        .filter(Boolean) as string[]
                     : [];
-              
-                const rImages = pImages.length > 0
-                  ? pImages.map((img: any) => img.image_url)
-                  : [product.thumbnail_url];
-              
-                const galleryImages = rImages.map(img => resolveImageSrc(img)).filter(Boolean) as string[];
+
+                // Smart merge: thumbnail first, then gallery (deduplicated)
+                let galleryImages: string[];
+                if (galleryRaw.length === 0) {
+                  galleryImages = thumbnailSrc ? [thumbnailSrc] : [];
+                } else if (thumbnailSrc && !galleryRaw.includes(thumbnailSrc)) {
+                  galleryImages = [thumbnailSrc, ...galleryRaw];
+                } else {
+                  galleryImages = thumbnailSrc
+                    ? [thumbnailSrc, ...galleryRaw.filter(url => url !== thumbnailSrc)]
+                    : galleryRaw;
+                }
 
                 if (galleryImages.length > 1) {
                   return (

@@ -66,8 +66,9 @@ export async function createProduct(formData: FormData) {
   const driveFileUrl = formData.get("driveFileUrl") as string;
   const isActive = formData.get("isActive") === "on";
   const thumbnailFile = formData.get("thumbnail") as File | null;
+  const existingThumbnail = (formData.get("existingThumbnail") as string) || "";
 
-  let thumbnailUrl = "";
+  let thumbnailUrl = existingThumbnail;
 
   if (thumbnailFile && thumbnailFile.size > 0) {
     const fileExt = thumbnailFile.name.split(".").pop();
@@ -118,6 +119,48 @@ export async function createProduct(formData: FormData) {
       sort_order: i,
     }));
     await admin.from("product_demo_links").insert(demoRows);
+  }
+
+  // Handle gallery images (files uploaded from form)
+  const galleryFiles = formData.getAll("galleryFiles") as File[];
+  const mediaGalleryUrlsRaw = formData.get("mediaGalleryUrls") as string;
+  let mediaGalleryUrls: string[] = [];
+  try {
+    if (mediaGalleryUrlsRaw) mediaGalleryUrls = JSON.parse(mediaGalleryUrlsRaw);
+  } catch { /* ignore */ }
+
+  let sortOrder = 0;
+
+  // Upload new gallery files
+  for (const file of galleryFiles) {
+    if (!file || file.size === 0) continue;
+    const fileExt = file.name.split(".").pop();
+    const fileName = `gallery-${inserted.id}-${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+
+    const { error: uploadError } = await admin.storage
+      .from("product-images")
+      .upload(fileName, file, { cacheControl: "3600", upsert: false });
+
+    if (uploadError) {
+      console.error("Gallery upload error:", uploadError.message);
+      continue;
+    }
+
+    const { data: publicUrl } = admin.storage.from("product-images").getPublicUrl(fileName);
+    await admin.from("product_images").insert({
+      product_id: inserted.id,
+      image_url: publicUrl.publicUrl,
+      sort_order: sortOrder++,
+    });
+  }
+
+  // Register media URLs as gallery images (no upload needed, already in storage)
+  for (const url of mediaGalleryUrls) {
+    await admin.from("product_images").insert({
+      product_id: inserted.id,
+      image_url: url,
+      sort_order: sortOrder++,
+    });
   }
 
   revalidatePath("/admin/products");
@@ -224,7 +267,79 @@ export async function updateProduct(productId: string, formData: FormData) {
     await admin.from("product_demo_links").insert(demoRows);
   }
 
+  // Handle gallery images
+  const galleryFiles = formData.getAll("galleryFiles") as File[];
+  const existingGalleryUrlsRaw = formData.get("existingGalleryUrls") as string;
+  const mediaGalleryUrlsRaw = formData.get("mediaGalleryUrls") as string;
+
+  let existingGalleryUrls: string[] = [];
+  let mediaGalleryUrls: string[] = [];
+  try {
+    if (existingGalleryUrlsRaw) existingGalleryUrls = JSON.parse(existingGalleryUrlsRaw);
+  } catch { /* ignore */ }
+  try {
+    if (mediaGalleryUrlsRaw) mediaGalleryUrls = JSON.parse(mediaGalleryUrlsRaw);
+  } catch { /* ignore */ }
+
+  // Get current gallery images in DB
+  const { data: currentGallery } = await admin
+    .from("product_images")
+    .select("id, image_url")
+    .eq("product_id", productId);
+
+  // Delete gallery images that are no longer in the existing list
+  const keepUrls = new Set(existingGalleryUrls);
+  for (const dbImg of (currentGallery || [])) {
+    if (!keepUrls.has(dbImg.image_url)) {
+      // This image was removed by the user — delete the DB record
+      // (storage file cleanup is handled by deleteGalleryImage or media page)
+      await admin.from("product_images").delete().eq("id", dbImg.id);
+    }
+  }
+
+  // Update sort_order for remaining existing gallery images
+  let sortOrder = 0;
+  for (const url of existingGalleryUrls) {
+    await admin.from("product_images")
+      .update({ sort_order: sortOrder++ })
+      .eq("product_id", productId)
+      .eq("image_url", url);
+  }
+
+  // Upload new gallery files
+  for (const file of galleryFiles) {
+    if (!file || file.size === 0) continue;
+    const fileExt = file.name.split(".").pop();
+    const fileName = `gallery-${productId}-${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+
+    const { error: uploadError } = await admin.storage
+      .from("product-images")
+      .upload(fileName, file, { cacheControl: "3600", upsert: false });
+
+    if (uploadError) {
+      console.error("Gallery upload error:", uploadError.message);
+      continue;
+    }
+
+    const { data: publicUrl } = admin.storage.from("product-images").getPublicUrl(fileName);
+    await admin.from("product_images").insert({
+      product_id: productId,
+      image_url: publicUrl.publicUrl,
+      sort_order: sortOrder++,
+    });
+  }
+
+  // Register media URLs as gallery images
+  for (const url of mediaGalleryUrls) {
+    await admin.from("product_images").insert({
+      product_id: productId,
+      image_url: url,
+      sort_order: sortOrder++,
+    });
+  }
+
   revalidatePath("/admin/products");
+  revalidatePath(`/admin/products/${productId}/edit`);
   redirect("/admin/products");
 }
 

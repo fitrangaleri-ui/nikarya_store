@@ -23,15 +23,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Plus,
-  Pencil,
-  Trash2,
-  ImageIcon,
-  Upload,
-  X,
-  FolderOpen,
-  ChevronRight,
-} from "lucide-react";
+  PlusIcon,
+  PencilIcon,
+  TrashIcon,
+  PhotoIcon,
+  ArrowUpTrayIcon,
+  XMarkIcon,
+  FolderOpenIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/24/outline";
+import { Typography } from "@/components/ui/typography";
 import {
   createCategory,
   updateCategory,
@@ -208,12 +209,12 @@ function CategoryDialog({
                       className="absolute top-2 right-2 h-8 w-8 rounded-full bg-destructive/90 backdrop-blur-sm text-destructive-foreground flex items-center justify-center hover:bg-destructive hover:scale-105 transition-all shadow-md"
                       aria-label="Hapus gambar"
                     >
-                      <X className="h-4 w-4" />
+                      <XMarkIcon className="h-4 w-4" />
                     </button>
                   </>
                 ) : (
                   <div className="flex flex-col items-center gap-2 text-muted-foreground/60">
-                    <ImageIcon className="h-8 w-8 mb-1" />
+                    <PhotoIcon className="h-8 w-8 mb-1" />
                     <span className="text-xs font-semibold">
                       Belum ada gambar
                     </span>
@@ -224,8 +225,8 @@ function CategoryDialog({
                 htmlFor={`thumb-${category?.id || "new"}`}
                 className="flex w-full h-11 cursor-pointer items-center justify-center gap-2 rounded-2xl border border-border/50 bg-background/50 px-4 py-2 text-sm font-bold text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary hover:border-primary/30 active:scale-[0.98] shadow-sm"
               >
-                <Upload className="h-4 w-4" />
-                {previewUrl ? "Ganti Gambar" : "Upload Gambar"}
+                <ArrowUpTrayIcon className="h-4 w-4" />
+                {previewUrl ? "Ganti Gambar" : "ArrowUpTrayIcon Gambar"}
               </label>
               <input
                 ref={fileInputRef}
@@ -296,7 +297,7 @@ function DeleteCategoryButton({
       disabled={isPending}
       title="Hapus Kategori"
     >
-      <Trash2 className="h-4 w-4" />
+      <TrashIcon className="h-4 w-4" />
       <span className="sr-only">Hapus</span>
     </Button>
   );
@@ -315,7 +316,7 @@ function CategoryRow({
 }) {
   return (
     <>
-      <TableRow className="hover:bg-muted/30 border-border/40 transition-colors group">
+      <TableRow className="hover:bg-muted/50 border-border transition-colors group">
         <TableCell className="w-16 sm:w-24 pl-4 py-3">
           <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center overflow-hidden rounded-xl bg-muted/30 border border-border/50">
             {resolveImageSrc(cat.thumbnail_url) ? (
@@ -327,7 +328,7 @@ function CategoryRow({
                 className="h-full w-full object-cover"
               />
             ) : (
-              <ImageIcon className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground/40" />
+              <PhotoIcon className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground/40" />
             )}
           </div>
         </TableCell>
@@ -340,7 +341,7 @@ function CategoryRow({
           >
             <div className="flex items-center gap-1.5">
               {depth > 0 && (
-                <ChevronRight className="h-4 w-4 text-muted-foreground/50 flex-shrink-0" />
+                <ChevronRightIcon className="h-4 w-4 text-muted-foreground/50 flex-shrink-0" />
               )}
               <p className="text-sm font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
                 {cat.name}
@@ -377,7 +378,7 @@ function CategoryRow({
                   size="icon"
                   className="h-10 w-10 rounded-xl text-primary hover:text-primary/80 hover:bg-primary/10 shadow-none transition-colors"
                 >
-                  <Pencil className="h-4 w-4" />
+                  <PencilIcon className="h-4 w-4" />
                   <span className="sr-only">Edit</span>
                 </Button>
               }
@@ -428,20 +429,20 @@ export function CategorySection({
         <div>
           <div className="flex items-center gap-3 mb-1">
             <span className="w-1.5 h-6 md:h-7 bg-primary rounded-full block flex-shrink-0" />
-            <h2 className="text-xl md:text-2xl font-black tracking-tight text-foreground">
+            <Typography variant="h3" as="h2" className="tracking-tight">
               Manajemen Kategori
-            </h2>
+            </Typography>
           </div>
-          <p className="mt-1 text-sm font-medium text-muted-foreground ml-4 md:ml-5">
+          <Typography variant="body-sm" className="font-medium text-muted-foreground ml-4 md:ml-5 mt-1">
             <strong className="text-foreground">{categories.length}</strong>{" "}
             kategori terdaftar
-          </p>
+          </Typography>
         </div>
         <CategoryDialog
           allCategories={categories}
           trigger={
             <Button className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-2xl shadow-sm h-11 px-5 transition-all active:scale-[0.98]">
-              <Plus className="mr-2 h-4 w-4" />
+              <PlusIcon className="mr-2 h-4 w-4" />
               Tambah Kategori
             </Button>
           }
@@ -449,10 +450,10 @@ export function CategorySection({
       </div>
 
       {/* Table */}
-      <div className="rounded-3xl border border-border/40 bg-card/60 backdrop-blur-md shadow-sm relative w-full overflow-hidden">
-        <div className="overflow-x-auto w-full custom-scrollbar rounded-3xl">
+      <div className="w-full rounded-[2rem] border border-border bg-card p-2 md:p-4 shadow-sm relative overflow-hidden">
+        <div className="overflow-x-auto w-full custom-scrollbar rounded-2xl border border-border">
           <Table className="w-full min-w-[600px]">
-            <TableHeader className="bg-background/95 backdrop-blur-sm border-b border-border/40">
+            <TableHeader className="bg-surface-2 border-b border-border">
               <TableRow className="hover:bg-transparent border-transparent">
                 <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest w-20 sm:w-24 pl-4 py-4">
                   Gambar
@@ -488,15 +489,15 @@ export function CategorySection({
                   >
                     <div className="flex flex-col items-center gap-3">
                       <div className="w-14 h-14 rounded-full bg-muted/50 flex items-center justify-center mb-2">
-                        <FolderOpen className="h-7 w-7 text-muted-foreground/40" />
+                        <FolderOpenIcon className="h-7 w-7 text-muted-foreground/40" />
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-foreground">
+                        <Typography variant="h6" className="font-bold">
                           Belum ada kategori
-                        </p>
-                        <p className="text-xs font-medium text-muted-foreground mt-1">
+                        </Typography>
+                        <Typography variant="body-sm" color="muted" className="mt-1">
                           Klik &quot;Tambah Kategori&quot; untuk memulai.
-                        </p>
+                        </Typography>
                       </div>
                     </div>
                   </TableCell>

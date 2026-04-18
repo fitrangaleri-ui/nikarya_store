@@ -223,7 +223,7 @@ export default function AdminLayout({
       {/* PENGUNCIAN 2: w-full min-w-0 agar elemen ini tidak melar lebih dari layar, overflow-x-hidden untuk aman */}
       <main className="flex-1 flex flex-col min-h-screen pt-16 md:pt-0 w-full min-w-0 md:pl-64 transition-all duration-300 relative overflow-x-hidden">
         {/* PENGUNCIAN 3: w-full dan min-w-0 di dalam wrapper anak */}
-        <div className="p-4 sm:p-6 md:p-8 w-full max-w-7xl mx-auto flex-1 z-10 min-w-0 overflow-x-hidden">
+        <div className="w-full flex-1 z-10 min-w-0 overflow-x-hidden">
           {children}
         </div>
       </main>

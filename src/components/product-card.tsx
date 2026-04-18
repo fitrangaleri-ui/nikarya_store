@@ -6,7 +6,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { PhotoIcon, EyeIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { PhotoIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { EyeIcon } from "@heroicons/react/24/solid";
 import { Typography } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 import { resolveImageSrc } from "@/lib/resolve-image";
@@ -45,17 +46,33 @@ export function ProductCard({ product }: { product: any }) {
 
   const hasDemoLinks = demoLinks.length > 0;
 
-  // Build gallery images array
-  const productImages =
-    product.product_images && Array.isArray(product.product_images) && product.product_images.length > 0
-      ? [...product.product_images].sort((a: any, b: any) => a.sort_order - b.sort_order)
-      : [];
+  // Build gallery images array — smart merge of thumbnail + gallery
+  // Thumbnail always first, gallery images after (deduplicated)
+  const buildImageList = (): string[] => {
+    const thumbnailSrc = resolveImageSrc(product.thumbnail_url);
+    const galleryRaw =
+      product.product_images && Array.isArray(product.product_images) && product.product_images.length > 0
+        ? [...product.product_images]
+          .sort((a: any, b: any) => a.sort_order - b.sort_order)
+          .map((img: any) => resolveImageSrc(img.image_url))
+          .filter(Boolean) as string[]
+        : [];
 
-  const rawImages = productImages.length > 0
-    ? productImages.map((img: any) => img.image_url)
-    : [product.thumbnail_url];
+    if (galleryRaw.length === 0) {
+      // No gallery — just use thumbnail if available
+      return thumbnailSrc ? [thumbnailSrc] : [];
+    }
 
-  const galleryImages = rawImages.map(img => resolveImageSrc(img)).filter(Boolean) as string[];
+    // Deduplicate: if thumbnail is already in gallery, don't add it twice
+    if (thumbnailSrc && !galleryRaw.includes(thumbnailSrc)) {
+      return [thumbnailSrc, ...galleryRaw];
+    }
+
+    // Thumbnail is already in gallery or doesn't exist
+    return thumbnailSrc ? [thumbnailSrc, ...galleryRaw.filter(url => url !== thumbnailSrc)] : galleryRaw;
+  };
+
+  const galleryImages = buildImageList();
 
   return (
     <div className="group flex flex-col glass rounded-2xl overflow-hidden transition-all duration-500 h-full relative hover:shadow-elevation-lg hover:translate-y-[-4px] hover:border-primary/40">
@@ -151,10 +168,19 @@ export function ProductCard({ product }: { product: any }) {
         </Link>
 
         {/* Price */}
-        <div className="mt-1">
+        <div className="mt-1 flex flex-col">
+          {discountPrice && price > discountPrice && (
+            <Typography
+              variant="body-sm"
+              color="muted"
+              className="line-through font-mono opacity-80"
+            >
+              Rp {Number(price).toLocaleString("id-ID")}
+            </Typography>
+          )}
           <Typography
             variant="h5"
-            className="font-bold tracking-tight"
+            className="font-bold font-mono tracking-tight"
           >
             Rp {Number(displayPrice).toLocaleString("id-ID")}
           </Typography>

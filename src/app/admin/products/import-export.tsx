@@ -19,14 +19,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Upload,
-  Download,
-  FileSpreadsheet,
-  FileText,
-  CheckCircle,
-  AlertCircle,
-  Eye,
-} from "lucide-react";
+  ArrowUpTrayIcon,
+  ArrowDownTrayIcon,
+  TableCellsIcon,
+  DocumentTextIcon,
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  EyeIcon,
+} from "@heroicons/react/24/outline";
+import { Typography } from "@/components/ui/typography";
 import { importProducts, exportProducts } from "./import-export-actions";
 import * as XLSX from "xlsx";
 
@@ -182,14 +183,14 @@ function ImportDialog() {
           variant="outline"
           className="h-11 rounded-2xl border-border/50 bg-background/50 text-muted-foreground font-bold hover:text-primary hover:bg-primary/10 shadow-sm transition-all"
         >
-          <Upload className="mr-2 h-4 w-4" />
+          <ArrowUpTrayIcon className="mr-2 h-4 w-4" />
           <span className="hidden sm:inline">Import</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="border-border/40 bg-card/95 backdrop-blur-xl rounded-3xl shadow-lg sm:max-w-3xl max-h-[85vh] overflow-y-auto p-6 custom-scrollbar">
         <DialogHeader className="mb-4">
           <DialogTitle className="text-xl font-black text-foreground flex items-center gap-2">
-            <FileSpreadsheet className="h-5 w-5 text-primary" />
+            <TableCellsIcon className="h-5 w-5 text-primary" />
             Import Produk
           </DialogTitle>
         </DialogHeader>
@@ -197,19 +198,19 @@ function ImportDialog() {
         <div className="space-y-5">
           {error && (
             <div className="rounded-2xl border border-destructive/20 bg-destructive/10 p-3.5 text-sm font-semibold text-destructive flex items-center gap-2.5 animate-in fade-in zoom-in-95">
-              <AlertCircle className="h-4 w-4 flex-shrink-0" />
+              <ExclamationCircleIcon className="h-4 w-4 flex-shrink-0" />
               {error}
             </div>
           )}
 
           {result?.success && (
             <div className="rounded-2xl border border-green-500/20 bg-green-500/10 p-3.5 text-sm font-bold text-green-600 flex items-center gap-2.5 animate-in fade-in zoom-in-95">
-              <CheckCircle className="h-4 w-4 flex-shrink-0" />
+              <CheckCircleIcon className="h-4 w-4 flex-shrink-0" />
               Berhasil mengimpor {result.count} produk!
             </div>
           )}
 
-          {/* Upload Area */}
+          {/* ArrowUpTrayIcon Area */}
           {rows.length === 0 && !result?.success && (
             <div className="space-y-4">
               <label
@@ -217,18 +218,18 @@ function ImportDialog() {
                 className="flex flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-border/50 bg-background/30 p-10 cursor-pointer transition-colors hover:bg-muted/50 hover:border-primary/50"
               >
                 <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
-                  <Upload className="h-6 w-6 text-primary" />
+                  <ArrowUpTrayIcon className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-center">
-                  <p className="font-bold text-foreground">
+                  <Typography variant="body-base" className="font-bold">
                     Pilih file CSV atau XLSX
-                  </p>
-                  <p className="text-xs font-medium text-muted-foreground mt-1.5">
+                  </Typography>
+                  <Typography variant="body-sm" color="muted" className="mt-1.5 font-medium">
                     Kolom wajib:{" "}
-                    <span className="font-bold text-foreground">
+                    <strong className="text-foreground">
                       title, price
-                    </span>
-                  </p>
+                    </strong>
+                  </Typography>
                 </div>
               </label>
               <input
@@ -241,9 +242,9 @@ function ImportDialog() {
               />
 
               <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4 text-xs text-foreground">
-                <p className="font-bold mb-1.5 text-primary">
+                <Typography variant="body-sm" className="font-bold mb-1.5 text-primary">
                   Kolom yang didukung:
-                </p>
+                </Typography>
                 <p className="font-mono text-[10px] sm:text-[11px] font-medium leading-relaxed opacity-80">
                   {EXPECTED_HEADERS.join(", ")}
                 </p>
@@ -256,7 +257,7 @@ function ImportDialog() {
             <div className="space-y-4 animate-in fade-in duration-300">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <Eye className="h-4 w-4 text-muted-foreground" />
+                  <EyeIcon className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm font-bold text-foreground truncate max-w-[150px] sm:max-w-xs">
                     {fileName}
                   </span>
@@ -408,7 +409,7 @@ function ExportDropdown() {
         onClick={() => setMenuOpen(!menuOpen)}
         disabled={isPending}
       >
-        <Download className="mr-2 h-4 w-4" />
+        <ArrowDownTrayIcon className="mr-2 h-4 w-4" />
         <span className="hidden sm:inline">
           {isPending ? "Mengekspor..." : "Export"}
         </span>
@@ -424,14 +425,14 @@ function ExportDropdown() {
               onClick={() => handleExport("csv")}
               className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-muted transition-colors"
             >
-              <FileText className="h-4 w-4 text-emerald-500" />
+              <DocumentTextIcon className="h-4 w-4 text-emerald-500" />
               CSV (.csv)
             </button>
             <button
               onClick={() => handleExport("xlsx")}
               className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-muted transition-colors"
             >
-              <FileSpreadsheet className="h-4 w-4 text-primary" />
+              <TableCellsIcon className="h-4 w-4 text-primary" />
               Excel (.xlsx)
             </button>
           </div>
@@ -441,7 +442,7 @@ function ExportDropdown() {
   );
 }
 
-// ─── Download Helper ────────────────────────────────────────────────────────
+// ─── ArrowDownTrayIcon Helper ────────────────────────────────────────────────────────
 
 function downloadFile(
   content: string | Blob,
