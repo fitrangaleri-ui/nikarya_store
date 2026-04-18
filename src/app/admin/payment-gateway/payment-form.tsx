@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Typography } from "@/components/ui/typography";
 import {
   saveGatewayConfig,
   setActiveGateway,
@@ -15,16 +16,15 @@ import {
   toggleManualMethod,
 } from "./actions";
 import {
-  CheckCircle,
-  AlertCircle,
-  Zap,
-  HandCoins,
-  Trash2,
-  Plus,
-  Pencil,
-  ToggleLeft,
-  ToggleRight,
-} from "lucide-react";
+  BoltIcon,
+  BanknotesIcon,
+  TrashIcon,
+  PlusIcon,
+  PencilIcon,
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  ArrowPathIcon,
+} from "@heroicons/react/24/outline";
 
 type GatewayConfig = {
   id: string;
@@ -59,7 +59,7 @@ interface PaymentFormProps {
 
 // Common Style Variable untuk Input
 const inputClass =
-  "h-11 rounded-2xl border border-border/50 bg-background/50 px-4 py-2 text-sm text-foreground font-semibold placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all shadow-sm";
+  "h-11 rounded-sm border border-border/70 bg-background/50 px-4 py-2 text-sm text-foreground font-semibold placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:bg-background outline-none transition-all box-border";
 
 export function PaymentForm({
   configs,
@@ -165,17 +165,17 @@ export function PaymentForm({
   const currentConfig = configs.find((c) => c.gateway_name === activeTab);
 
   return (
-    <div className="space-y-6 max-w-4xl pb-10">
+    <div className="space-y-5 md:space-y-6">
       {/* ── Status Messages ── */}
       {error && (
-        <div className="rounded-2xl border border-destructive/20 bg-destructive/10 p-4 text-sm font-semibold text-destructive flex items-center gap-2.5 animate-in fade-in zoom-in-95">
-          <AlertCircle className="h-5 w-5 flex-shrink-0" />
+        <div className="rounded-xl border border-destructive/20 bg-destructive/10 p-4 text-sm font-semibold text-destructive flex items-center gap-2.5 animate-in fade-in zoom-in-95">
+          <ExclamationCircleIcon className="h-5 w-5 flex-shrink-0" />
           {error}
         </div>
       )}
       {success && (
-        <div className="rounded-2xl border border-green-500/20 bg-green-500/10 p-4 text-sm font-bold text-green-600 flex items-center gap-2.5 animate-in fade-in zoom-in-95">
-          <CheckCircle className="h-5 w-5 flex-shrink-0" />
+        <div className="rounded-xl border border-primary/20 bg-primary/10 p-4 text-sm font-bold text-primary flex items-center gap-2.5 animate-in fade-in zoom-in-95">
+          <CheckCircleIcon className="h-5 w-5 flex-shrink-0" />
           {success}
         </div>
       )}
@@ -183,46 +183,47 @@ export function PaymentForm({
       {/* ══════════════════════════════════════
           SECTION 1: Payment Mode Toggle
          ══════════════════════════════════════ */}
-      <div className="rounded-3xl border border-border/40 bg-card/60 backdrop-blur-md p-6 sm:p-8 shadow-sm">
-        <div className="flex items-center gap-3 mb-5">
-          <span className="w-1.5 h-6 bg-primary rounded-full block flex-shrink-0" />
-          <h2 className="text-xl font-black text-foreground tracking-tight">
+      <div className="rounded-xl border border-border bg-card overflow-hidden">
+        <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20">
+          <Typography variant="h6" as="h2" className="text-white font-bold">
             Mode Pembayaran
-          </h2>
+          </Typography>
         </div>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <button
-            type="button"
-            onClick={() => handleModeChange("gateway")}
-            disabled={isPending}
-            className={`flex-1 flex items-center justify-center gap-2.5 rounded-2xl border px-4 py-3.5 text-sm font-bold transition-all ${
-              mode === "gateway"
-                ? "border-primary/50 bg-primary/10 text-primary shadow-sm ring-1 ring-primary/20"
-                : "border-border/50 bg-background/50 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-            }`}
-          >
-            <Zap className="h-5 w-5" />
-            Gateway Mode
-          </button>
-          <button
-            type="button"
-            onClick={() => handleModeChange("manual")}
-            disabled={isPending}
-            className={`flex-1 flex items-center justify-center gap-2.5 rounded-2xl border px-4 py-3.5 text-sm font-bold transition-all ${
-              mode === "manual"
-                ? "border-amber-500/40 bg-amber-500/10 text-amber-600 shadow-sm ring-1 ring-amber-500/20"
-                : "border-border/50 bg-background/50 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-            }`}
-          >
-            <HandCoins className="h-5 w-5" />
-            Manual Mode
-          </button>
+        <div className="p-5 md:p-7">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              type="button"
+              onClick={() => handleModeChange("gateway")}
+              disabled={isPending}
+              className={`flex-1 flex items-center justify-center gap-2.5 rounded-sm border px-4 py-3.5 text-sm font-bold transition-all ${
+                mode === "gateway"
+                  ? "border-primary/50 bg-primary/10 text-primary ring-1 ring-primary/20"
+                  : "border-border/50 bg-background/50 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+              }`}
+            >
+              <BoltIcon className="h-5 w-5" />
+              Gateway Mode
+            </button>
+            <button
+              type="button"
+              onClick={() => handleModeChange("manual")}
+              disabled={isPending}
+              className={`flex-1 flex items-center justify-center gap-2.5 rounded-sm border px-4 py-3.5 text-sm font-bold transition-all ${
+                mode === "manual"
+                  ? "border-primary/50 bg-primary/10 text-primary ring-1 ring-primary/20"
+                  : "border-border/50 bg-background/50 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+              }`}
+            >
+              <BanknotesIcon className="h-5 w-5" />
+              Manual Mode
+            </button>
+          </div>
+          <Typography variant="caption" color="muted" className="font-medium mt-4">
+            {mode === "gateway"
+              ? "💳 Pembayaran diproses otomatis melalui payment gateway (Midtrans / Duitku)."
+              : "🏦 Pembayaran manual — pelanggan melakukan transfer dan konfirmasi secara manual."}
+          </Typography>
         </div>
-        <p className="text-[13px] font-medium text-muted-foreground mt-4 ml-1">
-          {mode === "gateway"
-            ? "💳 Pembayaran diproses otomatis melalui payment gateway (Midtrans / Duitku)."
-            : "🏦 Pembayaran manual — pelanggan melakukan transfer dan konfirmasi secara manual."}
-        </p>
       </div>
 
       {/* ══════════════════════════════════════
@@ -237,15 +238,15 @@ export function PaymentForm({
                 key={config.gateway_name}
                 type="button"
                 onClick={() => setActiveTab(config.gateway_name)}
-                className={`flex items-center gap-2.5 rounded-2xl border px-5 py-3 text-sm font-bold transition-all ${
+                className={`flex items-center gap-2.5 rounded-sm border px-5 py-3 text-sm font-bold transition-all ${
                   activeTab === config.gateway_name
-                    ? "border-primary/50 bg-primary/10 text-primary shadow-sm"
-                    : "border-border/40 bg-card/60 backdrop-blur-md text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                    ? "border-primary/50 bg-primary/10 text-primary"
+                    : "border-border/50 bg-card text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                 }`}
               >
                 {config.display_name}
                 {config.is_active && (
-                  <Badge className="bg-primary text-primary-foreground border-transparent text-[10px] px-2 py-0.5 rounded-full shadow-sm ml-1">
+                  <Badge className="bg-primary text-primary-foreground border-transparent text-[10px] px-2 py-0.5 rounded-full shadow-none ml-1">
                     Aktif
                   </Badge>
                 )}
@@ -255,7 +256,7 @@ export function PaymentForm({
 
           {/* Gateway Config Form */}
           {currentConfig && (
-            <form action={handleSaveGateway} className="space-y-4">
+            <form action={handleSaveGateway} className="space-y-5">
               <input type="hidden" name="id" value={currentConfig.id} />
               <input
                 type="hidden"
@@ -263,16 +264,13 @@ export function PaymentForm({
                 value={currentConfig.gateway_name}
               />
 
-              <div className="rounded-3xl border border-border/40 bg-card/60 backdrop-blur-md p-6 sm:p-8 shadow-sm space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/40 pb-5">
-                  <div className="flex items-center gap-3">
-                    <span className="w-1.5 h-6 bg-primary rounded-full block flex-shrink-0" />
-                    <h2 className="text-xl font-black text-foreground tracking-tight">
-                      Konfigurasi {currentConfig.display_name}
-                    </h2>
-                  </div>
+              <div className="rounded-xl border border-border bg-card overflow-hidden">
+                <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20 flex items-center justify-between">
+                  <Typography variant="h6" as="h2" className="text-white font-bold">
+                    Konfigurasi {currentConfig.display_name}
+                  </Typography>
                   {currentConfig.is_active ? (
-                    <Badge className="bg-green-500/10 text-green-600 border border-green-500/20 px-3 py-1.5 rounded-full font-bold shadow-none text-xs">
+                    <Badge className="bg-white/15 text-white border border-white/20 px-3 py-1 rounded-full font-bold shadow-none text-xs">
                       ✅ Gateway Aktif
                     </Badge>
                   ) : (
@@ -282,126 +280,136 @@ export function PaymentForm({
                       size="sm"
                       onClick={() => handleSetActive(currentConfig.id)}
                       disabled={isPending}
-                      className="rounded-xl border-primary/30 text-primary bg-primary/5 hover:bg-primary/10 hover:text-primary font-bold shadow-none transition-all h-9 px-4"
+                      className="rounded-full border-white/30 text-white bg-white/10 hover:bg-white/20 hover:text-white font-bold shadow-none transition-all h-9 px-4"
                     >
                       Jadikan Aktif
                     </Button>
                   )}
                 </div>
 
-                <div className="space-y-2.5">
-                  <Label
-                    htmlFor="display_name"
-                    className="text-foreground font-bold"
-                  >
-                    Nama Tampilan
-                  </Label>
-                  <Input
-                    id="display_name"
-                    name="display_name"
-                    defaultValue={currentConfig.display_name}
-                    required
-                    placeholder="Contoh: Midtrans"
-                    className={inputClass}
-                  />
+                <div className="p-5 md:p-7 space-y-5">
+                  <div className="space-y-2.5">
+                    <Label
+                      htmlFor="display_name"
+                      className="text-foreground font-bold"
+                    >
+                      Nama Tampilan
+                    </Label>
+                    <Input
+                      id="display_name"
+                      name="display_name"
+                      defaultValue={currentConfig.display_name}
+                      required
+                      placeholder="Contoh: Midtrans"
+                      className={inputClass}
+                    />
+                  </div>
+
+                  {/* Environment Toggle */}
+                  <EnvironmentToggle defaultValue={currentConfig.environment} />
+
+                  {/* API Keys */}
+                  <div className="pt-5 border-t border-border/40 space-y-5">
+                    <div className="flex items-center justify-between">
+                      <Typography variant="body-sm" className="font-black">
+                        API Keys
+                      </Typography>
+                      <Badge
+                        variant="outline"
+                        className="rounded-full border-border/50 bg-muted/40 text-muted-foreground text-[10px] font-semibold shadow-none"
+                      >
+                        🔒 Tersimpan aman
+                      </Badge>
+                    </div>
+
+                    <div className="space-y-2.5">
+                      <Label
+                        htmlFor="api_key"
+                        className="text-foreground font-bold"
+                      >
+                        API Key / Client Key
+                      </Label>
+                      <Input
+                        id="api_key"
+                        name="api_key"
+                        type="password"
+                        defaultValue={currentConfig.api_key}
+                        placeholder="Client key..."
+                        className={`font-mono ${inputClass}`}
+                      />
+                    </div>
+
+                    <div className="space-y-2.5">
+                      <Label
+                        htmlFor="secret_key"
+                        className="text-foreground font-bold"
+                      >
+                        Secret Key / Server Key
+                      </Label>
+                      <Input
+                        id="secret_key"
+                        name="secret_key"
+                        type="password"
+                        defaultValue={currentConfig.secret_key}
+                        placeholder="Server key..."
+                        className={`font-mono ${inputClass}`}
+                      />
+                    </div>
+
+                    <div className="space-y-2.5">
+                      <Label
+                        htmlFor="merchant_id"
+                        className="text-foreground font-bold"
+                      >
+                        Merchant ID{" "}
+                        <span className="text-muted-foreground/60 font-medium text-xs ml-1">
+                          (Opsional)
+                        </span>
+                      </Label>
+                      <Input
+                        id="merchant_id"
+                        name="merchant_id"
+                        defaultValue={currentConfig.merchant_id || ""}
+                        placeholder="Merchant ID..."
+                        className={`font-mono ${inputClass}`}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Last Updated */}
+                  {currentConfig.updated_at && (
+                    <Typography variant="caption" color="muted" className="text-right pt-4 border-t border-border/40 font-medium block">
+                      Diperbarui:{" "}
+                      {new Date(currentConfig.updated_at).toLocaleDateString(
+                        "id-ID",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        },
+                      )}
+                    </Typography>
+                  )}
                 </div>
-
-                {/* Environment Toggle */}
-                <EnvironmentToggle defaultValue={currentConfig.environment} />
-
-                {/* API Keys */}
-                <div className="pt-4 border-t border-border/40 space-y-5">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-black text-foreground">
-                      API Keys
-                    </h3>
-                    <Badge
-                      variant="outline"
-                      className="rounded-full border-border/50 bg-muted/40 text-muted-foreground text-[10px] font-semibold"
-                    >
-                      🔒 Tersimpan aman
-                    </Badge>
-                  </div>
-
-                  <div className="space-y-2.5">
-                    <Label
-                      htmlFor="api_key"
-                      className="text-foreground font-bold"
-                    >
-                      API Key / Client Key
-                    </Label>
-                    <Input
-                      id="api_key"
-                      name="api_key"
-                      type="password"
-                      defaultValue={currentConfig.api_key}
-                      placeholder="Client key..."
-                      className={`font-mono ${inputClass}`}
-                    />
-                  </div>
-
-                  <div className="space-y-2.5">
-                    <Label
-                      htmlFor="secret_key"
-                      className="text-foreground font-bold"
-                    >
-                      Secret Key / Server Key
-                    </Label>
-                    <Input
-                      id="secret_key"
-                      name="secret_key"
-                      type="password"
-                      defaultValue={currentConfig.secret_key}
-                      placeholder="Server key..."
-                      className={`font-mono ${inputClass}`}
-                    />
-                  </div>
-
-                  <div className="space-y-2.5">
-                    <Label
-                      htmlFor="merchant_id"
-                      className="text-foreground font-bold"
-                    >
-                      Merchant ID{" "}
-                      <span className="text-muted-foreground/60 font-medium text-xs ml-1">
-                        (Opsional)
-                      </span>
-                    </Label>
-                    <Input
-                      id="merchant_id"
-                      name="merchant_id"
-                      defaultValue={currentConfig.merchant_id || ""}
-                      placeholder="Merchant ID..."
-                      className={`font-mono ${inputClass}`}
-                    />
-                  </div>
-                </div>
-
-                {/* Last Updated */}
-                {currentConfig.updated_at && (
-                  <p className="text-[11px] font-medium text-muted-foreground text-right pt-2 border-t border-border/40">
-                    Diperbarui:{" "}
-                    {new Date(currentConfig.updated_at).toLocaleDateString(
-                      "id-ID",
-                      {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      },
-                    )}
-                  </p>
-                )}
               </div>
 
               <Button
                 type="submit"
+                variant="brand"
                 size="lg"
-                className="w-full h-12 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-black shadow-sm active:scale-[0.98] transition-all"
+                className="w-full h-12 rounded-full font-black active:scale-[0.98] transition-all"
                 disabled={isPending}
               >
-                {isPending ? "Menyimpan..." : "Simpan Konfigurasi"}
+                {isPending ? (
+                  <>
+                    <ArrowPathIcon className="h-4 w-4 mr-2 animate-spin" />
+                    Menyimpan...
+                  </>
+                ) : (
+                  "Simpan Konfigurasi"
+                )}
               </Button>
             </form>
           )}
@@ -413,134 +421,139 @@ export function PaymentForm({
          ══════════════════════════════════════ */}
       {mode === "manual" && (
         <div className="space-y-5 animate-in fade-in duration-300">
-          <div className="rounded-3xl border border-border/40 bg-card/60 backdrop-blur-md p-6 sm:p-8 shadow-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-              <div className="flex items-center gap-3">
-                <span className="w-1.5 h-6 bg-amber-500 rounded-full block flex-shrink-0" />
-                <h2 className="text-xl font-black text-foreground tracking-tight">
-                  Metode Pembayaran Manual
-                </h2>
-              </div>
+          <div className="rounded-xl border border-border bg-card overflow-hidden">
+            <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20 flex items-center justify-between">
+              <Typography variant="h6" as="h2" className="text-white font-bold">
+                Metode Pembayaran Manual
+              </Typography>
               <Button
                 type="button"
                 onClick={() => {
                   setEditingMethod(null);
                   setShowManualForm(true);
                 }}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-sm rounded-2xl gap-2 h-10 px-4 transition-all active:scale-[0.98]"
+                variant="outline"
+                className="rounded-full border-white/30 text-white bg-white/10 hover:bg-white/20 hover:text-white font-bold shadow-none transition-all h-9 px-4 gap-2"
               >
-                <Plus className="h-4 w-4" />
+                <PlusIcon className="h-4 w-4" />
                 Tambah Rekening
               </Button>
             </div>
 
-            {/* Methods List */}
-            {manualMethods.length === 0 ? (
-              <div className="rounded-2xl border-2 border-dashed border-border/50 bg-background/30 p-10 text-center">
-                <p className="text-sm font-bold text-foreground">
-                  Belum ada metode pembayaran manual.
-                </p>
-                <p className="text-xs font-medium text-muted-foreground mt-1.5">
-                  Klik tombol "Tambah Rekening" di atas untuk menambahkan.
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {manualMethods.map((method) => (
-                  <div
-                    key={method.id}
-                    className={`flex items-center gap-4 rounded-2xl border p-4 transition-all ${
-                      method.is_active
-                        ? "border-border/50 bg-background/60 shadow-sm"
-                        : "border-border/30 bg-muted/20 opacity-70"
-                    }`}
-                  >
-                    {/* Icon */}
-                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-white border border-border/50 flex items-center justify-center overflow-hidden shadow-sm p-1.5">
-                      {method.logo_url ? (
-                        <Image
-                          src={method.logo_url}
-                          alt={method.provider_name}
-                          width={40}
-                          height={40}
-                          className="w-full h-full object-contain"
-                        />
-                      ) : (
-                        <span className="text-xl">
-                          {method.type === "bank_transfer" ? "🏦" : "📱"}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Info */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3">
-                        <p className="text-sm font-bold text-foreground truncate">
-                          {method.provider_name}
-                        </p>
-                        <Badge
-                          variant="outline"
-                          className={`w-fit text-[10px] px-2 py-0.5 rounded-full font-bold shadow-none border ${
-                            method.type === "bank_transfer"
-                              ? "bg-blue-500/10 text-blue-600 border-blue-500/20"
-                              : "bg-purple-500/10 text-purple-600 border-purple-500/20"
-                          }`}
-                        >
-                          {method.type === "bank_transfer"
-                            ? "Bank Transfer"
-                            : "E-Wallet"}
-                        </Badge>
-                      </div>
-                      <p className="text-[12px] font-medium text-muted-foreground mt-1">
-                        {method.account_name} —{" "}
-                        <span className="font-mono text-foreground font-bold">
-                          {method.account_number}
-                        </span>
-                      </p>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleToggleManualMethod(method.id, method.is_active)
-                        }
-                        disabled={isPending}
-                        className="p-2 rounded-xl hover:bg-muted/80 transition-colors"
-                        title={method.is_active ? "Nonaktifkan" : "Aktifkan"}
-                      >
-                        {method.is_active ? (
-                          <ToggleRight className="h-6 w-6 text-green-500 drop-shadow-sm" />
-                        ) : (
-                          <ToggleLeft className="h-6 w-6 text-muted-foreground" />
-                        )}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setEditingMethod(method);
-                          setShowManualForm(true);
-                        }}
-                        className="p-2 rounded-xl hover:bg-primary/10 hover:text-primary text-muted-foreground transition-colors"
-                        title="Edit"
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteManualMethod(method.id)}
-                        disabled={isPending}
-                        className="p-2 rounded-xl hover:bg-destructive/10 hover:text-destructive text-muted-foreground transition-colors"
-                        title="Hapus"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
+            <div className="p-5 md:p-7">
+              {/* Methods List */}
+              {manualMethods.length === 0 ? (
+                <div className="py-16 text-center">
+                  <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center mx-auto mb-4">
+                    <BanknotesIcon className="h-8 w-8 text-muted-foreground/40" />
                   </div>
-                ))}
-              </div>
-            )}
+                  <Typography variant="body-sm" color="muted" className="font-semibold">
+                    Belum ada metode pembayaran manual.
+                  </Typography>
+                  <Typography variant="caption" color="muted" className="mt-1">
+                    Klik tombol &quot;Tambah Rekening&quot; di atas untuk menambahkan.
+                  </Typography>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {manualMethods.map((method) => (
+                    <div
+                      key={method.id}
+                      className={`flex items-center gap-4 rounded-xl border p-4 transition-all ${
+                        method.is_active
+                          ? "border-border bg-background/60"
+                          : "border-border/30 bg-muted/20 opacity-70"
+                      }`}
+                    >
+                      {/* Icon */}
+                      <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-white border border-border/50 flex items-center justify-center overflow-hidden p-1.5">
+                        {method.logo_url ? (
+                          <Image
+                            src={method.logo_url}
+                            alt={method.provider_name}
+                            width={40}
+                            height={40}
+                            className="w-full h-full object-contain"
+                          />
+                        ) : (
+                          <BanknotesIcon className="h-6 w-6 text-muted-foreground/40" />
+                        )}
+                      </div>
+
+                      {/* Info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3">
+                          <Typography variant="body-sm" className="font-bold truncate">
+                            {method.provider_name}
+                          </Typography>
+                          <Badge
+                            variant="outline"
+                            className={`w-fit text-[10px] px-2.5 py-0.5 rounded-full font-bold shadow-none border ${
+                              method.type === "bank_transfer"
+                                ? "bg-primary/10 text-primary border-primary/20"
+                                : "bg-accent/50 text-accent-foreground border-accent-foreground/20"
+                            }`}
+                          >
+                            {method.type === "bank_transfer"
+                              ? "Bank Transfer"
+                              : "E-Wallet"}
+                          </Badge>
+                        </div>
+                        <Typography variant="caption" color="muted" className="font-medium mt-1">
+                          {method.account_name} —{" "}
+                          <span className="font-mono text-foreground font-bold">
+                            {method.account_number}
+                          </span>
+                        </Typography>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleToggleManualMethod(method.id, method.is_active)
+                          }
+                          disabled={isPending}
+                          className="p-2 rounded-full hover:bg-muted/80 transition-colors"
+                          title={method.is_active ? "Nonaktifkan" : "Aktifkan"}
+                        >
+                          <Badge
+                            className={
+                              method.is_active
+                                ? "bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 rounded-full shadow-none font-bold px-3 py-1 cursor-pointer"
+                                : "bg-muted text-muted-foreground border border-border/50 hover:bg-muted/80 rounded-full shadow-none font-bold px-3 py-1 cursor-pointer"
+                            }
+                          >
+                            {method.is_active ? "Aktif" : "Nonaktif"}
+                          </Badge>
+                        </button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 rounded-full hover:bg-primary/10 hover:text-primary"
+                          onClick={() => {
+                            setEditingMethod(method);
+                            setShowManualForm(true);
+                          }}
+                        >
+                          <PencilIcon className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 rounded-full hover:bg-destructive/10 hover:text-destructive"
+                          onClick={() => handleDeleteManualMethod(method.id)}
+                          disabled={isPending}
+                        >
+                          <TrashIcon className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* ── Add/Edit Manual Method Form ── */}
@@ -575,9 +588,9 @@ function EnvironmentToggle({ defaultValue }: { defaultValue: string }) {
         <button
           type="button"
           onClick={() => setEnvironment("sandbox")}
-          className={`flex-1 flex items-center justify-center gap-2 rounded-2xl border px-4 py-3.5 text-sm font-bold transition-all ${
+          className={`flex-1 flex items-center justify-center gap-2 rounded-sm border px-4 py-3.5 text-sm font-bold transition-all ${
             environment === "sandbox"
-              ? "border-orange-500/40 bg-orange-500/10 text-orange-600 shadow-sm ring-1 ring-orange-500/20"
+              ? "border-primary/50 bg-primary/10 text-primary ring-1 ring-primary/20"
               : "border-border/50 bg-background/50 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
           }`}
         >
@@ -586,9 +599,9 @@ function EnvironmentToggle({ defaultValue }: { defaultValue: string }) {
         <button
           type="button"
           onClick={() => setEnvironment("production")}
-          className={`flex-1 flex items-center justify-center gap-2 rounded-2xl border px-4 py-3.5 text-sm font-bold transition-all ${
+          className={`flex-1 flex items-center justify-center gap-2 rounded-sm border px-4 py-3.5 text-sm font-bold transition-all ${
             environment === "production"
-              ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-600 shadow-sm ring-1 ring-emerald-500/20"
+              ? "border-primary/50 bg-primary/10 text-primary ring-1 ring-primary/20"
               : "border-border/50 bg-background/50 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
           }`}
         >
@@ -596,10 +609,10 @@ function EnvironmentToggle({ defaultValue }: { defaultValue: string }) {
         </button>
       </div>
       {environment === "production" && (
-        <p className="text-[11px] text-orange-600 font-bold ml-1 flex items-center gap-1.5">
-          <AlertCircle className="h-3 w-3" />
-          Perhatian: Mode production akan memproses tagihan & pembayaran nyata.
-        </p>
+        <Typography variant="caption" color="destructive" className="font-bold ml-1 flex items-center gap-1.5">
+          <ExclamationCircleIcon className="h-3, w-3" />
+          Perhatian: Mode production akan memproses tagihan &amp; pembayaran nyata.
+        </Typography>
       )}
     </div>
   );
@@ -622,14 +635,15 @@ function ManualMethodForm({
   return (
     <form
       action={onSubmit}
-      className="rounded-3xl border border-primary/20 bg-primary/5 p-6 sm:p-8 shadow-sm space-y-5 relative"
+      className="rounded-xl border border-border bg-card overflow-hidden"
     >
-      <div className="flex items-center gap-3 mb-2">
-        <span className="w-1.5 h-5 bg-primary rounded-full block flex-shrink-0" />
-        <h3 className="text-lg font-black text-foreground">
+      <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20">
+        <Typography variant="h6" as="h3" className="text-white font-bold">
           {method ? "Edit Metode Pembayaran" : "Tambah Metode Pembayaran"}
-        </h3>
+        </Typography>
       </div>
+
+      <div className="p-5 md:p-7 space-y-5">
 
       {method && <input type="hidden" name="id" value={method.id} />}
 
@@ -641,9 +655,9 @@ function ManualMethodForm({
           <button
             type="button"
             onClick={() => setType("bank_transfer")}
-            className={`flex-1 flex items-center justify-center gap-2 rounded-2xl border px-4 py-3.5 text-sm font-bold transition-all ${
+            className={`flex-1 flex items-center justify-center gap-2 rounded-sm border px-4 py-3.5 text-sm font-bold transition-all ${
               type === "bank_transfer"
-                ? "border-blue-500/40 bg-blue-500/10 text-blue-600 shadow-sm ring-1 ring-blue-500/20"
+                ? "border-primary/50 bg-primary/10 text-primary ring-1 ring-primary/20"
                 : "border-border/50 bg-background/50 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
             }`}
           >
@@ -652,9 +666,9 @@ function ManualMethodForm({
           <button
             type="button"
             onClick={() => setType("ewallet")}
-            className={`flex-1 flex items-center justify-center gap-2 rounded-2xl border px-4 py-3.5 text-sm font-bold transition-all ${
+            className={`flex-1 flex items-center justify-center gap-2 rounded-sm border px-4 py-3.5 text-sm font-bold transition-all ${
               type === "ewallet"
-                ? "border-purple-500/40 bg-purple-500/10 text-purple-600 shadow-sm ring-1 ring-purple-500/20"
+                ? "border-primary/50 bg-primary/10 text-primary ring-1 ring-primary/20"
                 : "border-border/50 bg-background/50 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
             }`}
           >
@@ -747,23 +761,30 @@ function ManualMethodForm({
       <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-primary/10">
         <Button
           type="submit"
-          className="bg-primary hover:bg-primary/90 text-primary-foreground font-black flex-1 h-12 rounded-2xl shadow-sm transition-all active:scale-[0.98]"
+          variant="brand"
+          className="flex-1 h-12 rounded-full font-black transition-all active:scale-[0.98]"
           disabled={isPending}
         >
-          {isPending
-            ? "Menyimpan..."
-            : method
-              ? "Simpan Perubahan"
-              : "Tambahkan Sekarang"}
+          {isPending ? (
+            <>
+              <ArrowPathIcon className="h-4 w-4 mr-2 animate-spin" />
+              Menyimpan...
+            </>
+          ) : method ? (
+            "Simpan Perubahan"
+          ) : (
+            "Tambahkan Sekarang"
+          )}
         </Button>
         <Button
           type="button"
           variant="outline"
           onClick={onCancel}
-          className="border-primary/20 text-muted-foreground font-bold hover:bg-primary/10 hover:text-primary hover:border-primary/30 h-12 rounded-2xl sm:w-32 transition-all"
+          className="border-border/50 text-muted-foreground font-bold hover:bg-muted/50 hover:text-foreground h-12 rounded-full sm:w-32 transition-all"
         >
           Batal
         </Button>
+      </div>
       </div>
     </form>
   );

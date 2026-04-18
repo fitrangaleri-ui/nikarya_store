@@ -383,180 +383,186 @@ export function ProductForm({
             </div>
 
             {/* ── Harga & Inventaris ── */}
-            <div className="space-y-5 rounded-xl border border-border bg-card p-5 md:p-7">
-              <div className="flex items-center gap-3 mb-2">
-                <Typography variant="h6" as="h2">
+            <div className="rounded-xl border border-border bg-card overflow-hidden">
+              <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20">
+                <Typography variant="h6" as="h2" className="text-white font-bold">
                   Harga &amp; Inventaris
                 </Typography>
               </div>
 
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div className="space-y-2.5">
-                  <Label htmlFor="price" className="text-foreground font-bold">
-                    Harga Reguler (Rp)
-                  </Label>
-                  <Input
-                    id="price"
-                    name="price"
-                    type="number"
-                    min="0"
-                    step="1000"
-                    defaultValue={product?.price || ""}
-                    required
-                    placeholder="50000"
-                    className={`h-11 ${inputClass}`}
-                  />
-                </div>
-                <div className="space-y-2.5">
-                  <Label
-                    htmlFor="discountPrice"
-                    className="text-foreground font-bold"
-                  >
-                    Harga Coret / Diskon{" "}
-                    <span className="font-medium text-muted-foreground text-xs ml-1">
-                      (Opsional)
-                    </span>
-                  </Label>
-                  <Input
-                    id="discountPrice"
-                    name="discountPrice"
-                    type="number"
-                    min="0"
-                    step="1000"
-                    defaultValue={product?.discount_price || ""}
-                    placeholder="Contoh: 75000"
-                    className={`h-11 ${inputClass}`}
-                  />
-                  <Typography variant="caption" color="muted" className="ml-1 font-medium">
-                    Isi jika sedang diskon (harga asli sebelum diskon).
-                  </Typography>
-                </div>
-              </div>
+              <div className="p-5 md:p-7 space-y-5">
 
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div className="space-y-2.5">
-                  <Label htmlFor="sku" className="text-foreground font-bold">
-                    SKU (Kode Produk)
-                  </Label>
-                  <Input
-                    id="sku"
-                    name="sku"
-                    defaultValue={product?.sku || ""}
-                    placeholder="Contoh: WED-001"
-                    className={`h-11 uppercase ${inputClass}`}
-                  />
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="space-y-2.5">
+                    <Label htmlFor="price" className="text-foreground font-bold">
+                      Harga Reguler (Rp)
+                    </Label>
+                    <Input
+                      id="price"
+                      name="price"
+                      type="number"
+                      min="0"
+                      step="1000"
+                      defaultValue={product?.price || ""}
+                      required
+                      placeholder="50000"
+                      className={`h-11 ${inputClass}`}
+                    />
+                  </div>
+                  <div className="space-y-2.5">
+                    <Label
+                      htmlFor="discountPrice"
+                      className="text-foreground font-bold"
+                    >
+                      Harga Coret / Diskon{" "}
+                      <span className="font-medium text-muted-foreground text-xs ml-1">
+                        (Opsional)
+                      </span>
+                    </Label>
+                    <Input
+                      id="discountPrice"
+                      name="discountPrice"
+                      type="number"
+                      min="0"
+                      step="1000"
+                      defaultValue={product?.discount_price || ""}
+                      placeholder="Contoh: 75000"
+                      className={`h-11 ${inputClass}`}
+                    />
+                    <Typography variant="caption" color="muted" className="ml-1 font-medium">
+                      Isi jika sedang diskon (harga asli sebelum diskon).
+                    </Typography>
+                  </div>
+                </div>
+
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="space-y-2.5">
+                    <Label htmlFor="sku" className="text-foreground font-bold">
+                      SKU (Kode Produk)
+                    </Label>
+                    <Input
+                      id="sku"
+                      name="sku"
+                      defaultValue={product?.sku || ""}
+                      placeholder="Contoh: WED-001"
+                      className={`h-11 uppercase ${inputClass}`}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* ── File & Demo ── */}
-            <div className="space-y-5 rounded-xl border border-border bg-card p-5 md:p-7">
-              <div className="flex items-center gap-3 mb-2">
-                <Typography variant="h6" as="h2">
+            <div className="rounded-xl border border-border bg-card overflow-hidden">
+              <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20">
+                <Typography variant="h6" as="h2" className="text-white font-bold">
                   File &amp; Demo
                 </Typography>
               </div>
 
-              <div className="space-y-2.5">
-                <Label
-                  htmlFor="driveFileUrl"
-                  className="text-foreground font-bold"
-                >
-                  Google Drive Link (Produk Utama)
-                </Label>
-                <Input
-                  id="driveFileUrl"
-                  name="driveFileUrl"
-                  type="url"
-                  defaultValue={product?.drive_file_url || ""}
-                  placeholder="https://drive.google.com/file/d/..."
-                  className={`h-11 ${inputClass}`}
-                />
-                <Typography variant="caption" color="muted" className="ml-1 font-medium">
-                  Link download file asli yang akan diterima pembeli setelah
-                  bayar.
-                </Typography>
-              </div>
+              <div className="p-5 md:p-7 space-y-5">
 
-              <div className="space-y-2.5">
-                <Label className="text-foreground font-bold">
-                  Demo Preview Links{" "}
-                  <span className="font-medium text-muted-foreground text-xs ml-1">
-                    (Opsional)
-                  </span>
-                </Label>
-
-                {/* Hidden input to serialize demo links as JSON */}
-                <input
-                  type="hidden"
-                  name="demoLinks"
-                  value={JSON.stringify(demoLinks)}
-                />
-
-                <div className="space-y-3">
-                  {demoLinks.map((link, index) => (
-                    <div
-                      key={index}
-                      className="flex items-start gap-2 rounded-sm border border-border/50 bg-background/30 p-3"
-                    >
-                      <div className="flex-1 space-y-2">
-                        <Input
-                          placeholder={`Label (mis: Demo ${index + 1})`}
-                          value={link.label}
-                          onChange={(e) => {
-                            const updated = [...demoLinks];
-                            updated[index] = { ...updated[index], label: e.target.value };
-                            setDemoLinks(updated);
-                          }}
-                          className={`h-9 ${inputClass}`}
-                        />
-                        <div className="relative">
-                          <ArrowTopRightOnSquareIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                          <Input
-                            type="url"
-                            placeholder="https://preview-undangan.com/..."
-                            value={link.url}
-                            onChange={(e) => {
-                              const updated = [...demoLinks];
-                              updated[index] = { ...updated[index], url: e.target.value };
-                              setDemoLinks(updated);
-                            }}
-                            className={`h-9 pl-11 ${inputClass}`}
-                          />
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setDemoLinks(demoLinks.filter((_, i) => i !== index));
-                        }}
-                        className="mt-1 p-2 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                      >
-                        <TrashIcon className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ))}
-
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      setDemoLinks([
-                        ...demoLinks,
-                        { label: "", url: "" },
-                      ])
-                    }
-                    className="w-full rounded-full border-dashed border-border/50 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5"
+                <div className="space-y-2.5">
+                  <Label
+                    htmlFor="driveFileUrl"
+                    className="text-foreground font-bold"
                   >
-                    <PlusIcon className="h-4 w-4 mr-1.5" />
-                    Tambah Demo Link
-                  </Button>
+                    Google Drive Link (Produk Utama)
+                  </Label>
+                  <Input
+                    id="driveFileUrl"
+                    name="driveFileUrl"
+                    type="url"
+                    defaultValue={product?.drive_file_url || ""}
+                    placeholder="https://drive.google.com/file/d/..."
+                    className={`h-11 ${inputClass}`}
+                  />
+                  <Typography variant="caption" color="muted" className="ml-1 font-medium">
+                    Link download file asli yang akan diterima pembeli setelah
+                    bayar.
+                  </Typography>
                 </div>
 
-                <Typography variant="caption" color="muted" className="ml-1 font-medium">
-                  Tambahkan satu atau lebih link live preview agar pembeli bisa mencoba dulu.
-                </Typography>
+                <div className="space-y-2.5">
+                  <Label className="text-foreground font-bold">
+                    Demo Preview Links{" "}
+                    <span className="font-medium text-muted-foreground text-xs ml-1">
+                      (Opsional)
+                    </span>
+                  </Label>
+
+                  {/* Hidden input to serialize demo links as JSON */}
+                  <input
+                    type="hidden"
+                    name="demoLinks"
+                    value={JSON.stringify(demoLinks)}
+                  />
+
+                  <div className="space-y-3">
+                    {demoLinks.map((link, index) => (
+                      <div
+                        key={index}
+                        className="flex items-start gap-2 rounded-sm border border-border/50 bg-background/30 p-3"
+                      >
+                        <div className="flex-1 space-y-2">
+                          <Input
+                            placeholder={`Label (mis: Demo ${index + 1})`}
+                            value={link.label}
+                            onChange={(e) => {
+                              const updated = [...demoLinks];
+                              updated[index] = { ...updated[index], label: e.target.value };
+                              setDemoLinks(updated);
+                            }}
+                            className={`h-9 ${inputClass}`}
+                          />
+                          <div className="relative">
+                            <ArrowTopRightOnSquareIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input
+                              type="url"
+                              placeholder="https://preview-undangan.com/..."
+                              value={link.url}
+                              onChange={(e) => {
+                                const updated = [...demoLinks];
+                                updated[index] = { ...updated[index], url: e.target.value };
+                                setDemoLinks(updated);
+                              }}
+                              className={`h-9 pl-11 ${inputClass}`}
+                            />
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setDemoLinks(demoLinks.filter((_, i) => i !== index));
+                          }}
+                          className="mt-1 p-2 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ))}
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setDemoLinks([
+                          ...demoLinks,
+                          { label: "", url: "" },
+                        ])
+                      }
+                      className="w-full rounded-full border-dashed border-border/50 text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5"
+                    >
+                      <PlusIcon className="h-4 w-4 mr-1.5" />
+                      Tambah Demo Link
+                    </Button>
+                  </div>
+
+                  <Typography variant="caption" color="muted" className="ml-1 font-medium">
+                    Tambahkan satu atau lebih link live preview agar pembeli bisa mencoba dulu.
+                  </Typography>
+                </div>
               </div>
             </div>
           </div>
@@ -566,121 +572,124 @@ export function ProductForm({
             ══════════════════════════════════ */}
           <div className="space-y-5 md:space-y-6">
             {/* ── Status & Organisasi ── */}
-            <div className="space-y-5 rounded-xl border border-border bg-card p-5 md:p-7">
-              <div className="flex items-center gap-3 mb-2">
-                <Typography variant="h6" as="h2">
+            <div className="rounded-xl border border-border bg-card overflow-hidden">
+              <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20">
+                <Typography variant="h6" as="h2" className="text-white font-bold">
                   Organisasi
                 </Typography>
               </div>
 
-              {/* Status Toggle */}
-              <div className="flex items-center justify-between rounded-sm border border-border/50 bg-background/50 px-4 py-3">
-                <div className="space-y-1">
-                  <Label className="text-sm font-bold text-foreground cursor-pointer">
-                    Status Aktif
+              <div className="p-5 md:p-7 space-y-5">
+
+                {/* Status Toggle */}
+                <div className="flex items-center justify-between rounded-sm border border-border/50 bg-background/50 px-4 py-3">
+                  <div className="space-y-1">
+                    <Label className="text-sm font-bold text-foreground cursor-pointer">
+                      Status Aktif
+                    </Label>
+                    <Typography variant="caption" color="muted" className="font-medium">
+                      Tampilkan di toko
+                    </Typography>
+                  </div>
+                  <Switch
+                    checked={isActive}
+                    onCheckedChange={setIsActive}
+                    className="data-[state=checked]:bg-primary"
+                  />
+                </div>
+
+                {/* Kategori */}
+                <div className="space-y-2.5">
+                  <Label className="text-foreground font-bold">Kategori</Label>
+                  <div className="flex gap-2">
+                    <Select
+                      name="categoryId"
+                      defaultValue={product?.category_id || ""}
+                    >
+                      <SelectTrigger
+                        className={`flex-1 h-11 ${inputClass} shadow-none`}
+                      >
+                        <SelectValue placeholder="Pilih kategori" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl border-border/50 bg-background/95 backdrop-blur-md">
+                        {categoryList.map((cat) => (
+                          <SelectItem
+                            key={cat.id}
+                            value={cat.id}
+                            className="rounded-xl cursor-pointer"
+                          >
+                            {cat.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <Dialog
+                      open={categoryDialogOpen}
+                      onOpenChange={setCategoryDialogOpen}
+                    >
+                      <DialogTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          className="h-11 w-11 flex-shrink-0 rounded-full border-border/50 bg-background/50 text-muted-foreground hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-all"
+                        >
+                          <PlusIcon className="h-5 w-5" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="rounded-xl border-border bg-card/95 backdrop-blur-xl p-6 sm:max-w-md">
+                        <DialogHeader>
+                          <DialogTitle className="text-xl text-foreground font-black tracking-tight mb-2">
+                            Tambah Kategori
+                          </DialogTitle>
+                        </DialogHeader>
+                        <form action={handleAddCategory} className="space-y-5">
+                          <div className="space-y-2.5">
+                            <Label
+                              htmlFor="catName"
+                              className="text-foreground font-bold"
+                            >
+                              Nama Kategori
+                            </Label>
+                            <Input
+                              id="catName"
+                              name="name"
+                              required
+                              placeholder="Contoh: E-Books"
+                              className={`h-11 ${inputClass}`}
+                            />
+                          </div>
+                          <Button
+                            type="submit"
+                            variant="brand"
+                            size="lg"
+                            className="w-full rounded-xl"
+                          >
+                            Simpan Kategori
+                          </Button>
+                        </form>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </div>
+
+                {/* Tags */}
+                <div className="space-y-2.5">
+                  <Label htmlFor="tags" className="text-foreground font-bold">
+                    Tags (Label)
                   </Label>
-                  <Typography variant="caption" color="muted" className="font-medium">
-                    Tampilkan di toko
+                  <Input
+                    id="tags"
+                    name="tags"
+                    defaultValue={product?.tags?.join(", ") || ""}
+                    placeholder="wedding, luxury, gold"
+                    className={`h-11 ${inputClass}`}
+                  />
+                  <Typography variant="caption" color="muted" className="ml-1 font-medium">
+                    Pisahkan dengan koma (contoh: tag1, tag2).
                   </Typography>
                 </div>
-                <Switch
-                  checked={isActive}
-                  onCheckedChange={setIsActive}
-                  className="data-[state=checked]:bg-primary"
-                />
-              </div>
-
-              {/* Kategori */}
-              <div className="space-y-2.5">
-                <Label className="text-foreground font-bold">Kategori</Label>
-                <div className="flex gap-2">
-                  <Select
-                    name="categoryId"
-                    defaultValue={product?.category_id || ""}
-                  >
-                    <SelectTrigger
-                      className={`flex-1 h-11 ${inputClass} shadow-none`}
-                    >
-                      <SelectValue placeholder="Pilih kategori" />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-xl border-border/50 bg-background/95 backdrop-blur-md">
-                      {categoryList.map((cat) => (
-                        <SelectItem
-                          key={cat.id}
-                          value={cat.id}
-                          className="rounded-xl cursor-pointer"
-                        >
-                          {cat.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <Dialog
-                    open={categoryDialogOpen}
-                    onOpenChange={setCategoryDialogOpen}
-                  >
-                    <DialogTrigger asChild>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        className="h-11 w-11 flex-shrink-0 rounded-full border-border/50 bg-background/50 text-muted-foreground hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-all"
-                      >
-                        <PlusIcon className="h-5 w-5" />
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="rounded-xl border-border bg-card/95 backdrop-blur-xl p-6 sm:max-w-md">
-                      <DialogHeader>
-                        <DialogTitle className="text-xl text-foreground font-black tracking-tight mb-2">
-                          Tambah Kategori
-                        </DialogTitle>
-                      </DialogHeader>
-                      <form action={handleAddCategory} className="space-y-5">
-                        <div className="space-y-2.5">
-                          <Label
-                            htmlFor="catName"
-                            className="text-foreground font-bold"
-                          >
-                            Nama Kategori
-                          </Label>
-                          <Input
-                            id="catName"
-                            name="name"
-                            required
-                            placeholder="Contoh: E-Books"
-                            className={`h-11 ${inputClass}`}
-                          />
-                        </div>
-                        <Button
-                          type="submit"
-                          variant="brand"
-                          size="lg"
-                          className="w-full rounded-xl"
-                        >
-                          Simpan Kategori
-                        </Button>
-                      </form>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-              </div>
-
-              {/* Tags */}
-              <div className="space-y-2.5">
-                <Label htmlFor="tags" className="text-foreground font-bold">
-                  Tags (Label)
-                </Label>
-                <Input
-                  id="tags"
-                  name="tags"
-                  defaultValue={product?.tags?.join(", ") || ""}
-                  placeholder="wedding, luxury, gold"
-                  className={`h-11 ${inputClass}`}
-                />
-                <Typography variant="caption" color="muted" className="ml-1 font-medium">
-                  Pisahkan dengan koma (contoh: tag1, tag2).
-                </Typography>
               </div>
             </div>
 
@@ -688,131 +697,134 @@ export function ProductForm({
               Unified: Gambar Produk
               Gambar pertama = thumbnail, sisanya = galeri
               ══════════════════════════════════ */}
-            <div className="space-y-5 rounded-xl border border-border bg-card p-5 md:p-7">
-              <div className="flex items-center justify-between mb-1">
-                <Typography variant="h6" as="h2">
+            <div className="rounded-xl border border-border bg-card overflow-hidden">
+              <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20 flex items-center justify-between">
+                <Typography variant="h6" as="h2" className="text-white font-bold">
                   Gambar Produk
                 </Typography>
                 {images.length > 0 && (
-                  <Typography variant="caption" color="muted" className="font-semibold">
+                  <Typography variant="caption" className="text-white/80 font-semibold">
                     {images.length} gambar
                   </Typography>
                 )}
               </div>
 
-              <Typography variant="caption" color="muted" className="font-medium !mt-0">
-                Gambar pertama akan menjadi thumbnail utama. Anda bisa menambahkan
-                beberapa gambar sekaligus.
-              </Typography>
+              <div className="p-5 md:p-7 space-y-5">
 
-              {/* Image Grid */}
-              {images.length > 0 && (
-                <div className="grid grid-cols-3 gap-2">
-                  {images.map((img, index) => (
-                    <div
-                      key={img.id}
-                      className={`group/img relative aspect-square rounded-sm overflow-hidden border bg-muted/30 ${
-                        index === 0
-                          ? "border-primary/50 ring-2 ring-primary/20"
-                          : "border-border"
-                      }`}
-                    >
-                      <Image
-                        src={img.url}
-                        alt={index === 0 ? "Thumbnail" : `Gallery ${index}`}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 33vw, 120px"
-                      />
+                <Typography variant="caption" color="muted" className="font-medium !mt-0">
+                  Gambar pertama akan menjadi thumbnail utama. Anda bisa menambahkan
+                  beberapa gambar sekaligus.
+                </Typography>
 
-                      {/* Thumbnail badge */}
-                      {index === 0 && (
-                        <div className="absolute bottom-0 inset-x-0 bg-primary/90 px-2 py-1 text-center">
-                          <Typography
-                            variant="caption"
-                            as="span"
-                            className="text-primary-foreground font-bold text-[10px] uppercase tracking-wider"
-                          >
-                            Thumbnail
-                          </Typography>
-                        </div>
-                      )}
-
-                      {/* Media badge */}
-                      {img.isMediaUrl && !img.isExisting && (
-                        <div className="absolute top-1 left-1">
-                          <div className="bg-primary/80 backdrop-blur-sm rounded-full p-1">
-                            <Square2StackIcon className="h-2.5 w-2.5 text-primary-foreground" />
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Remove button */}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveImage(img.id)}
-                        disabled={isDeleting}
-                        className="absolute top-1 right-1 h-6 w-6 rounded-full bg-destructive/90 backdrop-blur-sm text-destructive-foreground flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-all hover:scale-110"
+                {/* Image Grid */}
+                {images.length > 0 && (
+                  <div className="grid grid-cols-3 gap-2">
+                    {images.map((img, index) => (
+                      <div
+                        key={img.id}
+                        className={`group/img relative aspect-square rounded-sm overflow-hidden border bg-muted/30 ${
+                          index === 0
+                            ? "border-primary/50 ring-2 ring-primary/20"
+                            : "border-border"
+                        }`}
                       >
-                        <XMarkIcon className="h-3 w-3" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
+                        <Image
+                          src={img.url}
+                          alt={index === 0 ? "Thumbnail" : `Gallery ${index}`}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 33vw, 120px"
+                        />
 
-              {/* Empty state */}
-              {images.length === 0 && (
-                <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-sm border-2 border-dashed border-border/50 bg-background/30">
-                  <div className="flex flex-col items-center gap-2 text-muted-foreground/60">
-                    <PhotoIcon className="h-8 w-8 mb-1" />
-                    <Typography variant="caption" as="span" color="muted" className="font-semibold">
-                      Belum ada gambar
-                    </Typography>
+                        {/* Thumbnail badge */}
+                        {index === 0 && (
+                          <div className="absolute bottom-0 inset-x-0 bg-primary/90 px-2 py-1 text-center">
+                            <Typography
+                              variant="caption"
+                              as="span"
+                              className="text-primary-foreground font-bold text-[10px] uppercase tracking-wider"
+                            >
+                              Thumbnail
+                            </Typography>
+                          </div>
+                        )}
+
+                        {/* Media badge */}
+                        {img.isMediaUrl && !img.isExisting && (
+                          <div className="absolute top-1 left-1">
+                            <div className="bg-primary/80 backdrop-blur-sm rounded-full p-1">
+                              <Square2StackIcon className="h-2.5 w-2.5 text-primary-foreground" />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Remove button */}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(img.id)}
+                          disabled={isDeleting}
+                          className="absolute top-1 right-1 h-6 w-6 rounded-full bg-destructive/90 backdrop-blur-sm text-destructive-foreground flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-all hover:scale-110"
+                        >
+                          <XMarkIcon className="h-3 w-3" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
+                )}
+
+                {/* Empty state */}
+                {images.length === 0 && (
+                  <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-sm border-2 border-dashed border-border/50 bg-background/30">
+                    <div className="flex flex-col items-center gap-2 text-muted-foreground/60">
+                      <PhotoIcon className="h-8 w-8 mb-1" />
+                      <Typography variant="caption" as="span" color="muted" className="font-semibold">
+                        Belum ada gambar
+                      </Typography>
+                    </div>
+                  </div>
+                )}
+
+                {/* Action buttons: Upload + Media */}
+                <div className="grid grid-cols-2 gap-2">
+                  <label
+                    htmlFor="image-upload"
+                    className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-sm border border-border/50 bg-background/50 h-11 px-4 text-sm font-bold text-muted-foreground transition hover:bg-primary/10 hover:text-primary hover:border-primary/30 ${isPending ? "opacity-50 pointer-events-none" : ""}`}
+                  >
+                    <ArrowUpTrayIcon className="h-4 w-4" />
+                    Upload
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setMediaPickerOpen(true)}
+                    className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-sm border border-border/50 bg-background/50 h-11 px-4 text-sm font-bold text-muted-foreground transition hover:bg-primary/10 hover:text-primary hover:border-primary/30"
+                  >
+                    <Square2StackIcon className="h-4 w-4" />
+                    Media
+                  </button>
                 </div>
-              )}
 
-              {/* Action buttons: Upload + Media */}
-              <div className="grid grid-cols-2 gap-2">
-                <label
-                  htmlFor="image-upload"
-                  className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-sm border border-border/50 bg-background/50 h-11 px-4 text-sm font-bold text-muted-foreground transition hover:bg-primary/10 hover:text-primary hover:border-primary/30 ${isPending ? "opacity-50 pointer-events-none" : ""}`}
-                >
-                  <ArrowUpTrayIcon className="h-4 w-4" />
-                  Upload
-                </label>
-                <button
-                  type="button"
-                  onClick={() => setMediaPickerOpen(true)}
-                  className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-sm border border-border/50 bg-background/50 h-11 px-4 text-sm font-bold text-muted-foreground transition hover:bg-primary/10 hover:text-primary hover:border-primary/30"
-                >
-                  <Square2StackIcon className="h-4 w-4" />
-                  Media
-                </button>
+                {/* Hidden file input — multiple */}
+                <input
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleFilesChange}
+                  ref={fileInputRef}
+                  className="hidden"
+                />
+
+                <Typography variant="caption" color="muted" align="center" className="font-medium">
+                  Upload multiple gambar sekaligus • PNG, JPG, WebP — Max 2MB/gambar
+                </Typography>
+
+                {/* Media Picker Dialog */}
+                <MediaPickerDialog
+                  open={mediaPickerOpen}
+                  onOpenChange={setMediaPickerOpen}
+                  onSelect={handleMediaSelect}
+                />
               </div>
-
-              {/* Hidden file input — multiple */}
-              <input
-                id="image-upload"
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleFilesChange}
-                ref={fileInputRef}
-                className="hidden"
-              />
-
-              <Typography variant="caption" color="muted" align="center" className="font-medium">
-                Upload multiple gambar sekaligus • PNG, JPG, WebP — Max 2MB/gambar
-              </Typography>
-
-              {/* Media Picker Dialog */}
-              <MediaPickerDialog
-                open={mediaPickerOpen}
-                onOpenChange={setMediaPickerOpen}
-                onSelect={handleMediaSelect}
-              />
             </div>
 
             {/* ── Desktop Action Buttons ── */}

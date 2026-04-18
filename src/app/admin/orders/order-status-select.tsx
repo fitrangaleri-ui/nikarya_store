@@ -10,17 +10,17 @@ import {
 } from "@/components/ui/select";
 import { updateOrderStatus } from "./actions";
 
-// Kita simpan pewarnaan spesifik setiap status agar saat dropdown dibuka terlihat cantik
+// Status options using semantic design tokens instead of hardcoded colors
 const statusOptions = [
   {
     value: "PENDING",
     label: "Pending",
-    className: "text-amber-600 font-bold hover:bg-amber-50 focus:bg-amber-50",
+    className: "text-warning font-bold hover:bg-warning/10 focus:bg-warning/10",
   },
   {
     value: "PENDING_MANUAL",
     label: "Pending Manual",
-    className: "text-amber-600 font-bold hover:bg-amber-50 focus:bg-amber-50",
+    className: "text-warning font-bold hover:bg-warning/10 focus:bg-warning/10",
   },
   {
     value: "PAID",
@@ -35,12 +35,12 @@ const statusOptions = [
   },
 ];
 
-// Helper untuk mewarnai kapsul Trigger (tombol utama) berdasarkan status saat ini
+// Helper to style the trigger capsule based on current status — uses semantic tokens
 const getTriggerColor = (status: string) => {
   switch (status) {
     case "PENDING":
     case "PENDING_MANUAL":
-      return "border-amber-500/30 bg-amber-500/10 text-amber-600 focus:ring-amber-500";
+      return "border-warning/30 bg-warning/10 text-warning focus:ring-warning";
     case "PAID":
       return "border-primary/30 bg-primary/10 text-primary focus:ring-primary";
     case "FAILED":
@@ -76,13 +76,13 @@ export function OrderStatusSelect({
       disabled={isPending}
     >
       <SelectTrigger
-        className={`w-[120px] sm:w-[130px] h-9 rounded-full border px-3 text-xs font-bold tracking-wide outline-none transition-all shadow-sm ${getTriggerColor(currentStatus)} ${isPending ? "opacity-60 cursor-not-allowed animate-pulse" : "hover:brightness-110 cursor-pointer"}`}
+        className={`w-[120px] sm:w-[130px] h-9 rounded-full border px-3 text-xs font-bold tracking-wide outline-none transition-all ${getTriggerColor(currentStatus)} ${isPending ? "opacity-60 cursor-not-allowed animate-pulse" : "hover:brightness-110 cursor-pointer"}`}
       >
         <SelectValue />
       </SelectTrigger>
 
       <SelectContent
-        className="rounded-xl border border-border/50 bg-background/95 backdrop-blur-xl shadow-lg animate-in fade-in zoom-in-95"
+        className="rounded-xl border border-border/50 bg-background/95 backdrop-blur-xl animate-in fade-in zoom-in-95"
         position="popper"
       >
         <div className="p-1">

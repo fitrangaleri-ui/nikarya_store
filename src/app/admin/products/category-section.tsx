@@ -52,9 +52,9 @@ type CategoryWithCount = Category & {
   children?: CategoryWithCount[];
 };
 
-// Common Input Class
+// Common Input Class — matches product-form standard
 const inputClass =
-  "w-full h-11 rounded-2xl border border-border/50 bg-background/50 px-4 py-2 text-sm text-foreground font-semibold placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:bg-background outline-none transition-all shadow-sm";
+  "w-full rounded-sm border border-border/70 bg-background/50 px-4 py-2 text-sm text-foreground font-semibold placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:bg-background outline-none transition-all";
 
 // ─── Add / Edit Dialog ──────────────────────────────────────────────────────
 
@@ -135,24 +135,27 @@ function CategoryDialog({
       }}
     >
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="border-border/40 bg-card/95 backdrop-blur-xl rounded-3xl shadow-lg sm:max-w-md p-6 gap-0">
-        <DialogHeader className="mb-5">
-          <DialogTitle className="text-xl font-black tracking-tight text-foreground text-left">
+      <DialogContent className="border-border bg-card/95 backdrop-blur-xl rounded-xl sm:max-w-md p-0 gap-0">
+        {/* Dialog Header with primary background */}
+        <DialogHeader className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20 rounded-t-xl">
+          <DialogTitle className="text-white font-bold text-lg tracking-tight">
             {isEdit ? "Edit Kategori" : "Tambah Kategori"}
           </DialogTitle>
         </DialogHeader>
 
-        <form action={handleSubmit} className="space-y-5">
+        <form action={handleSubmit} className="p-5 md:p-7 space-y-5">
           {error && (
-            <div className="rounded-2xl border border-destructive/20 bg-destructive/10 p-3.5 text-sm font-semibold text-destructive animate-in fade-in zoom-in-95">
-              {error}
+            <div className="rounded-sm border border-destructive/20 bg-destructive/10 p-3">
+              <Typography variant="body-sm" color="destructive" className="font-semibold">
+                {error}
+              </Typography>
             </div>
           )}
 
           <div className="space-y-2.5">
             <Label
               htmlFor="catName"
-              className="text-sm font-bold text-foreground"
+              className="text-foreground font-bold"
             >
               Nama Kategori <span className="text-destructive">*</span>
             </Label>
@@ -162,22 +165,22 @@ function CategoryDialog({
               defaultValue={category?.name || ""}
               required
               placeholder="Contoh: Undangan Pernikahan"
-              className={inputClass}
+              className={`h-11 ${inputClass}`}
             />
           </div>
 
           {/* Parent Selector */}
           <div className="space-y-2.5">
-            <Label className="text-sm font-bold text-foreground">
+            <Label className="text-foreground font-bold">
               Kategori Induk{" "}
-              <span className="text-muted-foreground/60 font-medium text-xs ml-1">
+              <span className="font-medium text-muted-foreground text-xs ml-1">
                 (Opsional)
               </span>
             </Label>
             <select
               value={parentId}
               onChange={(e) => setParentId(e.target.value)}
-              className={inputClass}
+              className={`h-11 ${inputClass}`}
             >
               <option value="">— Tanpa Induk (Parent) —</option>
               {parentOptions.map((p) => (
@@ -190,11 +193,11 @@ function CategoryDialog({
 
           {/* Thumbnail */}
           <div className="space-y-2.5">
-            <Label className="text-sm font-bold text-foreground">
+            <Label className="text-foreground font-bold">
               Thumbnail Gambar
             </Label>
             <div className="flex flex-col gap-3">
-              <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-border/50 bg-background/30 transition-colors">
+              <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-sm border-2 border-dashed border-border/50 bg-background/30 transition-colors">
                 {previewUrl ? (
                   <>
                     <Image
@@ -206,7 +209,7 @@ function CategoryDialog({
                     <button
                       type="button"
                       onClick={handleRemoveImage}
-                      className="absolute top-2 right-2 h-8 w-8 rounded-full bg-destructive/90 backdrop-blur-sm text-destructive-foreground flex items-center justify-center hover:bg-destructive hover:scale-105 transition-all shadow-md"
+                      className="absolute top-2 right-2 h-8 w-8 rounded-full bg-destructive/90 backdrop-blur-sm text-destructive-foreground flex items-center justify-center hover:bg-destructive hover:scale-105 transition-all"
                       aria-label="Hapus gambar"
                     >
                       <XMarkIcon className="h-4 w-4" />
@@ -215,18 +218,18 @@ function CategoryDialog({
                 ) : (
                   <div className="flex flex-col items-center gap-2 text-muted-foreground/60">
                     <PhotoIcon className="h-8 w-8 mb-1" />
-                    <span className="text-xs font-semibold">
+                    <Typography variant="caption" as="span" color="muted" className="font-semibold">
                       Belum ada gambar
-                    </span>
+                    </Typography>
                   </div>
                 )}
               </div>
               <label
                 htmlFor={`thumb-${category?.id || "new"}`}
-                className="flex w-full h-11 cursor-pointer items-center justify-center gap-2 rounded-2xl border border-border/50 bg-background/50 px-4 py-2 text-sm font-bold text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary hover:border-primary/30 active:scale-[0.98] shadow-sm"
+                className={`flex w-full h-11 cursor-pointer items-center justify-center gap-2 rounded-sm border border-border/50 bg-background/50 px-4 py-2 text-sm font-bold text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary hover:border-primary/30 active:scale-[0.98] ${isPending ? "opacity-50 pointer-events-none" : ""}`}
               >
                 <ArrowUpTrayIcon className="h-4 w-4" />
-                {previewUrl ? "Ganti Gambar" : "ArrowUpTrayIcon Gambar"}
+                {previewUrl ? "Ganti Gambar" : "Upload Gambar"}
               </label>
               <input
                 ref={fileInputRef}
@@ -240,10 +243,20 @@ function CategoryDialog({
             </div>
           </div>
 
-          <div className="pt-2">
+          <div className="flex gap-3 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-1 h-11 rounded-full border-border bg-surface-2"
+              onClick={() => setOpen(false)}
+              disabled={isPending}
+            >
+              Batal
+            </Button>
             <Button
               type="submit"
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-2xl shadow-sm h-11 transition-all active:scale-[0.98] disabled:opacity-70"
+              variant="brand"
+              className="flex-1 h-11 rounded-full"
               disabled={isPending}
             >
               {isPending
@@ -292,7 +305,7 @@ function DeleteCategoryButton({
     <Button
       variant="ghost"
       size="icon"
-      className="h-10 w-10 rounded-xl text-destructive hover:text-destructive/80 hover:bg-destructive/10 shadow-none transition-colors"
+      className="h-10 w-10 rounded-full text-destructive hover:text-destructive/80 hover:bg-destructive/10 shadow-none transition-colors"
       onClick={handleDelete}
       disabled={isPending}
       title="Hapus Kategori"
@@ -317,8 +330,8 @@ function CategoryRow({
   return (
     <>
       <TableRow className="hover:bg-muted/50 border-border transition-colors group">
-        <TableCell className="w-16 sm:w-24 pl-4 py-3">
-          <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center overflow-hidden rounded-xl bg-muted/30 border border-border/50">
+        <TableCell className="w-16 sm:w-24 pl-5 py-3">
+          <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center overflow-hidden rounded-sm bg-muted/30 border border-border/50">
             {resolveImageSrc(cat.thumbnail_url) ? (
               <Image
                 src={resolveImageSrc(cat.thumbnail_url)!}
@@ -335,17 +348,15 @@ function CategoryRow({
         <TableCell className="py-3">
           <div
             className="flex flex-col sm:flex-row sm:items-center gap-1.5"
-            style={{
-              paddingLeft: `${depth * (typeof window !== "undefined" && window.innerWidth < 640 ? 12 : 24)}px`,
-            }}
+            style={{ paddingLeft: `${depth * 20}px` }}
           >
             <div className="flex items-center gap-1.5">
               {depth > 0 && (
                 <ChevronRightIcon className="h-4 w-4 text-muted-foreground/50 flex-shrink-0" />
               )}
-              <p className="text-sm font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+              <Typography variant="body-sm" as="span" className="font-bold line-clamp-1 group-hover:text-primary transition-colors">
                 {cat.name}
-              </p>
+              </Typography>
             </div>
             {cat.parent_id && (
               <Badge
@@ -358,16 +369,16 @@ function CategoryRow({
           </div>
         </TableCell>
         <TableCell className="hidden xs:table-cell py-3">
-          <p className="text-xs font-medium text-muted-foreground truncate max-w-[120px] sm:max-w-[200px]">
+          <Typography variant="caption" color="muted" className="font-medium truncate max-w-[120px] sm:max-w-[200px]">
             /{cat.slug}
-          </p>
+          </Typography>
         </TableCell>
         <TableCell className="text-center w-16 sm:w-24 py-3">
-          <Badge className="bg-muted/50 text-foreground border border-border/50 rounded-lg shadow-none font-bold px-2 py-1 text-xs">
+          <Badge className="bg-muted/50 text-foreground border border-border/50 rounded-sm shadow-none font-bold px-2 py-1 text-xs">
             {cat.productCount}
           </Badge>
         </TableCell>
-        <TableCell className="text-right w-24 sm:w-32 pr-6 py-3">
+        <TableCell className="text-right w-24 sm:w-32 pr-5 py-3">
           <div className="flex items-center justify-end gap-1.5">
             <CategoryDialog
               category={cat}
@@ -376,7 +387,7 @@ function CategoryRow({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-10 w-10 rounded-xl text-primary hover:text-primary/80 hover:bg-primary/10 shadow-none transition-colors"
+                  className="h-10 w-10 rounded-full text-primary hover:text-primary/80 hover:bg-primary/10 shadow-none transition-colors"
                 >
                   <PencilIcon className="h-4 w-4" />
                   <span className="sr-only">Edit</span>
@@ -423,39 +434,34 @@ export function CategorySection({
   }));
 
   return (
-    <div className="space-y-4 md:space-y-6 w-full">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <span className="w-1.5 h-6 md:h-7 bg-primary rounded-full block flex-shrink-0" />
-            <Typography variant="h3" as="h2" className="tracking-tight">
+    <div className="space-y-5 md:space-y-6 w-full">
+      {/* ── Category Table ── */}
+      <div className="rounded-xl border border-border bg-card overflow-hidden">
+        <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20 flex items-center justify-between">
+          <div>
+            <Typography variant="h6" as="h2" className="text-white font-bold">
               Manajemen Kategori
             </Typography>
+            <Typography variant="caption" className="text-white/70 font-medium mt-0.5">
+              {categories.length} kategori terdaftar
+            </Typography>
           </div>
-          <Typography variant="body-sm" className="font-medium text-muted-foreground ml-4 md:ml-5 mt-1">
-            <strong className="text-foreground">{categories.length}</strong>{" "}
-            kategori terdaftar
-          </Typography>
+          <CategoryDialog
+            allCategories={categories}
+            trigger={
+              <Button variant="outline" className="rounded-full h-10 px-5 bg-white/10 border-white/20 text-white hover:bg-white hover:text-primary transition-all font-bold text-sm">
+                <PlusIcon className="mr-2 h-4 w-4" />
+                Tambah Kategori
+              </Button>
+            }
+          />
         </div>
-        <CategoryDialog
-          allCategories={categories}
-          trigger={
-            <Button className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-2xl shadow-sm h-11 px-5 transition-all active:scale-[0.98]">
-              <PlusIcon className="mr-2 h-4 w-4" />
-              Tambah Kategori
-            </Button>
-          }
-        />
-      </div>
 
-      {/* Table */}
-      <div className="w-full rounded-[2rem] border border-border bg-card p-2 md:p-4 shadow-sm relative overflow-hidden">
-        <div className="overflow-x-auto w-full custom-scrollbar rounded-2xl border border-border">
+        <div className="overflow-x-auto w-full">
           <Table className="w-full min-w-[600px]">
-            <TableHeader className="bg-surface-2 border-b border-border">
+            <TableHeader className="bg-background/95 border-b border-border/40">
               <TableRow className="hover:bg-transparent border-transparent">
-                <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest w-20 sm:w-24 pl-4 py-4">
+                <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest w-20 sm:w-24 pl-5 py-4">
                   Gambar
                 </TableHead>
                 <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest min-w-[150px] py-4">
@@ -467,7 +473,7 @@ export function CategorySection({
                 <TableHead className="text-center text-[11px] font-bold text-muted-foreground uppercase tracking-widest w-20 sm:w-24 py-4">
                   Produk
                 </TableHead>
-                <TableHead className="text-right text-[11px] font-bold text-muted-foreground uppercase tracking-widest w-28 sm:w-32 pr-6 py-4">
+                <TableHead className="text-right text-[11px] font-bold text-muted-foreground uppercase tracking-widest w-28 sm:w-32 pr-5 py-4">
                   Aksi
                 </TableHead>
               </TableRow>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,16 +12,18 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import {
-    Ticket,
-    Plus,
-    Pencil,
-    Trash2,
-    TrendingUp,
-    Hash,
-    DollarSign,
-    BarChart3,
-    Loader2,
-} from "lucide-react";
+    TicketIcon,
+    PlusIcon,
+    PencilIcon,
+    TrashIcon,
+    ArrowTrendingUpIcon,
+    HashtagIcon,
+    BanknotesIcon,
+    ChartBarIcon,
+    ArrowPathIcon,
+} from "@heroicons/react/24/outline";
+import { Typography } from "@/components/ui/typography";
+import { StickyHeader } from "../sticky-header";
 import PromoFormDialog, {
     type PromoFormData,
 } from "./promo-form-dialog";
@@ -191,279 +192,268 @@ export default function AdminPromosPage() {
     };
 
     return (
-        <div className="space-y-6 md:space-y-8 pb-10">
-            {/* Header — Primary banner */}
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-                <div className="relative flex-1 rounded-3xl overflow-hidden bg-primary px-6 py-8 md:px-10 shadow-lg shadow-primary/20">
-                    <div aria-hidden className="absolute -top-10 -right-10 w-64 h-64 rounded-full pointer-events-none blur-[80px]" style={{ background: "rgba(255,255,255,0.08)" }} />
-                    <div aria-hidden className="absolute bottom-0 left-1/3 w-48 h-48 rounded-full pointer-events-none blur-[60px]" style={{ background: "rgba(255,255,255,0.05)" }} />
-                    <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)" }} />
-                    <div aria-hidden className="absolute inset-0 rounded-3xl pointer-events-none" style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)", border: "1px solid rgba(255,255,255,0.15)" }} />
-
-                    <div className="relative z-10 flex items-start justify-between gap-4">
-                        <div>
-                            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-white/15 text-primary-foreground text-[11px] font-bold uppercase tracking-[-0.005em] mb-3">
-                                <Ticket className="w-3 h-3" />
-                                Manajemen Promo
-                            </span>
-                            <h1 className="text-2xl md:text-3xl font-extrabold text-primary-foreground leading-tight tracking-tight">
-                                Promo
-                            </h1>
-                            <p className="mt-1.5 text-sm text-primary-foreground/70 leading-relaxed">
-                                Kelola kode promo dan lihat analitik.
-                            </p>
-                        </div>
-
-                        <div className="hidden md:flex shrink-0 w-14 h-14 rounded-2xl bg-white/15 items-center justify-center border border-white/20">
-                            <Ticket className="w-6 h-6 text-primary-foreground" />
-                        </div>
-                    </div>
-                </div>
+        <div className="w-full max-w-full overflow-x-hidden pb-10">
+            {/* ── Sticky Header ── */}
+            <StickyHeader
+                title="Promo"
+                description="Kelola kode promo dan lihat analitik."
+            >
                 <Button
                     variant="brand"
                     className="rounded-full h-11 px-6"
                     onClick={openCreate}
                 >
-                    <Plus className="h-4 w-4 mr-2" />
+                    <PlusIcon className="h-4 w-4 mr-2" />
                     Buat Promo
                 </Button>
-            </div>
+            </StickyHeader>
 
-            {/* Stats Cards */}
-            <div className="grid gap-4 sm:gap-6 grid-cols-2 lg:grid-cols-4">
-                <div className="relative rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden group hover:border-primary/30 hover:shadow-md hover:shadow-primary/5 transition-all duration-200">
-                    <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-primary/8 blur-xl pointer-events-none" />
-                    <div className="flex items-center justify-between mb-3">
-                        <p className="text-xs font-semibold uppercase tracking-[-0.005em] text-muted-foreground">
-                            Total Promo
-                        </p>
-                        <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
-                            <Ticket className="h-4 w-4 text-primary" />
-                        </div>
-                    </div>
-                    <p className="text-3xl font-extrabold text-foreground tracking-tight">
-                        {totalPromos}
-                    </p>
-                    <p className="text-[11px] text-muted-foreground mt-1">
-                        {activePromos} aktif
-                    </p>
-                </div>
-
-                <div className="relative rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden group hover:border-primary/30 hover:shadow-md hover:shadow-primary/5 transition-all duration-200">
-                    <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-primary/8 blur-xl pointer-events-none" />
-                    <div className="flex items-center justify-between mb-3">
-                        <p className="text-xs font-semibold uppercase tracking-[-0.005em] text-muted-foreground">
-                            Penggunaan
-                        </p>
-                        <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
-                            <Hash className="h-4 w-4 text-primary" />
-                        </div>
-                    </div>
-                    <p className="text-3xl font-extrabold text-foreground tracking-tight">
-                        {promos.reduce((s, p) => s + p.stats.usage_count, 0)}
-                    </p>
-                    <p className="text-[11px] text-muted-foreground mt-1">
-                        Total kali digunakan
-                    </p>
-                </div>
-
-                <div className="relative rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden group hover:border-emerald-500/30 hover:shadow-md hover:shadow-emerald-500/5 transition-all duration-200">
-                    <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-emerald-500/8 blur-xl pointer-events-none" />
-                    <div className="flex items-center justify-between mb-3">
-                        <p className="text-xs font-semibold uppercase tracking-[-0.005em] text-muted-foreground">
-                            Diskon
-                        </p>
-                        <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-                            <DollarSign className="h-4 w-4 text-emerald-600" />
-                        </div>
-                    </div>
-                    <p className="text-2xl font-extrabold text-foreground tracking-tight">
-                        {fmt(totalDiscountGiven)}
-                    </p>
-                    <p className="text-[11px] text-muted-foreground mt-1">
-                        Total diskon diberikan
-                    </p>
-                </div>
-
-                <div className="relative rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden group hover:border-violet-500/30 hover:shadow-md hover:shadow-violet-500/5 transition-all duration-200">
-                    <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-violet-500/8 blur-xl pointer-events-none" />
-                    <div className="flex items-center justify-between mb-3">
-                        <p className="text-xs font-semibold uppercase tracking-[-0.005em] text-muted-foreground">
-                            Revenue
-                        </p>
-                        <div className="w-8 h-8 rounded-xl bg-violet-500/10 flex items-center justify-center">
-                            <TrendingUp className="h-4 w-4 text-violet-600" />
-                        </div>
-                    </div>
-                    <p className="text-2xl font-extrabold text-foreground tracking-tight">
-                        {fmt(totalRevenue)}
-                    </p>
-                    <p className="text-[11px] text-primary font-bold mt-1 flex items-center gap-1.5">
-                        <BarChart3 className="h-3.5 w-3.5" />
-                        Dari orderan promo
-                    </p>
-                </div>
-            </div>
-
-            {/* Promos Table */}
-            <Card className="rounded-3xl border border-border/40 bg-card/60 backdrop-blur-md shadow-sm overflow-hidden">
-                <CardHeader className="flex flex-row items-center justify-between p-5 sm:p-6 border-b border-border/40">
-                    <CardTitle className="text-base sm:text-lg font-bold text-foreground tracking-tight flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                            <Ticket className="h-4 w-4 text-primary" />
-                        </div>
-                        Daftar Promo
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="px-0 sm:px-2 pt-4 pb-2">
-                    {loading ? (
-                        <div className="py-16 text-center">
-                            <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
-                            <p className="text-sm font-medium text-muted-foreground">
-                                Memuat data...
-                            </p>
-                        </div>
-                    ) : promos.length === 0 ? (
-                        <div className="py-16 text-center">
-                            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-                                <Ticket className="h-8 w-8 text-muted-foreground/50" />
+            <div className="p-4 sm:p-6 md:p-8 space-y-5 md:space-y-6">
+                {/* ── Stats Cards ── */}
+                <div className="grid gap-4 sm:gap-5 grid-cols-2 lg:grid-cols-4">
+                    {/* Total Promo */}
+                    <div className="rounded-xl bg-card border border-border px-5 py-5 overflow-hidden hover:border-primary/30 transition-all duration-200">
+                        <div className="flex items-center justify-between mb-3">
+                            <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase tracking-widest">
+                                Total Promo
+                            </Typography>
+                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                <TicketIcon className="h-4 w-4 text-primary" />
                             </div>
-                            <p className="text-muted-foreground font-semibold text-sm mb-4">
-                                Belum ada promo.
-                            </p>
-                            <Button
-                                variant="brand"
-                                className="rounded-full"
-                                onClick={openCreate}
-                            >
-                                <Plus className="h-4 w-4 mr-2" />
-                                Buat Promo Pertama
-                            </Button>
                         </div>
-                    ) : (
-                        <div className="overflow-x-auto w-full px-4 sm:px-4">
-                            <Table className="min-w-[800px]">
-                                <TableHeader>
-                                    <TableRow className="hover:bg-transparent border-border/40">
-                                        <TableHead className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                                            Kode
-                                        </TableHead>
-                                        <TableHead className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                                            Nama
-                                        </TableHead>
-                                        <TableHead className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                                            Diskon
-                                        </TableHead>
-                                        <TableHead className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                                            Penggunaan
-                                        </TableHead>
-                                        <TableHead className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                                            Periode
-                                        </TableHead>
-                                        <TableHead className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                                            Status
-                                        </TableHead>
-                                        <TableHead className="text-xs font-bold text-muted-foreground uppercase tracking-widest text-right pr-4">
-                                            Aksi
-                                        </TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {promos.map((promo) => (
-                                        <TableRow
-                                            key={promo.id}
-                                            className="hover:bg-muted/30 border-border/40 transition-colors"
-                                        >
-                                            <TableCell className="py-4">
-                                                <span className="text-sm font-black text-foreground bg-primary/10 text-primary px-2.5 py-1 rounded-lg">
-                                                    {promo.code}
-                                                </span>
-                                            </TableCell>
-                                            <TableCell className="text-sm font-semibold text-foreground py-4">
-                                                {promo.name}
-                                            </TableCell>
-                                            <TableCell className="text-sm font-bold text-foreground py-4 whitespace-nowrap">
-                                                {promo.discount_type === "percentage"
-                                                    ? `${promo.discount_value}%`
-                                                    : fmt(promo.discount_value)}
-                                                {promo.max_discount_cap && (
-                                                    <span className="text-xs text-muted-foreground ml-1">
-                                                        (maks {fmt(promo.max_discount_cap)})
-                                                    </span>
-                                                )}
-                                            </TableCell>
-                                            <TableCell className="text-sm font-bold text-foreground py-4">
-                                                <span className="text-primary">
-                                                    {promo.stats.usage_count}
-                                                </span>
-                                                {promo.global_usage_limit && (
-                                                    <span className="text-muted-foreground">
-                                                        /{promo.global_usage_limit}
-                                                    </span>
-                                                )}
-                                            </TableCell>
-                                            <TableCell className="text-xs font-medium text-muted-foreground py-4 whitespace-nowrap">
-                                                {fmtDate(promo.start_date)} — {fmtDate(promo.end_date)}
-                                            </TableCell>
-                                            <TableCell className="py-4">
-                                                <button onClick={() => handleToggle(promo)}>
-                                                    <Badge
-                                                        className={
-                                                            promo.is_active
-                                                                ? "bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 rounded-full shadow-none font-bold px-3 py-1 cursor-pointer"
-                                                                : "bg-muted text-muted-foreground border border-border/50 hover:bg-muted/80 rounded-full shadow-none font-bold px-3 py-1 cursor-pointer"
-                                                        }
-                                                    >
-                                                        {promo.is_active ? "Aktif" : "Nonaktif"}
-                                                    </Badge>
-                                                </button>
-                                            </TableCell>
-                                            <TableCell className="text-right pr-4 py-4">
-                                                <div className="flex items-center justify-end gap-1.5">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="h-8 w-8 rounded-full hover:bg-primary/10 hover:text-primary"
-                                                        onClick={() => openEdit(promo)}
-                                                    >
-                                                        <Pencil className="h-3.5 w-3.5" />
-                                                    </Button>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="h-8 w-8 rounded-full hover:bg-destructive/10 hover:text-destructive"
-                                                        onClick={() => handleDelete(promo.id)}
-                                                        disabled={deleting === promo.id}
-                                                    >
-                                                        {deleting === promo.id ? (
-                                                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                                        ) : (
-                                                            <Trash2 className="h-3.5 w-3.5" />
-                                                        )}
-                                                    </Button>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </div>
-                    )}
-                </CardContent>
-            </Card>
+                        <Typography variant="h3" as="p" className="tracking-tight">
+                            {totalPromos}
+                        </Typography>
+                        <Typography variant="caption" color="muted" className="mt-1">
+                            {activePromos} aktif
+                        </Typography>
+                    </div>
 
-            {/* Dialog */}
-            <PromoFormDialog
-                open={dialogOpen}
-                onClose={() => {
-                    setDialogOpen(false);
-                    setEditingPromo(null);
-                }}
-                onSave={handleSave}
-                initialData={editingPromo}
-                categories={categories}
-                products={products}
-            />
+                    {/* Penggunaan */}
+                    <div className="rounded-xl bg-card border border-border px-5 py-5 overflow-hidden hover:border-primary/30 transition-all duration-200">
+                        <div className="flex items-center justify-between mb-3">
+                            <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase tracking-widest">
+                                Penggunaan
+                            </Typography>
+                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                <HashtagIcon className="h-4 w-4 text-primary" />
+                            </div>
+                        </div>
+                        <Typography variant="h3" as="p" className="tracking-tight">
+                            {promos.reduce((s, p) => s + p.stats.usage_count, 0)}
+                        </Typography>
+                        <Typography variant="caption" color="muted" className="mt-1">
+                            Total kali digunakan
+                        </Typography>
+                    </div>
+
+                    {/* Diskon */}
+                    <div className="rounded-xl bg-card border border-border px-5 py-5 overflow-hidden hover:border-primary/30 transition-all duration-200">
+                        <div className="flex items-center justify-between mb-3">
+                            <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase tracking-widest">
+                                Diskon
+                            </Typography>
+                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                <BanknotesIcon className="h-4 w-4 text-primary" />
+                            </div>
+                        </div>
+                        <Typography variant="h4" as="p" className="tracking-tight">
+                            {fmt(totalDiscountGiven)}
+                        </Typography>
+                        <Typography variant="caption" color="muted" className="mt-1">
+                            Total diskon diberikan
+                        </Typography>
+                    </div>
+
+                    {/* Revenue */}
+                    <div className="rounded-xl bg-card border border-border px-5 py-5 overflow-hidden hover:border-primary/30 transition-all duration-200">
+                        <div className="flex items-center justify-between mb-3">
+                            <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase tracking-widest">
+                                Revenue
+                            </Typography>
+                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                <ArrowTrendingUpIcon className="h-4 w-4 text-primary" />
+                            </div>
+                        </div>
+                        <Typography variant="h4" as="p" className="tracking-tight">
+                            {fmt(totalRevenue)}
+                        </Typography>
+                        <Typography variant="caption" color="primary" className="font-bold mt-1 flex items-center gap-1.5">
+                            <ChartBarIcon className="h-3.5 w-3.5" />
+                            Dari orderan promo
+                        </Typography>
+                    </div>
+                </div>
+
+                {/* ── Promos Table ── */}
+                <div className="rounded-xl border border-border bg-card overflow-hidden">
+                    <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20 flex items-center justify-between">
+                        <Typography variant="h6" as="h2" className="text-white font-bold">
+                            Daftar Promo
+                        </Typography>
+                        <Typography variant="caption" className="text-white/80 font-semibold">
+                            {totalPromos} promo
+                        </Typography>
+                    </div>
+
+                    <div className="px-0 sm:px-2 pt-4 pb-2">
+                        {loading ? (
+                            <div className="py-16 text-center">
+                                <ArrowPathIcon className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
+                                <Typography variant="body-sm" color="muted" className="font-medium">
+                                    Memuat data...
+                                </Typography>
+                            </div>
+                        ) : promos.length === 0 ? (
+                            <div className="py-16 text-center">
+                                <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center mx-auto mb-4">
+                                    <TicketIcon className="h-8 w-8 text-muted-foreground/40" />
+                                </div>
+                                <Typography variant="body-sm" color="muted" className="font-semibold mb-4">
+                                    Belum ada promo.
+                                </Typography>
+                                <Button
+                                    variant="brand"
+                                    className="rounded-full"
+                                    onClick={openCreate}
+                                >
+                                    <PlusIcon className="h-4 w-4 mr-2" />
+                                    Buat Promo Pertama
+                                </Button>
+                            </div>
+                        ) : (
+                            <div className="overflow-x-auto w-full px-4 sm:px-4">
+                                <Table className="min-w-[800px]">
+                                    <TableHeader className="bg-background/95 border-b border-border/40">
+                                        <TableRow className="hover:bg-transparent border-transparent">
+                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                                                Kode
+                                            </TableHead>
+                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                                                Nama
+                                            </TableHead>
+                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                                                Diskon
+                                            </TableHead>
+                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                                                Penggunaan
+                                            </TableHead>
+                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                                                Periode
+                                            </TableHead>
+                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                                                Status
+                                            </TableHead>
+                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest text-right pr-4">
+                                                Aksi
+                                            </TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {promos.map((promo) => (
+                                            <TableRow
+                                                key={promo.id}
+                                                className="hover:bg-muted/30 border-border/40 transition-colors"
+                                            >
+                                                <TableCell className="py-4">
+                                                    <Typography variant="body-sm" as="span" color="primary" className="font-black bg-primary/10 px-2.5 py-1 rounded-sm">
+                                                        {promo.code}
+                                                    </Typography>
+                                                </TableCell>
+                                                <TableCell className="py-4">
+                                                    <Typography variant="body-sm" className="font-semibold">
+                                                        {promo.name}
+                                                    </Typography>
+                                                </TableCell>
+                                                <TableCell className="py-4 whitespace-nowrap">
+                                                    <Typography variant="body-sm" className="font-bold">
+                                                        {promo.discount_type === "percentage"
+                                                            ? `${promo.discount_value}%`
+                                                            : fmt(promo.discount_value)}
+                                                    </Typography>
+                                                    {promo.max_discount_cap && (
+                                                        <Typography variant="caption" color="muted" as="span" className="ml-1">
+                                                            (maks {fmt(promo.max_discount_cap)})
+                                                        </Typography>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell className="py-4">
+                                                    <Typography variant="body-sm" className="font-bold">
+                                                        <span className="text-primary">
+                                                            {promo.stats.usage_count}
+                                                        </span>
+                                                        {promo.global_usage_limit && (
+                                                            <span className="text-muted-foreground">
+                                                                /{promo.global_usage_limit}
+                                                            </span>
+                                                        )}
+                                                    </Typography>
+                                                </TableCell>
+                                                <TableCell className="py-4 whitespace-nowrap">
+                                                    <Typography variant="caption" color="muted" className="font-medium">
+                                                        {fmtDate(promo.start_date)} — {fmtDate(promo.end_date)}
+                                                    </Typography>
+                                                </TableCell>
+                                                <TableCell className="py-4">
+                                                    <button onClick={() => handleToggle(promo)}>
+                                                        <Badge
+                                                            className={
+                                                                promo.is_active
+                                                                    ? "bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 rounded-full shadow-none font-bold px-3 py-1 cursor-pointer"
+                                                                    : "bg-muted text-muted-foreground border border-border/50 hover:bg-muted/80 rounded-full shadow-none font-bold px-3 py-1 cursor-pointer"
+                                                            }
+                                                        >
+                                                            {promo.is_active ? "Aktif" : "Nonaktif"}
+                                                        </Badge>
+                                                    </button>
+                                                </TableCell>
+                                                <TableCell className="text-right pr-4 py-4">
+                                                    <div className="flex items-center justify-end gap-1.5">
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-8 w-8 rounded-full hover:bg-primary/10 hover:text-primary"
+                                                            onClick={() => openEdit(promo)}
+                                                        >
+                                                            <PencilIcon className="h-3.5 w-3.5" />
+                                                        </Button>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-8 w-8 rounded-full hover:bg-destructive/10 hover:text-destructive"
+                                                            onClick={() => handleDelete(promo.id)}
+                                                            disabled={deleting === promo.id}
+                                                        >
+                                                            {deleting === promo.id ? (
+                                                                <ArrowPathIcon className="h-3.5 w-3.5 animate-spin" />
+                                                            ) : (
+                                                                <TrashIcon className="h-3.5 w-3.5" />
+                                                            )}
+                                                        </Button>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Dialog */}
+                <PromoFormDialog
+                    open={dialogOpen}
+                    onClose={() => {
+                        setDialogOpen(false);
+                        setEditingPromo(null);
+                    }}
+                    onSave={handleSave}
+                    initialData={editingPromo}
+                    categories={categories}
+                    products={products}
+                />
+            </div>
         </div>
     );
 }

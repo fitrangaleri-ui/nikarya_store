@@ -5,8 +5,15 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserCircle, Upload, X, CheckCircle, AlertCircle } from "lucide-react";
+import { Typography } from "@/components/ui/typography";
+import {
+  UserCircleIcon,
+  ArrowUpTrayIcon,
+  XMarkIcon,
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  ArrowPathIcon,
+} from "@heroicons/react/24/outline";
 import { updateProfile } from "./actions";
 
 type ProfileData = {
@@ -60,41 +67,41 @@ export function ProfileForm({ profile }: { profile: ProfileData }) {
   }
 
   return (
-    <Card className="rounded-3xl border border-border/40 bg-card/60 backdrop-blur-md shadow-sm overflow-hidden">
-      <CardHeader className="p-5 sm:p-6 border-b border-border/40">
-        <CardTitle className="text-base sm:text-lg font-bold text-foreground tracking-tight flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-            <UserCircle className="h-4 w-4 text-primary" />
-          </div>
+    <div className="rounded-xl border border-border bg-card overflow-hidden">
+      <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20 flex items-center gap-3">
+        <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center">
+          <UserCircleIcon className="h-4 w-4 text-white" />
+        </div>
+        <Typography variant="h6" as="h2" className="text-white font-bold">
           Edit Profil
-        </CardTitle>
-      </CardHeader>
+        </Typography>
+      </div>
 
-      <CardContent className="p-5 sm:p-8">
-        <form action={handleSubmit} className="space-y-7">
+      <div className="p-5 md:p-7">
+        <form action={handleSubmit} className="space-y-6">
           {/* Pesan Error */}
           {error && (
-            <div className="rounded-2xl border border-destructive/20 bg-destructive/10 p-4 text-sm font-semibold text-destructive flex items-center gap-3 animate-in fade-in zoom-in-95">
-              <AlertCircle className="h-5 w-5 flex-shrink-0" />
+            <div className="rounded-xl border border-destructive/20 bg-destructive/10 p-4 text-sm font-semibold text-destructive flex items-center gap-3 animate-in fade-in zoom-in-95">
+              <ExclamationCircleIcon className="h-5 w-5 flex-shrink-0" />
               {error}
             </div>
           )}
 
           {/* Pesan Sukses */}
           {success && (
-            <div className="rounded-2xl border border-primary/20 bg-primary/10 p-4 text-sm font-semibold text-primary flex items-center gap-3 animate-in fade-in zoom-in-95">
-              <CheckCircle className="h-5 w-5 flex-shrink-0" />
+            <div className="rounded-xl border border-primary/20 bg-primary/10 p-4 text-sm font-semibold text-primary flex items-center gap-3 animate-in fade-in zoom-in-95">
+              <CheckCircleIcon className="h-5 w-5 flex-shrink-0" />
               Profil berhasil diperbarui!
             </div>
           )}
 
           {/* Avatar Area */}
           <div className="space-y-4">
-            <Label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">
+            <Label className="text-xs font-bold text-muted-foreground uppercase  ml-1">
               Foto Profil
             </Label>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-6 bg-background/50 border border-border/50 rounded-2xl p-5 shadow-sm">
-              <div className="relative h-24 w-24 sm:h-28 sm:w-28 rounded-full overflow-hidden border-2 border-border/50 bg-muted/40 flex-shrink-0 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-6 bg-background/50 border border-border/50 rounded-xl p-5">
+              <div className="relative h-24 w-24 sm:h-28 sm:w-28 rounded-full overflow-hidden border-2 border-border/50 bg-muted/40 flex-shrink-0">
                 {previewUrl ? (
                   <>
                     <Image
@@ -106,10 +113,10 @@ export function ProfileForm({ profile }: { profile: ProfileData }) {
                     <button
                       type="button"
                       onClick={handleRemoveAvatar}
-                      className="absolute -top-1 -right-1 h-8 w-8 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center hover:bg-destructive/90 transition-colors z-10 shadow-sm border-2 border-background"
+                      className="absolute -top-1 -right-1 h-8 w-8 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center hover:bg-destructive/90 transition-colors z-10 border-2 border-background"
                       aria-label="Hapus Foto"
                     >
-                      <X className="h-3.5 w-3.5" />
+                      <XMarkIcon className="h-3.5 w-3.5" />
                     </button>
                   </>
                 ) : (
@@ -122,15 +129,15 @@ export function ProfileForm({ profile }: { profile: ProfileData }) {
               <div className="space-y-3">
                 <label
                   htmlFor="avatar-upload"
-                  className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border border-border/60 bg-background px-5 py-2.5 text-sm font-bold text-foreground hover:bg-primary/5 hover:text-primary hover:border-primary/40 transition-all active:scale-[0.98] shadow-sm"
+                  className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border border-border/60 bg-background px-5 py-2.5 text-sm font-bold text-foreground hover:bg-primary/5 hover:text-primary hover:border-primary/40 transition-all active:scale-[0.98]"
                 >
-                  <Upload className="h-4 w-4 text-primary" />
+                  <ArrowUpTrayIcon className="h-4 w-4 text-primary" />
                   {previewUrl ? "Ganti Foto" : "Unggah Foto"}
                 </label>
-                <p className="text-[11px] font-medium text-muted-foreground/70 leading-relaxed max-w-[200px]">
+                <Typography variant="caption" color="muted" className="leading-relaxed max-w-[200px]">
                   Format: PNG, JPG atau JPEG. <br />
                   Ukuran maksimal 2MB.
-                </p>
+                </Typography>
               </div>
             </div>
 
@@ -149,7 +156,7 @@ export function ProfileForm({ profile }: { profile: ProfileData }) {
           <div className="space-y-2">
             <Label
               htmlFor="full_name"
-              className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1"
+              className="text-xs font-bold text-muted-foreground uppercase  ml-1"
             >
               Nama Lengkap <span className="text-destructive">*</span>
             </Label>
@@ -159,7 +166,7 @@ export function ProfileForm({ profile }: { profile: ProfileData }) {
               defaultValue={profile.fullName}
               placeholder="Masukkan nama lengkap Anda"
               required
-              className="h-12 rounded-xl border-border/50 bg-background/50 text-foreground text-sm font-semibold focus:ring-1 focus:ring-primary focus:border-primary focus:bg-background transition-all"
+              className="h-11 rounded-sm border-border/70 bg-background/50 text-foreground text-sm font-semibold focus:ring-1 focus:ring-primary focus:border-primary focus:bg-background transition-all"
             />
           </div>
 
@@ -168,14 +175,21 @@ export function ProfileForm({ profile }: { profile: ProfileData }) {
             <Button
               type="submit"
               variant="brand"
-              className="w-full h-12 rounded-full shadow-md shadow-primary/20 transition-all active:scale-[0.98] disabled:opacity-70"
+              className="w-full h-12 rounded-full transition-all active:scale-[0.98] disabled:opacity-70"
               disabled={isPending}
             >
-              {isPending ? "Menyimpan..." : "Simpan Perubahan"}
+              {isPending ? (
+                <>
+                  <ArrowPathIcon className="h-4 w-4 mr-2 animate-spin" />
+                  Menyimpan...
+                </>
+              ) : (
+                "Simpan Perubahan"
+              )}
             </Button>
           </div>
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

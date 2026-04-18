@@ -1,12 +1,11 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Typography } from "@/components/ui/typography";
 import {
-  PhotoIcon,
   ServerStackIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
+import { StickyHeader } from "../sticky-header";
 import { MediaGrid, type MediaItem } from "./media-grid";
 
 export const dynamic = "force-dynamic";
@@ -24,14 +23,11 @@ export default async function AdminMediaPage() {
 
   if (filesError) {
     return (
-      <Alert
-        variant="destructive"
-        className="w-full rounded-2xl border-destructive/20 bg-destructive/10"
-      >
-        <AlertDescription className="text-sm font-semibold text-destructive">
+      <div className="w-full rounded-xl border border-destructive/20 bg-destructive/10 p-4 sm:p-6 animate-in fade-in zoom-in-95">
+        <Typography variant="body-sm" color="destructive" className="font-semibold">
           Error loading storage: {filesError.message}
-        </AlertDescription>
-      </Alert>
+        </Typography>
+      </div>
     );
   }
 
@@ -212,110 +208,60 @@ export default async function AdminMediaPage() {
         : "bg-success";
 
   return (
-    <div className="space-y-6 md:space-y-8 w-full max-w-full overflow-x-hidden pb-10">
-      {/* Header — Primary banner */}
-      <div className="relative rounded-2xl overflow-hidden bg-primary px-6 py-8 md:px-10">
-        {/* Decorative blurs */}
-        <div
-          aria-hidden
-          className="absolute -top-10 -right-10 w-64 h-64 rounded-full pointer-events-none blur-[80px]"
-          style={{ background: "rgba(255,255,255,0.08)" }}
-        />
-        <div
-          aria-hidden
-          className="absolute bottom-0 left-1/3 w-48 h-48 rounded-full pointer-events-none blur-[60px]"
-          style={{ background: "rgba(255,255,255,0.05)" }}
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
-          }}
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 rounded-2xl pointer-events-none"
-          style={{
-            boxShadow:
-              "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
-            border: "1px solid rgba(255,255,255,0.15)",
-          }}
-        />
+    <div className="w-full max-w-full overflow-x-hidden pb-10">
+      {/* ── Sticky Header ── */}
+      <StickyHeader
+        title="Galeri Media"
+        description="Kelola file gambar produk dan kategori."
+      />
 
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div>
-            <Badge className="mb-3 gap-1.5 bg-primary-foreground/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-primary-foreground border-none">
-              <PhotoIcon className="w-3 h-3" />
-              Manajemen Media
-            </Badge>
-            <Typography
-              variant="h3"
-              as="h1"
-              className="text-primary-foreground leading-tight"
-            >
-              Galeri Media Terpadu
+      <div className="p-4 sm:p-6 md:p-8 space-y-5 md:space-y-6">
+        {/* ── Storage Capacity Card ── */}
+        <div className="rounded-xl border border-border bg-card overflow-hidden">
+          <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20">
+            <Typography variant="h6" as="h2" className="text-white font-bold">
+              Kapasitas Storage
             </Typography>
-            <Typography
-              variant="body-sm"
-              as="p"
-              className="mt-1.5 text-primary-foreground/70 leading-relaxed max-w-lg"
-            >
-              Sistem otomatis mendeteksi file yang terhubung dengan produk /
-              kategori. Hapus file{" "}
-              <strong className="text-primary-foreground">Tidak Terpakai</strong>{" "}
-              untuk menghemat kuota limit.
+            <Typography variant="caption" className="text-white/70 font-medium mt-0.5">
+              Sistem otomatis mendeteksi file yang terhubung dengan produk / kategori.
             </Typography>
           </div>
 
-          {/* Storage Capacity Card */}
-          <div className="bg-primary-foreground/10 border border-primary-foreground/20 rounded-xl p-4 w-full lg:w-80 backdrop-blur-md shrink-0">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-1.5 text-primary-foreground">
-                <ServerStackIcon className="h-4 w-4" />
-                <Typography
-                  variant="body-sm"
-                  as="span"
-                  className="font-bold text-primary-foreground"
-                >
-                  Kapasitas Storage
+          <div className="p-5 md:p-7">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <ServerStackIcon className="h-5 w-5 text-primary" />
+                <Typography variant="body-sm" className="font-bold">
+                  Penggunaan Storage
                 </Typography>
               </div>
-              <Typography
-                variant="caption"
-                as="span"
-                className="font-mono font-bold text-primary-foreground bg-primary-foreground/20 px-2 py-0.5 rounded-full"
-              >
+              <Badge className="font-mono font-bold bg-primary/10 text-primary border border-primary/20 rounded-full shadow-none px-3 py-1">
                 {totalStorageMB} MB / {maxStorageMB} MB
-              </Typography>
+              </Badge>
             </div>
 
             {/* Progress Bar */}
-            <div className="h-2 w-full bg-primary-foreground/10 rounded-full overflow-hidden mb-2.5">
+            <div className="h-2.5 w-full bg-muted/50 rounded-full overflow-hidden mb-3">
               <div
                 className={`h-full rounded-full transition-all duration-1000 ease-out ${progressBarClass}`}
                 style={{ width: `${storagePercentage}%` }}
               />
             </div>
 
-            <div className="flex items-start gap-1.5 text-primary-foreground/70">
-              <ExclamationCircleIcon className="h-3.5 w-3.5 shrink-0 mt-0.5" />
-              <Typography
-                variant="caption"
-                as="span"
-                className="text-primary-foreground/70 leading-snug"
-              >
-                Acuan Free Tier Supabase (1GB). Penghapusan gambar yang sudah
-                dipakai di artikel/produk akan memutuskan link tersebut.
+            <div className="flex items-start gap-2 bg-muted/30 rounded-sm p-3 border border-border/50">
+              <ExclamationCircleIcon className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+              <Typography variant="caption" color="muted" className="leading-snug font-medium">
+                Acuan Free Tier Supabase (1GB). Hapus file{" "}
+                <strong className="text-foreground">Tidak Terpakai</strong>{" "}
+                untuk menghemat kuota. Penghapusan gambar yang sudah dipakai akan memutuskan link tersebut.
               </Typography>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Grid of media */}
-      <MediaGrid initialMedia={allMedia} />
+        {/* ── Grid of media ── */}
+        <MediaGrid initialMedia={allMedia} />
+      </div>
     </div>
   );
 }

@@ -18,6 +18,7 @@ import { DeleteProductButton, DuplicateProductButton, ToggleStatusButton } from 
 import { FilterSelect } from "../filter-select";
 import { CategorySection } from "./category-section";
 import { ImportExportSection } from "./import-export";
+import { StickyHeader } from "../sticky-header";
 
 export const dynamic = "force-dynamic";
 
@@ -70,116 +71,96 @@ export default async function AdminProductsPage({
 
   if (error) {
     return (
-      <div className="w-full rounded-2xl border border-destructive/20 bg-destructive/10 p-4 sm:p-6 text-sm font-semibold text-destructive animate-in fade-in zoom-in-95">
-        Error loading products: {error.message}
+      <div className="w-full rounded-xl border border-destructive/20 bg-destructive/10 p-4 sm:p-6 animate-in fade-in zoom-in-95">
+        <Typography variant="body-sm" color="destructive" className="font-semibold">
+          Error loading products: {error.message}
+        </Typography>
       </div>
     );
   }
 
   return (
-    <div className="p-4 sm:p-6 md:p-8">
-      {/* PENGUNCIAN UTAMA: overflow-hidden & max-w-full */}
-      <div className="flex flex-col gap-6 md:gap-8 w-full max-w-full overflow-hidden pb-10">
-        {/* ── Header — Primary banner ── */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 w-full">
-          <div className="relative flex-1 overflow-hidden rounded-[2rem] border border-border bg-card px-6 py-8 shadow-sm md:px-10 md:py-10">
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(circle at top right, color-mix(in srgb, var(--primary) 16%, transparent), transparent 36%), radial-gradient(circle at bottom left, color-mix(in srgb, var(--warning) 12%, transparent), transparent 28%)",
-              }}
-            />
-
-            <div className="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-6">
-              <div className="space-y-4">
-                <Badge className="rounded-full bg-primary-bg px-4 py-1.5 text-primary shadow-sm hover:bg-primary-bg">
-                  <CubeIcon className="w-3.5 h-3.5 mr-2" />
-                  Manajemen Produk
-                </Badge>
-
-                <div>
-                  <Typography variant="h2" as="h1" className="tracking-tight text-foreground">
-                    Produk
-                  </Typography>
-                  <Typography variant="body-base" className="text-muted-foreground mt-2">
-                    <strong className="text-foreground">{products?.length || 0}</strong>{" "}
-                    produk terdaftar
-                  </Typography>
-                </div>
-              </div>
-
-              <div className="hidden md:flex shrink-0 w-16 h-16 rounded-3xl bg-surface-2 items-center justify-center border border-border shadow-sm">
-                <CubeIcon className="w-7 h-7 text-primary" />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2.5 flex-shrink-0">
-            <ImportExportSection />
-            <Link href="/admin/products/new">
-              <Button variant="brand" size="lg" className="rounded-2xl shadow-sm">
-                <PlusIcon className="h-4 w-4 sm:mr-2" />
-                <span className="hidden sm:inline">Tambah Produk</span>
-              </Button>
-            </Link>
-          </div>
+    <div className="w-full max-w-full overflow-x-hidden pb-10">
+      {/* ── Sticky Header ── */}
+      <StickyHeader
+        title="Produk"
+        description={`${products?.length || 0} produk terdaftar`}
+      >
+        <div className="flex items-center gap-2.5">
+          <ImportExportSection />
+          <Link href="/admin/products/new">
+            <Button variant="brand" size="lg" className="rounded-full">
+              <PlusIcon className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Tambah Produk</span>
+            </Button>
+          </Link>
         </div>
+      </StickyHeader>
 
+      <div className="p-4 sm:p-6 md:p-8 space-y-5 md:space-y-6">
         {/* ── Search & Filter Bar ── */}
-        <div className="w-full flex flex-col lg:flex-row gap-4 md:gap-5 rounded-[2rem] border border-border bg-surface-2 p-4 md:p-5 shadow-sm overflow-hidden">
-          <form className="w-full flex-1 relative">
-            <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-            <input
-              type="text"
-              name="search"
-              defaultValue={search || ""}
-              placeholder="Cari nama produk..."
-              className="w-full h-11 rounded-2xl border border-border/50 bg-background/50 pl-11 pr-4 py-2 text-sm text-foreground font-semibold placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:bg-background outline-none transition-all shadow-sm box-border"
-            />
-            {status && <input type="hidden" name="status" value={status} />}
-            {category && <input type="hidden" name="category" value={category} />}
-          </form>
+        <div className="rounded-xl border border-border bg-card overflow-hidden">
+          <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20">
+            <Typography variant="h6" as="h2" className="text-white font-bold">
+              Filter Produk
+            </Typography>
+          </div>
+          <div className="p-5 md:p-7">
+            <div className="flex flex-col lg:flex-row gap-4 md:gap-5 w-full">
+              <form className="w-full flex-1 relative">
+                <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                <input
+                  type="text"
+                  name="search"
+                  defaultValue={search || ""}
+                  placeholder="Cari nama produk..."
+                  className="w-full h-11 rounded-sm border border-border/70 bg-background/50 pl-11 pr-4 py-2 text-sm text-foreground font-semibold placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:bg-background outline-none transition-all box-border"
+                />
+                {status && <input type="hidden" name="status" value={status} />}
+                {category && <input type="hidden" name="category" value={category} />}
+              </form>
 
-          <div className="w-full lg:w-auto flex flex-col sm:flex-row gap-3 flex-shrink-0">
-            <div className="flex flex-row gap-3 w-full sm:w-auto">
-              <div className="flex-1 sm:w-36 min-w-0">
-                <FilterSelect
-                  name="status"
-                  defaultValue={status || ""}
-                  options={[
-                    { value: "", label: "Semua Status" },
-                    { value: "active", label: "Aktif" },
-                    { value: "inactive", label: "Nonaktif" },
-                  ]}
-                  className="w-full rounded-2xl"
-                />
-              </div>
-              <div className="flex-1 sm:w-44 min-w-0">
-                <FilterSelect
-                  name="category"
-                  defaultValue={category || ""}
-                  options={[
-                    { value: "", label: "Kategori" },
-                    ...(categories?.map((cat) => ({
-                      value: cat.id,
-                      label: cat.name,
-                    })) || []),
-                  ]}
-                  className="w-full rounded-2xl"
-                />
+              <div className="w-full lg:w-auto flex flex-col sm:flex-row gap-3 flex-shrink-0">
+                <div className="flex flex-row gap-3 w-full sm:w-auto">
+                  <div className="flex-1 sm:w-36 min-w-0">
+                    <FilterSelect
+                      name="status"
+                      defaultValue={status || ""}
+                      options={[
+                        { value: "", label: "Semua Status" },
+                        { value: "active", label: "Aktif" },
+                        { value: "inactive", label: "Nonaktif" },
+                      ]}
+                      className="w-full rounded-sm"
+                    />
+                  </div>
+                  <div className="flex-1 sm:w-44 min-w-0">
+                    <FilterSelect
+                      name="category"
+                      defaultValue={category || ""}
+                      options={[
+                        { value: "", label: "Kategori" },
+                        ...(categories?.map((cat) => ({
+                          value: cat.id,
+                          label: cat.name,
+                        })) || []),
+                      ]}
+                      className="w-full rounded-sm"
+                    />
+                  </div>
+                </div>
+                {(search || status || category) && (
+                  <Link href="/admin/products" className="w-full sm:w-auto block">
+                    <Button
+                      variant="outline"
+                      className="w-full sm:w-auto h-11 rounded-sm border-border/50 bg-background/50 text-muted-foreground font-bold hover:text-foreground hover:bg-muted/80 transition-all active:scale-95"
+                    >
+                      Reset
+                    </Button>
+                  </Link>
+                )}
               </div>
             </div>
-            {(search || status || category) && (
-              <Link href="/admin/products" className="w-full sm:w-auto block">
-                <Button
-                  variant="outline"
-                  className="w-full sm:w-auto h-11 rounded-2xl border-border/50 bg-background/50 text-muted-foreground font-bold hover:text-foreground hover:bg-muted/80 shadow-sm transition-all active:scale-95"
-                >
-                  Reset
-                </Button>
-              </Link>
-            )}
           </div>
         </div>
 
@@ -191,11 +172,11 @@ export default async function AdminProductsPage({
             products.map((product) => (
               <div
                 key={product.id}
-                className="rounded-3xl border border-border bg-card shadow-sm overflow-hidden transition-all"
+                className="rounded-xl border border-border bg-card overflow-hidden transition-all"
               >
                 {/* Baris atas: thumbnail + info */}
                 <div className="flex gap-4 p-4">
-                  <div className="flex-shrink-0 h-20 w-20 rounded-2xl overflow-hidden bg-muted/30 border border-border/50 flex items-center justify-center">
+                  <div className="flex-shrink-0 h-20 w-20 rounded-sm overflow-hidden bg-muted/30 border border-border/50 flex items-center justify-center">
                     {resolveImageSrc(product.thumbnail_url) ? (
                       <Image
                         src={resolveImageSrc(product.thumbnail_url)!}
@@ -210,17 +191,17 @@ export default async function AdminProductsPage({
                   </div>
 
                   <div className="flex-1 min-w-0 flex flex-col justify-center">
-                    <p className="text-sm font-bold text-foreground line-clamp-2 leading-snug">
+                    <Typography variant="body-sm" className="font-bold line-clamp-2 leading-snug">
                       {product.title}
-                    </p>
-                    <p className="text-[11px] font-medium text-muted-foreground truncate mt-1">
+                    </Typography>
+                    <Typography variant="caption" color="muted" className="font-medium truncate mt-1">
                       {(product.categories as unknown as { name: string } | null)
                         ?.name || "—"}{" "}
                       · /{product.slug}
-                    </p>
-                    <p className="text-base font-black text-primary mt-1.5 tracking-tight">
+                    </Typography>
+                    <Typography variant="body-base" color="primary" className="font-black mt-1.5 tracking-tight">
                       Rp {Number(product.price).toLocaleString("id-ID")}
-                    </p>
+                    </Typography>
                   </div>
                 </div>
 
@@ -246,7 +227,7 @@ export default async function AdminProductsPage({
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-10 w-10 rounded-xl text-primary hover:text-primary/80 hover:bg-primary/10 shadow-none transition-colors"
+                        className="h-10 w-10 rounded-full text-primary hover:text-primary/80 hover:bg-primary/10 shadow-none transition-colors"
                       >
                         <PencilIcon className="h-4 w-4" />
                         <span className="sr-only">Edit Produk</span>
@@ -262,7 +243,7 @@ export default async function AdminProductsPage({
               </div>
             ))
           ) : (
-            <div className="rounded-[2rem] border border-border bg-surface-2 py-16 flex flex-col items-center gap-4 shadow-sm">
+            <div className="rounded-xl border border-border bg-card py-16 flex flex-col items-center gap-4">
               <div className="h-16 w-16 rounded-full bg-muted/50 flex items-center justify-center">
                 <CubeIcon className="h-8 w-8 text-muted-foreground/40" />
               </div>
@@ -281,28 +262,28 @@ export default async function AdminProductsPage({
         {/* ══════════════════════════════════════
             ── DESKTOP: Products Table (≥ md)  ──
             ══════════════════════════════════════ */}
-        <div className="hidden md:block w-full rounded-[2rem] border border-border bg-card p-2 md:p-4 shadow-sm">
-          <div className="w-full overflow-x-auto custom-scrollbar rounded-2xl border border-border">
+        <div className="hidden md:block w-full rounded-xl border border-border bg-card overflow-hidden">
+          <div className="w-full overflow-x-auto">
             <div className="min-w-[900px] w-full inline-block align-middle">
               <Table className="w-full">
-                <TableHeader className="bg-surface-2 border-b border-border">
+                <TableHeader className="bg-primary border-b border-primary-bg/20">
                   <TableRow className="hover:bg-transparent border-transparent">
-                    <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest w-20 py-4 pl-4">
+                    <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest w-20 py-4 pl-5">
                       Gambar
                     </TableHead>
-                    <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest min-w-[200px] py-4">
+                    <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest min-w-[200px] py-4">
                       Nama Produk
                     </TableHead>
-                    <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest min-w-[150px] py-4">
+                    <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest min-w-[150px] py-4">
                       Kategori
                     </TableHead>
-                    <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest min-w-[150px] py-4">
+                    <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest min-w-[150px] py-4">
                       Harga
                     </TableHead>
-                    <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest text-center min-w-[150px] py-4">
+                    <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest text-center min-w-[150px] py-4">
                       Status
                     </TableHead>
-                    <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest text-right w-32 pr-6 py-4">
+                    <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest text-right w-32 pr-5 py-4">
                       Aksi
                     </TableHead>
                   </TableRow>
@@ -314,8 +295,8 @@ export default async function AdminProductsPage({
                         key={product.id}
                         className="hover:bg-muted/50 border-border transition-colors group"
                       >
-                        <TableCell className="py-4 pl-4">
-                          <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-muted/30 border border-border/50">
+                        <TableCell className="py-4 pl-5">
+                          <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-sm bg-muted/30 border border-border/50">
                             {resolveImageSrc(product.thumbnail_url) ? (
                               <Image
                                 src={resolveImageSrc(product.thumbnail_url)!}
@@ -333,21 +314,25 @@ export default async function AdminProductsPage({
                           <Typography variant="body-sm" className="font-bold line-clamp-1">
                             {product.title}
                           </Typography>
-                          <Typography variant="caption" className="text-muted-foreground mt-1 truncate max-w-[250px]">
+                          <Typography variant="caption" color="muted" className="mt-1 truncate max-w-[250px]">
                             /{product.slug}
                           </Typography>
                         </TableCell>
-                        <TableCell className="py-4 text-sm font-medium text-muted-foreground">
-                          {(
-                            product.categories as unknown as {
-                              name: string;
-                            } | null
-                          )?.name || (
-                              <span className="text-muted-foreground/50">—</span>
-                            )}
+                        <TableCell className="py-4">
+                          <Typography variant="body-sm" color="muted" className="font-medium">
+                            {(
+                              product.categories as unknown as {
+                                name: string;
+                              } | null
+                            )?.name || (
+                                <span className="text-muted-foreground/50">—</span>
+                              )}
+                          </Typography>
                         </TableCell>
-                        <TableCell className="py-4 text-sm font-black text-primary whitespace-nowrap">
-                          Rp {Number(product.price).toLocaleString("id-ID")}
+                        <TableCell className="py-4 whitespace-nowrap">
+                          <Typography variant="body-sm" color="primary" className="font-black">
+                            Rp {Number(product.price).toLocaleString("id-ID")}
+                          </Typography>
                         </TableCell>
                         <TableCell className="py-4 text-center">
                           <div className="flex items-center justify-center gap-3">
@@ -366,13 +351,13 @@ export default async function AdminProductsPage({
                             </Badge>
                           </div>
                         </TableCell>
-                        <TableCell className="py-4 text-right pr-6">
+                        <TableCell className="py-4 text-right pr-5">
                           <div className="flex items-center justify-end gap-1.5">
                             <Link href={`/admin/products/${product.id}/edit`}>
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-10 w-10 rounded-xl text-primary hover:text-primary/80 hover:bg-primary/10 shadow-none transition-colors"
+                                className="h-10 w-10 rounded-full text-primary hover:text-primary/80 hover:bg-primary/10 shadow-none transition-colors"
                               >
                                 <PencilIcon className="h-4 w-4" />
                                 <span className="sr-only">Edit Produk</span>
@@ -416,9 +401,7 @@ export default async function AdminProductsPage({
         </div>
 
         {/* ── Category Management Section ── */}
-        <div className="border-t border-border/40 pt-6 md:pt-8 mt-2 w-full">
-          <CategorySection categories={categoriesWithCount} />
-        </div>
+        <CategorySection categories={categoriesWithCount} />
       </div>
     </div>
   );

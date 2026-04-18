@@ -87,7 +87,7 @@ function MediaCard({
 
   return (
     <div
-      className={`group relative overflow-hidden flex flex-col rounded-2xl border transition-all duration-300 ${
+      className={`group relative overflow-hidden flex flex-col rounded-xl border transition-all duration-300 ${
         isBroken
           ? "border-destructive/50 bg-destructive/5"
           : "border-border bg-card hover:border-primary/30"
@@ -165,30 +165,34 @@ function MediaCard({
                   <TrashIcon className="h-3.5 w-3.5" />
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent className="rounded-2xl border-border bg-background/95 backdrop-blur-xl sm:max-w-md p-6">
-                <AlertDialogHeader className="space-y-3">
-                  <div className="mx-auto w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-1">
-                    <ExclamationTriangleIcon className="h-6 w-6 text-destructive" />
+              <AlertDialogContent className="rounded-xl border-border bg-card/95 backdrop-blur-xl sm:max-w-md p-0 gap-0">
+                <div className="bg-destructive/10 px-5 py-4 md:px-7 md:py-5 border-b border-destructive/20 rounded-t-xl">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center">
+                      <ExclamationTriangleIcon className="h-5 w-5 text-destructive" />
+                    </div>
+                    <AlertDialogTitle className="text-lg font-bold tracking-tight text-destructive">
+                      Hapus Gambar?
+                    </AlertDialogTitle>
                   </div>
-                  <AlertDialogTitle className="text-xl text-center font-black tracking-tight text-foreground">
-                    Hapus Gambar?
-                  </AlertDialogTitle>
-                  <AlertDialogDescription className="text-center font-medium">
+                </div>
+                <div className="p-5 md:p-7 space-y-5">
+                  <AlertDialogDescription className="font-medium text-muted-foreground">
                     Apakah Anda yakin ingin menghapus gambar ini secara permanen
                     dari server penyimpanan? Tindakan ini tidak dapat dibatalkan.
                   </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter className="mt-6 flex gap-3 sm:justify-center">
-                  <AlertDialogCancel className="h-11 rounded-xl flex-1 bg-muted/50 hover:bg-muted font-bold border-none transition-colors">
-                    Batal
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleDelete}
-                    className="h-11 rounded-xl flex-1 bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black shadow-none transition-all active:scale-[0.98]"
-                  >
-                    Ya, Hapus
-                  </AlertDialogAction>
-                </AlertDialogFooter>
+                  <AlertDialogFooter className="flex gap-3 sm:justify-end">
+                    <AlertDialogCancel className="h-11 rounded-full flex-1 sm:flex-none bg-surface-2 hover:bg-muted font-bold border-border transition-colors">
+                      Batal
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleDelete}
+                      className="h-11 rounded-full flex-1 sm:flex-none bg-destructive hover:bg-destructive/90 text-destructive-foreground font-bold shadow-none transition-all active:scale-[0.98]"
+                    >
+                      Ya, Hapus
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </div>
               </AlertDialogContent>
             </AlertDialog>
           </div>
@@ -223,7 +227,7 @@ function MediaCard({
               variant="caption"
               as="p"
               color="muted"
-              className="font-mono font-bold bg-muted/50 px-1.5 py-0.5 rounded-md"
+              className="font-mono font-bold bg-muted/50 px-1.5 py-0.5 rounded-sm"
             >
               {(item.size / 1024).toFixed(1)} KB
             </Typography>
@@ -272,60 +276,67 @@ export function MediaGrid({ initialMedia }: { initialMedia: MediaItem[] }) {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 md:space-y-6">
       {/* Filter Bar */}
-      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between rounded-2xl border border-border bg-card p-4">
-        <div className="relative w-full sm:max-w-xs">
-          <FunnelIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Cari nama produk..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 h-11 rounded-xl border-border bg-background text-sm font-semibold shadow-none focus:bg-background"
-          />
+      <div className="rounded-xl border border-border bg-card overflow-hidden">
+        <div className="bg-primary px-5 py-3 md:px-7 md:py-4 border-b border-primary-bg/20">
+          <Typography variant="body-sm" as="h3" className="text-white font-bold">
+            Filter Media
+          </Typography>
         </div>
+        <div className="p-4 md:p-5 flex flex-col sm:flex-row gap-4 items-center justify-between">
+          <div className="relative w-full sm:max-w-xs">
+            <FunnelIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Cari nama produk..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10 h-11 rounded-sm border-border/70 bg-background/50 text-sm font-semibold shadow-none focus:border-primary focus:ring-1 focus:ring-primary focus:bg-background outline-none transition-all"
+            />
+          </div>
 
-        <div className="w-full sm:w-48">
-          <Select
-            value={filterType}
-            onValueChange={(val: string) => setFilterType(val)}
-          >
-            <SelectTrigger className="h-11 rounded-xl border-border bg-background text-sm font-semibold shadow-none">
-              <SelectValue placeholder="Semua Tipe" />
-            </SelectTrigger>
-            <SelectContent className="rounded-xl border-border">
-              <SelectItem value="all" className="rounded-lg font-medium">
-                Semua Tipe
-              </SelectItem>
-              <SelectItem value="multiple" className="rounded-lg font-medium">
-                Thumbnail & Galeri
-              </SelectItem>
-              <SelectItem value="gallery" className="rounded-lg font-medium">
-                Galeri Produk
-              </SelectItem>
-              <SelectItem
-                value="product_thumbnail"
-                className="rounded-lg font-medium"
-              >
-                Thumbnail Produk
-              </SelectItem>
-              <SelectItem
-                value="category_thumbnail"
-                className="rounded-lg font-medium"
-              >
-                Gambar Kategori
-              </SelectItem>
-              <SelectItem value="unused" className="rounded-lg font-medium">
-                Tidak Terpakai
-              </SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="w-full sm:w-48">
+            <Select
+              value={filterType}
+              onValueChange={(val: string) => setFilterType(val)}
+            >
+              <SelectTrigger className="h-11 rounded-sm border-border/70 bg-background/50 text-sm font-semibold shadow-none">
+                <SelectValue placeholder="Semua Tipe" />
+              </SelectTrigger>
+              <SelectContent className="rounded-xl border-border/50 bg-background/95 backdrop-blur-md">
+                <SelectItem value="all" className="rounded-xl font-medium cursor-pointer">
+                  Semua Tipe
+                </SelectItem>
+                <SelectItem value="multiple" className="rounded-xl font-medium cursor-pointer">
+                  Thumbnail & Galeri
+                </SelectItem>
+                <SelectItem value="gallery" className="rounded-xl font-medium cursor-pointer">
+                  Galeri Produk
+                </SelectItem>
+                <SelectItem
+                  value="product_thumbnail"
+                  className="rounded-xl font-medium cursor-pointer"
+                >
+                  Thumbnail Produk
+                </SelectItem>
+                <SelectItem
+                  value="category_thumbnail"
+                  className="rounded-xl font-medium cursor-pointer"
+                >
+                  Gambar Kategori
+                </SelectItem>
+                <SelectItem value="unused" className="rounded-xl font-medium cursor-pointer">
+                  Tidak Terpakai
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 
       {/* Grid */}
       {filteredMedia.length > 0 ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5">
           {filteredMedia.map((item) => (
             <MediaCard
               key={`${item.type}-${item.id}`}
@@ -335,7 +346,7 @@ export function MediaGrid({ initialMedia }: { initialMedia: MediaItem[] }) {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center py-24 px-4 text-center rounded-2xl border-2 border-dashed border-border bg-card/30">
+        <div className="flex flex-col items-center justify-center py-24 px-4 text-center rounded-xl border-2 border-dashed border-border bg-card/30">
           <div className="w-16 h-16 rounded-full bg-muted/50 flex flex-col items-center justify-center mb-3">
             <PhotoIcon className="h-8 w-8 text-muted-foreground/40" />
           </div>
