@@ -14,6 +14,7 @@ import { useDemoPreview } from "@/components/demo-preview-provider";
 interface DemoLink {
     label: string;
     url: string;
+    image_url?: string;
 }
 
 interface DemoLinksModalProps {
@@ -61,7 +62,6 @@ export function DemoLinksModal({ demoLinks, children }: DemoLinksModalProps) {
                     <DialogHeader className="px-6 pt-6 pb-2">
                         <DialogTitle asChild>
                             <Typography variant="h4" className="flex items-center gap-2">
-                                <EyeIcon className="size-5 text-primary" />
                                 Pilih Demo
                             </Typography>
                         </DialogTitle>
@@ -83,13 +83,20 @@ export function DemoLinksModal({ demoLinks, children }: DemoLinksModalProps) {
                                     });
                                 }}
                             >
-                                <div className="flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:bg-primary/20 transition-colors">
-                                        <Typography variant="caption" className="font-bold text-primary">
-                                            {index + 1}
-                                        </Typography>
-                                    </div>
-                                    <Typography variant="body-sm" className="font-semibold group-hover:text-primary transition-colors">
+                                <div className="flex items-center gap-4">
+                                    {link.image_url ? (
+                                        <div className="w-12 h-12 rounded-lg overflow-hidden border border-border/50 relative shrink-0">
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                                            <img src={link.image_url} alt={link.label} className="w-full h-full object-cover" />
+                                        </div>
+                                    ) : (
+                                        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:bg-primary/20 transition-colors shrink-0">
+                                            <Typography variant="caption" className="font-bold text-primary text-lg">
+                                                {index + 1}
+                                            </Typography>
+                                        </div>
+                                    )}
+                                    <Typography variant="body-sm" className="font-semibold group-hover:text-primary transition-colors text-left">
                                         {link.label || `Demo ${index + 1}`}
                                     </Typography>
                                 </div>

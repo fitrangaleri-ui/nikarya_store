@@ -22,7 +22,7 @@ import { fetchMediaForPicker, type MediaPickerItem } from "./fetch-media";
 type MediaPickerDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSelect: (url: string) => void;
+  onSelect: (payload: { type: "url"; url: string } | { type: "files"; files: File[] }) => void;
 };
 
 export function MediaPickerDialog({
@@ -58,7 +58,14 @@ export function MediaPickerDialog({
 
   const handleConfirm = () => {
     if (selectedUrl) {
-      onSelect(selectedUrl);
+      onSelect({ type: "url", url: selectedUrl });
+      onOpenChange(false);
+    }
+  };
+
+  const handleLocalFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      onSelect({ type: "files", files: Array.from(e.target.files) });
       onOpenChange(false);
     }
   };
@@ -144,22 +151,20 @@ export function MediaPickerDialog({
                         isSelected ? null : item.image_url
                       )
                     }
-                    className={`group relative aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                      isSelected
+                    className={`group relative aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${isSelected
                         ? "border-primary ring-2 ring-primary/20 scale-[0.97]"
                         : "border-border hover:border-primary/40"
-                    }`}
+                      }`}
                   >
                     <Image
                       src={item.image_url}
                       alt={item.file_name}
                       fill
                       sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, 20vw"
-                      className={`object-cover transition-all duration-300 ${
-                        isSelected
+                      className={`object-cover transition-all duration-300 ${isSelected
                           ? "brightness-75"
                           : "group-hover:scale-105"
-                      }`}
+                        }`}
                     />
 
                     {/* Selection overlay */}
@@ -187,7 +192,7 @@ export function MediaPickerDialog({
         </div>
 
         {/* Footer */}
-        <div className="shrink-0 border-t border-border bg-muted/30 px-5 py-3 sm:px-6 flex items-center justify-between gap-3">
+        <div className="shrink-0 border-t border-border bg-muted/30 px-5 py-3 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <Typography
             variant="caption"
             color="muted"
@@ -198,16 +203,28 @@ export function MediaPickerDialog({
               <span className="text-primary ml-2">• 1 dipilih</span>
             )}
           </Typography>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto">
             <Button
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => onOpenChange(false)}
-              className="rounded-full border-border bg-background px-4"
+              onClick={() => document.getElementById("media-picker-upload")?.click()}
+              className="rounded-full border-border bg-background px-4 hover:border-primary/50 hover:text-primary transition-colors"
             >
-              Batal
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 mr-1.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+              </svg>
+              Upload dari Komputer
             </Button>
+            <input
+              id="media-picker-upload"
+              type="file"
+              multiple
+              accept="image/*"
+              className="hidden"
+              onChange={handleLocalFiles}
+            />
+
             <Button
               type="button"
               variant="brand"
@@ -218,6 +235,15 @@ export function MediaPickerDialog({
             >
               <CheckCircleIcon className="h-4 w-4 mr-1.5" />
               Gunakan Gambar
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => onOpenChange(false)}
+              className="rounded-full border-border bg-background px-4"
+            >
+              Batal
             </Button>
           </div>
         </div>

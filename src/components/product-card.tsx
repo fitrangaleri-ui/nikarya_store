@@ -58,6 +58,12 @@ export function ProductCard({ product }: { product: any }) {
           .filter(Boolean) as string[]
         : [];
 
+    const demoImages = product.product_demo_links && Array.isArray(product.product_demo_links)
+      ? product.product_demo_links.map((d: any) => resolveImageSrc(d.image_url)).filter(Boolean) as string[]
+      : [];
+    
+    galleryRaw.push(...demoImages);
+
     if (galleryRaw.length === 0) {
       // No gallery — just use thumbnail if available
       return thumbnailSrc ? [thumbnailSrc] : [];

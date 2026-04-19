@@ -48,7 +48,7 @@ export async function createProduct(formData: FormData) {
 
   const sku = (formData.get("sku") as string) || null;
   const demoLinksRaw = formData.get("demoLinks") as string;
-  let demoLinks: { label: string; url: string }[] = [];
+  let demoLinks: { label: string; url: string; image_url?: string }[] = [];
   try {
     if (demoLinksRaw) demoLinks = JSON.parse(demoLinksRaw);
   } catch { /* ignore parse errors */ }
@@ -116,6 +116,7 @@ export async function createProduct(formData: FormData) {
       product_id: inserted.id,
       label: d.label || `Demo ${i + 1}`,
       url: d.url,
+      image_url: d.image_url || null,
       sort_order: i,
     }));
     await admin.from("product_demo_links").insert(demoRows);
@@ -184,7 +185,7 @@ export async function updateProduct(productId: string, formData: FormData) {
 
   const sku = (formData.get("sku") as string) || null;
   const demoLinksRaw = formData.get("demoLinks") as string;
-  let demoLinks: { label: string; url: string }[] = [];
+  let demoLinks: { label: string; url: string; image_url?: string }[] = [];
   try {
     if (demoLinksRaw) demoLinks = JSON.parse(demoLinksRaw);
   } catch { /* ignore parse errors */ }
@@ -262,6 +263,7 @@ export async function updateProduct(productId: string, formData: FormData) {
       product_id: productId,
       label: d.label || `Demo ${i + 1}`,
       url: d.url,
+      image_url: d.image_url || null,
       sort_order: i,
     }));
     await admin.from("product_demo_links").insert(demoRows);
@@ -472,7 +474,7 @@ export async function duplicateProduct(productId: string) {
   // Duplicate demo links
   const { data: demoLinks } = await admin
     .from("product_demo_links")
-    .select("label, url, sort_order")
+    .select("label, url, image_url, sort_order")
     .eq("product_id", productId)
     .order("sort_order");
 
@@ -481,6 +483,7 @@ export async function duplicateProduct(productId: string) {
       product_id: inserted.id,
       label: d.label,
       url: d.url,
+      image_url: d.image_url,
       sort_order: d.sort_order,
     }));
     await admin.from("product_demo_links").insert(demoRows);

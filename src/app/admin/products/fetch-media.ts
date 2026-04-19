@@ -51,3 +51,29 @@ export async function fetchMediaForPicker(): Promise<MediaPickerItem[]> {
 
   return items;
 }
+
+export async function uploadMediaDirect(formData: FormData) {
+  const admin = createAdminClient();
+  const file = formData.get("file") as File;
+  if (!file || file.size === 0) return { error: "No file provided" };
+
+  const fileExt = file.name.split(".").pop();
+  const fileName = `media-${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+
+  const { error: uploadError } = await admin.storage
+    .from("product-images")
+    .upload(fileName, file, {
+      cacheControl: "3600",
+      upsert: false,
+    });
+
+  if (uploadError) {
+    return { error: uploadError.message };
+  }
+
+  const { data: publicUrl } = admin.storage
+    .from("product-images")
+    .getPublicUrl(fileName);
+
+  return { url: publicUrl.publicUrl };
+}

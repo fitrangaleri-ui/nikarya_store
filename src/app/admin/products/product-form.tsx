@@ -21,6 +21,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { createProduct, updateProduct, deleteGalleryImage } from "./actions";
+import { uploadMediaDirect } from "./fetch-media";
 import { createCategory } from "../categories/actions";
 import {
   PlusIcon,
@@ -60,7 +61,7 @@ type Product = {
   discount_price?: number | null;
   sku?: string | null;
   demo_link?: string | null;
-  demo_links?: { id: string; label: string; url: string; sort_order: number }[];
+  demo_links?: { id: string; label: string; url: string; image_url?: string; sort_order: number }[];
   tags?: string[] | null;
   category_id: string | null;
   thumbnail_url: string | null;
@@ -99,6 +100,7 @@ export function ProductForm({
 
   // Media picker state
   const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
+  const [demoLinkMediaPickerIndex, setDemoLinkMediaPickerIndex] = useState<number | null>(null);
 
   // Unified images state — combines thumbnail + gallery into a single ordered list
   // First image = thumbnail, rest = gallery
@@ -136,8 +138,8 @@ export function ProductForm({
   const [images, setImages] = useState<ImageItem[]>(buildInitialImages);
 
   // Demo links state
-  const [demoLinks, setDemoLinks] = useState<{ label: string; url: string }[]>(
-    product?.demo_links?.map((d) => ({ label: d.label, url: d.url })) || []
+  const [demoLinks, setDemoLinks] = useState<{ label: string; url: string; image_url?: string }[]>(
+    product?.demo_links?.map((d) => ({ label: d.label, url: d.url, image_url: d.image_url })) || []
   );
 
   const generateSlug = (title: string) => {
@@ -154,45 +156,65 @@ export function ProductForm({
     }
   };
 
-  // Handle multiple file upload
-  const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-
-    const newItems: ImageItem[] = [];
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      newItems.push({
-        id: `new-${Date.now()}-${i}`,
-        url: URL.createObjectURL(file),
-        file,
-        isExisting: false,
-        isMediaUrl: false,
-      });
-    }
-
-    setImages((prev) => [...prev, ...newItems]);
-
-    // Reset file input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
-
   // Handle media picker selection
-  const handleMediaSelect = (url: string) => {
-    // Check if this URL is already in the list
-    if (images.some((img) => img.url === url)) return;
+  const handleMediaSelect = async (payload: { type: "url"; url: string } | { type: "files"; files: File[] }) => {
+    if (payload.type === "url") {
+      const url = payload.url;
+      if (demoLinkMediaPickerIndex !== null) {
+        const updated = [...demoLinks];
+        updated[demoLinkMediaPickerIndex] = { ...updated[demoLinkMediaPickerIndex], image_url: url };
+        setDemoLinks(updated);
+        setDemoLinkMediaPickerIndex(null);
+        return;
+      }
 
-    setImages((prev) => [
-      ...prev,
-      {
-        id: `media-${Date.now()}`,
-        url,
-        isExisting: false,
-        isMediaUrl: true,
-      },
-    ]);
+      // Check if this URL is already in the list
+      if (images.some((img) => img.url === url)) return;
+
+      setImages((prev) => [
+        ...prev,
+        {
+          id: `media-${Date.now()}`,
+          url,
+          isExisting: false,
+          isMediaUrl: true,
+        },
+      ]);
+    } else if (payload.type === "files") {
+      const files = payload.files;
+
+      if (demoLinkMediaPickerIndex !== null) {
+        const file = files[0];
+        if (file) {
+          const formData = new FormData();
+          formData.append("file", file);
+          const res = await uploadMediaDirect(formData);
+          if (res.url) {
+            const updated = [...demoLinks];
+            updated[demoLinkMediaPickerIndex] = { ...updated[demoLinkMediaPickerIndex], image_url: res.url };
+            setDemoLinks(updated);
+          }
+        }
+        setDemoLinkMediaPickerIndex(null);
+        return;
+      }
+
+      // Handle multiple file upload to gallery
+      const newItems: ImageItem[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (images.some((img) => img.file?.name === file.name)) continue;
+
+        newItems.push({
+          id: `new-${Date.now()}-${i}`,
+          url: URL.createObjectURL(file),
+          file,
+          isExisting: false,
+          isMediaUrl: false,
+        });
+      }
+      setImages((prev) => [...prev, ...newItems]);
+    }
   };
 
   // Remove an image
@@ -340,7 +362,7 @@ export function ProductForm({
                     defaultValue={product?.title || ""}
                     onChange={handleTitleChange}
                     required
-                    placeholder="Misal: Undangan Pernikahan Digital"
+                    placeholder="Nama produk anda..."
                     className={`h-11 ${inputClass}`}
                   />
                 </div>
@@ -355,7 +377,7 @@ export function ProductForm({
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
                     required
-                    placeholder="nama-produk"
+                    placeholder="slug-produk"
                     className={`h-11 ${inputClass}`}
                   />
                   <Typography variant="caption" color="muted" className="ml-1 font-medium">
@@ -375,7 +397,7 @@ export function ProductForm({
                     name="description"
                     defaultValue={product?.description || ""}
                     rows={5}
-                    placeholder="Jelaskan detail dan fitur produk Anda..."
+                    placeholder="Tulis deskripsi detail produk di sini..."
                     className={inputClass}
                   />
                 </div>
@@ -405,7 +427,7 @@ export function ProductForm({
                       step="1000"
                       defaultValue={product?.price || ""}
                       required
-                      placeholder="50000"
+                      placeholder="Contoh: 100.000"
                       className={`h-11 ${inputClass}`}
                     />
                   </div>
@@ -426,7 +448,7 @@ export function ProductForm({
                       min="0"
                       step="1000"
                       defaultValue={product?.discount_price || ""}
-                      placeholder="Contoh: 75000"
+                      placeholder="Contoh: 75.000"
                       className={`h-11 ${inputClass}`}
                     />
                     <Typography variant="caption" color="muted" className="ml-1 font-medium">
@@ -444,7 +466,7 @@ export function ProductForm({
                       id="sku"
                       name="sku"
                       defaultValue={product?.sku || ""}
-                      placeholder="Contoh: WED-001"
+                      placeholder="Contoh: SKU-001"
                       className={`h-11 uppercase ${inputClass}`}
                     />
                   </div>
@@ -474,7 +496,7 @@ export function ProductForm({
                     name="driveFileUrl"
                     type="url"
                     defaultValue={product?.drive_file_url || ""}
-                    placeholder="https://drive.google.com/file/d/..."
+                    placeholder="https://drive.google.com/..."
                     className={`h-11 ${inputClass}`}
                   />
                   <Typography variant="caption" color="muted" className="ml-1 font-medium">
@@ -502,11 +524,31 @@ export function ProductForm({
                     {demoLinks.map((link, index) => (
                       <div
                         key={index}
-                        className="flex items-start gap-2 rounded-sm border border-border/50 bg-background/30 p-3"
+                        className="flex flex-col sm:flex-row items-start gap-3 rounded-sm border border-border/50 bg-background/30 p-3"
                       >
-                        <div className="flex-1 space-y-2">
+                        <div className="w-16 h-16 shrink-0 border border-border/50 bg-background/50 rounded-sm overflow-hidden flex items-center justify-center relative group/img">
+                          {link.image_url ? (
+                            <>
+                              <Image src={link.image_url} alt="Demo Thumbnail" fill className="object-cover" />
+                              <button type="button" onClick={() => {
+                                const updated = [...demoLinks];
+                                updated[index].image_url = undefined;
+                                setDemoLinks(updated);
+                              }} className="absolute inset-0 bg-black/50 text-white opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-opacity"><XMarkIcon className="h-5 w-5" /></button>
+                            </>
+                          ) : (
+                            <button type="button" onClick={() => {
+                              setDemoLinkMediaPickerIndex(index);
+                              setMediaPickerOpen(true);
+                            }} className="w-full h-full flex flex-col items-center justify-center text-muted-foreground/60 hover:text-primary transition-colors">
+                              <PhotoIcon className="h-5 w-5 mb-0.5" />
+                              <span className="text-[9px] uppercase font-bold tracking-wider">Image</span>
+                            </button>
+                          )}
+                        </div>
+                        <div className="flex-1 space-y-2 w-full">
                           <Input
-                            placeholder={`Label (mis: Demo ${index + 1})`}
+                            placeholder="Label demo (mis: Demo Preview)"
                             value={link.label}
                             onChange={(e) => {
                               const updated = [...demoLinks];
@@ -516,10 +558,9 @@ export function ProductForm({
                             className={`h-9 ${inputClass}`}
                           />
                           <div className="relative">
-                            <ArrowTopRightOnSquareIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <Input
                               type="url"
-                              placeholder="https://preview-undangan.com/..."
+                              placeholder="https://demo.link/..."
                               value={link.url}
                               onChange={(e) => {
                                 const updated = [...demoLinks];
@@ -535,7 +576,7 @@ export function ProductForm({
                           onClick={() => {
                             setDemoLinks(demoLinks.filter((_, i) => i !== index));
                           }}
-                          className="mt-1 p-2 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                          className="mt-1 p-2 shrink-0 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
                         >
                           <TrashIcon className="h-4 w-4" />
                         </button>
@@ -656,7 +697,7 @@ export function ProductForm({
                               id="catName"
                               name="name"
                               required
-                              placeholder="Contoh: E-Books"
+                              placeholder="Nama kategori..."
                               className={`h-11 ${inputClass}`}
                             />
                           </div>
@@ -683,7 +724,7 @@ export function ProductForm({
                     id="tags"
                     name="tags"
                     defaultValue={product?.tags?.join(", ") || ""}
-                    placeholder="wedding, luxury, gold"
+                    placeholder="tag1, tag2, tag3"
                     className={`h-11 ${inputClass}`}
                   />
                   <Typography variant="caption" color="muted" className="ml-1 font-medium">
@@ -722,11 +763,10 @@ export function ProductForm({
                     {images.map((img, index) => (
                       <div
                         key={img.id}
-                        className={`group/img relative aspect-square rounded-sm overflow-hidden border bg-muted/30 ${
-                          index === 0
-                            ? "border-primary/50 ring-2 ring-primary/20"
-                            : "border-border"
-                        }`}
+                        className={`group/img relative aspect-square rounded-sm overflow-hidden border bg-muted/30 ${index === 0
+                          ? "border-primary/50 ring-2 ring-primary/20"
+                          : "border-border"
+                          }`}
                       >
                         <Image
                           src={img.url}
@@ -784,35 +824,20 @@ export function ProductForm({
                   </div>
                 )}
 
-                {/* Action buttons: Upload + Media */}
-                <div className="grid grid-cols-2 gap-2">
-                  <label
-                    htmlFor="image-upload"
-                    className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-sm border border-border/50 bg-background/50 h-11 px-4 text-sm font-bold text-muted-foreground transition hover:bg-primary/10 hover:text-primary hover:border-primary/30 ${isPending ? "opacity-50 pointer-events-none" : ""}`}
-                  >
-                    <ArrowUpTrayIcon className="h-4 w-4" />
-                    Upload
-                  </label>
+                {/* Action buttons: Media */}
+                <div className="w-full">
                   <button
                     type="button"
-                    onClick={() => setMediaPickerOpen(true)}
+                    onClick={() => {
+                      setDemoLinkMediaPickerIndex(null);
+                      setMediaPickerOpen(true);
+                    }}
                     className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-sm border border-border/50 bg-background/50 h-11 px-4 text-sm font-bold text-muted-foreground transition hover:bg-primary/10 hover:text-primary hover:border-primary/30"
                   >
                     <Square2StackIcon className="h-4 w-4" />
-                    Media
+                    Upload Gambar
                   </button>
                 </div>
-
-                {/* Hidden file input — multiple */}
-                <input
-                  id="image-upload"
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleFilesChange}
-                  ref={fileInputRef}
-                  className="hidden"
-                />
 
                 <Typography variant="caption" color="muted" align="center" className="font-medium">
                   Upload multiple gambar sekaligus • PNG, JPG, WebP — Max 2MB/gambar

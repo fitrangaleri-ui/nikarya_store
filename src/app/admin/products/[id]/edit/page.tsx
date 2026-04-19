@@ -13,7 +13,7 @@ export default async function EditProductPage({
   const [{ data: product }, { data: categories }, { data: demoLinks }, { data: galleryImages }] = await Promise.all([
     admin.from("products").select("*").eq("id", id).single(),
     admin.from("categories").select("id, name, slug").order("name"),
-    admin.from("product_demo_links").select("id, label, url, sort_order").eq("product_id", id).order("sort_order"),
+    admin.from("product_demo_links").select("id, label, url, image_url, sort_order").eq("product_id", id).order("sort_order"),
     admin.from("product_images").select("id, image_url, sort_order").eq("product_id", id).order("sort_order"),
   ]);
 

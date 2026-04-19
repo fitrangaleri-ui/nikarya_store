@@ -59,7 +59,7 @@ interface ProductData {
   discount_price: number | null;
   sku: string | null;
   demo_link: string | null;
-  demo_links: { label: string; url: string }[];
+  demo_links: { label: string; url: string; image_url?: string }[];
   tags: string[] | null;
   thumbnail_url: string | null;
   product_images?: { image_url: string; sort_order: number }[];
@@ -146,6 +146,12 @@ export function ProductDetailClient({
                         .map((img: any) => resolveImageSrc(img.image_url))
                         .filter(Boolean) as string[]
                     : [];
+
+                const demoImages = product.demo_links && Array.isArray(product.demo_links)
+                  ? product.demo_links.map((d: any) => resolveImageSrc(d.image_url)).filter(Boolean) as string[]
+                  : [];
+                
+                galleryRaw.push(...demoImages);
 
                 // Smart merge: thumbnail first, then gallery (deduplicated)
                 let galleryImages: string[];
