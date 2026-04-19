@@ -34,11 +34,12 @@ export function ProductCard({ product }: { product: any }) {
   const imageSrc = resolveImageSrc(product.thumbnail_url);
 
   // Build demo links array from new table or fallback to old column
-  const demoLinks: { label: string; url: string }[] =
+  const demoLinks: { label: string; url: string; image_url?: string }[] =
     product.product_demo_links && product.product_demo_links.length > 0
       ? product.product_demo_links.map((d: any) => ({
         label: d.label || "Demo",
         url: d.url,
+        image_url: d.image_url,
       }))
       : product.demo_link
         ? [{ label: "Demo", url: product.demo_link }]

@@ -213,7 +213,7 @@ export function ProductDetailClient({
               <div className="absolute inset-0 bg-background/0 group-hover:bg-background/5 transition-colors duration-300 pointer-events-none" />
               {(() => {
                 // Build demo links from new table or fallback
-                const dLinks: { label: string; url: string }[] =
+                const dLinks: { label: string; url: string; image_url?: string }[] =
                   product.demo_links && product.demo_links.length > 0
                     ? product.demo_links
                     : product.demo_link
