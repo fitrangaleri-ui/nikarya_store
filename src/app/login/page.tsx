@@ -58,7 +58,7 @@ function LoginFormInner() {
           <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/10 pointer-events-none" />
           <div className="absolute bottom-[-20px] left-[15%] h-32 w-32 rounded-full bg-white/5 pointer-events-none" />
 
-          <div className="relative z-10 flex flex-col items-start gap-4">
+          <div className="relative z-10 flex flex-col items-start">
             <div>
               <Typography variant="h3" className="text-white leading-tight">
                 Selamat Datang
