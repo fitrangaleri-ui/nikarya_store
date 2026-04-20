@@ -45,7 +45,7 @@ export function HeroSection({
               </Typography>
             </div>
 
-            <Typography variant="body-lg" className="max-w-xl text-white/80">
+            <Typography variant="body-base" className="max-w-xl text-primary-foreground">
               {description}
             </Typography>
 
