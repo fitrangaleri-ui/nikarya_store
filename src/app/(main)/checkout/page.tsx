@@ -22,12 +22,13 @@ import {
   UserCircleIcon,
   ExclamationTriangleIcon,
   DocumentTextIcon,
+  CheckBadgeIcon,
+  InformationCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useCart } from "@/context/cart-context";
 import { useAuth } from "@/components/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Typography } from "@/components/ui/typography";
 
 interface ManualMethod {
@@ -69,6 +70,7 @@ export default function CheckoutPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [isPhoneFocused, setIsPhoneFocused] = useState(false);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [notes, setNotes] = useState("");
@@ -347,9 +349,14 @@ export default function CheckoutPage() {
                   <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
                     <UserIcon className="w-4 h-4 text-white" />
                   </div>
-                  <Typography variant="h5" className="text-white leading-tight">
-                    Informasi Pelanggan
-                  </Typography>
+                  <div className="flex flex-col">
+                    <Typography variant="h5" className="text-white leading-tight">
+                      Informasi Pelanggan
+                    </Typography>
+                    <Typography variant="body-xs" className="text-white/80 font-medium tracking-wide">
+                      Lengkapi data diri untuk keperluan akses pesanan
+                    </Typography>
+                  </div>
                 </div>
               </div>
 
@@ -396,9 +403,6 @@ export default function CheckoutPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* Nama */}
                       <div className="relative group">
-                        <Label htmlFor="guest-name" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1 mb-1.5 block">
-                          Nama Lengkap <span className="text-destructive">*</span>
-                        </Label>
                         <div className="relative">
                           <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center transition-colors group-focus-within:bg-primary/10">
                             <UserCircleIcon className="h-4 w-4 text-primary" />
@@ -407,7 +411,7 @@ export default function CheckoutPage() {
                             id="guest-name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            placeholder="Contoh: Budi Santoso"
+                            placeholder="Nama Lengkap Anda *"
                             className="pl-14 h-12 rounded-lg bg-background/80 border-border focus-visible:ring-primary/20 transition-all text-sm font-medium"
                           />
                         </div>
@@ -415,9 +419,6 @@ export default function CheckoutPage() {
 
                       {/* Phone */}
                       <div className="relative group">
-                        <Label htmlFor="guest-phone" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1 mb-1.5 block">
-                          Nomor HP <span className="text-destructive">*</span>
-                        </Label>
                         <div className="relative">
                           <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center transition-colors group-focus-within:bg-primary/10">
                             <PhoneIcon className="h-4 w-4 text-primary" />
@@ -427,18 +428,25 @@ export default function CheckoutPage() {
                             type="tel"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
-                            placeholder="08123456789"
+                            onFocus={() => setIsPhoneFocused(true)}
+                            onBlur={() => setIsPhoneFocused(false)}
+                            placeholder="Nomor WhatsApp Aktif *"
                             className="pl-14 h-12 rounded-lg bg-background/80 border-border focus-visible:ring-primary/20 transition-all text-sm font-medium"
                           />
                         </div>
+                        {isPhoneFocused && (
+                          <div className="mt-2 py-2 px-4 bg-primary rounded-lg text-white text-[10px] flex items-center gap-2 animate-in fade-in slide-in-from-top-1 duration-300">
+                            <InformationCircleIcon className="h-3.5 w-3.5 shrink-0" />
+                            <Typography variant="caption" className="text-primary-foreground font-normal leading-tight">
+                              Gunakan nomor WhatsApp aktif untuk menerima notifikasi pesanan Anda
+                            </Typography>
+                          </div>
+                        )}
                       </div>
                     </div>
 
                     {/* Email */}
                     <div className="relative group">
-                      <Label htmlFor="guest-email" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1 mb-1.5 block">
-                        Alamat Email <span className="text-destructive">*</span>
-                      </Label>
                       <div className="relative">
                         <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center transition-colors group-focus-within:bg-primary/10">
                           <EnvelopeIcon className="h-4 w-4 text-primary" />
@@ -448,7 +456,7 @@ export default function CheckoutPage() {
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          placeholder="alamat-email@anda.com"
+                          placeholder="Alamat Email Valid *"
                           className="pl-14 h-12 rounded-lg bg-background/80 border-border focus-visible:ring-primary/20 transition-all text-sm font-medium"
                         />
                       </div>
@@ -456,9 +464,6 @@ export default function CheckoutPage() {
 
                     {/* Password */}
                     <div className="relative group">
-                      <Label htmlFor="guest-password" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1 mb-1.5 block">
-                        Kata Sandi <span className="text-destructive">*</span>
-                      </Label>
                       <div className="relative">
                         <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center transition-colors group-focus-within:bg-primary/10">
                           <LockClosedIcon className="h-4 w-4 text-primary" />
@@ -468,7 +473,7 @@ export default function CheckoutPage() {
                           type={showPassword ? "text" : "password"}
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          placeholder="Minimal 6 karakter"
+                          placeholder="Buat Password Akun (Min. 6 Karakter) *"
                           className="pl-14 pr-12 h-12 rounded-lg bg-background/80 border-border focus-visible:ring-primary/20 transition-all text-sm font-medium"
                         />
                         <button
@@ -487,9 +492,6 @@ export default function CheckoutPage() {
 
                     {/* Catatan */}
                     <div className="relative group">
-                      <Label htmlFor="guest-notes" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1 mb-1.5 block">
-                        Catatan Khusus <span className="font-normal opacity-60">(opsional)</span>
-                      </Label>
                       <div className="relative">
                         <div className="absolute left-4 top-6 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center">
                           <DocumentTextIcon className="h-4 w-4 text-primary" />
@@ -498,7 +500,7 @@ export default function CheckoutPage() {
                           id="guest-notes"
                           value={notes}
                           onChange={(e) => setNotes(e.target.value)}
-                          placeholder="Tulis instruksi tambahan jika ada..."
+                          placeholder="Catatan tambahan untuk pesanan (opsional)..."
                           rows={3}
                           className="w-full pl-14 pr-4 py-3 rounded-lg bg-background/80 border border-border focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all text-sm font-medium outline-none resize-none"
                         />
@@ -524,9 +526,16 @@ export default function CheckoutPage() {
                   <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
                     <CreditCardIcon className="w-4 h-4 text-white" />
                   </div>
-                  <Typography variant="h5" className="text-white leading-tight">
-                    Metode Pembayaran
-                  </Typography>
+                  <div className="flex flex-col">
+                    <Typography variant="h5" className="text-white leading-tight">
+                      Metode Pembayaran
+                    </Typography>
+                    {paymentConfig?.mode === "manual" && (
+                      <Typography variant="body-xs" className="text-white/80 font-medium tracking-wide">
+                        Pilih Rekening Tujuan Transfer
+                      </Typography>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -546,27 +555,38 @@ export default function CheckoutPage() {
                       {paymentConfig.gateway_methods?.map((method) => (
                         <label
                           key={method.code}
-                          className={`flex items-center gap-4 rounded-xl border p-4 cursor-pointer transition-all ${selectedGatewayMethod === method.code
-                              ? "border-primary bg-primary/5 ring-4 ring-primary/5"
-                              : "border-border/50 bg-background/50 hover:border-primary/30 hover:bg-primary/5"
+                          className={`flex flex-col gap-0 rounded-xl border p-4 cursor-pointer transition-all ${selectedGatewayMethod === method.code
+                            ? "border-primary bg-primary/5 ring-4 ring-primary/5"
+                            : "border-border/50 bg-background/50 hover:border-primary/30 hover:bg-primary/5"
                             }`}
                         >
-                          <input
-                            type="radio"
-                            name="gatewayMethod"
-                            checked={selectedGatewayMethod === method.code}
-                            onChange={() => setSelectedGatewayMethod(method.code)}
-                            className="accent-primary w-4 h-4 flex-shrink-0 cursor-pointer"
-                          />
-                          <span className="text-2xl opacity-90">{method.icon}</span>
-                          <div className="min-w-0 flex-1">
-                            <Typography variant="body-sm" className="font-bold tracking-tight">
-                              {method.label}
-                            </Typography>
-                            <Typography variant="caption" color="muted" className="mt-0.5 leading-tight font-medium">
-                              {method.description}
-                            </Typography>
+                          <div className="flex items-center gap-4">
+                            <input
+                              type="radio"
+                              name="gatewayMethod"
+                              checked={selectedGatewayMethod === method.code}
+                              onChange={() => setSelectedGatewayMethod(method.code)}
+                              className="accent-primary w-4 h-4 flex-shrink-0 cursor-pointer"
+                            />
+                            <span className="text-2xl opacity-90">{method.icon}</span>
+                            <div className="min-w-0 flex-1">
+                              <Typography variant="body-sm" className="font-bold tracking-tight">
+                                {method.label}
+                              </Typography>
+                              <Typography variant="caption" color="muted" className="mt-0.5 leading-tight font-medium">
+                                {method.description}
+                              </Typography>
+                            </div>
                           </div>
+
+                          {selectedGatewayMethod === method.code && (
+                            <div className="mt-4 py-2 px-4 bg-primary rounded-lg text-white text-[10px] flex items-center gap-2 animate-in fade-in slide-in-from-top-1 duration-300">
+                              <CheckBadgeIcon className="h-3.5 w-3.5 shrink-0" />
+                              <Typography variant="caption" className="text-primary-foreground font-normal leading-tight">
+                                Pembayaran melalui {method.label}
+                              </Typography>
+                            </div>
+                          )}
                         </label>
                       ))}
                     </div>
@@ -576,37 +596,42 @@ export default function CheckoutPage() {
                 {/* Manual Choice */}
                 {paymentConfig?.mode === "manual" && (
                   <div className="grid grid-cols-1 gap-3">
-                    <div className="flex items-center gap-2 mb-2 px-2">
-                      <span className="w-1.5 h-4 bg-primary/40 rounded-full" />
-                      <Typography variant="caption" className="font-bold uppercase tracking-widest text-[10px] text-muted-foreground">
-                        Pilih Rekening Tujuan Transfer
-                      </Typography>
-                    </div>
                     {paymentConfig.manual_methods?.map((method) => (
                       <label
                         key={method.id}
-                        className={`flex items-center gap-4 rounded-xl border p-4 cursor-pointer transition-all ${selectedManualMethodId === method.id
-                            ? "border-primary bg-primary/5 ring-4 ring-primary/5"
-                            : "border-border/50 bg-background/50 hover:border-primary/30 hover:bg-primary/5"
+                        className={`flex flex-col gap-0 rounded-xl border p-4 cursor-pointer transition-all ${selectedManualMethodId === method.id
+                          ? "border-primary bg-primary/5 ring-4 ring-primary/5"
+                          : "border-border/50 bg-background/50 hover:border-primary/30 hover:bg-primary/5"
                           }`}
                       >
-                        <input
-                          type="radio"
-                          name="manualMethod"
-                          checked={selectedManualMethodId === method.id}
-                          onChange={() => setSelectedManualMethodId(method.id)}
-                          className="accent-primary w-4 h-4 flex-shrink-0 cursor-pointer"
-                        />
-                        <div className="w-10 h-10 rounded-lg bg-white border border-border/50 flex items-center justify-center flex-shrink-0 overflow-hidden p-1.5">
-                          {method.logo_url ? (
-                            <Image src={method.logo_url} alt={method.provider_name} width={40} height={40} className="w-full h-full object-contain" />
-                          ) : (
-                            <span className="text-lg">{method.type === "bank_transfer" ? "🏦" : "📱"}</span>
-                          )}
+                        <div className="flex items-center gap-4">
+                          <input
+                            type="radio"
+                            name="manualMethod"
+                            checked={selectedManualMethodId === method.id}
+                            onChange={() => setSelectedManualMethodId(method.id)}
+                            className="accent-primary w-4 h-4 flex-shrink-0 cursor-pointer"
+                          />
+                          <div className="w-10 h-10 rounded-full bg-white border border-border/50 flex items-center justify-center flex-shrink-0 overflow-hidden p-1.5">
+                            {method.logo_url ? (
+                              <Image src={method.logo_url} alt={method.provider_name} width={40} height={40} className="w-full h-full object-contain" />
+                            ) : (
+                              <span className="text-lg">{method.type === "bank_transfer" ? "🏦" : "📱"}</span>
+                            )}
+                          </div>
+                          <Typography variant="body-sm" className="font-bold tracking-tight">
+                            {method.provider_name}
+                          </Typography>
                         </div>
-                        <Typography variant="body-sm" className="font-bold tracking-tight">
-                          {method.provider_name}
-                        </Typography>
+
+                        {selectedManualMethodId === method.id && (
+                          <div className="mt-4 py-2 px-4 bg-primary rounded-lg text-white text-[10px] flex items-center gap-2 animate-in fade-in slide-in-from-top-1 duration-300">
+                            <CheckBadgeIcon className="h-3.5 w-3.5 shrink-0" />
+                            <Typography variant="caption" className="text-primary-foreground font-normal leading-tight">
+                              Pembayaran melalui bank/dompet digital {method.provider_name}
+                            </Typography>
+                          </div>
+                        )}
                       </label>
                     ))}
                   </div>
@@ -617,16 +642,21 @@ export default function CheckoutPage() {
 
           {/* ── RIGHT: Order Summary + Button ── */}
           <div className="space-y-6">
-            <div className="glass rounded-xl overflow-hidden lg:sticky lg:top-24 shadow-2xl animate-in fade-in zoom-in-95 duration-500 delay-200">
+            <div className="glass rounded-xl overflow-hidden lg:sticky lg:top-24 animate-in fade-in zoom-in-95 duration-500 delay-200">
               <div className="relative bg-gradient-to-br from-primary to-secondary-foreground px-6 py-6 overflow-hidden">
                 <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10 pointer-events-none" />
                 <div className="relative z-10 flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
                     <ClipboardDocumentListIcon className="w-4 h-4 text-white" />
                   </div>
-                  <Typography variant="h5" className="text-white leading-tight">
-                    Ringkasan
-                  </Typography>
+                  <div className="flex flex-col">
+                    <Typography variant="h5" className="text-white leading-tight">
+                      Ringkasan
+                    </Typography>
+                    <Typography variant="body-xs" className="text-white/80 font-medium tracking-wide">
+                      Tinjau kembali rincian pesanan Anda
+                    </Typography>
+                  </div>
                 </div>
               </div>
 
@@ -635,7 +665,7 @@ export default function CheckoutPage() {
                 <ul className="space-y-4 mb-8">
                   {cartItems.map((item) => (
                     <li key={item.id} className="flex gap-4 group">
-                      <div className="relative w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-background/50 border border-border/60 shadow-sm transition-transform group-hover:scale-105 duration-300">
+                      <div className="relative w-16 h-16 flex-shrink-0 rounded-sm overflow-hidden bg-background/50 border border-border/60 transition-transform group-hover:scale-105 duration-300">
                         {item.thumbnail_url ? (
                           <Image src={item.thumbnail_url} alt={item.title} fill className="object-cover" />
                         ) : (
@@ -649,11 +679,11 @@ export default function CheckoutPage() {
                           {item.title}
                         </Typography>
                         <div className="flex items-center justify-between mt-2">
-                          <Typography variant="body-xs" color="primary" className="font-bold">
+                          <Typography variant="body-xs" color="primary" className="font-bold font-mono">
                             Rp {Number(item.price).toLocaleString("id-ID")}
                           </Typography>
                           <div className="flex items-center gap-2 px-2 py-0.5 bg-primary/5 rounded-full border border-primary/10">
-                            <Typography variant="caption" className="font-black text-primary text-[10px]">
+                            <Typography variant="caption" className="font-black text-primary text-[10px] font-mono">
                               {item.quantity}x
                             </Typography>
                           </div>
@@ -665,18 +695,13 @@ export default function CheckoutPage() {
 
                 {/* Promo Code Style */}
                 <div className="pt-6 border-t border-border/40 mb-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <TicketIcon className="h-4 w-4 text-primary" />
-                    <Typography variant="body-sm" className="font-bold">Kode Promo</Typography>
-                  </div>
-
                   {appliedPromo ? (
                     <div className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 animate-in zoom-in-95">
                       <div className="flex items-center gap-2">
                         <Typography variant="body-sm" color="primary" className="font-black uppercase">
                           {appliedPromo.code}
                         </Typography>
-                        <Typography variant="caption" className="font-bold text-primary/60">
+                        <Typography variant="caption" className="font-bold text-primary/60 font-mono">
                           −Rp {appliedPromo.discountAmount.toLocaleString("id-ID")}
                         </Typography>
                       </div>
@@ -692,19 +717,19 @@ export default function CheckoutPage() {
                           setPromoInput(e.target.value.toUpperCase());
                           setPromoError("");
                         }}
-                        placeholder="INPUT KODE"
-                        className="h-11 rounded-lg text-sm font-black uppercase flex-1 bg-background/50 border-border"
+                        placeholder="Masukkan Kode Promo"
+                        className="h-11 rounded-lg text-sm flex-1 bg-background/50 border-border"
                         onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
                       />
                       <Button
                         variant="brand"
-                        className="h-11 rounded-lg px-4"
+                        className="h-11 rounded-full px-6 font-bold"
                         onClick={handleApplyPromo}
                         disabled={promoLoading || !promoInput.trim()}
                       >
                         {promoLoading ? (
                           <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        ) : "Cek"}
+                        ) : "Apply"}
                       </Button>
                     </div>
                   )}
@@ -723,17 +748,17 @@ export default function CheckoutPage() {
                 <div className="pt-6 border-t border-border/40 mb-8 space-y-3">
                   <div className="flex items-center justify-between">
                     <Typography variant="body-sm" color="muted" className="font-medium">Subtotal Produk</Typography>
-                    <Typography variant="body-sm" className="font-bold">Rp {subtotal.toLocaleString("id-ID")}</Typography>
+                    <Typography variant="body-sm" className="font-bold font-mono">Rp {subtotal.toLocaleString("id-ID")}</Typography>
                   </div>
                   {appliedPromo && (
                     <div className="flex items-center justify-between">
                       <Typography variant="body-sm" color="primary" className="font-medium">Voucher ({appliedPromo.code})</Typography>
-                      <Typography variant="body-sm" color="primary" className="font-bold">−Rp {appliedPromo.discountAmount.toLocaleString("id-ID")}</Typography>
+                      <Typography variant="body-sm" color="primary" className="font-bold font-mono">−Rp {appliedPromo.discountAmount.toLocaleString("id-ID")}</Typography>
                     </div>
                   )}
                   <div className="pt-4 border-t border-dashed border-border/40 flex items-end justify-between">
-                    <Typography variant="body-sm" className="font-black uppercase tracking-widest text-[10px] text-muted-foreground pb-1">Total Bayar</Typography>
-                    <Typography variant="h3" color="primary" className="tracking-tight leading-none">
+                    <Typography variant="body-sm" color="muted" className="font-medium">Total Bayar</Typography>
+                    <Typography variant="h3" color="primary" className="tracking-tight leading-none font-mono">
                       Rp {discountedTotal.toLocaleString("id-ID")}
                     </Typography>
                   </div>
@@ -762,17 +787,14 @@ export default function CheckoutPage() {
                     disabled={loading || cartItems.length === 0}
                     variant="brand"
                     size="lg"
-                    className="w-full h-14 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-primary/20 hover:-translate-y-0.5 transition-all duration-300"
+                    className="w-full h-14 rounded-full hover:-translate-y-0.5 transition-all duration-300"
                   >
                     {loading ? (
                       <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : (
-                      <div className="flex items-center justify-between w-full px-2">
-                        <span className="font-black uppercase tracking-wider">{user ? "Bayar Sekarang" : "Daftar & Bayar"}</span>
-                        <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md">
-                          <ArrowRightIcon className="h-5 w-5" />
-                        </div>
-                      </div>
+                      <Typography variant="body-base" className="text-primary-foreground">
+                        {user ? "Bayar Sekarang" : "Daftar & Bayar"}
+                      </Typography>
                     )}
                   </Button>
 
@@ -788,6 +810,6 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
-    </main>
+    </main >
   );
 }
