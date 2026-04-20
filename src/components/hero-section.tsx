@@ -27,8 +27,8 @@ export function HeroSection({
   descriptionClassName,
 }: HeroSectionProps) {
   return (
-    <div className="w-full px-4 md:px-6 pt-6 md:pt-8 mx-auto max-w-7xl">
-      <section className="relative overflow-hidden mt-16 rounded-xl border border-border bg-gradient-to-br from-primary to-secondary-foreground text-primary-foreground shadow-xl animate-in fade-in duration-700">
+    <div className="w-full px-4 md:px-6 pt-2 md:pt-4 mx-auto max-w-7xl">
+      <section className="relative overflow-hidden mt-4 md:mt-8 rounded-xl border border-border bg-gradient-to-br from-primary to-secondary-foreground text-primary-foreground shadow-xl animate-in fade-in duration-700">
         {/* Decorative Circles */}
         <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10 pointer-events-none z-0" />
         <div className="absolute bottom-[-20px] left-[20%] h-32 w-32 rounded-full bg-white/5 pointer-events-none z-0" />

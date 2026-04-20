@@ -7,6 +7,7 @@ import { ProductCardDemo } from "../product-card-demo";
 import { PriceCard } from "../price-card";
 import { Typography } from "@/components/ui/typography";
 import { DemoPreviewProvider } from "@/components/demo-preview-provider";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 export const dynamic = "force-dynamic";
 
@@ -75,31 +76,35 @@ export default async function WKSSeriesPage() {
           descriptionClassName="text-sm"
         />
 
-        <section id="templates" className="py-16 md:py-24 bg-transparent border-t border-border/50">
+        <section id="templates" className="py-20 md:py-24 bg-transparent border-t border-border/50">
           <div className="container mx-auto px-4 md:px-6">
-            <div className="max-w-xl mx-auto text-center mb-12 md:mb-16">
+            <ScrollReveal className="max-w-xl mx-auto text-center mb-12 md:mb-16">
               <Typography variant="h3" className="mb-2 text-center">
                 Pilihan Tema Eksklusif
               </Typography>
               <Typography variant="body-sm" color="muted" className="text-center">
                 Jelajahi koleksi desain undangan digital terbaik kami yang siap mempercantik hari spesial Anda.
               </Typography>
-            </div>
+            </ScrollReveal>
 
             {demoLinks && demoLinks.length > 0 ? (
               <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                {demoLinks.map((demo) => (
-                  <div key={demo.id} className="w-full">
+                {demoLinks.map((demo, index) => (
+                  <ScrollReveal
+                    key={demo.id}
+                    delay={(index % 3) * 100}
+                    className="w-full h-full"
+                  >
                     <ProductCardDemo demoLink={demo} />
-                  </div>
+                  </ScrollReveal>
                 ))}
               </div>
             ) : (
-              <div className="py-20 text-center glass rounded-3xl border-dashed border-border/50">
+              <ScrollReveal className="py-20 text-center glass rounded-3xl border-dashed border-border/50">
                 <Typography variant="body-base" color="muted">
                   Belum ada koleksi tema saat ini. Silakan kembali lagi nanti.
                 </Typography>
-              </div>
+              </ScrollReveal>
             )}
           </div>
         </section>
@@ -111,20 +116,24 @@ export default async function WKSSeriesPage() {
 
           {/* Pricing wrapper */}
           <div className="container mx-auto px-4 md:px-6 relative z-10">
-            <div className="max-w-xl mx-auto text-center mb-10 md:mb-14">
+            <ScrollReveal className="max-w-xl mx-auto text-center mb-10 md:mb-14" direction="down">
               <Typography variant="h3" className="text-center text-primary-foreground">
                 Dapatkan harga terbaik
               </Typography>
-            </div>
+            </ScrollReveal>
 
-            <PriceCard
-              product={wksProduct || undefined}
-              themeCount={demoLinks.length > 0 ? demoLinks.length : 5}
-            />
+            <ScrollReveal delay={200}>
+              <PriceCard
+                product={wksProduct || undefined}
+                themeCount={demoLinks.length > 0 ? demoLinks.length : 5}
+              />
+            </ScrollReveal>
           </div>
 
           <div className="mt-10 md:mt-16">
-            <WarnSection transparent={true} />
+            <ScrollReveal delay={400} distance={50}>
+              <WarnSection transparent={true} />
+            </ScrollReveal>
           </div>
         </section>
 
