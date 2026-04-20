@@ -6,6 +6,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { ProductCardDemo } from "../product-card-demo";
 import { PriceCard } from "../price-card";
 import { Typography } from "@/components/ui/typography";
+import { DemoPreviewProvider } from "@/components/demo-preview-provider";
 
 export const dynamic = "force-dynamic";
 
@@ -58,23 +59,29 @@ export default async function WKSSeriesPage() {
   );
 
   return (
-    <main className="flex flex-col min-h-screen pb-20">
-      <HeroSection 
-        title="Template Walimatul Khitan Series"
-        description="TEMA WALIMATUL KHITAN dari NIKARYA DIGITAL hadir dengan desain elegan, responsif, interaktif dan siap pakai dalam format JSON tema ini dirancang khusus untuk penyedia layanan jasa pembuatan undangan digital profesional."
-        imageSrc="/landingpage/wks-series.png"
-        buttonLabel="Lihat Koleksi"
-        buttonHref="#templates"
-        badgeLabel="Koleksi Walimatul Khitan"
-      />
+    <DemoPreviewProvider>
+      <main className="flex flex-col min-h-screen pb-20">
+        <HeroSection
+          title="Template Walimatul Khitan Series"
+          description={
+            <>
+              <b>TEMA WALIMATUL KHITAN</b> dari <b>NIKARYA DIGITAL</b> hadir dengan desain elegan, responsif, interaktif dan siap pakai dalam format <b>JSON</b> tema ini dirancang khusus untuk penyedia layanan jasa pembuatan undangan digital profesional.
+            </>
+          }
+          imageSrc="/landingpage/wks-series.png"
+          buttonLabel="Lihat Koleksi"
+          buttonHref="#templates"
+          badgeLabel="Koleksi Walimatul Khitan"
+          descriptionClassName="text-sm"
+        />
 
         <section id="templates" className="py-16 md:py-24 bg-transparent border-t border-border/50">
           <div className="container mx-auto px-4 md:px-6">
             <div className="max-w-xl mx-auto text-center mb-12 md:mb-16">
-              <Typography variant="h2" className="mb-4">
+              <Typography variant="h3" className="mb-2 text-center">
                 Pilihan Tema Eksklusif
               </Typography>
-              <Typography variant="body-base" color="muted">
+              <Typography variant="body-sm" color="muted" className="text-center">
                 Jelajahi koleksi desain undangan digital terbaik kami yang siap mempercantik hari spesial Anda.
               </Typography>
             </div>
@@ -83,7 +90,7 @@ export default async function WKSSeriesPage() {
               <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 {demoLinks.map((demo) => (
                   <div key={demo.id} className="w-full">
-                     <ProductCardDemo demoLink={demo} />
+                    <ProductCardDemo demoLink={demo} />
                   </div>
                 ))}
               </div>
@@ -105,12 +112,12 @@ export default async function WKSSeriesPage() {
           {/* Pricing wrapper */}
           <div className="container mx-auto px-4 md:px-6 relative z-10">
             <div className="max-w-xl mx-auto text-center mb-10 md:mb-14">
-              <Typography variant="h2" className="text-white drop-shadow-sm uppercase tracking-wider font-extrabold">
-                PRICE
+              <Typography variant="h3" className="text-center text-primary-foreground">
+                Dapatkan harga terbaik
               </Typography>
             </div>
-            
-            <PriceCard 
+
+            <PriceCard
               product={wksProduct || undefined}
               themeCount={demoLinks.length > 0 ? demoLinks.length : 5}
             />
@@ -120,8 +127,9 @@ export default async function WKSSeriesPage() {
             <WarnSection transparent={true} />
           </div>
         </section>
-        
-      <FaqSection customFaqs={wksFaqs} />
-    </main>
+
+        <FaqSection customFaqs={wksFaqs} />
+      </main>
+    </DemoPreviewProvider>
   );
 }

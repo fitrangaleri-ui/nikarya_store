@@ -16,6 +16,7 @@ const typographyVariants = cva(
         "body-lg": "font-sans text-[length:var(--text-body-lg)] leading-[calc(var(--text-body-lg-lh))]",
         "body-base": "font-sans text-[length:var(--text-body-base)] leading-[calc(var(--text-body-base-lh))]",
         "body-sm": "font-sans text-[length:var(--text-body-sm)] leading-[calc(var(--text-body-sm-lh))]",
+        "body-xs": "font-sans text-[length:var(--text-body-xs)] leading-[calc(var(--text-body-xs-lh))]",
         caption: "font-sans text-[length:var(--text-caption)] leading-[calc(var(--text-caption-lh))]",
       },
       align: {

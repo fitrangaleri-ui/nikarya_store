@@ -20,6 +20,7 @@ const badgeVariants = cva(
         link: "text-primary underline-offset-4 [a&]:hover:underline",
         glass:
           "border-white/30 bg-white/10 text-white backdrop-blur-sm [a&]:hover:bg-white/20",
+        sale: "bg-sale text-white [a&]:hover:bg-sale/90 border-none",
       },
     },
     defaultVariants: {

@@ -5,14 +5,16 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
+import { cn } from "@/lib/utils";
 
 interface HeroSectionProps {
   title?: string;
-  description?: string;
+  description?: React.ReactNode;
   imageSrc?: string;
   badgeLabel?: string;
   buttonLabel?: string;
   buttonHref?: string;
+  descriptionClassName?: string;
 }
 
 export function HeroSection({
@@ -22,6 +24,7 @@ export function HeroSection({
   badgeLabel = "Platform E-Invitation Indonesia",
   buttonLabel = "Lihat Tema",
   buttonHref = "/products",
+  descriptionClassName,
 }: HeroSectionProps) {
   return (
     <div className="w-full px-4 md:px-6 pt-6 md:pt-8 mx-auto max-w-7xl">
@@ -45,7 +48,10 @@ export function HeroSection({
               </Typography>
             </div>
 
-            <Typography variant="body-base" className="max-w-xl text-white/80 leading-relaxed">
+            <Typography 
+              variant="body-base" 
+              className={cn("max-w-xl text-white/80 leading-relaxed", descriptionClassName)}
+            >
               {description}
             </Typography>
 
