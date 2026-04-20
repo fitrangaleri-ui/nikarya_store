@@ -4,6 +4,7 @@ import { FaqSection } from "@/components/faq-section";
 import { WarnSection } from "@/components/warn";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { ProductCardDemo } from "../product-card-demo";
+import { PriceCard } from "../price-card";
 import { Typography } from "@/components/ui/typography";
 
 export const dynamic = "force-dynamic";
@@ -45,7 +46,7 @@ export default async function WKSSeriesPage() {
   const { data: wksProduct } = await supabase
     .from("products")
     .select(
-      "id, sku, product_demo_links(id, label, url, image_url, sort_order)"
+      "id, sku, slug, title, price, discount_price, thumbnail_url, product_demo_links(id, label, url, image_url, sort_order)"
     )
     .eq("is_active", true)
     .ilike("sku", "wks-series")
@@ -96,7 +97,29 @@ export default async function WKSSeriesPage() {
           </div>
         </section>
 
-        <WarnSection />
+        <section id="pricing" className="relative bg-gradient-to-br from-primary to-secondary-foreground shadow-2xl py-20 md:py-28 overflow-hidden">
+          {/* Decorative Circles shared for both Price & Warn */}
+          <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10 pointer-events-none" />
+          <div className="absolute bottom-[10%] left-[10%] h-32 w-32 rounded-full bg-white/5 pointer-events-none" />
+
+          {/* Pricing wrapper */}
+          <div className="container mx-auto px-4 md:px-6 relative z-10">
+            <div className="max-w-xl mx-auto text-center mb-10 md:mb-14">
+              <Typography variant="h2" className="text-white drop-shadow-sm uppercase tracking-wider font-extrabold">
+                PRICE
+              </Typography>
+            </div>
+            
+            <PriceCard 
+              product={wksProduct || undefined}
+              themeCount={demoLinks.length > 0 ? demoLinks.length : 5}
+            />
+          </div>
+
+          <div className="mt-10 md:mt-16">
+            <WarnSection transparent={true} />
+          </div>
+        </section>
         
       <FaqSection customFaqs={wksFaqs} />
     </main>

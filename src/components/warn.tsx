@@ -125,7 +125,7 @@ function AccordionItem({
   );
 }
 
-export function WarnSection() {
+export function WarnSection({ transparent = false }: { transparent?: boolean }) {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   const handleToggle = (idx: number) => {
@@ -133,10 +133,14 @@ export function WarnSection() {
   };
 
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-br from-[#01696f] to-[#0c4e54] py-16 md:py-24 shadow-2xl">
+    <div className={`relative w-full overflow-hidden ${transparent ? 'pt-16 pb-16 md:pb-24' : 'bg-gradient-to-br from-[#01696f] to-[#0c4e54] py-16 md:py-24 shadow-2xl'}`}>
       {/* Decorative Circles from Hero */}
-      <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10 pointer-events-none" />
-      <div className="absolute bottom-[-20px] left-[20%] h-32 w-32 rounded-full bg-white/5 pointer-events-none" />
+      {!transparent && (
+        <>
+          <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10 pointer-events-none" />
+          <div className="absolute bottom-[-20px] left-[20%] h-32 w-32 rounded-full bg-white/5 pointer-events-none" />
+        </>
+      )}
 
       <div className="mx-auto max-w-4xl px-6 relative z-10">
         {/* ── Header ── */}
@@ -173,7 +177,7 @@ export function WarnSection() {
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
