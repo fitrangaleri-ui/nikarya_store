@@ -6,16 +6,17 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import {
-  LayoutDashboard,
-  Package,
-  Download,
-  Wallet,
-  FileDown,
-  ArrowRight,
-  Sparkles,
-} from "lucide-react";
+  Squares2X2Icon,
+  ShoppingBagIcon,
+  ArrowDownTrayIcon,
+  BanknotesIcon,
+  InboxStackIcon,
+  ArrowRightIcon,
+  SparklesIcon,
+} from "@heroicons/react/24/outline";
 import { getDashboardData, formatCurrency } from "./lib";
 import { VerifiedToast } from "./verified-toast";
+import { Typography } from "@/components/ui/typography";
 
 export const dynamic = "force-dynamic";
 
@@ -32,230 +33,186 @@ export default async function DashboardPage() {
       <Suspense fallback={null}>
         <VerifiedToast />
       </Suspense>
-      {/* ════════════════════════════════════════════════════ */}
-      {/* HEADER — Welcome banner dengan ambient glow         */}
-      {/* ════════════════════════════════════════════════════ */}
-      <div className="relative rounded-3xl overflow-hidden bg-primary px-6 py-8 md:px-10 shadow-lg shadow-primary/20">
-        {/* Ambient glow background */}
-        <div
-          aria-hidden
-          className="absolute -top-10 -right-10 w-64 h-64 rounded-full pointer-events-none blur-[80px]"
-          style={{ background: "rgba(255,255,255,0.08)" }}
-        />
-        <div
-          aria-hidden
-          className="absolute bottom-0 left-1/3 w-48 h-48 rounded-full pointer-events-none blur-[60px]"
-          style={{ background: "rgba(255,255,255,0.05)" }}
-        />
+      {/* ── Banner: Profil User ── */}
+      <div className="relative rounded-xl overflow-hidden bg-primary px-6 py-8 md:px-10">
+        {/* Decorative elements */}
+        <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10 pointer-events-none" />
+        <div className="absolute bottom-[-20px] left-[20%] h-32 w-32 rounded-full bg-white/5 pointer-events-none" />
 
-        {/* Glass shimmer overlay */}
-        <div
-          aria-hidden
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
-          }}
-        />
-        {/* Stroke border */}
-        <div
-          aria-hidden
-          className="absolute inset-0 rounded-3xl pointer-events-none"
-          style={{
-            boxShadow:
-              "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
-            border: "1px solid rgba(255,255,255,0.15)",
-          }}
-        />
-
-        {/* Konten header */}
+        {/* Konten banner */}
         <div className="relative z-10 flex items-start justify-between gap-4">
           <div>
-            {/* Badge label */}
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-white/15 text-primary-foreground text-[11px] font-bold uppercase tracking-[-0.005em] mb-3">
-              <LayoutDashboard className="w-3 h-3" />
-              Dashboard Saya
-            </span>
+            <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-white/15 text-white mb-4 backdrop-blur-md border border-white/10">
+              <Squares2X2Icon className="w-3.5 h-3.5" />
+              <Typography variant="caption" className="text-primary-foreground font-semibold">
+                Dashboard Saya
+              </Typography>
+            </div>
 
-            <h1 className="text-2xl md:text-3xl font-extrabold text-primary-foreground leading-tight tracking-tight">
+            <Typography variant="h2" as="h1" className="text-white tracking-tight">
               Halo, {displayName}! 👋
-            </h1>
-            <p className="mt-1.5 text-sm text-primary-foreground/70 leading-relaxed">
-              Selamat datang kembali. Berikut ringkasan aktivitas akunmu.
-            </p>
+            </Typography>
+            <Typography variant="body-sm" className="text-white/70 mt-2 font-medium max-w-md">
+              Selamat datang kembali. Berikut ringkasan aktivitas dan akses cepat ke produk Anda.
+            </Typography>
           </div>
 
-          {/* Icon dekorasi kanan */}
-          <div className="hidden md:flex shrink-0 w-14 h-14 rounded-2xl bg-white/15 items-center justify-center border border-white/20">
-            <Sparkles className="w-6 h-6 text-primary-foreground" />
+          <div className="hidden md:flex flex-none w-14 h-14 rounded-xl bg-white/15 items-center justify-center border border-white/20 backdrop-blur-md">
+            <SparklesIcon className="w-7 h-7 text-white" />
           </div>
         </div>
       </div>
 
-      {/* ════════════════════════════════════════════════════ */}
-      {/* OVERVIEW STATS — 4 kartu angka ringkasan           */}
-      {/* ════════════════════════════════════════════════════ */}
+      {/* ── Stats Section ── */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Stat: Total Pesanan */}
-        <div className="relative rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden group hover:border-primary/30 hover:shadow-md hover:shadow-primary/5 transition-all duration-200">
-          <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-primary/8 blur-xl pointer-events-none" />
+        <div className="rounded-xl bg-card border border-border px-5 py-5 overflow-hidden hover:border-primary/30 transition-all duration-200 group">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold uppercase tracking-[-0.005em] text-muted-foreground">
+            <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase ">
               Total Pesanan
-            </p>
-            <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Package className="h-4 w-4 text-primary" />
+            </Typography>
+            <div className="w-8 h-8 rounded-sm bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors">
+              <ShoppingBagIcon className="h-4 w-4 text-primary group-hover:text-white" />
             </div>
           </div>
-          <p className="text-3xl font-extrabold text-foreground tracking-tight">
+          <Typography variant="h3" as="p" className="tracking-tight">
             {allOrders.length}
-          </p>
-          <p className="text-[11px] text-muted-foreground mt-1">semua status</p>
+          </Typography>
+          <Typography variant="caption" color="muted" className="mt-1">
+            Semua status
+          </Typography>
         </div>
 
         {/* Stat: Pesanan Lunas */}
-        <div className="relative rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden group hover:border-emerald-500/30 hover:shadow-md hover:shadow-emerald-500/5 transition-all duration-200">
-          <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-emerald-500/8 blur-xl pointer-events-none" />
+        <div className="rounded-xl bg-card border border-border px-5 py-5 overflow-hidden hover:border-primary/30 transition-all duration-200 group">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold uppercase tracking-[-0.005em] text-muted-foreground">
+            <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase ">
               Pesanan Lunas
-            </p>
-            <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-              <Download className="h-4 w-4 text-emerald-600" />
+            </Typography>
+            <div className="w-8 h-8 rounded-sm bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors">
+              <ArrowDownTrayIcon className="h-4 w-4 text-primary group-hover:text-white" />
             </div>
           </div>
-          <p className="text-3xl font-extrabold text-foreground tracking-tight">
+          <Typography variant="h3" as="p" className="tracking-tight">
             {paidOrders.length}
-          </p>
-          <p className="text-[11px] text-muted-foreground mt-1">
-            sudah dibayar
-          </p>
+          </Typography>
+          <Typography variant="caption" color="primary" className="mt-1 font-bold">
+            Sudah dibayar
+          </Typography>
         </div>
 
         {/* Stat: Total Belanja */}
-        <div className="relative rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden group hover:border-violet-500/30 hover:shadow-md hover:shadow-violet-500/5 transition-all duration-200">
-          <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-violet-500/8 blur-xl pointer-events-none" />
+        <div className="rounded-xl bg-card border border-border px-5 py-5 overflow-hidden hover:border-primary/30 transition-all duration-200 group">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold uppercase tracking-[-0.005em] text-muted-foreground">
+            <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase ">
               Total Belanja
-            </p>
-            <div className="w-8 h-8 rounded-xl bg-violet-500/10 flex items-center justify-center">
-              <Wallet className="h-4 w-4 text-violet-600" />
+            </Typography>
+            <div className="w-8 h-8 rounded-sm bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors">
+              <BanknotesIcon className="h-4 w-4 text-primary group-hover:text-white" />
             </div>
           </div>
-          <p className="text-2xl font-extrabold text-foreground tracking-tight">
+          <Typography variant="h4" as="p" className="tracking-tight">
             {formatCurrency(totalSpent)}
-          </p>
-          <p className="text-[11px] text-muted-foreground mt-1">
-            akumulasi pembelian
-          </p>
+          </Typography>
+          <Typography variant="caption" color="muted" className="mt-1">
+            Akumulasi pembelian
+          </Typography>
         </div>
 
         {/* Stat: Produk Tersedia */}
-        <div className="relative rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden group hover:border-primary/30 hover:shadow-md hover:shadow-primary/5 transition-all duration-200">
-          <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-primary/8 blur-xl pointer-events-none" />
+        <div className="rounded-xl bg-card border border-border px-5 py-5 overflow-hidden hover:border-primary/30 transition-all duration-200 group">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold uppercase tracking-[-0.005em] text-muted-foreground">
-              Produk Tersedia
-            </p>
-            <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
-              <FileDown className="h-4 w-4 text-primary" />
+            <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase ">
+              Produk Siap
+            </Typography>
+            <div className="w-8 h-8 rounded-sm bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors">
+              <InboxStackIcon className="h-4 w-4 text-primary group-hover:text-white" />
             </div>
           </div>
-          <p className="text-3xl font-extrabold text-foreground tracking-tight">
+          <Typography variant="h3" as="p" className="tracking-tight">
             {uniquePaidProducts.length}
-          </p>
-          <p className="text-[11px] text-muted-foreground mt-1">siap diunduh</p>
+          </Typography>
+          <Typography variant="caption" color="muted" className="mt-1">
+            Akses tersedia
+          </Typography>
         </div>
       </div>
 
-      {/* ════════════════════════════════════════════════════ */}
-      {/* QUICK LINKS — 3 kartu navigasi cepat               */}
-      {/* ════════════════════════════════════════════════════ */}
+      {/* ── Main Actions Section ── */}
       <div>
-        {/* Section label */}
-        <div className="flex items-center gap-2 mb-4">
-          <span className="w-1 h-5 rounded-full bg-primary block" />
-          <h2 className="text-sm font-bold uppercase tracking-[-0.005em] text-muted-foreground">
+        <div className="flex items-center gap-2 mb-5">
+          <span className="w-1.5 h-5 rounded-full bg-primary block" />
+          <Typography variant="h6" className="uppercase  font-bold">
             Menu Utama
-          </h2>
+          </Typography>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Link: Produk Saya */}
+          {/* Action: Produk Saya */}
           <Link href="/dashboard/products" className="group">
-            <div className="relative flex items-center justify-between gap-4 rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden hover:border-primary/40 hover:shadow-md hover:shadow-primary/5 transition-all duration-200 group-hover:scale-[1.01]">
-              <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/[0.02] transition-colors duration-200 pointer-events-none rounded-2xl" />
-
+            <div className="relative flex items-center justify-between gap-4 rounded-xl bg-card border border-border px-5 py-6 overflow-hidden hover:border-primary/30 transition-all duration-200 group-hover:translate-y-[-2px]">
               <div className="flex items-center gap-4 relative z-10">
-                {/* Icon */}
-                <div className="w-11 h-11 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/15 transition-colors">
-                  <Download className="h-5 w-5 text-primary" />
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary transition-colors duration-200">
+                  <InboxStackIcon className="h-6 w-6 text-primary group-hover:text-white" />
                 </div>
-                {/* Info */}
                 <div>
-                  <p className="font-bold text-foreground text-sm group-hover:text-primary transition-colors">
+                  <Typography variant="body-sm" className="font-bold group-hover:text-primary transition-colors">
                     Produk Saya
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  </Typography>
+                  <Typography variant="caption" color="muted" className="mt-0.5 font-medium">
                     {uniquePaidProducts.length} produk tersedia
-                  </p>
+                  </Typography>
                 </div>
               </div>
 
-              {/* Arrow */}
-              <div className="relative z-10 w-8 h-8 rounded-full bg-muted/60 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-200">
-                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary-foreground transition-colors" />
+              <div className="relative z-10 w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0 group-hover:bg-primary transition-all duration-200">
+                <ArrowRightIcon className="h-4 w-4 text-muted-foreground group-hover:text-white" />
               </div>
             </div>
           </Link>
 
-          {/* Link: Riwayat Pesanan */}
+          {/* Action: Riwayat Pesanan */}
           <Link href="/dashboard/orders" className="group">
-            <div className="relative flex items-center justify-between gap-4 rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden hover:border-amber-500/40 hover:shadow-md hover:shadow-amber-500/5 transition-all duration-200 group-hover:scale-[1.01]">
-              <div className="absolute inset-0 bg-amber-500/0 group-hover:bg-amber-500/[0.02] transition-colors duration-200 pointer-events-none rounded-2xl" />
-
+            <div className="relative flex items-center justify-between gap-4 rounded-xl bg-card border border-border px-5 py-6 overflow-hidden hover:border-primary/30 transition-all duration-200 group-hover:translate-y-[-2px]">
               <div className="flex items-center gap-4 relative z-10">
-                <div className="w-11 h-11 rounded-2xl bg-amber-500/10 flex items-center justify-center shrink-0 group-hover:bg-amber-500/15 transition-colors">
-                  <Package className="h-5 w-5 text-amber-600" />
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary transition-colors duration-200">
+                  <ShoppingBagIcon className="h-6 w-6 text-primary group-hover:text-white" />
                 </div>
                 <div>
-                  <p className="font-bold text-foreground text-sm group-hover:text-amber-600 transition-colors">
+                  <Typography variant="body-sm" className="font-bold group-hover:text-primary transition-colors">
                     Riwayat Pesanan
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {allOrders.length} pesanan
-                  </p>
+                  </Typography>
+                  <Typography variant="caption" color="muted" className="mt-0.5 font-medium">
+                    {allOrders.length} transaksi tercatat
+                  </Typography>
                 </div>
               </div>
 
-              <div className="relative z-10 w-8 h-8 rounded-full bg-muted/60 flex items-center justify-center shrink-0 group-hover:bg-amber-500 transition-all duration-200">
-                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-white transition-colors" />
+              <div className="relative z-10 w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0 group-hover:bg-primary transition-all duration-200">
+                <ArrowRightIcon className="h-4 w-4 text-muted-foreground group-hover:text-white" />
               </div>
             </div>
           </Link>
 
-          {/* Link: Katalog Produk */}
+          {/* Action: Katalog Produk */}
           <Link href="/products" className="group">
-            <div className="relative flex items-center justify-between gap-4 rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden hover:border-violet-500/40 hover:shadow-md hover:shadow-violet-500/5 transition-all duration-200 group-hover:scale-[1.01]">
-              <div className="absolute inset-0 bg-violet-500/0 group-hover:bg-violet-500/[0.02] transition-colors duration-200 pointer-events-none rounded-2xl" />
-
+            <div className="relative flex items-center justify-between gap-4 rounded-xl bg-card border border-border px-5 py-6 overflow-hidden hover:border-primary/30 transition-all duration-200 group-hover:translate-y-[-2px]">
               <div className="flex items-center gap-4 relative z-10">
-                <div className="w-11 h-11 rounded-2xl bg-violet-500/10 flex items-center justify-center shrink-0 group-hover:bg-violet-500/15 transition-colors">
-                  <FileDown className="h-5 w-5 text-violet-600" />
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary transition-colors duration-200">
+                  <Squares2X2Icon className="h-6 w-6 text-primary group-hover:text-white" />
                 </div>
                 <div>
-                  <p className="font-bold text-foreground text-sm group-hover:text-violet-600 transition-colors">
+                  <Typography variant="body-sm" className="font-bold group-hover:text-primary transition-colors">
                     Katalog Produk
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  </Typography>
+                  <Typography variant="caption" color="muted" className="mt-0.5 font-medium">
                     Jelajahi koleksi kami
-                  </p>
+                  </Typography>
                 </div>
               </div>
 
-              <div className="relative z-10 w-8 h-8 rounded-full bg-muted/60 flex items-center justify-center shrink-0 group-hover:bg-violet-500 transition-all duration-200">
-                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-white transition-colors" />
+              <div className="relative z-10 w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0 group-hover:bg-primary transition-all duration-200">
+                <ArrowRightIcon className="h-4 w-4 text-muted-foreground group-hover:text-white" />
               </div>
             </div>
           </Link>

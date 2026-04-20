@@ -9,15 +9,15 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect, notFound } from "next/navigation";
 import {
-  ArrowLeft,
-  ShoppingBag,
-  Package,
-  CalendarDays,
-  Hash,
-  ShieldCheck,
-  Download,
-  ExternalLink,
-} from "lucide-react";
+  ArrowLeftIcon,
+  ShoppingBagIcon,
+  CubeIcon,
+  CalendarDaysIcon,
+  HashtagIcon,
+  ArrowTopRightOnSquareIcon
+} from "@heroicons/react/24/outline";
+import { ShieldCheckIcon } from "@heroicons/react/20/solid";
+import { Typography } from "@/components/ui/typography";
 import { DownloadButton } from "../../download-button";
 
 export const dynamic = "force-dynamic";
@@ -74,35 +74,38 @@ export default async function DownloadPage({
   const remaining = MAX_DOWNLOADS - downloadCount;
   const progress = (downloadCount / MAX_DOWNLOADS) * 100;
 
-  // Warna progress bar sesuai sisa kuota
+  // Warna progress bar sesuai sisa kuota (menggunakan semantic tokens)
   const progressColor =
     remaining <= 0
-      ? "bg-red-500"
+      ? "bg-destructive"
       : remaining <= 5
-        ? "bg-amber-500"
+        ? "bg-warning"
         : "bg-primary";
-  const remainingColor =
+
+  const statusColor =
     remaining <= 0
-      ? "text-red-500"
+      ? "destructive"
       : remaining <= 5
-        ? "text-amber-500"
-        : "text-emerald-600";
+        ? "warning"
+        : "success";
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       {/* ── Back link ── */}
       <Link
         href="/dashboard/products"
-        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors group"
+        className="inline-flex items-center gap-1.5 group outline-none"
       >
-        <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform duration-200" />
-        Kembali ke Produk Saya
+        <ArrowLeftIcon className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:-translate-x-0.5 transition-all duration-200" />
+        <Typography variant="body-sm" color="muted" className="group-hover:text-primary transition-colors">
+          Kembali ke Produk Saya
+        </Typography>
       </Link>
 
       {/* ════════════════════════════════════════════════════ */}
       {/* THUMBNAIL HERO                                       */}
       {/* ════════════════════════════════════════════════════ */}
-      <div className="relative w-full aspect-[2/1] rounded-3xl overflow-hidden bg-muted/30 border border-border/40 shadow-xl shadow-primary/5">
+      <div className="relative w-full aspect-[2/1] rounded-3xl overflow-hidden bg-muted/30 border border-border/40">
         {product?.thumbnail_url ? (
           <Image
             src={product.thumbnail_url}
@@ -112,7 +115,7 @@ export default async function DownloadPage({
           />
         ) : (
           <div className="flex h-full items-center justify-center">
-            <ShoppingBag className="h-14 w-14 text-muted-foreground/20" />
+            <ShoppingBagIcon className="h-14 w-14 text-muted-foreground/20" />
           </div>
         )}
 
@@ -120,28 +123,32 @@ export default async function DownloadPage({
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
 
         {/* Badge Lunas */}
-        <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 bg-emerald-500 text-white text-[11px] font-bold shadow-lg">
-          <ShieldCheck className="h-3.5 w-3.5" />
-          Pembayaran Lunas
+        <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 bg-success text-white shadow-lg border border-white/10">
+          <ShieldCheckIcon className="h-3.5 w-3.5" />
+          <Typography variant="caption" className="font-bold text-white">
+            Pembayaran Lunas
+          </Typography>
         </div>
       </div>
 
       {/* ════════════════════════════════════════════════════ */}
       {/* PRODUCT INFO                                         */}
       {/* ════════════════════════════════════════════════════ */}
-      <div className="rounded-3xl border border-border/50 bg-card shadow-sm overflow-hidden">
+      <div className="dashboard-card overflow-hidden">
         {/* Header info produk */}
         <div className="px-6 pt-6 pb-5 border-b border-border/40">
-          <h1 className="text-xl font-extrabold text-foreground leading-snug tracking-tight">
+          <Typography variant="h5" as="h1" className="leading-snug">
             {product?.title || "Produk Tanpa Nama"}
-          </h1>
+          </Typography>
           {product?.slug && (
             <Link
               href={`/products/${product.slug}`}
-              className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+              className="inline-flex items-center gap-1 mt-2 group"
             >
-              <ExternalLink className="h-3 w-3" />
-              Lihat halaman produk
+              <ArrowTopRightOnSquareIcon className="h-3 w-3 text-primary group-hover:text-primary/80 transition-colors" />
+              <Typography variant="body-xs" color="primary" className="font-medium group-hover:text-primary/80 transition-colors">
+                Lihat halaman produk
+              </Typography>
             </Link>
           )}
         </div>
@@ -152,30 +159,30 @@ export default async function DownloadPage({
             {/* Order ID */}
             <div className="flex items-start gap-3 rounded-2xl bg-muted/40 border border-border/40 px-4 py-3">
               <div className="w-7 h-7 rounded-lg bg-background flex items-center justify-center shrink-0 border border-border/50 mt-0.5">
-                <Hash className="h-3.5 w-3.5 text-muted-foreground" />
+                <HashtagIcon className="h-3.5 w-3.5 text-muted-foreground" />
               </div>
               <div className="min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                <Typography variant="caption" color="muted" className="font-bold uppercase text-[10px]">
                   Order ID
-                </p>
-                <p className="text-xs font-mono text-foreground mt-1 truncate">
+                </Typography>
+                <Typography variant="body-xs" className="font-mono mt-1 truncate">
                   #{(order.midtrans_order_id || order.id).substring(0, 16)}
-                </p>
+                </Typography>
               </div>
             </div>
 
             {/* Tanggal Beli */}
             <div className="flex items-start gap-3 rounded-2xl bg-muted/40 border border-border/40 px-4 py-3">
               <div className="w-7 h-7 rounded-lg bg-background flex items-center justify-center shrink-0 border border-border/50 mt-0.5">
-                <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" />
+                <CalendarDaysIcon className="h-3.5 w-3.5 text-muted-foreground" />
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                <Typography variant="caption" color="muted" className="font-bold uppercase  text-[10px]">
                   Tanggal Beli
-                </p>
-                <p className="text-xs text-foreground mt-1">
+                </Typography>
+                <Typography variant="body-xs" className="mt-1">
                   {formatDate(order.created_at)}
-                </p>
+                </Typography>
               </div>
             </div>
           </div>
@@ -184,16 +191,18 @@ export default async function DownloadPage({
           <div className="rounded-2xl border border-border/40 bg-muted/20 px-5 py-4 space-y-3">
             {/* Label + angka */}
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                <Package className="h-4 w-4 text-primary" />
-                Kuota Download
+              <span className="flex items-center gap-2">
+                <CubeIcon className="h-4 w-4 text-primary" />
+                <Typography variant="body-sm" className="font-semibold">
+                  Kuota Download
+                </Typography>
               </span>
-              <span className="text-sm font-bold text-muted-foreground">
-                <span className={`font-extrabold ${remainingColor}`}>
+              <Typography variant="body-sm" color="muted" className="font-bold">
+                <Typography as="span" variant="body-sm" color={statusColor as any} className="font-extrabold">
                   {downloadCount}
-                </span>{" "}
+                </Typography>{" "}
                 / {MAX_DOWNLOADS}
-              </span>
+              </Typography>
             </div>
 
             {/* Progress bar */}
@@ -205,20 +214,20 @@ export default async function DownloadPage({
             </div>
 
             {/* Keterangan sisa */}
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">
+            <div className="flex items-center justify-between">
+              <Typography variant="caption" color="muted">
                 {remaining <= 0
                   ? "Kuota download habis"
                   : `Tersisa ${remaining} download`}
-              </span>
+              </Typography>
               {/* Indikator warna */}
-              <span className={`font-semibold ${remainingColor}`}>
+              <Typography variant="caption" color={statusColor as any} className="font-semibold">
                 {remaining <= 0
                   ? "Habis"
                   : remaining <= 5
                     ? "Hampir habis"
                     : "Tersedia"}
-              </span>
+              </Typography>
             </div>
           </div>
 
@@ -234,9 +243,9 @@ export default async function DownloadPage({
           </div>
 
           {/* ── Catatan kecil ── */}
-          <p className="text-center text-[11px] text-muted-foreground/60 leading-relaxed">
+          <Typography variant="caption" align="center" color="muted" className="opacity-60 leading-relaxed block">
             File akan otomatis terunduh. Hubungi support jika mengalami kendala.
-          </p>
+          </Typography>
         </div>
       </div>
     </div>

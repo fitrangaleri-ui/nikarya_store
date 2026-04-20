@@ -5,7 +5,8 @@
 // ============================================================
 "use client";
 
-import { Download, AlertOctagon } from "lucide-react";
+import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import { ExclamationTriangleIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import { DownloadModal } from "./download-modal";
 import { PrimaryButton } from "@/components/ui/primary-button";
@@ -32,7 +33,7 @@ export function DownloadButton({
   if (isMaxed) {
     return (
       <PrimaryButton variant="disabled-outline" size="md">
-        <AlertOctagon className="h-4 w-4" />
+        <ExclamationTriangleIcon className="h-4 w-4" />
         Limit Tercapai
       </PrimaryButton>
     );
@@ -42,7 +43,7 @@ export function DownloadButton({
   return (
     <>
       <PrimaryButton size="md" onClick={() => setModalOpen(true)}>
-        <Download className="h-4 w-4" />
+        <ArrowDownTrayIcon className="h-4 w-4" />
         Akses File
       </PrimaryButton>
 

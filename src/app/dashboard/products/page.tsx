@@ -6,14 +6,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  Download,
-  ShoppingBag,
-  CalendarDays,
-  ArrowRight,
-  Sparkles,
-} from "lucide-react";
+  InboxStackIcon,
+  ShoppingBagIcon,
+  CalendarDaysIcon,
+  ArrowRightIcon,
+  SparklesIcon,
+  DocumentMagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import { DownloadButton } from "../download-button";
 import { getDashboardData, formatDate } from "../lib";
+import { Typography } from "@/components/ui/typography";
 
 export const dynamic = "force-dynamic";
 
@@ -27,64 +29,41 @@ export default async function ProductsPage() {
       {/* ════════════════════════════════════════════════════ */}
       {/* HEADER BANNER                                        */}
       {/* ════════════════════════════════════════════════════ */}
-      <div className="relative rounded-3xl overflow-hidden bg-primary px-6 py-8 md:px-10 shadow-lg shadow-primary/20">
-        {/* Ambient glow */}
-        <div
-          aria-hidden
-          className="absolute -top-10 -right-10 w-64 h-64 rounded-full pointer-events-none blur-[80px]"
-          style={{ background: "rgba(255,255,255,0.08)" }}
-        />
-        <div
-          aria-hidden
-          className="absolute bottom-0 left-1/3 w-48 h-48 rounded-full pointer-events-none blur-[60px]"
-          style={{ background: "rgba(255,255,255,0.05)" }}
-        />
 
-        {/* Glass shimmer overlay */}
-        <div
-          aria-hidden
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
-          }}
-        />
+      {/* ── Banner: Header ── */}
+      <div className="relative rounded-xl overflow-hidden bg-primary px-6 py-8 md:px-10 border border-white/5">
+        {/* Decorative elements */}
+        <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10 pointer-events-none" />
+        <div className="absolute bottom-[-20px] left-[20%] h-32 w-32 rounded-full bg-white/5 pointer-events-none" />
 
-        {/* Stroke border */}
-        <div
-          aria-hidden
-          className="absolute inset-0 rounded-3xl pointer-events-none"
-          style={{
-            boxShadow:
-              "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
-            border: "1px solid rgba(255,255,255,0.15)",
-          }}
-        />
-
-        {/* Konten */}
+        {/* Konten banner */}
         <div className="relative z-10 flex items-start justify-between gap-4">
           <div>
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-white/15 text-primary-foreground text-[11px] font-bold uppercase tracking-[-0.005em] mb-3">
-              <Download className="w-3 h-3" />
-              Produk Saya
-            </span>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-primary-foreground leading-tight tracking-tight">
+            <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-white/15 text-white mb-4 backdrop-blur-md border border-white/10">
+              <InboxStackIcon className="w-3.5 h-3.5" />
+              <Typography variant="caption" className="font-semibold text-primary-foreground">
+                Produk Saya
+              </Typography>
+            </div>
+
+            <Typography variant="h2" as="h1" className="text-white tracking-tight">
               Produk Digital Saya
-            </h1>
-            <p className="mt-1.5 text-sm text-primary-foreground/70 leading-relaxed">
-              Produk yang sudah dibeli dan tersedia untuk diunduh.
-            </p>
+            </Typography>
+            <Typography variant="body-sm" className="text-white/70 mt-2 font-medium max-w-md">
+              Koleksi produk digital yang telah Anda beli. Akses unduhan tersedia sesuai kuota.
+            </Typography>
           </div>
 
-          {/* Icon dekorasi + badge jumlah */}
-          <div className="hidden md:flex flex-col items-end gap-2 shrink-0">
-            <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center border border-white/20">
-              <Sparkles className="w-6 h-6 text-primary-foreground" />
+          <div className="hidden md:flex flex-col items-end gap-3 shrink-0">
+            <div className="flex w-14 h-14 rounded-xl bg-white/15 items-center justify-center border border-white/20 backdrop-blur-md">
+              <SparklesIcon className="w-7 h-7 text-primary-foreground" />
             </div>
             {uniquePaidProducts.length > 0 && (
-              <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 bg-white/15 border border-white/20 text-primary-foreground text-[11px] font-bold">
-                {uniquePaidProducts.length} produk
-              </span>
+              <div className="px-3 py-1 bg-white/10 border border-white/20 rounded-full backdrop-blur-sm">
+                <Typography variant="caption" className="text-white font-bold whitespace-nowrap">
+                  {uniquePaidProducts.length} Produk Koleksi
+                </Typography>
+              </div>
             )}
           </div>
         </div>
@@ -109,9 +88,9 @@ export default async function ProductsPage() {
 
               const progressColor =
                 remaining <= 0
-                  ? "bg-red-500"
+                  ? "bg-destructive"
                   : remaining <= 5
-                    ? "bg-amber-500"
+                    ? "bg-warning"
                     : "bg-primary";
 
               const remainingLabel =
@@ -119,15 +98,15 @@ export default async function ProductsPage() {
 
               const remainingColor =
                 remaining <= 0
-                  ? "text-red-500"
+                  ? "text-destructive"
                   : remaining <= 5
-                    ? "text-amber-500"
-                    : "text-emerald-600";
+                    ? "text-warning"
+                    : "text-primary";
 
               return (
                 <div
                   key={order.id}
-                  className="group rounded-3xl border border-border/50 bg-card overflow-hidden shadow-sm hover:shadow-md hover:shadow-primary/5 hover:border-primary/20 transition-all duration-200"
+                  className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/30 transition-all duration-200"
                 >
                   {/* Thumbnail */}
                   <div className="relative w-full aspect-[4/3] bg-muted/30 overflow-hidden">
@@ -140,49 +119,51 @@ export default async function ProductsPage() {
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center">
-                        <ShoppingBag className="h-10 w-10 text-muted-foreground/20" />
+                        <ShoppingBagIcon className="h-10 w-10 text-muted-foreground/20" />
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
-                    <div className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 bg-emerald-500 text-white text-[10px] font-bold shadow-md">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white/70" />
-                      Lunas
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+                    <div className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-primary/10 border border-primary/20 text-primary backdrop-blur-md">
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                      <Typography variant="caption" className="font-bold">Lunas</Typography>
                     </div>
-                    <div className="absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 bg-black/40 backdrop-blur-sm text-white/90 text-[10px]">
-                      <CalendarDays className="w-3 h-3" />
-                      {formatDate(order.created_at)}
+                    <div className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-black/40 backdrop-blur-sm text-white/90">
+                      <CalendarDaysIcon className="w-3.5 h-3.5" />
+                      <Typography variant="caption" className="font-medium text-white">{formatDate(order.created_at)}</Typography>
                     </div>
                   </div>
 
                   {/* Content */}
                   <div className="p-5 space-y-4">
                     <div>
-                      <h3 className="font-bold text-foreground leading-snug line-clamp-1 group-hover:text-primary transition-colors">
+                      <Typography variant="body-base" className="font-bold line-clamp-1 group-hover:text-primary transition-colors">
                         {product?.title || "Produk Tanpa Nama"}
-                      </h3>
+                      </Typography>
                       {product?.slug && (
                         <Link
                           href={`/products/${product.slug}`}
-                          className="inline-flex items-center gap-1 mt-1 text-[11px] text-muted-foreground hover:text-primary transition-colors"
+                          className="inline-flex items-center gap-1.5 mt-1 hover:text-primary transition-colors group/link"
                         >
-                          Lihat halaman produk
-                          <ArrowRight className="w-3 h-3" />
+                          <Typography variant="caption" color="muted" className="group-hover/link:text-primary transition-colors font-medium">
+                            Halaman Produk
+                          </Typography>
+                          <DocumentMagnifyingGlassIcon className="w-3.5 h-3.5 text-muted-foreground group-hover/link:text-primary transition-colors" />
                         </Link>
                       )}
                     </div>
 
                     {/* Kuota download */}
-                    <div className="rounded-2xl bg-muted/30 border border-border/40 px-4 py-3 space-y-2">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-medium text-muted-foreground">
+                    <div className="rounded-xl bg-muted/30 border border-border px-4 py-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <Typography variant="body-xs" color="muted" className="font-semibold uppercase tracking-widest">
                           Kuota Download
-                        </span>
-                        <span className="font-bold text-muted-foreground">
-                          <span className={`font-extrabold ${remainingColor}`}>
+                        </Typography>
+                        <Typography variant="body-sm" className="font-bold">
+                          <span className={remainingColor}>
                             {downloadCount}
                           </span>{" "}
                           / {MAX_DOWNLOADS}
-                        </span>
+                        </Typography>
                       </div>
                       <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                         <div
@@ -190,11 +171,11 @@ export default async function ProductsPage() {
                           style={{ width: `${Math.min(progress, 100)}%` }}
                         />
                       </div>
-                      <p
-                        className={`text-[11px] font-semibold text-right ${remainingColor}`}
-                      >
-                        {remainingLabel}
-                      </p>
+                      <div className="flex justify-end">
+                        <Typography variant="caption" className={`font-bold ${remainingColor}`}>
+                          {remainingLabel}
+                        </Typography>
+                      </div>
                     </div>
 
                     <DownloadButton
@@ -211,31 +192,24 @@ export default async function ProductsPage() {
           </div>
         </>
       ) : (
-        // ── Empty state ──────────────────────────────────────
-        <div className="relative rounded-3xl border border-dashed border-border/60 bg-card/40 overflow-hidden py-20 text-center">
-          <div
-            aria-hidden
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full pointer-events-none blur-[80px]"
-            style={{
-              background: "color-mix(in oklch, var(--primary) 6%, transparent)",
-            }}
-          />
-          <div className="relative z-10 flex flex-col items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center border border-border/50">
-              <ShoppingBag className="h-8 w-8 text-muted-foreground/40" />
+        <div className="relative rounded-xl border border-dashed border-border bg-card/40 py-24 text-center">
+          {/* ── Empty state ── */}
+          <div className="relative z-10 flex flex-col items-center gap-6">
+            <div className="w-20 h-20 rounded-xl bg-muted flex items-center justify-center border border-border">
+              <ShoppingBagIcon className="h-10 w-10 text-muted-foreground/30" />
             </div>
-            <div>
-              <h3 className="text-lg font-bold text-foreground">
+            <div className="space-y-2">
+              <Typography variant="h4" className="font-bold">
                 Belum ada produk
-              </h3>
-              <p className="mt-1 text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
-                Kamu belum memiliki produk yang sudah dibayar lunas.
-              </p>
+              </Typography>
+              <Typography variant="body-sm" color="muted" className="max-w-xs mx-auto font-medium">
+                Koleksi produk digital Anda akan muncul di sini setelah transaksi berhasil dilakukan.
+              </Typography>
             </div>
             <Link href="/products">
-              <button className="inline-flex items-center gap-2 mt-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] shadow-sm shadow-primary/30">
+              <button className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-white hover:bg-primary-hover transition-all duration-200 active:scale-95">
                 Jelajahi Katalog
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>
           </div>

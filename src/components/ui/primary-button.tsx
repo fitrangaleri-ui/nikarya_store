@@ -3,7 +3,7 @@
 // Reusable button dengan style rounded-full + glass shimmer
 // ============================================================
 
-import { Loader2 } from "lucide-react";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -89,7 +89,7 @@ export function PrimaryButton({
       <span className="relative flex items-center gap-2">
         {loading ? (
           <>
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <ArrowPathIcon className="h-4 w-4 animate-spin" />
             Memproses...
           </>
         ) : (
