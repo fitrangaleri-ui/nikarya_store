@@ -147,7 +147,7 @@ export function Navbar() {
   const dropdownId = "navbar-user-dropdown";
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 w-full border-b border-border/40 bg-background/70 shadow-sm backdrop-blur-lg transition-all duration-300 flex items-center justify-center">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/70 shadow-sm backdrop-blur-lg transition-all duration-300 flex items-center justify-center mb-6">
       <div className="container mx-auto flex h-16 w-full items-center justify-between gap-3 px-4 md:px-6">
         <div className="flex shrink-0 items-center">
           <Link href="/" className="group flex items-center">

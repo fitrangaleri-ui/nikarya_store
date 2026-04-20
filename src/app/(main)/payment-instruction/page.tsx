@@ -7,10 +7,17 @@ import {
   CheckCircleIcon,
   ClockIcon,
   ExclamationTriangleIcon,
-} from "@heroicons/react/24/outline";
+  CreditCardIcon,
+  BanknotesIcon,
+  DevicePhoneMobileIcon,
+  MagnifyingGlassIcon,
+  ArrowTopRightOnSquareIcon,
+  DocumentTextIcon,
+} from "@heroicons/react/24/solid";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import { Suspense } from "react";
+import { Badge } from "@/components/ui/badge";
 import { createClient } from "@/lib/supabase/client";
 
 interface ManualMethodInfo {
@@ -62,13 +69,15 @@ function getMethodLabel(data: InstructionData): string {
   return labels[method] || data.paymentType || "Pembayaran";
 }
 
-function getMethodIcon(data: InstructionData): string {
-  if (data.manualMethod)
-    return data.manualMethod.type === "bank_transfer" ? "🏦" : "📱";
+function getMethodIcon(data: InstructionData) {
+  if (data.manualMethod) {
+    if (data.manualMethod.type === "bank_transfer") return <BanknotesIcon className="h-6 w-6" />;
+    return <DevicePhoneMobileIcon className="h-6 w-6" />;
+  }
   const pt = data.paymentType || "";
-  if (pt === "bank_transfer" || pt === "echannel") return "🏦";
-  if (pt === "qris") return "📲";
-  return "📱";
+  if (pt === "bank_transfer" || pt === "echannel") return <BanknotesIcon className="h-6 w-6" />;
+  if (pt === "qris") return <DevicePhoneMobileIcon className="h-6 w-6" />;
+  return <CreditCardIcon className="h-6 w-6" />;
 }
 
 function getHowToPayInstructions(
@@ -81,7 +90,7 @@ function getHowToPayInstructions(
     if (data.manualMethod.type === "bank_transfer") {
       return [
         {
-          title: "Cara Transfer Bank",
+          title: "INSTRUKSI PEMBAYARAN",
           steps: [
             `Buka aplikasi mobile banking atau ATM ${data.manualMethod.provider_name}`,
             "Pilih menu Transfer",
@@ -216,6 +225,28 @@ function isQRPayment(data: InstructionData): boolean {
   return pt === "qris" || pt === "gopay";
 }
 
+function LoadingSkeleton() {
+  return (
+    <div className="min-h-80 flex flex-col items-center justify-start bg-background py-10 md:py-20 px-4 relative overflow-hidden">
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10" />
+      <div className="w-full max-w-[920px] glass rounded-xl overflow-hidden">
+        <div className="h-40 bg-muted/40 animate-pulse" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 divide-y md:divide-y-0 md:divide-x divide-border/30">
+          <div className="px-4 py-8 space-y-6">
+            <div className="h-20 bg-muted/20 rounded-xl animate-pulse" />
+            <div className="h-32 bg-muted/20 rounded-xl animate-pulse" />
+            <div className="h-32 bg-muted/20 rounded-xl animate-pulse" />
+          </div>
+          <div className="px-4 py-8 space-y-6 bg-muted/5">
+            <div className="h-64 bg-muted/20 rounded-xl animate-pulse" />
+            <div className="h-12 bg-muted/20 rounded-xl animate-pulse" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PaymentInstructionContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -281,7 +312,7 @@ function PaymentInstructionContent() {
                 const emailParam = user.email ? `?email=${encodeURIComponent(user.email)}` : "";
                 router.push(`/confirm-email${emailParam}`);
               } else if (!user) {
-                const guestEmail = result.guestEmail || "";
+                const guestEmail = (result as any).guestEmail || "";
                 const emailParam = guestEmail ? `?email=${encodeURIComponent(guestEmail)}` : "";
                 router.push(`/confirm-email${emailParam}`);
               } else {
@@ -293,7 +324,7 @@ function PaymentInstructionContent() {
           }
         }
       } catch {
-        // silent — will retry on next interval
+        // silent
       }
     }, 4000);
 
@@ -327,417 +358,290 @@ function PaymentInstructionContent() {
     return getHowToPayInstructions(data);
   }, [data]);
 
-  // ── Loading skeleton ──
-  if (loading) {
-    return (
-      <main className="mx-auto max-w-lg px-4 py-12">
-        <div className="w-full bg-background/95 backdrop-blur-2xl border border-border/50 shadow-2xl shadow-black/20 rounded-3xl overflow-hidden animate-pulse">
-          <div className="h-36 bg-primary/20" />
-          <div className="p-6 space-y-4">
-            <div className="h-20 bg-muted/50 rounded-2xl" />
-            <div className="h-16 bg-muted/50 rounded-2xl" />
-            <div className="h-28 bg-muted/50 rounded-2xl" />
-            <div className="h-32 bg-muted/50 rounded-2xl" />
-          </div>
-        </div>
-      </main>
-    );
-  }
+  if (loading) return <LoadingSkeleton />;
 
-  // ── Error state ──
-  if (error || !data) {
-    return (
-      <main className="mx-auto max-w-lg px-4 py-12">
-        <div className="w-full bg-background/95 backdrop-blur-2xl border border-border/50 shadow-2xl shadow-black/20 rounded-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-500">
-          {/* Header */}
-          <div className="relative bg-primary px-6 pt-6 pb-5 overflow-hidden">
-            <div aria-hidden className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-white/10 pointer-events-none blur-[60px]" />
-            <div aria-hidden className="absolute inset-0 bg-gradient-to-br from-white/10 to-white/0 pointer-events-none" />
-            <div className="relative z-10 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center text-xl shrink-0">
-                ⚠️
-              </div>
-              <div>
-                <Typography variant="h5" as="h1" className="text-primary-foreground leading-tight tracking-tight">
-                  Terjadi Kesalahan
-                </Typography>
-                <Typography variant="body-xs" as="p" className="text-primary-foreground/70 mt-0.5">
-                  Data pembayaran tidak dapat dimuat.
-                </Typography>
-              </div>
-            </div>
-          </div>
-
-          <div className="px-6 py-6 space-y-5">
-            <div className="rounded-2xl bg-muted/30 border border-border/40 px-4 py-4 flex items-start gap-3">
-              <div className="w-7 h-7 rounded-lg bg-destructive/10 flex items-center justify-center shrink-0 mt-0.5">
-                <ExclamationTriangleIcon className="h-3.5 w-3.5 text-destructive" />
-              </div>
-              <Typography variant="body-sm" as="p" color="muted" className="font-medium leading-relaxed">
-                {error || "Data instruksi pembayaran tidak ditemukan."}
-              </Typography>
-            </div>
-            <Button onClick={() => router.push("/")} variant="brand" size="lg" className="w-full rounded-full">
-              Kembali ke Beranda
-            </Button>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  const methodLabel = getMethodLabel(data);
-  const methodIcon = getMethodIcon(data);
-  const showVA = isVAPayment(data) && data.paymentCode;
-  const showQR = isQRPayment(data) && data.paymentCode;
-  const isDeeplink = data.paymentType === "shopeepay" && data.paymentCode;
+  const methodLabel = getMethodLabel(data!);
+  const methodIcon = getMethodIcon(data!);
+  const showVA = isVAPayment(data!) && data!.paymentCode;
+  const showQR = isQRPayment(data!) && data!.paymentCode;
+  const isDeeplink = data!.paymentType === "shopeepay" && data!.paymentCode;
 
   return (
-    <main className="mx-auto max-w-lg px-4 py-10">
-      <div className="w-full bg-background/95 backdrop-blur-2xl border border-border/50 shadow-2xl shadow-black/20 rounded-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-500">
+    <div className="flex flex-col items-center justify-start bg-background py-10 md:py-10 px-4 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10" />
+      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] -z-10" />
 
-        {/* ── Header Banner ── */}
-        <div className="relative bg-primary px-6 pt-6 pb-5 overflow-hidden">
-          <div aria-hidden className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-white/10 pointer-events-none blur-[60px]" />
-          <div aria-hidden className="absolute bottom-0 left-1/4 w-32 h-32 rounded-full bg-white/5 pointer-events-none blur-[50px]" />
-          <div aria-hidden className="absolute inset-0 bg-gradient-to-br from-white/10 to-white/0 pointer-events-none" />
-          <div className="relative z-10">
-            <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-white/15 text-primary-foreground text-[10px] font-bold uppercase tracking-tight mb-3">
-              💳 Instruksi Pembayaran
-            </span>
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center text-2xl shrink-0">
-                {methodIcon}
+      <div className="w-full max-w-[920px] glass rounded-xl overflow-hidden animate-in fade-in zoom-in-95 duration-500">
+        {error || !data ? (
+          <div className="max-w-[480px] mx-auto">
+            {/* Error Header */}
+            <div className="relative bg-gradient-to-br from-destructive to-destructive/80 px-4 pt-9 pb-8 overflow-hidden">
+              <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/10 pointer-events-none" />
+              <div className="relative z-10">
+                <Typography variant="h3" className="text-white">Terjadi Kesalahan</Typography>
+                <Typography variant="body-sm" className="text-white/70 mt-1 capitalize">{error || "Data tidak ditemukan"}</Typography>
               </div>
-              <div>
-                <Typography variant="h5" as="h1" className="text-primary-foreground leading-tight tracking-tight">
-                  {methodLabel}
-                </Typography>
-                <Typography variant="body-xs" as="p" className="mt-0.5 text-primary-foreground/70">
-                  Order #{data.orderId.split("-")[0]}
-                </Typography>
-              </div>
+            </div>
+            <div className="p-4 py-8">
+              <Button onClick={() => router.push("/")} variant="brand" size="lg" className="w-full rounded-xl">
+                Kembali ke Beranda
+              </Button>
             </div>
           </div>
-        </div>
+        ) : (
+          <>
+            {/* ── Header Banner ── (Full Width) */}
+            <div className={`relative bg-gradient-to-br transition-all duration-500 ${isPaid ? "from-green-500 to-green-600" : "from-primary to-secondary-foreground"} px-4 pt-9 pb-8 overflow-hidden`}>
+              <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/10 pointer-events-none" />
+              <div className="absolute bottom-[-20px] left-[15%] h-32 w-32 rounded-full bg-white/5 pointer-events-none" />
 
-        <div className="px-6 py-5 space-y-4">
-
-          {/* ── Paid status ── */}
-          {isPaid && (
-            <div className="rounded-2xl bg-primary/5 border border-primary/20 px-4 py-4 flex items-start gap-3 animate-in zoom-in-95">
-              <CheckCircleIcon className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-              <div>
-                <Typography variant="body-sm" as="p" color="primary" className="font-bold">Pembayaran Dikonfirmasi!</Typography>
-                <Typography variant="body-xs" as="p" className="text-primary/70 mt-0.5">
-                  Pesanan Anda sedang diproses. Mengalihkan...
-                </Typography>
-              </div>
-            </div>
-          )}
-
-          {/* ── Countdown Timer ── */}
-          {!isPaid && data.paymentDeadline && (
-            <div className={`rounded-2xl border overflow-hidden ${isExpired ? "border-destructive/20" : "border-border/40"}`}>
-              <div className="flex items-center gap-3 px-4 py-3">
-                <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isExpired ? "bg-destructive/10" : "bg-primary/10"}`}>
-                  {isExpired
-                    ? <ExclamationTriangleIcon className="h-3.5 w-3.5 text-destructive" />
-                    : <ClockIcon className="h-3.5 w-3.5 text-primary" />
-                  }
-                </div>
-                <div className="flex-1 min-w-0">
-                  <Typography variant="caption" as="p" className={`font-bold uppercase tracking-tight ${isExpired ? "text-destructive" : "text-muted-foreground"}`}>
-                    {isExpired ? "Waktu Habis" : "Selesaikan Sebelum"}
-                  </Typography>
-                  {isExpired ? (
-                    <Typography variant="body-xs" as="p" className="text-destructive/80 font-medium mt-0.5 leading-relaxed">
-                      Batas waktu pembayaran telah terlewati. Silakan buat pesanan baru jika masih berminat.
+              <div className="relative z-10 flex flex-col items-start text-white">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center shrink-0">
+                    {isPaid ? <CheckCircleIcon className="h-7 w-7 text-white" /> : methodIcon}
+                  </div>
+                  <div>
+                    <Typography variant="h4" className="text-white leading-tight">
+                      {isPaid ? "Selesai!" : methodLabel}
                     </Typography>
-                  ) : (
-                    <Typography variant="h4" as="p" className="font-mono font-black tracking-wider mt-0.5">
-                      {formatCountdown(remainingMs)}
-                    </Typography>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ── Transfer Amount ── */}
-          {!isExpired && !isPaid && (
-            <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
-              <div className="px-4 pt-3 pb-2">
-                <Typography variant="caption" as="p" color="muted" className="font-bold uppercase tracking-tight mb-2">
-                  Jumlah Tagihan
-                </Typography>
-                {data.discountAmount > 0 && (
-                  <div className="space-y-1.5 mb-2">
-                    <div className="flex items-center justify-between">
-                      <Typography variant="body-xs" as="span" color="muted" className="font-medium">Subtotal</Typography>
-                      <Typography variant="body-xs" as="span" color="muted" className="font-semibold">
-                        Rp {data.originalTotal.toLocaleString("id-ID")}
+                    <div className="mt-2 flex flex-wrap items-center gap-3">
+                      <Typography variant="body-xs" className="text-white/70 font-medium shrink-0">
+                        Order #{data.orderId.split("-")[0].toUpperCase()}
                       </Typography>
+                      {!isPaid && data.paymentDeadline && (
+                        <Badge variant="destructive" className="font-mono text-[11px] gap-2 px-3 py-1 ring-4 ring-destructive/10">
+                          <ClockIcon className="h-3.5 w-3.5" />
+                          <span className="font-sans font-bold uppercase text-[10px] opacity-90 border-r border-white/20 pr-2 leading-none">
+                            {isExpired ? "Waktu Habis" : "Selesaikan Dalam"}
+                          </span>
+                          <span className="leading-none">{isExpired ? "00:00:00" : formatCountdown(remainingMs)}</span>
+                        </Badge>
+                      )}
                     </div>
-                    <div className="flex items-center justify-between">
-                      <Typography variant="body-xs" as="span" color="primary" className="font-medium">
-                        Diskon {data.promoCode ? `(${data.promoCode})` : ""}
-                      </Typography>
-                      <Typography variant="body-xs" as="span" color="primary" className="font-semibold">
-                        -Rp {data.discountAmount.toLocaleString("id-ID")}
-                      </Typography>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0 divide-y md:divide-y-0 md:divide-x divide-border/30">
+              {/* ── Left Column: Payment Summary ── */}
+              <div className="px-4 py-9 space-y-8">
+                {/* PAID STATUS */}
+                {isPaid && (
+                  <div className="text-center space-y-5 py-12 animate-in fade-in slide-in-from-bottom-4">
+                    <div className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-2">
+                      <CheckCircleIcon className="w-10 h-10 text-green-500" />
                     </div>
-                    <div className="h-px bg-border/40" />
-                  </div>
-                )}
-                <div className="flex items-center justify-between py-1">
-                  <Typography variant="h4" as="p" color="primary" className="font-black tracking-tight">
-                    Rp {data.totalAmount.toLocaleString("id-ID")}
-                  </Typography>
-                  <button
-                    onClick={() => handleCopy(String(data.totalAmount), "amount")}
-                    className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all ${copiedField === "amount"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-primary/10 text-primary hover:bg-primary/20"
-                      }`}
-                  >
-                    {copiedField === "amount" ? (
-                      <><CheckCircleIcon className="h-3.5 w-3.5" /> Tersalin</>
-                    ) : (
-                      <><ClipboardDocumentIcon className="h-3.5 w-3.5" /> Salin</>
-                    )}
-                  </button>
-                </div>
-                <Typography variant="caption" as="p" color="muted" className="font-medium pb-3 leading-relaxed">
-                  * Pastikan transfer hingga{" "}
-                  <strong className="text-foreground">3 digit terakhir</strong>{" "}
-                  agar pembayaran terverifikasi otomatis.
-                </Typography>
-              </div>
-            </div>
-          )}
-
-          {/* ── VA Number (Gateway - Bank Transfer) ── */}
-          {showVA && !isExpired && !isPaid && (
-            <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
-              <div className="flex items-center gap-3 px-4 py-3 border-b border-border/40">
-                <Typography variant="caption" as="p" color="muted" className="font-bold uppercase tracking-tight">
-                  {data.paymentType === "echannel" ? "Biller Code & Bill Key" : "Nomor Virtual Account"}
-                </Typography>
-              </div>
-              <div className="flex items-center justify-between gap-4 px-4 py-3">
-                <Typography variant="h5" as="p" className="font-mono font-bold tracking-tight break-all">
-                  {data.paymentCode}
-                </Typography>
-                <button
-                  onClick={() => handleCopy(data.paymentCode!, "va")}
-                  className={`flex items-center justify-center w-9 h-9 rounded-xl transition-all flex-shrink-0 ${copiedField === "va"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-primary/10 hover:bg-primary/20 text-primary"
-                    }`}
-                  title="Salin nomor"
-                >
-                  {copiedField === "va" ? <CheckCircleIcon className="h-4 w-4" /> : <ClipboardDocumentIcon className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* ── QR Code (Gateway - QRIS / GoPay) ── */}
-          {showQR && !isExpired && !isPaid && (
-            <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
-              <div className="px-4 py-3 border-b border-border/40">
-                <Typography variant="caption" as="p" color="muted" className="font-bold uppercase tracking-tight">
-                  Scan QR Code
-                </Typography>
-              </div>
-              <div className="px-4 py-4 flex justify-center">
-                {data.paymentCode && data.paymentCode.startsWith("http") ? (
-                  <div className="bg-white p-3 rounded-2xl border border-border/50 shadow-sm inline-block">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={data.paymentCode}
-                      alt="QR Code"
-                      className="w-48 h-48 rounded-xl object-contain"
-                    />
-                  </div>
-                ) : (
-                  <div className="bg-background/60 rounded-xl p-4 w-full">
-                    <Typography variant="body-sm" as="p" color="muted" className="font-mono break-all text-center">
-                      {data.paymentCode}
+                    <Typography variant="h4" className="font-bold">Pembayaran Diterima!</Typography>
+                    <Typography variant="body-base" color="muted" className="max-w-[300px] mx-auto">
+                      Pesanan Anda sedang diproses dan Anda akan segera dialihkan ke dashboard.
                     </Typography>
+                    <Button
+                      onClick={() => router.push("/dashboard")}
+                      variant="brand"
+                      size="lg"
+                      className="w-full"
+                    >
+                      Buka Dashboard
+                    </Button>
+                  </div>
+                )}
+
+                {!isPaid && (
+                  <>
+                    <div className="space-y-6">
+
+                      {/* Amount Section */}
+                      <div className="rounded-xl border border-border/60 bg-card overflow-hidden">
+                        <div className="bg-primary px-6 py-4 border-b border-primary-bg/10 flex items-center justify-between">
+                          <Typography variant="caption" className="text-white font-black uppercase ">Total Tagihan</Typography>
+                          <CreditCardIcon className="w-4 h-4 text-white/50" />
+                        </div>
+                        <div className="px-6 py-6 space-y-5">
+                          {data.discountAmount > 0 && (
+                            <div className="space-y-2.5 border-b border-border/30 pb-5">
+                              <div className="flex justify-between items-center text-xs">
+                                <Typography variant="body-xs" color="muted" className="font-medium text-muted-foreground">Subtotal</Typography>
+                                <Typography variant="body-xs" className="font-bold">Rp {data.originalTotal.toLocaleString("id-ID")}</Typography>
+                              </div>
+                              <div className="flex justify-between items-center text-primary text-xs">
+                                <Typography variant="body-xs" className="font-bold">Diskon Promo</Typography>
+                                <Typography variant="body-xs" className="font-black">-Rp {data.discountAmount.toLocaleString("id-ID")}</Typography>
+                              </div>
+                            </div>
+                          )}
+                          <div className="flex items-center justify-between gap-4">
+                            <div className="space-y-1">
+                              <Typography variant="h3" color="primary" className="font-black tracking-tight leading-none">
+                                Rp {data.totalAmount.toLocaleString("id-ID")}
+                              </Typography>
+                              <Typography variant="caption" color="muted" className="font-medium">Sudah termasuk pajak & biaya</Typography>
+                            </div>
+                            <button
+                              onClick={() => handleCopy(String(data.totalAmount), "amount")}
+                              className={`flex items-center rounded-sm gap-2 px-4 py-2.5 text-xs font-bold transition-all duration-300 ${copiedField === "amount" ? "bg-green-500 text-white" : "bg-primary/10 text-primary hover:bg-primary/20"}`}
+                            >
+                              {copiedField === "amount" ? <CheckCircleIcon className="h-4 w-4" /> : <ClipboardDocumentIcon className="h-4 w-4" />}
+                              {copiedField === "amount" ? "Tersalin" : "Salin"}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* VA / QR Section */}
+                      <div className="rounded-xl border border-border/60 bg-card overflow-hidden">
+                        <div className="bg-primary px-6 py-4 border-b border-primary-bg/10 flex items-center justify-between">
+                          <Typography variant="caption" className="text-white font-black uppercase ">Detail rekening</Typography>
+                          <MagnifyingGlassIcon className="w-4 h-4 text-white/50" />
+                        </div>
+                        <div className="px-6 py-6">
+                          {data.paymentCode && !showQR && !isDeeplink && (
+                            <div className="flex items-center justify-between gap-4">
+                              <div className="flex-1 min-w-0 space-y-1">
+                                <Typography variant="caption" color="muted" className="font-bold block tracking-wide uppercase text-[10px]">
+                                  {data.paymentType === "echannel" ? "Bill Key" : "Nomor Virtual Account"}
+                                </Typography>
+                                <Typography variant="h4" className="font-mono font-black break-all text-foreground/90 leading-none">{data.paymentCode}</Typography>
+                                {(data as any).accountName && (
+                                  <Typography variant="caption" color="muted" className="font-medium">A/N: {(data as any).accountName}</Typography>
+                                )}
+                              </div>
+                              <button
+                                onClick={() => handleCopy(data.paymentCode!, "code")}
+                                className={`flex items-center rounded-sm gap-2 px-4 py-2.5 text-xs font-bold transition-all duration-300 ${copiedField === "code" ? "bg-green-500 text-white" : "bg-primary/10 text-primary hover:bg-primary/20"}`}
+                              >
+                                {copiedField === "code" ? <CheckCircleIcon className="h-4 w-4" /> : <ClipboardDocumentIcon className="h-4 w-4" />}
+                                {copiedField === "code" ? "Tersalin" : "Salin"}
+                              </button>
+                            </div>
+                          )}
+
+                          {showQR && (
+                            <div className="flex flex-col items-center gap-5 py-2">
+                              <div className="p-3 bg-white border-2 border-primary/10 rounded-xl group transition-all hover:border-primary/30">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={data.paymentCode!} alt="QR Code" className="w-48 h-48 object-contain transition-transform group-hover:scale-[1.02]" />
+                              </div>
+                              <Typography variant="caption" color="muted" className="font-bold uppercase  flex items-center gap-2">
+                                <MagnifyingGlassIcon className="w-4 h-4" /> Scan Dengan Aplikasi
+                              </Typography>
+                            </div>
+                          )}
+
+                          {isDeeplink && (
+                            <Button asChild variant="brand" size="lg" className="w-full">
+                              <a href={data.paymentCode!} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
+                                <span>Buka Aplikasi</span>
+                                <ArrowTopRightOnSquareIcon className="w-5 h-5" />
+                              </a>
+                            </Button>
+                          )}
+
+                          {data.manualMethod && (
+                            <div className="space-y-5">
+                              <div className="flex items-center justify-between gap-4">
+                                <div className="flex-1 min-w-0 space-y-1">
+                                  <Typography variant="h4" className="font-mono font-black leading-none">{data.manualMethod.account_number}</Typography>
+                                  <Typography variant="caption" color="muted" className="font-medium">A/N: {data.manualMethod.account_name}</Typography>
+                                </div>
+                                <button
+                                  onClick={() => handleCopy(data.manualMethod!.account_number, "manual")}
+                                  className={`flex items-center rounded-sm gap-2 px-4 py-2.5 text-xs font-bold transition-all duration-300 ${copiedField === "manual" ? "bg-green-500 text-white" : "bg-primary/10 text-primary hover:bg-primary/20"}`}
+                                >
+                                  {copiedField === "manual" ? <CheckCircleIcon className="h-4 w-4" /> : <ClipboardDocumentIcon className="h-4 w-4" />}
+                                  {copiedField === "manual" ? "Tersalin" : "Salin"}
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* ── Right Column: Instructions & Actions ── */}
+              <div className="px-4 py-9 space-y-8 bg-muted/5 backdrop-blur-sm">
+                {!isPaid && !isExpired && (
+                  <>
+                    <div className="space-y-6">
+
+                      <div className="space-y-4">
+                        {instructions.map((section, idx) => (
+                          <div key={idx} className="rounded-xl border border-border bg-card overflow-hidden group transition-all hover:border-primary/30">
+                            <div className="px-6 py-4 bg-primary border-b border-primary-bg/10 flex items-center gap-3">
+                              <Typography variant="body-sm" className="text-white font-black tracking-wide">{section.title}</Typography>
+                            </div>
+                            <div className="px-7 py-6">
+                              <ul className="space-y-4 list-decimal list-outside text-[13px] text-muted-foreground/80 font-semibold marker:text-primary marker:font-black">
+                                {section.steps.map((step, sIdx) => (
+                                  <li key={sIdx} className="leading-relaxed pl-1">{step}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="pt-4 space-y-5">
+                      {/* Polling */}
+                      <div className="flex items-center gap-3 px-2 py-3 rounded-full bg-primary/5 border border-primary/10">
+                        <span className="relative flex h-2.5 w-2.5">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary" />
+                        </span>
+                        <Typography variant="caption" color="primary" className="font-bold italic tracking-wide">Menunggu konfirmasi otomatis...</Typography>
+                      </div>
+
+                      <div className="flex flex-col gap-3.5">
+                        <Button
+                          onClick={() => router.push("/dashboard")}
+                          variant="brand"
+                          size="lg"
+                          className="w-full h-14 font-black tracking-tight"
+                        >
+                          Cek Status Pesanan
+                        </Button>
+                        <Button
+                          onClick={() => router.push("/")}
+                          variant="outline"
+                          size="lg"
+                          className="w-full h-14 border-border/60 hover:bg-muted/50 font-bold"
+                        >
+                          Selesai & Bayar Nanti
+                        </Button>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {isExpired && (
+                  <div className="h-full min-h-[400px] flex flex-col items-center justify-center text-center p-8 space-y-6">
+                    <div className="w-24 h-24 rounded-full bg-destructive/10 flex items-center justify-center animate-bounce">
+                      <ExclamationTriangleIcon className="h-12 w-12 text-destructive" />
+                    </div>
+                    <div className="space-y-2">
+                      <Typography variant="h4" className="font-black text-destructive">Waktu Pembayaran Habis</Typography>
+                      <Typography variant="body-base" color="muted" className="max-w-[280px] mx-auto font-medium">Batas waktu telah habis. Silakan buat pesanan baru untuk melanjutkan.</Typography>
+                    </div>
+                    <Button onClick={() => router.push("/")} variant="brand" size="lg" className="w-full h-14">Cari Produk Lain</Button>
                   </div>
                 )}
               </div>
             </div>
-          )}
-
-          {/* ── Deeplink (ShopeePay) ── */}
-          {isDeeplink && !isExpired && !isPaid && (
-            <a
-              href={data.paymentCode!}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold rounded-full shadow-md transition-all active:scale-[0.98]"
-            >
-              <span>📱</span> Buka Aplikasi ShopeePay
-            </a>
-          )}
-
-          {/* ── Manual Payment Method Details ── */}
-          {data.manualMethod && !isExpired && !isPaid && (
-            <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
-              {/* Provider header */}
-              <div className="flex items-center gap-3 px-4 py-3 border-b border-border/40">
-                {data.manualMethod.logo_url ? (
-                  <div className="w-7 h-7 rounded-lg bg-white border border-border/50 flex items-center justify-center flex-shrink-0 overflow-hidden p-0.5">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={data.manualMethod.logo_url}
-                      alt={data.manualMethod.provider_name}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 text-sm">
-                    {data.manualMethod.type === "bank_transfer" ? "🏦" : "📱"}
-                  </div>
-                )}
-                <Typography variant="caption" as="p" color="muted" className="font-bold uppercase tracking-tight">
-                  {data.manualMethod.provider_name}
-                </Typography>
-              </div>
-
-              {/* Account name */}
-              <div className="flex items-center gap-3 px-4 py-3 border-b border-border/40">
-                <div className="flex-1 min-w-0">
-                  <Typography variant="caption" as="p" color="muted" className="font-bold uppercase tracking-tight">
-                    Atas Nama
-                  </Typography>
-                  <Typography variant="body-sm" as="p" className="font-bold mt-0.5">
-                    {data.manualMethod.account_name}
-                  </Typography>
-                </div>
-              </div>
-
-              {/* Account number */}
-              <div className="flex items-center justify-between gap-4 px-4 py-3">
-                <div className="min-w-0">
-                  <Typography variant="caption" as="p" color="muted" className="font-bold uppercase tracking-tight">
-                    {data.manualMethod.type === "bank_transfer" ? "Nomor Rekening" : "Nomor Tujuan"}
-                  </Typography>
-                  <Typography variant="h5" as="p" className="font-mono font-bold tracking-wider mt-0.5 break-all">
-                    {data.manualMethod.account_number}
-                  </Typography>
-                </div>
-                <button
-                  onClick={() => handleCopy(data.manualMethod!.account_number, "account")}
-                  className={`flex items-center justify-center w-9 h-9 rounded-xl transition-all flex-shrink-0 ${copiedField === "account"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-primary/10 hover:bg-primary/20 text-primary"
-                    }`}
-                  title="Salin nomor"
-                >
-                  {copiedField === "account" ? <CheckCircleIcon className="h-4 w-4" /> : <ClipboardDocumentIcon className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* ── How to Pay Instructions ── */}
-          {!isExpired && !isPaid && instructions.length > 0 && (
-            <div className="space-y-3">
-              {instructions.map((section, idx) => (
-                <div key={idx} className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
-                  <div className="px-4 py-3 border-b border-border/40 flex items-center gap-2">
-                    <span className="w-1 h-4 bg-primary rounded-full inline-block shrink-0" />
-                    <Typography variant="caption" as="p" color="muted" className="font-bold uppercase tracking-tight">
-                      {section.title}
-                    </Typography>
-                  </div>
-                  <ol className="px-4 py-3 space-y-2 list-decimal list-outside ml-4">
-                    {section.steps.map((step, sIdx) => (
-                      <li key={sIdx}>
-                        <Typography variant="body-sm" as="span" color="muted" className="font-medium leading-relaxed pl-1">
-                          {step}
-                        </Typography>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* ── Polling indicator ── */}
-          {!isPaid && !isExpired && (
-            <div className="flex items-center justify-center gap-3 py-2">
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/60 opacity-75" />
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-primary" />
-              </span>
-              <Typography variant="body-xs" as="span" color="muted" className="font-semibold">
-                Menunggu konfirmasi pembayaran otomatis...
-              </Typography>
-            </div>
-          )}
-
-          {/* ── Action Button ── */}
-          <div className="pt-2 pb-1">
-            {isPaid ? (
-              <Button
-                onClick={async () => {
-                  const supabase = createClient();
-                  const { data: { user } } = await supabase.auth.getUser();
-                  if (user && !user.email_confirmed_at) {
-                    const emailParam = user.email ? `?email=${encodeURIComponent(user.email)}` : "";
-                    router.push(`/confirm-email${emailParam}`);
-                  } else if (!user) {
-                    router.push("/confirm-email");
-                  } else {
-                    router.push("/dashboard");
-                  }
-                }}
-                variant="brand"
-                size="lg"
-                className="w-full rounded-full"
-              >
-                Lanjutkan
-              </Button>
-            ) : (
-              <Button
-                onClick={() => router.push("/")}
-                variant="outline"
-                size="lg"
-                className="w-full rounded-full border-border/50 bg-transparent text-foreground hover:bg-muted/50 font-bold transition-all active:scale-95"
-              >
-                {isExpired ? "Kembali ke Beranda" : "Selesai (Bayar Nanti)"}
-              </Button>
-            )}
-          </div>
-        </div>
+          </>
+        )}
       </div>
-    </main>
+    </div>
   );
 }
 
 export default function PaymentInstructionPage() {
   return (
-    <Suspense
-      fallback={
-        <main className="mx-auto max-w-lg px-4 py-12">
-          <div className="w-full bg-background/95 backdrop-blur-2xl border border-border/50 shadow-2xl shadow-black/20 rounded-3xl overflow-hidden animate-pulse">
-            <div className="h-36 bg-primary/20" />
-            <div className="p-6 space-y-4">
-              <div className="h-20 bg-muted/50 rounded-2xl" />
-              <div className="h-16 bg-muted/50 rounded-2xl" />
-              <div className="h-28 bg-muted/50 rounded-2xl" />
-              <div className="h-32 bg-muted/50 rounded-2xl" />
-            </div>
-          </div>
-        </main>
-      }
-    >
+    <Suspense fallback={<LoadingSkeleton />}>
       <PaymentInstructionContent />
     </Suspense>
   );
