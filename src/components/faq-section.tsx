@@ -161,15 +161,31 @@ function AccordionItem({
 }
 
 // ── FAQ Section ────────────────────────────────────────────────
-export function FaqSection() {
+interface FaqItem {
+  q: string;
+  a: string;
+}
+
+interface FaqSectionProps {
+  customFaqs?: FaqItem[];
+  title?: string;
+  subtitle?: string;
+}
+
+export function FaqSection({ 
+  customFaqs, 
+  title = "Ada yang ingin ditanyakan?", 
+  subtitle = "Temukan jawaban atas pertanyaan umum seputar layanan kami di sini." 
+}: FaqSectionProps) {
+  const displayFaqs = customFaqs || faqs;
   const [openIdx, setOpenIdx] = useState<number | null>(null);
 
   const handleToggle = (idx: number) => {
     setOpenIdx((prev) => (prev === idx ? null : idx));
   };
 
-  const leftFaqs = faqs.filter((_, i) => i % 2 === 0);
-  const rightFaqs = faqs.filter((_, i) => i % 2 !== 0);
+  const leftFaqs = displayFaqs.filter((_, i) => i % 2 === 0);
+  const rightFaqs = displayFaqs.filter((_, i) => i % 2 !== 0);
 
   return (
     <section className="w-full bg-background py-16 md:py-24 relative overflow-hidden">
@@ -192,10 +208,10 @@ export function FaqSection() {
             </Badge>
           </div>
           <Typography variant="h2" className="text-center">
-            Ada yang ingin ditanyakan?
+            {title}
           </Typography>
           <Typography variant="body-base" className="text-sm mt-2 text-center md:text-base text-muted-foreground/80 max-w-md mx-auto leading-relaxed">
-            Temukan jawaban atas pertanyaan umum seputar layanan kami di sini.
+            {subtitle}
           </Typography>
         </div>
 

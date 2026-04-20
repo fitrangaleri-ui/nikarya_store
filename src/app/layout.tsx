@@ -6,6 +6,7 @@ import Script from "next/script";
 import { AuthProvider } from "@/components/auth-provider";
 import { CartProvider } from "@/context/cart-context";
 import { ThemeProvider } from "@/components/theme-provider";
+import { DemoPreviewProvider } from "@/components/demo-preview-provider";
 import { CartSidebar } from "@/components/cart-sidebar";
 import { MenuSidebar } from "@/components/menu-sidebar";
 import { WhatsAppButton } from "@/components/whatsapp-button";
@@ -58,11 +59,13 @@ export default function RootLayout({
               disableTransitionOnChange
               storageKey="nikarya-theme"
             >
-              {children}
-              {authModal}
-              <CartSidebar />
-              <MenuSidebar />
-              <WhatsAppButton />
+              <DemoPreviewProvider>
+                {children}
+                {authModal}
+                <CartSidebar />
+                <MenuSidebar />
+                <WhatsAppButton />
+              </DemoPreviewProvider>
             </ThemeProvider>
           </CartProvider>
         </AuthProvider>
