@@ -610,7 +610,7 @@ function EnvironmentToggle({ defaultValue }: { defaultValue: string }) {
       </div>
       {environment === "production" && (
         <Typography variant="caption" color="destructive" className="font-bold ml-1 flex items-center gap-1.5">
-          <ExclamationCircleIcon className="h-3, w-3" />
+          <ExclamationCircleIcon className="h-3 w-3" />
           Perhatian: Mode production akan memproses tagihan &amp; pembayaran nyata.
         </Typography>
       )}

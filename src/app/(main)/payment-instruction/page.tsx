@@ -2,8 +2,14 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Copy, CheckCircle, Clock, AlertTriangle } from "lucide-react";
+import {
+  ClipboardDocumentIcon,
+  CheckCircleIcon,
+  ClockIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
+import { Typography } from "@/components/ui/typography";
 import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -345,32 +351,31 @@ function PaymentInstructionContent() {
         <div className="w-full bg-background/95 backdrop-blur-2xl border border-border/50 shadow-2xl shadow-black/20 rounded-3xl overflow-hidden animate-in fade-in zoom-in-95 duration-500">
           {/* Header */}
           <div className="relative bg-primary px-6 pt-6 pb-5 overflow-hidden">
-            <div aria-hidden className="absolute -top-8 -right-8 w-40 h-40 rounded-full pointer-events-none blur-[60px]" style={{ background: "rgba(255,255,255,0.08)" }} />
-            <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)" }} />
-            <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)", border: "1px solid rgba(255,255,255,0.15)" }} />
+            <div aria-hidden className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-white/10 pointer-events-none blur-[60px]" />
+            <div aria-hidden className="absolute inset-0 bg-gradient-to-br from-white/10 to-white/0 pointer-events-none" />
             <div className="relative z-10 flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center text-xl shrink-0">
                 ⚠️
               </div>
               <div>
-                <h1 className="text-xl font-extrabold text-primary-foreground leading-tight tracking-tight">
+                <Typography variant="h5" as="h1" className="text-primary-foreground leading-tight tracking-tight">
                   Terjadi Kesalahan
-                </h1>
-                <p className="mt-0.5 text-xs text-primary-foreground/70">
+                </Typography>
+                <Typography variant="body-xs" as="p" className="text-primary-foreground/70 mt-0.5">
                   Data pembayaran tidak dapat dimuat.
-                </p>
+                </Typography>
               </div>
             </div>
           </div>
 
           <div className="px-6 py-6 space-y-5">
             <div className="rounded-2xl bg-muted/30 border border-border/40 px-4 py-4 flex items-start gap-3">
-              <div className="w-7 h-7 rounded-lg bg-red-500/10 flex items-center justify-center shrink-0 mt-0.5">
-                <AlertTriangle className="h-3.5 w-3.5 text-red-500" />
+              <div className="w-7 h-7 rounded-lg bg-destructive/10 flex items-center justify-center shrink-0 mt-0.5">
+                <ExclamationTriangleIcon className="h-3.5 w-3.5 text-destructive" />
               </div>
-              <p className="text-sm font-medium text-muted-foreground leading-relaxed">
+              <Typography variant="body-sm" as="p" color="muted" className="font-medium leading-relaxed">
                 {error || "Data instruksi pembayaran tidak ditemukan."}
-              </p>
+              </Typography>
             </div>
             <Button onClick={() => router.push("/")} variant="brand" size="lg" className="w-full rounded-full">
               Kembali ke Beranda
@@ -393,12 +398,11 @@ function PaymentInstructionContent() {
 
         {/* ── Header Banner ── */}
         <div className="relative bg-primary px-6 pt-6 pb-5 overflow-hidden">
-          <div aria-hidden className="absolute -top-8 -right-8 w-40 h-40 rounded-full pointer-events-none blur-[60px]" style={{ background: "rgba(255,255,255,0.08)" }} />
-          <div aria-hidden className="absolute bottom-0 left-1/4 w-32 h-32 rounded-full pointer-events-none blur-[50px]" style={{ background: "rgba(255,255,255,0.05)" }} />
-          <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)" }} />
-          <div aria-hidden className="absolute inset-0 pointer-events-none" style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)", border: "1px solid rgba(255,255,255,0.15)" }} />
+          <div aria-hidden className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-white/10 pointer-events-none blur-[60px]" />
+          <div aria-hidden className="absolute bottom-0 left-1/4 w-32 h-32 rounded-full bg-white/5 pointer-events-none blur-[50px]" />
+          <div aria-hidden className="absolute inset-0 bg-gradient-to-br from-white/10 to-white/0 pointer-events-none" />
           <div className="relative z-10">
-            <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-white/15 text-primary-foreground text-[10px] font-bold uppercase tracking-[-0.005em] mb-3">
+            <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-white/15 text-primary-foreground text-[10px] font-bold uppercase tracking-tight mb-3">
               💳 Instruksi Pembayaran
             </span>
             <div className="flex items-center gap-3">
@@ -406,12 +410,12 @@ function PaymentInstructionContent() {
                 {methodIcon}
               </div>
               <div>
-                <h1 className="text-xl font-extrabold text-primary-foreground leading-tight tracking-tight">
+                <Typography variant="h5" as="h1" className="text-primary-foreground leading-tight tracking-tight">
                   {methodLabel}
-                </h1>
-                <p className="mt-0.5 text-xs text-primary-foreground/70">
+                </Typography>
+                <Typography variant="body-xs" as="p" className="mt-0.5 text-primary-foreground/70">
                   Order #{data.orderId.split("-")[0]}
-                </p>
+                </Typography>
               </div>
             </div>
           </div>
@@ -422,38 +426,38 @@ function PaymentInstructionContent() {
           {/* ── Paid status ── */}
           {isPaid && (
             <div className="rounded-2xl bg-primary/5 border border-primary/20 px-4 py-4 flex items-start gap-3 animate-in zoom-in-95">
-              <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <CheckCircleIcon className="h-5 w-5 text-primary shrink-0 mt-0.5" />
               <div>
-                <p className="text-sm font-bold text-primary">Pembayaran Dikonfirmasi!</p>
-                <p className="text-xs text-primary/70 mt-0.5">
+                <Typography variant="body-sm" as="p" color="primary" className="font-bold">Pembayaran Dikonfirmasi!</Typography>
+                <Typography variant="body-xs" as="p" className="text-primary/70 mt-0.5">
                   Pesanan Anda sedang diproses. Mengalihkan...
-                </p>
+                </Typography>
               </div>
             </div>
           )}
 
           {/* ── Countdown Timer ── */}
           {!isPaid && data.paymentDeadline && (
-            <div className={`rounded-2xl border overflow-hidden ${isExpired ? "border-red-500/20" : "border-border/40"}`}>
+            <div className={`rounded-2xl border overflow-hidden ${isExpired ? "border-destructive/20" : "border-border/40"}`}>
               <div className="flex items-center gap-3 px-4 py-3">
-                <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isExpired ? "bg-red-500/10" : "bg-primary/10"}`}>
+                <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isExpired ? "bg-destructive/10" : "bg-primary/10"}`}>
                   {isExpired
-                    ? <AlertTriangle className="h-3.5 w-3.5 text-red-500" />
-                    : <Clock className="h-3.5 w-3.5 text-primary" />
+                    ? <ExclamationTriangleIcon className="h-3.5 w-3.5 text-destructive" />
+                    : <ClockIcon className="h-3.5 w-3.5 text-primary" />
                   }
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-[10px] font-bold uppercase tracking-[-0.005em] ${isExpired ? "text-red-500" : "text-muted-foreground"}`}>
+                  <Typography variant="caption" as="p" className={`font-bold uppercase tracking-tight ${isExpired ? "text-destructive" : "text-muted-foreground"}`}>
                     {isExpired ? "Waktu Habis" : "Selesaikan Sebelum"}
-                  </p>
+                  </Typography>
                   {isExpired ? (
-                    <p className="text-xs font-medium text-red-500/80 mt-0.5 leading-relaxed">
+                    <Typography variant="body-xs" as="p" className="text-destructive/80 font-medium mt-0.5 leading-relaxed">
                       Batas waktu pembayaran telah terlewati. Silakan buat pesanan baru jika masih berminat.
-                    </p>
+                    </Typography>
                   ) : (
-                    <p className="text-2xl font-mono font-black text-foreground tracking-wider mt-0.5">
+                    <Typography variant="h4" as="p" className="font-mono font-black tracking-wider mt-0.5">
                       {formatCountdown(remainingMs)}
-                    </p>
+                    </Typography>
                   )}
                 </div>
               </div>
@@ -464,32 +468,32 @@ function PaymentInstructionContent() {
           {!isExpired && !isPaid && (
             <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
               <div className="px-4 pt-3 pb-2">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[-0.005em] mb-2">
+                <Typography variant="caption" as="p" color="muted" className="font-bold uppercase tracking-tight mb-2">
                   Jumlah Tagihan
-                </p>
+                </Typography>
                 {data.discountAmount > 0 && (
                   <div className="space-y-1.5 mb-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-muted-foreground">Subtotal</span>
-                      <span className="text-xs font-semibold text-muted-foreground">
+                      <Typography variant="body-xs" as="span" color="muted" className="font-medium">Subtotal</Typography>
+                      <Typography variant="body-xs" as="span" color="muted" className="font-semibold">
                         Rp {data.originalTotal.toLocaleString("id-ID")}
-                      </span>
+                      </Typography>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-primary">
+                      <Typography variant="body-xs" as="span" color="primary" className="font-medium">
                         Diskon {data.promoCode ? `(${data.promoCode})` : ""}
-                      </span>
-                      <span className="text-xs font-semibold text-primary">
+                      </Typography>
+                      <Typography variant="body-xs" as="span" color="primary" className="font-semibold">
                         -Rp {data.discountAmount.toLocaleString("id-ID")}
-                      </span>
+                      </Typography>
                     </div>
                     <div className="h-px bg-border/40" />
                   </div>
                 )}
                 <div className="flex items-center justify-between py-1">
-                  <p className="text-2xl font-black text-primary tracking-tight">
+                  <Typography variant="h4" as="p" color="primary" className="font-black tracking-tight">
                     Rp {data.totalAmount.toLocaleString("id-ID")}
-                  </p>
+                  </Typography>
                   <button
                     onClick={() => handleCopy(String(data.totalAmount), "amount")}
                     className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all ${copiedField === "amount"
@@ -498,17 +502,17 @@ function PaymentInstructionContent() {
                       }`}
                   >
                     {copiedField === "amount" ? (
-                      <><CheckCircle className="h-3.5 w-3.5" /> Tersalin</>
+                      <><CheckCircleIcon className="h-3.5 w-3.5" /> Tersalin</>
                     ) : (
-                      <><Copy className="h-3.5 w-3.5" /> Salin</>
+                      <><ClipboardDocumentIcon className="h-3.5 w-3.5" /> Salin</>
                     )}
                   </button>
                 </div>
-                <p className="text-[10px] font-medium text-muted-foreground pb-3 leading-relaxed">
+                <Typography variant="caption" as="p" color="muted" className="font-medium pb-3 leading-relaxed">
                   * Pastikan transfer hingga{" "}
                   <strong className="text-foreground">3 digit terakhir</strong>{" "}
                   agar pembayaran terverifikasi otomatis.
-                </p>
+                </Typography>
               </div>
             </div>
           )}
@@ -517,14 +521,14 @@ function PaymentInstructionContent() {
           {showVA && !isExpired && !isPaid && (
             <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
               <div className="flex items-center gap-3 px-4 py-3 border-b border-border/40">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[-0.005em]">
+                <Typography variant="caption" as="p" color="muted" className="font-bold uppercase tracking-tight">
                   {data.paymentType === "echannel" ? "Biller Code & Bill Key" : "Nomor Virtual Account"}
-                </p>
+                </Typography>
               </div>
               <div className="flex items-center justify-between gap-4 px-4 py-3">
-                <p className="text-xl font-mono font-bold text-foreground tracking-[-0.005em] break-all">
+                <Typography variant="h5" as="p" className="font-mono font-bold tracking-tight break-all">
                   {data.paymentCode}
-                </p>
+                </Typography>
                 <button
                   onClick={() => handleCopy(data.paymentCode!, "va")}
                   className={`flex items-center justify-center w-9 h-9 rounded-xl transition-all flex-shrink-0 ${copiedField === "va"
@@ -533,7 +537,7 @@ function PaymentInstructionContent() {
                     }`}
                   title="Salin nomor"
                 >
-                  {copiedField === "va" ? <CheckCircle className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  {copiedField === "va" ? <CheckCircleIcon className="h-4 w-4" /> : <ClipboardDocumentIcon className="h-4 w-4" />}
                 </button>
               </div>
             </div>
@@ -543,9 +547,9 @@ function PaymentInstructionContent() {
           {showQR && !isExpired && !isPaid && (
             <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
               <div className="px-4 py-3 border-b border-border/40">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[-0.005em]">
+                <Typography variant="caption" as="p" color="muted" className="font-bold uppercase tracking-tight">
                   Scan QR Code
-                </p>
+                </Typography>
               </div>
               <div className="px-4 py-4 flex justify-center">
                 {data.paymentCode && data.paymentCode.startsWith("http") ? (
@@ -559,9 +563,9 @@ function PaymentInstructionContent() {
                   </div>
                 ) : (
                   <div className="bg-background/60 rounded-xl p-4 w-full">
-                    <p className="text-sm text-muted-foreground font-mono break-all text-center">
+                    <Typography variant="body-sm" as="p" color="muted" className="font-mono break-all text-center">
                       {data.paymentCode}
-                    </p>
+                    </Typography>
                   </div>
                 )}
               </div>
@@ -599,32 +603,32 @@ function PaymentInstructionContent() {
                     {data.manualMethod.type === "bank_transfer" ? "🏦" : "📱"}
                   </div>
                 )}
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[-0.005em]">
+                <Typography variant="caption" as="p" color="muted" className="font-bold uppercase tracking-tight">
                   {data.manualMethod.provider_name}
-                </p>
+                </Typography>
               </div>
 
               {/* Account name */}
               <div className="flex items-center gap-3 px-4 py-3 border-b border-border/40">
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-bold uppercase tracking-[-0.005em] text-muted-foreground">
+                  <Typography variant="caption" as="p" color="muted" className="font-bold uppercase tracking-tight">
                     Atas Nama
-                  </p>
-                  <p className="text-sm font-bold text-foreground mt-0.5">
+                  </Typography>
+                  <Typography variant="body-sm" as="p" className="font-bold mt-0.5">
                     {data.manualMethod.account_name}
-                  </p>
+                  </Typography>
                 </div>
               </div>
 
               {/* Account number */}
               <div className="flex items-center justify-between gap-4 px-4 py-3">
                 <div className="min-w-0">
-                  <p className="text-[10px] font-bold uppercase tracking-[-0.005em] text-muted-foreground">
+                  <Typography variant="caption" as="p" color="muted" className="font-bold uppercase tracking-tight">
                     {data.manualMethod.type === "bank_transfer" ? "Nomor Rekening" : "Nomor Tujuan"}
-                  </p>
-                  <p className="text-xl font-mono font-bold text-foreground tracking-wider mt-0.5 break-all">
+                  </Typography>
+                  <Typography variant="h5" as="p" className="font-mono font-bold tracking-wider mt-0.5 break-all">
                     {data.manualMethod.account_number}
-                  </p>
+                  </Typography>
                 </div>
                 <button
                   onClick={() => handleCopy(data.manualMethod!.account_number, "account")}
@@ -634,7 +638,7 @@ function PaymentInstructionContent() {
                     }`}
                   title="Salin nomor"
                 >
-                  {copiedField === "account" ? <CheckCircle className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  {copiedField === "account" ? <CheckCircleIcon className="h-4 w-4" /> : <ClipboardDocumentIcon className="h-4 w-4" />}
                 </button>
               </div>
             </div>
@@ -647,14 +651,16 @@ function PaymentInstructionContent() {
                 <div key={idx} className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
                   <div className="px-4 py-3 border-b border-border/40 flex items-center gap-2">
                     <span className="w-1 h-4 bg-primary rounded-full inline-block shrink-0" />
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[-0.005em]">
+                    <Typography variant="caption" as="p" color="muted" className="font-bold uppercase tracking-tight">
                       {section.title}
-                    </p>
+                    </Typography>
                   </div>
                   <ol className="px-4 py-3 space-y-2 list-decimal list-outside ml-4">
                     {section.steps.map((step, sIdx) => (
-                      <li key={sIdx} className="text-sm font-medium text-muted-foreground leading-relaxed pl-1">
-                        {step}
+                      <li key={sIdx}>
+                        <Typography variant="body-sm" as="span" color="muted" className="font-medium leading-relaxed pl-1">
+                          {step}
+                        </Typography>
                       </li>
                     ))}
                   </ol>
@@ -665,12 +671,14 @@ function PaymentInstructionContent() {
 
           {/* ── Polling indicator ── */}
           {!isPaid && !isExpired && (
-            <div className="flex items-center justify-center gap-3 text-xs font-semibold text-muted-foreground py-2">
+            <div className="flex items-center justify-center gap-3 py-2">
               <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/60 opacity-75" />
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-primary" />
               </span>
-              Menunggu konfirmasi pembayaran otomatis...
+              <Typography variant="body-xs" as="span" color="muted" className="font-semibold">
+                Menunggu konfirmasi pembayaran otomatis...
+              </Typography>
             </div>
           )}
 

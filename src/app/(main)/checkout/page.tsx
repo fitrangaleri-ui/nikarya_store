@@ -4,31 +4,31 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
-  ShoppingBag,
-  ArrowRight,
-  Loader2,
-  Plus,
-  Minus,
-  Trash2,
-  Eye,
-  EyeOff,
-  User,
-  CreditCard,
-  ReceiptText,
-  Ticket,
-  X,
-  Lock,
-  Mail,
-  Phone,
-  UserCircle,
-  AlertOctagon,
-  FileText,
-} from "lucide-react";
+  ShoppingBagIcon,
+  ArrowRightIcon,
+  PlusIcon,
+  MinusIcon,
+  TrashIcon,
+  EyeIcon,
+  EyeSlashIcon,
+  UserIcon,
+  CreditCardIcon,
+  ClipboardDocumentListIcon,
+  TicketIcon,
+  XMarkIcon,
+  LockClosedIcon,
+  EnvelopeIcon,
+  PhoneIcon,
+  UserCircleIcon,
+  ExclamationTriangleIcon,
+  DocumentTextIcon,
+} from "@heroicons/react/24/outline";
 import { useCart } from "@/context/cart-context";
 import { useAuth } from "@/components/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Typography } from "@/components/ui/typography";
 
 interface ManualMethod {
   id: string;
@@ -290,22 +290,26 @@ export default function CheckoutPage() {
   // ── EMPTY CART STATE ──
   if (cartItems.length === 0) {
     return (
-      <main className="min-h-[70vh] flex items-center justify-center px-4 py-16">
-        <div className="flex flex-col items-center justify-center text-center p-8 bg-card/40 backdrop-blur-sm border border-border/50 rounded-3xl shadow-sm max-w-sm w-full">
+      <main className="min-h-screen flex items-center justify-center bg-background p-4 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] -z-10" />
+
+        <div className="flex flex-col items-center justify-center text-center p-8 glass rounded-xl max-w-sm w-full animate-in fade-in zoom-in-95 duration-500">
           <div className="w-20 h-20 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mb-6">
-            <ShoppingBag className="h-8 w-8 text-primary" />
+            <ShoppingBagIcon className="h-8 w-8 text-primary" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground tracking-tight">
+          <Typography variant="h4" as="h1" className="tracking-tight">
             Keranjang Kosong
-          </h1>
-          <p className="text-sm text-muted-foreground mt-2 mb-8">
+          </Typography>
+          <Typography variant="body-sm" color="muted" className="mt-2 mb-8 font-medium">
             Belum ada produk untuk di-checkout. Mari mulai berbelanja!
-          </p>
+          </Typography>
           <Button
             onClick={() => router.push("/products")}
             variant="brand"
             size="lg"
-            className="w-full rounded-full h-12"
+            className="w-full h-12"
           >
             Lihat Katalog Produk
           </Button>
@@ -316,557 +320,469 @@ export default function CheckoutPage() {
 
   // ── MAIN CHECKOUT PAGE ──
   return (
-    <main className="mx-auto max-w-6xl px-4 md:px-6 py-8 md:py-10">
-      <div className="flex items-center gap-3 mb-8">
-        <span className="w-1.5 h-7 bg-primary rounded-full block" />
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
-          Checkout Pesanan
-        </h1>
-      </div>
+    <main className="min-h-screen bg-background relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-[10%] left-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -z-10" />
+      <div className="absolute bottom-[20%] right-[-5%] w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] -z-10" />
 
-      <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
-        {/* ── LEFT: Customer Info Form ── */}
-        <div className="space-y-6">
+      <div className="mx-auto max-w-6xl px-4 md:px-6 py-8 md:py-12 relative z-10 animate-in fade-in duration-700">
+        <div className="flex items-center gap-3 mb-10">
+          <span className="w-1.5 h-8 bg-gradient-to-b from-primary to-secondary-foreground rounded-full block" />
+          <Typography variant="h2" as="h1" className="tracking-tight">
+            Checkout Pesanan
+          </Typography>
+        </div>
 
-          {/* Informasi Pelanggan */}
-          <div className="rounded-3xl border border-border/40 bg-card/40 backdrop-blur-md shadow-sm overflow-hidden">
-            <div className="bg-primary/5 border-b border-border/40 px-6 py-4 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                <User className="w-4 h-4 text-primary" />
-              </div>
-              <h2 className="text-base font-bold text-foreground tracking-tight">
-                Informasi Pelanggan
-              </h2>
-            </div>
+        <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
+          {/* ── LEFT: Customer Info Form ── */}
+          <div className="space-y-8">
 
-            <div className="p-6 md:p-8">
-              {user ? (
-                <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
-                  <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border/40">
-                    <div className="flex items-center gap-3 px-4 py-3">
-                      <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                        <UserCircle className="h-3.5 w-3.5 text-primary" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                          Nama Lengkap
-                        </p>
-                        <p className="text-sm font-semibold text-foreground mt-0.5 truncate">
-                          {displayName || "—"}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 px-4 py-3">
-                      <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                        <Mail className="h-3.5 w-3.5 text-primary" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                          Alamat Email
-                        </p>
-                        <p className="text-sm font-semibold text-foreground mt-0.5 truncate">
-                          {displayEmail || "—"}
-                        </p>
-                      </div>
-                    </div>
+            {/* Informasi Pelanggan */}
+            <div className="glass rounded-xl overflow-hidden animate-in fade-in slide-in-from-left duration-500">
+              {/* Login-style Header Banner */}
+              <div className="relative bg-gradient-to-br from-primary to-secondary-foreground px-6 py-6 overflow-hidden">
+                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10 pointer-events-none" />
+                <div className="absolute bottom-[-10px] left-[10%] h-16 w-16 rounded-full bg-white/5 pointer-events-none" />
+                <div className="relative z-10 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                    <UserIcon className="w-4 h-4 text-white" />
                   </div>
-                  <div className="px-4 py-2.5 bg-primary/5 border-t border-border/40">
-                    <p className="text-xs font-semibold text-primary">
-                      ✓ Terhubung dengan akun Anda
-                    </p>
-                  </div>
+                  <Typography variant="h5" className="text-white leading-tight">
+                    Informasi Pelanggan
+                  </Typography>
                 </div>
-              ) : (
-                <div className="space-y-3">
-                  {/* Nama + HP */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
-                      <div className="flex items-center gap-3 px-4 py-3">
-                        <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                          <UserCircle className="h-3.5 w-3.5 text-primary" />
+              </div>
+
+              <div className="p-6 md:p-8">
+                {user ? (
+                  <div className="rounded-2xl bg-background/50 border border-border/40 overflow-hidden">
+                    <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border/40">
+                      <div className="flex items-center gap-3 px-4 py-4">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                          <UserCircleIcon className="h-4 w-4 text-primary" />
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <Label htmlFor="guest-name" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                            Nama Lengkap <span className="text-destructive">*</span>
-                          </Label>
+                        <div className="min-w-0">
+                          <Typography variant="caption" as="p" color="muted" className="font-bold uppercase tracking-widest text-[10px]">
+                            Nama Lengkap
+                          </Typography>
+                          <Typography variant="body-sm" as="p" className="font-semibold truncate">
+                            {displayName || "—"}
+                          </Typography>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 px-4 py-4">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                          <EnvelopeIcon className="h-4 w-4 text-primary" />
+                        </div>
+                        <div className="min-w-0">
+                          <Typography variant="caption" as="p" color="muted" className="font-bold uppercase tracking-widest text-[10px]">
+                            Alamat Email
+                          </Typography>
+                          <Typography variant="body-sm" as="p" className="font-semibold truncate">
+                            {displayEmail || "—"}
+                          </Typography>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="px-4 py-2.5 bg-primary/5 border-t border-border/40">
+                      <Typography variant="body-xs" as="p" className="text-primary font-bold">
+                        ✓ Terhubung dengan akun aktif
+                      </Typography>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-5">
+                    {/* Grid Inputs */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Nama */}
+                      <div className="relative group">
+                        <Label htmlFor="guest-name" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1 mb-1.5 block">
+                          Nama Lengkap <span className="text-destructive">*</span>
+                        </Label>
+                        <div className="relative">
+                          <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center transition-colors group-focus-within:bg-primary/10">
+                            <UserCircleIcon className="h-4 w-4 text-primary" />
+                          </div>
                           <Input
                             id="guest-name"
-                            type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            placeholder="Masukkan nama lengkap"
-                            className="h-7 p-0 border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm font-medium text-foreground placeholder:text-muted-foreground/50 mt-0.5"
+                            placeholder="Contoh: Budi Santoso"
+                            className="pl-14 h-12 rounded-lg bg-background/80 border-border focus-visible:ring-primary/20 transition-all text-sm font-medium"
                           />
                         </div>
                       </div>
-                    </div>
 
-                    <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
-                      <div className="flex items-center gap-3 px-4 py-3">
-                        <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                          <Phone className="h-3.5 w-3.5 text-primary" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <Label htmlFor="guest-phone" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                            Nomor HP <span className="text-destructive">*</span>
-                          </Label>
+                      {/* Phone */}
+                      <div className="relative group">
+                        <Label htmlFor="guest-phone" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1 mb-1.5 block">
+                          Nomor HP <span className="text-destructive">*</span>
+                        </Label>
+                        <div className="relative">
+                          <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center transition-colors group-focus-within:bg-primary/10">
+                            <PhoneIcon className="h-4 w-4 text-primary" />
+                          </div>
                           <Input
                             id="guest-phone"
                             type="tel"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
-                            placeholder="08xxxxxxxxxx"
-                            className="h-7 p-0 border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm font-medium text-foreground placeholder:text-muted-foreground/50 mt-0.5"
+                            placeholder="08123456789"
+                            className="pl-14 h-12 rounded-lg bg-background/80 border-border focus-visible:ring-primary/20 transition-all text-sm font-medium"
                           />
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Email */}
-                  <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
-                    <div className="flex items-center gap-3 px-4 py-3">
-                      <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                        <Mail className="h-3.5 w-3.5 text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <Label htmlFor="guest-email" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                          Alamat Email <span className="text-destructive">*</span>
-                        </Label>
+                    {/* Email */}
+                    <div className="relative group">
+                      <Label htmlFor="guest-email" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1 mb-1.5 block">
+                        Alamat Email <span className="text-destructive">*</span>
+                      </Label>
+                      <div className="relative">
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center transition-colors group-focus-within:bg-primary/10">
+                          <EnvelopeIcon className="h-4 w-4 text-primary" />
+                        </div>
                         <Input
                           id="guest-email"
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          placeholder="contoh@email.com"
-                          className="h-7 p-0 border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm font-medium text-foreground placeholder:text-muted-foreground/50 mt-0.5"
+                          placeholder="alamat-email@anda.com"
+                          className="pl-14 h-12 rounded-lg bg-background/80 border-border focus-visible:ring-primary/20 transition-all text-sm font-medium"
                         />
                       </div>
                     </div>
-                  </div>
 
-                  {/* Password */}
-                  <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
-                    <div className="flex items-center gap-3 px-4 py-3">
-                      <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                        <Lock className="h-3.5 w-3.5 text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <Label htmlFor="guest-password" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                          Kata Sandi <span className="text-destructive">*</span>
-                        </Label>
+                    {/* Password */}
+                    <div className="relative group">
+                      <Label htmlFor="guest-password" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1 mb-1.5 block">
+                        Kata Sandi <span className="text-destructive">*</span>
+                      </Label>
+                      <div className="relative">
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center transition-colors group-focus-within:bg-primary/10">
+                          <LockClosedIcon className="h-4 w-4 text-primary" />
+                        </div>
                         <Input
                           id="guest-password"
                           type={showPassword ? "text" : "password"}
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="Minimal 6 karakter"
-                          className="h-7 p-0 border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm font-medium text-foreground placeholder:text-muted-foreground/50 mt-0.5"
+                          className="pl-14 pr-12 h-12 rounded-lg bg-background/80 border-border focus-visible:ring-primary/20 transition-all text-sm font-medium"
                         />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
+                        >
+                          {showPassword ? (
+                            <EyeSlashIcon className="h-4 w-4" />
+                          ) : (
+                            <EyeIcon className="h-4 w-4" />
+                          )}
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="shrink-0 w-7 h-7 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
-                        tabIndex={-1}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-3.5 w-3.5" />
-                        ) : (
-                          <Eye className="h-3.5 w-3.5" />
-                        )}
-                      </button>
                     </div>
-                  </div>
-                  <p className="text-[11px] font-medium text-primary px-1">
-                    Akun akan dibuat otomatis untuk melacak pesanan Anda
-                  </p>
 
-                  {/* Catatan */}
-                  <div className="rounded-2xl bg-muted/30 border border-border/40 overflow-hidden">
-                    <div className="flex items-start gap-3 px-4 py-3">
-                      <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                        <FileText className="h-3.5 w-3.5 text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <Label htmlFor="guest-notes" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                          Catatan <span className="font-normal text-muted-foreground/60">(opsional)</span>
-                        </Label>
+                    {/* Catatan */}
+                    <div className="relative group">
+                      <Label htmlFor="guest-notes" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1 mb-1.5 block">
+                        Catatan Khusus <span className="font-normal opacity-60">(opsional)</span>
+                      </Label>
+                      <div className="relative">
+                        <div className="absolute left-4 top-6 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center">
+                          <DocumentTextIcon className="h-4 w-4 text-primary" />
+                        </div>
                         <textarea
                           id="guest-notes"
                           value={notes}
                           onChange={(e) => setNotes(e.target.value)}
-                          placeholder="Pesan khusus untuk penjual..."
-                          rows={2}
-                          className="w-full mt-0.5 bg-transparent text-sm font-medium text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-none"
+                          placeholder="Tulis instruksi tambahan jika ada..."
+                          rows={3}
+                          className="w-full pl-14 pr-4 py-3 rounded-lg bg-background/80 border border-border focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all text-sm font-medium outline-none resize-none"
                         />
                       </div>
                     </div>
+
+                    <div className="rounded-xl bg-primary/5 border border-primary/20 p-4">
+                      <Typography variant="body-xs" className="font-semibold text-primary">
+                        Info: Akun akan dibuat otomatis untuk memudahkan Anda melacak status pesanan di masa mendatang.
+                      </Typography>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* Payment Method Selection - Gateway */}
-          {paymentConfig?.mode === "gateway" &&
-            paymentConfig.gateway_methods &&
-            paymentConfig.gateway_methods.length > 0 && (
-              <div className="rounded-3xl border border-border/40 bg-card/40 backdrop-blur-md shadow-sm overflow-hidden">
-                <div className="bg-primary/5 border-b border-border/40 px-6 py-4 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                    <CreditCard className="w-4 h-4 text-primary" />
+            {/* Payment Method Selection - Gateway / Manual */}
+            <div className="glass rounded-xl overflow-hidden animate-in fade-in slide-in-from-left duration-500 delay-100">
+              <div className="relative bg-gradient-to-br from-primary to-secondary-foreground px-6 py-6 overflow-hidden">
+                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10 pointer-events-none" />
+                <div className="absolute bottom-[-10px] left-[15%] h-16 w-16 rounded-full bg-white/5 pointer-events-none" />
+                <div className="relative z-10 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                    <CreditCardIcon className="w-4 h-4 text-white" />
                   </div>
-                  <div>
-                    <h2 className="text-base font-bold text-foreground tracking-tight">
-                      Metode Pembayaran
-                    </h2>
-                    {paymentConfig.active_gateway && (
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">
-                        Via {paymentConfig.active_gateway.display_name}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="p-6 md:p-8">
-                  <div className="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
-                    {paymentConfig.gateway_methods.map((method) => (
-                      <label
-                        key={method.code}
-                        className={`flex items-center gap-4 rounded-2xl border p-4 cursor-pointer transition-all shadow-sm ${selectedGatewayMethod === method.code
-                            ? "border-primary bg-primary/5 ring-1 ring-primary/20"
-                            : "border-border/50 bg-background hover:border-primary/40 hover:bg-primary/5"
-                          }`}
-                      >
-                        <input
-                          type="radio"
-                          name="gatewayMethod"
-                          value={method.code}
-                          checked={selectedGatewayMethod === method.code}
-                          onChange={() => {
-                            setSelectedGatewayMethod(method.code);
-                            setError("");
-                          }}
-                          className="accent-primary w-4 h-4 flex-shrink-0 cursor-pointer"
-                        />
-                        <span className="text-2xl flex-shrink-0 opacity-80">
-                          {method.icon}
-                        </span>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-bold text-foreground">
-                            {method.label}
-                          </p>
-                          <p className="text-xs font-medium text-muted-foreground mt-0.5 leading-tight">
-                            {method.description}
-                          </p>
-                        </div>
-                      </label>
-                    ))}
-                  </div>
+                  <Typography variant="h5" className="text-white leading-tight">
+                    Metode Pembayaran
+                  </Typography>
                 </div>
               </div>
-            )}
 
-          {/* Payment Method Selection - Manual */}
-          {paymentConfig?.mode === "manual" &&
-            paymentConfig.manual_methods &&
-            paymentConfig.manual_methods.length > 0 && (
-              <div className="rounded-3xl border border-border/40 bg-card/40 backdrop-blur-md shadow-sm overflow-hidden">
-                <div className="bg-primary/5 border-b border-border/40 px-6 py-4 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                    <CreditCard className="w-4 h-4 text-primary" />
+              <div className="p-6 md:p-8">
+                {/* Gateway Choice */}
+                {paymentConfig?.mode === "gateway" && (
+                  <div className="space-y-4">
+                    {paymentConfig.active_gateway && (
+                      <div className="flex items-center gap-2 mb-4 px-2">
+                        <span className="w-1.5 h-4 bg-primary/40 rounded-full" />
+                        <Typography variant="caption" className="font-bold uppercase tracking-widest text-[10px] text-muted-foreground">
+                          Otomatis melalui {paymentConfig.active_gateway.display_name}
+                        </Typography>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-1 gap-3 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
+                      {paymentConfig.gateway_methods?.map((method) => (
+                        <label
+                          key={method.code}
+                          className={`flex items-center gap-4 rounded-xl border p-4 cursor-pointer transition-all ${selectedGatewayMethod === method.code
+                              ? "border-primary bg-primary/5 ring-4 ring-primary/5"
+                              : "border-border/50 bg-background/50 hover:border-primary/30 hover:bg-primary/5"
+                            }`}
+                        >
+                          <input
+                            type="radio"
+                            name="gatewayMethod"
+                            checked={selectedGatewayMethod === method.code}
+                            onChange={() => setSelectedGatewayMethod(method.code)}
+                            className="accent-primary w-4 h-4 flex-shrink-0 cursor-pointer"
+                          />
+                          <span className="text-2xl opacity-90">{method.icon}</span>
+                          <div className="min-w-0 flex-1">
+                            <Typography variant="body-sm" className="font-bold tracking-tight">
+                              {method.label}
+                            </Typography>
+                            <Typography variant="caption" color="muted" className="mt-0.5 leading-tight font-medium">
+                              {method.description}
+                            </Typography>
+                          </div>
+                        </label>
+                      ))}
+                    </div>
                   </div>
-                  <h2 className="text-base font-bold text-foreground tracking-tight">
-                    Pilih Rekening Transfer
-                  </h2>
-                </div>
+                )}
 
-                <div className="p-6 md:p-8">
-                  <div className="space-y-3">
-                    {paymentConfig.manual_methods.map((method) => (
+                {/* Manual Choice */}
+                {paymentConfig?.mode === "manual" && (
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="flex items-center gap-2 mb-2 px-2">
+                      <span className="w-1.5 h-4 bg-primary/40 rounded-full" />
+                      <Typography variant="caption" className="font-bold uppercase tracking-widest text-[10px] text-muted-foreground">
+                        Pilih Rekening Tujuan Transfer
+                      </Typography>
+                    </div>
+                    {paymentConfig.manual_methods?.map((method) => (
                       <label
                         key={method.id}
-                        className={`flex items-center gap-4 rounded-2xl border p-4 cursor-pointer transition-all shadow-sm ${selectedManualMethodId === method.id
-                            ? "border-primary bg-primary/5 ring-1 ring-primary/20"
-                            : "border-border/50 bg-background hover:border-primary/40 hover:bg-primary/5"
+                        className={`flex items-center gap-4 rounded-xl border p-4 cursor-pointer transition-all ${selectedManualMethodId === method.id
+                            ? "border-primary bg-primary/5 ring-4 ring-primary/5"
+                            : "border-border/50 bg-background/50 hover:border-primary/30 hover:bg-primary/5"
                           }`}
                       >
                         <input
                           type="radio"
                           name="manualMethod"
-                          value={method.id}
                           checked={selectedManualMethodId === method.id}
-                          onChange={() => {
-                            setSelectedManualMethodId(method.id);
-                            setError("");
-                          }}
+                          onChange={() => setSelectedManualMethodId(method.id)}
                           className="accent-primary w-4 h-4 flex-shrink-0 cursor-pointer"
                         />
-                        <div className="flex items-center gap-3 min-w-0 flex-1">
-                          <div className="w-10 h-10 rounded-xl bg-white border border-border/50 flex items-center justify-center flex-shrink-0 overflow-hidden p-1.5">
-                            {method.logo_url ? (
-                              <Image
-                                src={method.logo_url}
-                                alt={method.provider_name}
-                                width={40}
-                                height={40}
-                                className="w-full h-full object-contain"
-                              />
-                            ) : (
-                              <span className="text-lg">
-                                {method.type === "bank_transfer" ? "🏦" : "📱"}
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-sm font-bold text-foreground">
-                            {method.provider_name}
-                          </p>
+                        <div className="w-10 h-10 rounded-lg bg-white border border-border/50 flex items-center justify-center flex-shrink-0 overflow-hidden p-1.5">
+                          {method.logo_url ? (
+                            <Image src={method.logo_url} alt={method.provider_name} width={40} height={40} className="w-full h-full object-contain" />
+                          ) : (
+                            <span className="text-lg">{method.type === "bank_transfer" ? "🏦" : "📱"}</span>
+                          )}
                         </div>
+                        <Typography variant="body-sm" className="font-bold tracking-tight">
+                          {method.provider_name}
+                        </Typography>
                       </label>
                     ))}
                   </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* ── RIGHT: Order Summary + Button ── */}
+          <div className="space-y-6">
+            <div className="glass rounded-xl overflow-hidden lg:sticky lg:top-24 shadow-2xl animate-in fade-in zoom-in-95 duration-500 delay-200">
+              <div className="relative bg-gradient-to-br from-primary to-secondary-foreground px-6 py-6 overflow-hidden">
+                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10 pointer-events-none" />
+                <div className="relative z-10 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                    <ClipboardDocumentListIcon className="w-4 h-4 text-white" />
+                  </div>
+                  <Typography variant="h5" className="text-white leading-tight">
+                    Ringkasan
+                  </Typography>
                 </div>
               </div>
-            )}
-        </div>
 
-        {/* ── RIGHT: Order Summary + Button ── */}
-        <div className="space-y-6">
-          <div className="rounded-3xl border border-border/40 bg-card/40 backdrop-blur-md shadow-sm overflow-hidden lg:sticky lg:top-24">
-            <div className="bg-primary/5 border-b border-border/40 px-6 py-4 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                <ReceiptText className="w-4 h-4 text-primary" />
-              </div>
-              <h2 className="text-base font-bold text-foreground tracking-tight">
-                Ringkasan Pesanan
-              </h2>
-            </div>
-
-            <div className="p-6 md:p-8">
-              {/* Cart Items */}
-              <ul className="space-y-4 mb-6">
-                {cartItems.map((item) => (
-                  <li key={item.id} className="flex gap-4">
-                    <div className="relative w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-muted/30 border border-border/50">
-                      {item.thumbnail_url ? (
-                        <Image
-                          src={item.thumbnail_url}
-                          alt={item.title}
-                          fill
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center">
-                          <ShoppingBag className="h-5 w-5 text-muted-foreground/50" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
-                      <div>
-                        <p className="text-xs font-bold text-foreground leading-snug line-clamp-2">
-                          {item.title}
-                        </p>
-                        <p className="text-xs font-semibold text-primary mt-1">
-                          Rp {Number(item.price).toLocaleString("id-ID")}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center justify-between mt-2">
-                        <div className="inline-flex items-center bg-background border border-border/60 rounded-full h-7 w-fit shadow-sm">
-                          <button
-                            type="button"
-                            onClick={() => handleDecrease(item.id, item.quantity)}
-                            className="w-7 h-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-l-full transition-colors"
-                            title={item.quantity <= 1 ? "Hapus" : "Kurangi"}
-                          >
-                            {item.quantity <= 1 ? (
-                              <Trash2 className="h-3 w-3 text-destructive" />
-                            ) : (
-                              <Minus className="h-3 w-3" />
-                            )}
-                          </button>
-                          <span className="w-6 text-center text-[10px] font-bold text-foreground">
-                            {item.quantity}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => increaseQuantity(item.id)}
-                            className="w-7 h-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-r-full transition-colors"
-                            title="Tambah"
-                          >
-                            <Plus className="h-3 w-3" />
-                          </button>
-                        </div>
-
-                        {item.quantity > 1 && (
-                          <p className="text-xs font-bold text-foreground">
-                            Rp{" "}
-                            {(item.price * item.quantity).toLocaleString("id-ID")}
-                          </p>
+              <div className="p-6 md:p-8">
+                {/* Cart Items */}
+                <ul className="space-y-4 mb-8">
+                  {cartItems.map((item) => (
+                    <li key={item.id} className="flex gap-4 group">
+                      <div className="relative w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden bg-background/50 border border-border/60 shadow-sm transition-transform group-hover:scale-105 duration-300">
+                        {item.thumbnail_url ? (
+                          <Image src={item.thumbnail_url} alt={item.title} fill className="object-cover" />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center">
+                            <ShoppingBagIcon className="h-5 w-5 text-muted-foreground/30" />
+                          </div>
                         )}
                       </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-
-              {/* Promo Code Section */}
-              <div className="pt-5 border-t border-border/50 mb-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Ticket className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-bold text-foreground">Kode Promo</span>
-                </div>
-
-                {appliedPromo ? (
-                  <div className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-xl px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <Ticket className="h-4 w-4 text-primary" />
-                      <span className="text-sm font-black text-primary">
-                        {appliedPromo.code}
-                      </span>
-                      <span className="text-xs font-semibold text-primary/70">
-                        −Rp {appliedPromo.discountAmount.toLocaleString("id-ID")}
-                      </span>
-                    </div>
-                    <button
-                      onClick={handleRemovePromo}
-                      className="h-6 w-6 rounded-full hover:bg-destructive/10 flex items-center justify-center transition-colors"
-                    >
-                      <X className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex gap-2">
-                    <Input
-                      value={promoInput}
-                      onChange={(e) => {
-                        setPromoInput(e.target.value.toUpperCase());
-                        setPromoError("");
-                      }}
-                      placeholder="Masukkan kode"
-                      className="h-10 rounded-xl text-sm uppercase flex-1"
-                      onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
-                    />
-                    <Button
-                      variant="brand"
-                      className="h-10 rounded-xl px-5 shrink-0"
-                      onClick={handleApplyPromo}
-                      disabled={promoLoading || !promoInput.trim()}
-                    >
-                      {promoLoading ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        "Terapkan"
-                      )}
-                    </Button>
-                  </div>
-                )}
-
-                {promoError && (
-                  <p className="text-xs font-semibold text-destructive mt-2 flex items-center gap-1">
-                    <AlertOctagon className="h-3 w-3 shrink-0" />
-                    {promoError}
-                  </p>
-                )}
-                {promoSuccess && !appliedPromo && (
-                  <p className="text-xs font-semibold text-primary mt-2">
-                    {promoSuccess}
-                  </p>
-                )}
-              </div>
-
-              {/* Totals */}
-              <div className="pt-4 border-t border-border/50 mb-6">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-muted-foreground">
-                    Jumlah Item
-                  </span>
-                  <span className="text-sm font-bold text-foreground">
-                    {cartCount} Item
-                  </span>
-                </div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-muted-foreground">
-                    Subtotal
-                  </span>
-                  <span className="text-sm font-bold text-foreground">
-                    Rp {subtotal.toLocaleString("id-ID")}
-                  </span>
-                </div>
-                {appliedPromo && (
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-primary">
-                      Diskon ({appliedPromo.code})
-                    </span>
-                    <span className="text-sm font-bold text-primary">
-                      −Rp {appliedPromo.discountAmount.toLocaleString("id-ID")}
-                    </span>
-                  </div>
-                )}
-                <div className="flex items-end justify-between pt-2 border-t border-dashed border-border/50">
-                  <span className="text-sm font-bold text-muted-foreground">
-                    Total Bayar
-                  </span>
-                  <span className="text-2xl font-bold text-primary tracking-tight">
-                    Rp {discountedTotal.toLocaleString("id-ID")}
-                  </span>
-                </div>
-              </div>
-
-              {/* Error message */}
-              {error && (
-                <div className="mb-6 rounded-2xl bg-red-500/5 border border-red-500/20 px-4 py-3 flex items-start gap-2 animate-in fade-in zoom-in-95">
-                  <AlertOctagon className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-red-600">{error}</p>
-                    {error.includes("login") && (
-                      <button
-                        onClick={() => router.push("/login?redirectTo=/checkout")}
-                        className="text-primary hover:text-primary/80 font-bold underline transition-colors text-xs mt-1 block"
-                      >
-                        Masuk ke akun sekarang
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Pay button */}
-              <div className="space-y-4">
-                <Button
-                  onClick={handleCheckout}
-                  disabled={loading || cartItems.length === 0}
-                  variant="brand"
-                  size="lg"
-                  className="w-full h-14 rounded-full hover:shadow-[0_6px_20px_rgba(13,148,136,0.23)] hover:-translate-y-0.5 transition-all"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2.5 h-5 w-5 animate-spin" />
-                      Memproses...
-                    </>
-                  ) : (
-                    <div className="flex items-center justify-between w-full px-2">
-                      <span>{user ? "Bayar Sekarang" : "Daftar & Bayar"}</span>
-                      <div className="w-8 h-8 rounded-full bg-background/20 flex items-center justify-center backdrop-blur-sm">
-                        <ArrowRight className="h-4 w-4" />
+                      <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                        <Typography variant="body-xs" className="font-bold leading-snug line-clamp-2">
+                          {item.title}
+                        </Typography>
+                        <div className="flex items-center justify-between mt-2">
+                          <Typography variant="body-xs" color="primary" className="font-bold">
+                            Rp {Number(item.price).toLocaleString("id-ID")}
+                          </Typography>
+                          <div className="flex items-center gap-2 px-2 py-0.5 bg-primary/5 rounded-full border border-primary/10">
+                            <Typography variant="caption" className="font-black text-primary text-[10px]">
+                              {item.quantity}x
+                            </Typography>
+                          </div>
+                        </div>
                       </div>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Promo Code Style */}
+                <div className="pt-6 border-t border-border/40 mb-6">
+                  <div className="flex items-center gap-2 mb-3">
+                    <TicketIcon className="h-4 w-4 text-primary" />
+                    <Typography variant="body-sm" className="font-bold">Kode Promo</Typography>
+                  </div>
+
+                  {appliedPromo ? (
+                    <div className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 animate-in zoom-in-95">
+                      <div className="flex items-center gap-2">
+                        <Typography variant="body-sm" color="primary" className="font-black uppercase">
+                          {appliedPromo.code}
+                        </Typography>
+                        <Typography variant="caption" className="font-bold text-primary/60">
+                          −Rp {appliedPromo.discountAmount.toLocaleString("id-ID")}
+                        </Typography>
+                      </div>
+                      <button onClick={handleRemovePromo} className="h-7 w-7 rounded-full hover:bg-destructive/10 flex items-center justify-center transition-colors">
+                        <XMarkIcon className="h-4 w-4 text-muted-foreground hover:text-destructive" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <Input
+                        value={promoInput}
+                        onChange={(e) => {
+                          setPromoInput(e.target.value.toUpperCase());
+                          setPromoError("");
+                        }}
+                        placeholder="INPUT KODE"
+                        className="h-11 rounded-lg text-sm font-black uppercase flex-1 bg-background/50 border-border"
+                        onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
+                      />
+                      <Button
+                        variant="brand"
+                        className="h-11 rounded-lg px-4"
+                        onClick={handleApplyPromo}
+                        disabled={promoLoading || !promoInput.trim()}
+                      >
+                        {promoLoading ? (
+                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        ) : "Cek"}
+                      </Button>
                     </div>
                   )}
-                </Button>
 
-                {!user && (
-                  <p className="text-xs font-semibold text-muted-foreground text-center">
-                    Sudah memiliki akun?{" "}
-                    <button
-                      onClick={() => router.push("/login?redirectTo=/checkout")}
-                      className="text-primary hover:text-primary/80 transition-colors ml-1"
-                    >
-                      Masuk di sini
-                    </button>
-                  </p>
-                )}
+                  {promoError && (
+                    <div className="flex items-center gap-1.5 mt-2.5 px-1">
+                      <ExclamationTriangleIcon className="h-3.5 w-3.5 text-destructive" />
+                      <Typography variant="body-xs" color="destructive" className="font-bold">
+                        {promoError}
+                      </Typography>
+                    </div>
+                  )}
+                </div>
+
+                {/* Totals */}
+                <div className="pt-6 border-t border-border/40 mb-8 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Typography variant="body-sm" color="muted" className="font-medium">Subtotal Produk</Typography>
+                    <Typography variant="body-sm" className="font-bold">Rp {subtotal.toLocaleString("id-ID")}</Typography>
+                  </div>
+                  {appliedPromo && (
+                    <div className="flex items-center justify-between">
+                      <Typography variant="body-sm" color="primary" className="font-medium">Voucher ({appliedPromo.code})</Typography>
+                      <Typography variant="body-sm" color="primary" className="font-bold">−Rp {appliedPromo.discountAmount.toLocaleString("id-ID")}</Typography>
+                    </div>
+                  )}
+                  <div className="pt-4 border-t border-dashed border-border/40 flex items-end justify-between">
+                    <Typography variant="body-sm" className="font-black uppercase tracking-widest text-[10px] text-muted-foreground pb-1">Total Bayar</Typography>
+                    <Typography variant="h3" color="primary" className="tracking-tight leading-none">
+                      Rp {discountedTotal.toLocaleString("id-ID")}
+                    </Typography>
+                  </div>
+                </div>
+
+                {/* Submit Panel */}
+                <div className="space-y-4">
+                  {error && (
+                    <div className="rounded-xl bg-destructive/5 border border-destructive/20 p-4 animate-in fade-in zoom-in-95">
+                      <div className="flex items-start gap-2">
+                        <ExclamationTriangleIcon className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+                        <Typography variant="body-sm" color="destructive" className="font-bold">
+                          {error}
+                        </Typography>
+                      </div>
+                      {error.includes("login") && (
+                        <button onClick={() => router.push("/login?redirectTo=/checkout")} className="mt-2 text-primary font-bold underline text-xs block">
+                          Klik di sini untuk Masuk
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  <Button
+                    onClick={handleCheckout}
+                    disabled={loading || cartItems.length === 0}
+                    variant="brand"
+                    size="lg"
+                    className="w-full h-14 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-primary/20 hover:-translate-y-0.5 transition-all duration-300"
+                  >
+                    {loading ? (
+                      <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <div className="flex items-center justify-between w-full px-2">
+                        <span className="font-black uppercase tracking-wider">{user ? "Bayar Sekarang" : "Daftar & Bayar"}</span>
+                        <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md">
+                          <ArrowRightIcon className="h-5 w-5" />
+                        </div>
+                      </div>
+                    )}
+                  </Button>
+
+                  {!user && (
+                    <Typography variant="body-xs" color="muted" className="font-bold text-center pt-2">
+                      Sudah punya akun?{" "}
+                      <button onClick={() => router.push("/login?redirectTo=/checkout")} className="text-primary hover:underline ml-1">Masuk Sekarang</button>
+                    </Typography>
+                  )}
+                </div>
               </div>
             </div>
           </div>
