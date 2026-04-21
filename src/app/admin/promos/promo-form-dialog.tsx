@@ -18,7 +18,8 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { DialogClose } from "@/components/ui/dialog";
 import { Typography } from "@/components/ui/typography";
 
 export interface PromoFormData {
@@ -166,12 +167,18 @@ export default function PromoFormDialog({
 
     return (
         <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-            <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto rounded-xl border-border bg-card/95 backdrop-blur-xl p-0">
+            <DialogContent showCloseButton={false} className="w-[95vw] sm:w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl border-border bg-card/95 backdrop-blur-xl p-0">
                 {/* Dialog Header with primary background */}
-                <DialogHeader className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20 rounded-t-xl">
-                    <DialogTitle className="text-white font-bold text-lg tracking-tight">
+                <DialogHeader className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20 rounded-t-xl relative">
+                    <DialogTitle className="text-white text-center font-bold text-lg tracking-tight">
                         {isEdit ? "Edit Promo" : "Buat Promo Baru"}
                     </DialogTitle>
+                    <DialogClose asChild>
+                        <button className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-2 bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all focus:outline-none">
+                            <XMarkIcon className="h-5 w-5" />
+                            <span className="sr-only">Close</span>
+                        </button>
+                    </DialogClose>
                 </DialogHeader>
 
                 <div className="p-5 md:p-7 space-y-5">

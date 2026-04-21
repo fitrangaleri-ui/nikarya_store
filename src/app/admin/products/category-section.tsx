@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 import {
   Table,
@@ -135,12 +136,18 @@ function CategoryDialog({
       }}
     >
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="border-border bg-card/95 backdrop-blur-xl rounded-xl sm:max-w-md p-0 gap-0">
+      <DialogContent showCloseButton={false} className="w-[95vw] sm:w-full max-w-md max-h-[90vh] overflow-y-auto rounded-xl border-border bg-card/95 backdrop-blur-xl p-0 gap-0">
         {/* Dialog Header with primary background */}
-        <DialogHeader className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20 rounded-t-xl">
-          <DialogTitle className="text-white font-bold text-lg tracking-tight">
+        <DialogHeader className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20 rounded-t-xl relative">
+          <DialogTitle className="text-white text-center font-bold text-lg tracking-tight">
             {isEdit ? "Edit Kategori" : "Tambah Kategori"}
           </DialogTitle>
+          <DialogClose asChild>
+            <button className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-2 bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all focus:outline-none">
+              <XMarkIcon className="h-5 w-5" />
+              <span className="sr-only">Close</span>
+            </button>
+          </DialogClose>
         </DialogHeader>
 
         <form action={handleSubmit} className="p-5 md:p-7 space-y-5">
@@ -459,21 +466,21 @@ export function CategorySection({
 
         <div className="overflow-x-auto w-full">
           <Table className="w-full min-w-[600px]">
-            <TableHeader className="bg-background/95 border-b border-border/40">
+            <TableHeader className="bg-primary/95 border-b border-primary-bg/20">
               <TableRow className="hover:bg-transparent border-transparent">
-                <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest w-20 sm:w-24 pl-5 py-4">
+                <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest w-20 sm:w-24 pl-5 py-4">
                   Gambar
                 </TableHead>
-                <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest min-w-[150px] py-4">
+                <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest min-w-[150px] py-4">
                   Nama Kategori
                 </TableHead>
-                <TableHead className="hidden xs:table-cell text-[11px] font-bold text-muted-foreground uppercase tracking-widest min-w-[120px] py-4">
+                <TableHead className="hidden xs:table-cell text-[11px] font-bold text-white/80 uppercase tracking-widest min-w-[120px] py-4">
                   Slug
                 </TableHead>
-                <TableHead className="text-center text-[11px] font-bold text-muted-foreground uppercase tracking-widest w-20 sm:w-24 py-4">
+                <TableHead className="text-center text-[11px] font-bold text-white/80 uppercase tracking-widest w-20 sm:w-24 py-4">
                   Produk
                 </TableHead>
-                <TableHead className="text-right text-[11px] font-bold text-muted-foreground uppercase tracking-widest w-28 sm:w-32 pr-5 py-4">
+                <TableHead className="text-right text-[11px] font-bold text-white/80 uppercase tracking-widest pr-5 py-4">
                   Aksi
                 </TableHead>
               </TableRow>

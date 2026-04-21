@@ -83,7 +83,7 @@ export default async function AdminDashboard() {
           {/* Card 1: Total Pendapatan */}
           <div className="rounded-xl bg-card border border-border px-5 py-5 overflow-hidden hover:border-primary/30 transition-all duration-200">
             <div className="flex items-center justify-between mb-3">
-              <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase tracking-widest">
+              <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase ">
                 Pendapatan
               </Typography>
               <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -106,7 +106,7 @@ export default async function AdminDashboard() {
           {/* Card 2: Total Pesanan */}
           <div className="rounded-xl bg-card border border-border px-5 py-5 overflow-hidden hover:border-primary/30 transition-all duration-200">
             <div className="flex items-center justify-between mb-3">
-              <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase tracking-widest">
+              <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase ">
                 Pesanan
               </Typography>
               <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -124,7 +124,7 @@ export default async function AdminDashboard() {
           {/* Card 3: Total Produk */}
           <div className="rounded-xl bg-card border border-border px-5 py-5 overflow-hidden hover:border-primary/30 transition-all duration-200">
             <div className="flex items-center justify-between mb-3">
-              <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase tracking-widest">
+              <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase ">
                 Produk
               </Typography>
               <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -142,7 +142,7 @@ export default async function AdminDashboard() {
           {/* Card 4: Total Pelanggan */}
           <div className="rounded-xl bg-card border border-border px-5 py-5 overflow-hidden hover:border-primary/30 transition-all duration-200">
             <div className="flex items-center justify-between mb-3">
-              <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase tracking-widest">
+              <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase ">
                 Pelanggan
               </Typography>
               <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -180,16 +180,16 @@ export default async function AdminDashboard() {
                   <Table className="min-w-[500px]">
                     <TableHeader className="bg-background/95 border-b border-border/40">
                       <TableRow className="hover:bg-transparent border-transparent">
-                        <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                        <TableHead className="text-[11px] font-bold text-muted-foreground uppercase ">
                           Pelanggan
                         </TableHead>
-                        <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                        <TableHead className="text-[11px] font-bold text-muted-foreground uppercase ">
                           Produk
                         </TableHead>
-                        <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                        <TableHead className="text-[11px] font-bold text-muted-foreground uppercase ">
                           Total
                         </TableHead>
-                        <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest text-right pr-4">
+                        <TableHead className="text-[11px] font-bold text-muted-foreground uppercase  text-right pr-4">
                           Status
                         </TableHead>
                       </TableRow>
@@ -292,7 +292,7 @@ export default async function AdminDashboard() {
                           <Typography variant="body-sm" className="font-bold truncate">
                             {product.title}
                           </Typography>
-                          <Typography variant="caption" color="muted" className="font-bold uppercase tracking-widest mt-1">
+                          <Typography variant="caption" color="muted" className="font-bold uppercase  mt-1">
                             {(
                               product.categories as unknown as {
                                 name: string;
@@ -306,7 +306,7 @@ export default async function AdminDashboard() {
                         <Typography variant="body-sm" className="font-bold truncate">
                           {product.title}
                         </Typography>
-                        <Typography variant="caption" color="muted" className="font-bold uppercase tracking-widest mt-1">
+                        <Typography variant="caption" color="muted" className="font-bold uppercase  mt-1">
                           {(
                             product.categories as unknown as {
                               name: string;

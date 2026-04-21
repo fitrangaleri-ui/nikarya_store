@@ -280,7 +280,7 @@ export function PaymentForm({
                       size="sm"
                       onClick={() => handleSetActive(currentConfig.id)}
                       disabled={isPending}
-                      className="rounded-full border-white/30 text-white bg-white/10 hover:bg-white/20 hover:text-white font-bold shadow-none transition-all h-9 px-4"
+                      className="rounded-full h-10 px-5 bg-white/10 border-white/20 text-white hover:bg-white hover:text-primary transition-all font-bold text-sm shadow-none"
                     >
                       Jadikan Aktif
                     </Button>
@@ -433,9 +433,9 @@ export function PaymentForm({
                   setShowManualForm(true);
                 }}
                 variant="outline"
-                className="rounded-full border-white/30 text-white bg-white/10 hover:bg-white/20 hover:text-white font-bold shadow-none transition-all h-9 px-4 gap-2"
+                className="rounded-full h-10 px-5 bg-white/10 border-white/20 text-white hover:bg-white hover:text-primary transition-all font-bold text-sm shadow-none"
               >
-                <PlusIcon className="h-4 w-4" />
+                <PlusIcon className="mr-2 h-4 w-4" />
                 Tambah Rekening
               </Button>
             </div>

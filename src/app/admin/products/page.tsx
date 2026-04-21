@@ -139,9 +139,9 @@ export default async function AdminProductsPage({
         <div className="flex items-center gap-2.5">
           <ImportExportSection />
           <Link href="/admin/products/new">
-            <Button variant="brand" size="lg" className="rounded-full">
-              <PlusIcon className="h-4 w-4 sm:mr-2" />
-              <span className="hidden sm:inline">Tambah Produk</span>
+            <Button variant="outline" className="rounded-full h-10 px-5 bg-white/10 border-white/20 text-white hover:bg-white hover:text-primary transition-all font-bold text-sm">
+              <PlusIcon className="mr-2 h-4 w-4" />
+              Tambah Produk
             </Button>
           </Link>
         </div>

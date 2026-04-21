@@ -197,16 +197,7 @@ export default function AdminPromosPage() {
             <StickyHeader
                 title="Promo"
                 description="Kelola kode promo dan lihat analitik."
-            >
-                <Button
-                    variant="brand"
-                    className="rounded-full h-11 px-6"
-                    onClick={openCreate}
-                >
-                    <PlusIcon className="h-4 w-4 mr-2" />
-                    Buat Promo
-                </Button>
-            </StickyHeader>
+            />
 
             <div className="p-4 sm:p-6 md:p-8 space-y-5 md:space-y-6">
                 {/* ── Stats Cards ── */}
@@ -288,12 +279,22 @@ export default function AdminPromosPage() {
                 {/* ── Promos Table ── */}
                 <div className="rounded-xl border border-border bg-card overflow-hidden">
                     <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20 flex items-center justify-between">
-                        <Typography variant="h6" as="h2" className="text-white font-bold">
-                            Daftar Promo
-                        </Typography>
-                        <Typography variant="caption" className="text-white/80 font-semibold">
-                            {totalPromos} promo
-                        </Typography>
+                        <div>
+                            <Typography variant="h6" as="h2" className="text-white font-bold">
+                                Manajemen Promo
+                            </Typography>
+                            <Typography variant="caption" className="text-white/70 font-medium mt-0.5">
+                                {totalPromos} promo terdaftar
+                            </Typography>
+                        </div>
+                        <Button
+                            variant="outline"
+                            className="rounded-full h-10 px-5 bg-white/10 border-white/20 text-white hover:bg-white hover:text-primary transition-all font-bold text-sm"
+                            onClick={openCreate}
+                        >
+                            <PlusIcon className="mr-2 h-4 w-4" />
+                            Buat Promo
+                        </Button>
                     </div>
 
                     <div className="px-0 sm:px-2 pt-4 pb-2">

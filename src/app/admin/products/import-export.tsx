@@ -26,8 +26,10 @@ import {
   CheckCircleIcon,
   ExclamationCircleIcon,
   EyeIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Typography } from "@/components/ui/typography";
+import { DialogClose } from "@/components/ui/dialog";
 import { importProducts, exportProducts } from "./import-export-actions";
 import * as XLSX from "xlsx";
 
@@ -180,22 +182,28 @@ function ImportDialog() {
     >
       <DialogTrigger asChild>
         <Button
-          variant="default"
-          className="h-11 border-border/50 bg-background/50 text-muted-foreground font-bold hover:text-primary hover:bg-primary/10 shadow-sm transition-all"
+          variant="outline"
+          className="rounded-full h-10 px-5 bg-white/10 border-white/20 text-white hover:bg-white hover:text-primary transition-all font-bold text-sm"
         >
           <ArrowUpTrayIcon className="mr-2 h-4 w-4" />
           <span className="hidden sm:inline">Import</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="border-border/40 bg-card/95 backdrop-blur-xl rounded-3xl shadow-lg sm:max-w-3xl max-h-[85vh] overflow-y-auto p-6 custom-scrollbar">
-        <DialogHeader className="mb-4">
-          <DialogTitle className="text-xl font-black text-foreground flex items-center gap-2">
-            <TableCellsIcon className="h-5 w-5 text-primary" />
+      <DialogContent showCloseButton={false} className="border-border/40 bg-card/95 backdrop-blur-xl rounded-2xl shadow-lg sm:max-w-3xl max-h-[85vh] overflow-y-auto p-0 custom-scrollbar">
+        <DialogHeader className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20 rounded-t-2xl relative">
+          <DialogTitle className="text-white text-center font-bold text-lg tracking-tight flex items-center justify-center gap-2">
+            <TableCellsIcon className="h-5 w-5 text-white" />
             Import Produk
           </DialogTitle>
+          <DialogClose asChild>
+            <button className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-2 bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all focus:outline-none">
+              <XMarkIcon className="h-5 w-5" />
+              <span className="sr-only">Close</span>
+            </button>
+          </DialogClose>
         </DialogHeader>
 
-        <div className="space-y-5">
+        <div className="p-6 md:p-8 space-y-6">
           {error && (
             <div className="rounded-2xl border border-destructive/20 bg-destructive/10 p-3.5 text-sm font-semibold text-destructive flex items-center gap-2.5 animate-in fade-in zoom-in-95">
               <ExclamationCircleIcon className="h-4 w-4 flex-shrink-0" />
@@ -256,12 +264,12 @@ function ImportDialog() {
           {rows.length > 0 && (
             <div className="space-y-4 animate-in fade-in duration-300">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <EyeIcon className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm font-bold text-foreground truncate max-w-[150px] sm:max-w-xs">
+                <div className="flex items-center gap-2.5">
+                  <EyeIcon className="h-4 w-4 text-primary" />
+                  <Typography variant="body-sm" className="font-bold text-foreground truncate max-w-[150px] sm:max-w-xs">
                     {fileName}
-                  </span>
-                  <Badge className="bg-primary/10 text-primary border border-primary/20 shadow-none font-bold rounded-full">
+                  </Typography>
+                  <Badge className="bg-primary/10 text-primary border border-primary/20 shadow-none font-bold rounded-full px-3">
                     {rows.length} baris
                   </Badge>
                 </div>
@@ -277,21 +285,21 @@ function ImportDialog() {
 
               <div className="overflow-auto max-h-[300px] rounded-2xl border border-border/40 bg-card custom-scrollbar">
                 <Table>
-                  <TableHeader className="sticky top-0 bg-background/95 backdrop-blur-sm shadow-sm z-10">
-                    <TableRow className="border-border/40 hover:bg-transparent">
-                      <TableHead className="text-[11px] font-bold text-muted-foreground py-3 pl-4">
+                  <TableHeader className="bg-primary/95 backdrop-blur-sm sticky top-0 z-10">
+                    <TableRow className="border-primary-bg/20 hover:bg-transparent">
+                      <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest py-3.5 pl-4">
                         #
                       </TableHead>
-                      <TableHead className="text-[11px] font-bold text-muted-foreground py-3">
+                      <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest py-3.5">
                         Title
                       </TableHead>
-                      <TableHead className="text-[11px] font-bold text-muted-foreground py-3">
+                      <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest py-3.5">
                         Price
                       </TableHead>
-                      <TableHead className="text-[11px] font-bold text-muted-foreground py-3">
+                      <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest py-3.5">
                         Category
                       </TableHead>
-                      <TableHead className="text-[11px] font-bold text-muted-foreground py-3">
+                      <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest py-3.5">
                         Code
                       </TableHead>
                     </TableRow>
@@ -405,7 +413,7 @@ function ExportDropdown() {
     <div className="relative">
       <Button
         variant="outline"
-        className="h-11 border-border/50 bg-background/50 text-muted-foreground font-bold hover:text-primary hover:bg-primary/10 shadow-sm transition-all"
+        className="rounded-full h-10 px-5 bg-white/10 border-white/20 text-white hover:bg-white hover:text-primary transition-all font-bold text-sm"
         onClick={() => setMenuOpen(!menuOpen)}
         disabled={isPending}
       >
@@ -420,20 +428,20 @@ function ExportDropdown() {
             className="fixed inset-0 z-40"
             onClick={() => setMenuOpen(false)}
           />
-          <div className="absolute right-0 top-full mt-2 z-50 w-44 rounded-2xl border border-border/50 bg-background/95 backdrop-blur-xl shadow-lg p-1.5 animate-in fade-in slide-in-from-top-2">
+          <div className="absolute left-0 top-full mt-2 z-50 w-44 rounded-2xl border border-border/50 bg-background/95 backdrop-blur-xl shadow-lg p-1.5 animate-in fade-in slide-in-from-top-2">
             <button
               onClick={() => handleExport("csv")}
-              className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-muted transition-colors"
+              className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-primary/5 hover:text-primary transition-colors group"
             >
-              <DocumentTextIcon className="h-4 w-4 text-emerald-500" />
-              CSV (.csv)
+              <DocumentTextIcon className="h-4 w-4 text-success group-hover:scale-110 transition-transform" />
+              <Typography variant="body-sm" className="font-bold">CSV (.csv)</Typography>
             </button>
             <button
               onClick={() => handleExport("xlsx")}
-              className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-muted transition-colors"
+              className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-primary/5 hover:text-primary transition-colors group"
             >
-              <TableCellsIcon className="h-4 w-4 text-primary" />
-              Excel (.xlsx)
+              <TableCellsIcon className="h-4 w-4 text-primary group-hover:scale-110 transition-transform" />
+              <Typography variant="body-sm" className="font-bold">Excel (.xlsx)</Typography>
             </button>
           </div>
         </>

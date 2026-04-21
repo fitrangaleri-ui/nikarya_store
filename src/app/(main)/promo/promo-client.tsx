@@ -315,7 +315,7 @@ export default function PromoClient({ initialPromos }: PromoClientProps) {
   }
 
   return (
-    <div className="w-full space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 overflow-x-hidden">
+    <div className="w-full px-5 md:px-0 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 overflow-x-hidden">
       <div className="relative rounded-xl overflow-hidden bg-primary px-8 py-16 md:px-20 md:py-24 border border-primary/10">
         {/* Animated Background Elements */}
         <div className="absolute top-0 right-0 w-1/2 h-full bg-linear-to-l from-white/10 to-transparent pointer-events-none" />
