@@ -3,41 +3,43 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
-  Download,
-  ClipboardList,
-  Settings,
-  LogOut,
-  X,
-} from "lucide-react";
+  Squares2X2Icon,
+  ArrowDownTrayIcon,
+  ClipboardDocumentListIcon,
+  Cog6ToothIcon,
+  ArrowRightStartOnRectangleIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/components/auth-provider";
+import { Typography } from "@/components/ui/typography";
+import { cn } from "@/lib/utils";
 
 const navItems = [
   {
     label: "Overview",
     href: "/dashboard",
-    icon: LayoutDashboard,
+    icon: Squares2X2Icon,
     color: "bg-primary text-primary-foreground",
     exact: true,
   },
   {
     label: "Produk Saya",
     href: "/dashboard/products",
-    icon: Download,
-    color: "bg-emerald-500 text-white",
+    icon: ArrowDownTrayIcon,
+    color: "bg-success text-success-foreground",
   },
   {
     label: "Riwayat Pesanan",
     href: "/dashboard/orders",
-    icon: ClipboardList,
-    color: "bg-amber-500 text-white",
+    icon: ClipboardDocumentListIcon,
+    color: "bg-warning text-warning-foreground",
   },
   {
     label: "Pengaturan",
     href: "/dashboard/settings",
-    icon: Settings,
-    color: "bg-violet-500 text-white",
+    icon: Cog6ToothIcon,
+    color: "bg-primary-soft text-primary-foreground",
   },
 ];
 
@@ -77,22 +79,22 @@ export function DashboardFab() {
     <>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 z-40 bg-black/20 backdrop-blur-[2px] transition-opacity duration-300 ${
-          open
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
+        className={cn(
+          "fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300",
+          open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        )}
         onClick={() => setOpen(false)}
         aria-hidden="true"
       />
 
       {/* Menu Items (expand upward) */}
       <div
-        className={`fixed bottom-[calc(5rem+10%)] right-5 sm:right-8 z-50 flex flex-col items-end gap-2 transition-all duration-300 ${
+        className={cn(
+          "fixed bottom-[calc(6.5rem+10%)] right-5 sm:right-8 z-50 flex flex-col items-end gap-3 transition-all duration-300",
           open
             ? "opacity-100 translate-y-0 pointer-events-auto"
-            : "opacity-0 translate-y-4 pointer-events-none"
-        }`}
+            : "opacity-0 translate-y-8 pointer-events-none"
+        )}
       >
         {navItems.map((item, index) => {
           const active = isActive(item);
@@ -101,38 +103,38 @@ export function DashboardFab() {
             <Link
               key={item.href}
               href={item.href}
-              className={`
-                group flex items-center gap-3 pl-4 pr-5 py-2.5 rounded-full
-                backdrop-blur-xl border
-                transition-all duration-200
-                hover:scale-[1.02] active:scale-[0.98]
-                ${
-                  active
-                    ? "bg-primary border-primary/30 ring-2 ring-primary/20"
-                    : "bg-background/90 border-border/50"
-                }
-              `}
+              className={cn(
+                "group flex items-center gap-3 pl-4 pr-6 py-2.5 rounded-full",
+                "glass transition-all duration-300",
+                "hover:scale-[1.05] active:scale-[0.95]",
+                active
+                  ? "bg-primary-bg border-primary/30 ring-4 ring-primary/5"
+                  : "hover:bg-muted/50"
+              )}
               style={{
-                transitionDelay: open ? `${index * 40}ms` : "0ms",
+                transitionDelay: open ? `${index * 50}ms` : "0ms",
               }}
               onClick={() => setOpen(false)}
             >
               <div
-                className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
+                className={cn(
+                  "w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300",
                   active
                     ? item.color
-                    : "bg-muted/60 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
-                }`}
+                    : "bg-muted text-muted-foreground group-hover:bg-primary/20 group-hover:text-primary"
+                )}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-5 w-5" />
               </div>
-              <span
-                className={`text-sm font-semibold whitespace-nowrap ${
-                  active ? "text-primary-foreground" : "text-foreground"
-                }`}
+              <Typography
+                variant="body-sm"
+                className={cn(
+                  "font-bold tracking-tight whitespace-nowrap transition-colors",
+                  active ? "text-primary" : "text-foreground group-hover:text-primary"
+                )}
               >
                 {item.label}
-              </span>
+              </Typography>
             </Link>
           );
         })}
@@ -140,41 +142,46 @@ export function DashboardFab() {
         {/* Logout */}
         <button
           onClick={handleSignOut}
-          className="group flex items-center gap-3 pl-4 pr-5 py-2.5 rounded-full bg-background/90 backdrop-blur-xl border border-border/50 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+          className={cn(
+            "group flex items-center gap-3 pl-4 pr-6 py-2.5 rounded-full",
+            "glass transition-all duration-300",
+            "hover:scale-[1.05] active:scale-[0.95] hover:bg-destructive/10"
+          )}
           style={{
-            transitionDelay: open ? `${navItems.length * 40}ms` : "0ms",
+            transitionDelay: open ? `${navItems.length * 50}ms` : "0ms",
           }}
         >
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-red-500/10 text-red-500 group-hover:bg-red-500 group-hover:text-white transition-colors">
-            <LogOut className="h-4 w-4" />
+          <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 bg-destructive/10 text-destructive group-hover:bg-destructive group-hover:text-destructive-foreground transition-all duration-300">
+            <ArrowRightStartOnRectangleIcon className="h-5 w-5" />
           </div>
-          <span className="text-sm font-semibold text-red-500 whitespace-nowrap group-hover:text-red-500">
+          <Typography
+            variant="body-sm"
+            className="font-bold tracking-tight text-destructive whitespace-nowrap group-hover:text-destructive"
+          >
             Keluar
-          </span>
+          </Typography>
         </button>
       </div>
 
       {/* FAB Button */}
       <button
         onClick={() => setOpen(!open)}
-        className={`
-          fixed bottom-[calc(1.5rem+10%)] right-5 sm:right-8 z-50
-          w-14 h-14 rounded-full
-          flex items-center justify-center
-          transition-all duration-300 ease-out
-          hover:scale-105 active:scale-95
-          ${
-            open
-              ? "bg-muted text-foreground border border-border/50"
-              : "bg-primary text-primary-foreground"
-          }
-        `}
+        className={cn(
+          "fixed bottom-[calc(1.5rem+10%)] right-5 sm:right-8 z-50",
+          "w-16 h-16 rounded-full shadow-elevation-lg",
+          "flex items-center justify-center",
+          "transition-all duration-500 cubic-bezier(0.34, 1.56, 0.64, 1)",
+          "hover:scale-110 active:scale-90",
+          open
+            ? "bg-background text-foreground border border-border/50 rotate-90"
+            : "bg-primary text-primary-foreground"
+        )}
         aria-label={open ? "Tutup menu" : "Buka navigasi dashboard"}
       >
         {open ? (
-          <X className="h-6 w-6" />
+          <XMarkIcon className="h-8 w-8 transition-transform duration-500" />
         ) : (
-          <LayoutDashboard className="h-5 w-5" />
+          <Squares2X2Icon className="h-7 w-7 transition-transform duration-500" />
         )}
       </button>
     </>

@@ -17,6 +17,7 @@ import {
 import { getDashboardData, formatCurrency } from "./lib";
 import { VerifiedToast } from "./verified-toast";
 import { Typography } from "@/components/ui/typography";
+import { HeaderBanner } from "./header-banner";
 
 export const dynamic = "force-dynamic";
 
@@ -34,34 +35,13 @@ export default async function DashboardPage() {
         <VerifiedToast />
       </Suspense>
       {/* ── Banner: Profil User ── */}
-      <div className="relative rounded-xl overflow-hidden bg-primary px-6 py-8 md:px-10">
-        {/* Decorative elements */}
-        <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10 pointer-events-none" />
-        <div className="absolute bottom-[-20px] left-[20%] h-32 w-32 rounded-full bg-white/5 pointer-events-none" />
-
-        {/* Konten banner */}
-        <div className="relative z-10 flex items-start justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-white/15 text-white mb-4 backdrop-blur-md border border-white/10">
-              <Squares2X2Icon className="w-3.5 h-3.5" />
-              <Typography variant="caption" className="text-primary-foreground font-semibold">
-                Dashboard Saya
-              </Typography>
-            </div>
-
-            <Typography variant="h2" as="h1" className="text-white tracking-tight">
-              Halo, {displayName}! 👋
-            </Typography>
-            <Typography variant="body-sm" className="text-white/70 mt-2 font-medium max-w-md">
-              Selamat datang kembali. Berikut ringkasan aktivitas dan akses cepat ke produk Anda.
-            </Typography>
-          </div>
-
-          <div className="hidden md:flex flex-none w-14 h-14 rounded-xl bg-white/15 items-center justify-center border border-white/20 backdrop-blur-md">
-            <SparklesIcon className="w-7 h-7 text-white" />
-          </div>
-        </div>
-      </div>
+      <HeaderBanner
+        title={`Halo, ${displayName}! 👋`}
+        description="Selamat datang kembali. Berikut ringkasan aktivitas dan akses cepat ke produk Anda."
+        badgeLabel="Dashboard Saya"
+        badgeIcon={<Squares2X2Icon className="w-3.5 h-3.5 text-white" />}
+        actionIcon={<SparklesIcon className="w-7 h-7 text-white" />}
+      />
 
       {/* ── Stats Section ── */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

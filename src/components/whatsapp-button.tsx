@@ -119,8 +119,8 @@ export function WhatsAppButton() {
     [handleSend],
   );
 
-  // Jangan tampilkan di halaman admin
-  if (pathname?.startsWith("/admin")) {
+  // Jangan tampilkan di halaman admin atau dashboard
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/dashboard")) {
     return null;
   }
 

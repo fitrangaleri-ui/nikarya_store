@@ -1,12 +1,26 @@
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { ClipboardList, Eye, AlertCircle, ArrowRight } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  ClipboardDocumentListIcon,
+  EyeIcon,
+  ExclamationCircleIcon,
+  ArrowRightIcon,
+} from "@heroicons/react/24/outline";
 import {
   getDashboardData,
   formatCurrency,
   formatDate,
-  statusConfig,
 } from "../lib";
+import { Typography } from "@/components/ui/typography";
+import { HeaderBanner } from "../header-banner";
+import { DashboardStatusBadge } from "../status-badge";
 
 export const dynamic = "force-dynamic";
 
@@ -14,184 +28,130 @@ export default async function OrdersPage() {
   const { allOrders } = await getDashboardData();
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       {/* ════════════════════════════════════════════════════ */}
       {/* HEADER BANNER                                        */}
       {/* ════════════════════════════════════════════════════ */}
-      <div className="relative rounded-3xl overflow-hidden bg-primary px-6 py-8 md:px-10 shadow-lg shadow-primary/20">
-        {/* Ambient glow */}
-        <div
-          aria-hidden
-          className="absolute -top-10 -right-10 w-64 h-64 rounded-full pointer-events-none blur-[80px]"
-          style={{ background: "rgba(255,255,255,0.08)" }}
-        />
-        <div
-          aria-hidden
-          className="absolute bottom-0 left-1/3 w-48 h-48 rounded-full pointer-events-none blur-[60px]"
-          style={{ background: "rgba(255,255,255,0.05)" }}
-        />
-
-        {/* Glass shimmer overlay */}
-        <div
-          aria-hidden
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
-          }}
-        />
-
-        {/* Stroke border */}
-        <div
-          aria-hidden
-          className="absolute inset-0 rounded-3xl pointer-events-none"
-          style={{
-            boxShadow:
-              "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
-            border: "1px solid rgba(255,255,255,0.15)",
-          }}
-        />
-
-        {/* Konten */}
-        <div className="relative z-10 flex items-start justify-between gap-4">
-          <div>
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-white/15 text-primary-foreground text-[11px] font-bold uppercase tracking-[-0.005em] mb-3">
-              <ClipboardList className="w-3 h-3" />
-              Riwayat Pesanan
-            </span>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-primary-foreground leading-tight tracking-tight">
-              Riwayat Pesanan
-            </h1>
-            <p className="mt-1.5 text-sm text-primary-foreground/70 leading-relaxed">
-              Semua riwayat transaksi dan pesanan Anda.
-            </p>
-          </div>
-
-          {/* Icon dekorasi + badge jumlah */}
-          <div className="hidden md:flex flex-col items-end gap-2 shrink-0">
-            <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center border border-white/20">
-              <ClipboardList className="w-6 h-6 text-primary-foreground" />
-            </div>
-            {allOrders.length > 0 && (
-              <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 bg-white/15 border border-white/20 text-primary-foreground text-[11px] font-bold">
-                {allOrders.length} pesanan
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
+      {/* ── Banner: Header ── */}
+      <HeaderBanner
+        title="Riwayat Pesanan"
+        description="Kelola dan pantau semua transaksi digital Anda di satu tempat yang aman."
+        badgeLabel="Dashboard Pelanggan"
+        badgeIcon={<ClipboardDocumentListIcon className="w-3.5 h-3.5 text-white" />}
+        actionIcon={<ClipboardDocumentListIcon className="w-8 h-8 text-white" />}
+        extraBadge={allOrders.length > 0 ? `${allOrders.length} Pesanan Terdaftar` : undefined}
+      />
 
       {/* ════════════════════════════════════════════════════ */}
       {/* ORDER LIST / EMPTY STATE                            */}
       {/* ════════════════════════════════════════════════════ */}
       {allOrders.length > 0 ? (
-        <div className="rounded-3xl border border-border/50 bg-card overflow-hidden shadow-sm">
+        <div className="rounded-xl border border-border bg-card overflow-hidden shadow-sm">
           {/* Desktop table */}
-          <div className="hidden md:block overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border/50 bg-muted/40">
-                  <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">
-                    Order ID
-                  </th>
-                  <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">
-                    Produk
-                  </th>
-                  <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">
-                    Tanggal
-                  </th>
-                  <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">
-                    Total
-                  </th>
-                  <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">
-                    Status
-                  </th>
-                  <th className="text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">
-                    Aksi
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/30">
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader className="bg-muted/50">
+                <TableRow className="hover:bg-transparent border-border/50">
+                  <TableHead className="w-[180px] px-6">
+                    <Typography variant="caption" className="font-bold uppercase tracking-widest text-muted-foreground">Order ID</Typography>
+                  </TableHead>
+                  <TableHead className="px-6">
+                    <Typography variant="caption" className="font-bold uppercase tracking-widest text-muted-foreground">Produk</Typography>
+                  </TableHead>
+                  <TableHead className="px-6">
+                    <Typography variant="caption" className="font-bold uppercase tracking-widest text-muted-foreground">Tanggal</Typography>
+                  </TableHead>
+                  <TableHead className="px-6">
+                    <Typography variant="caption" className="font-bold uppercase tracking-widest text-muted-foreground">Total</Typography>
+                  </TableHead>
+                  <TableHead className="px-6 text-center">
+                    <Typography variant="caption" className="font-bold uppercase tracking-widest text-muted-foreground">Status</Typography>
+                  </TableHead>
+                  <TableHead className="px-6 text-right">
+                    <Typography variant="caption" className="font-bold uppercase tracking-widest text-muted-foreground">Aksi</Typography>
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {allOrders.map((order) => {
-                  const product = order.products as {
-                    title: string;
-                  } | null;
-                  const cfg =
-                    statusConfig[order.payment_status] || statusConfig.FAILED;
+                  const product = order.products as { title: string } | null;
+
                   return (
-                    <tr
-                      key={order.id}
-                      className="hover:bg-muted/30 transition-colors"
-                    >
-                      <td className="px-6 py-4 text-sm font-mono text-muted-foreground">
-                        #
-                        {order.midtrans_order_id?.substring(0, 16) ||
-                          order.id.substring(0, 8)}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-foreground font-medium max-w-[200px] truncate">
-                        {product?.title || "Produk"}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-muted-foreground">
-                        {formatDate(order.created_at)}
-                      </td>
-                      <td className="px-6 py-4 text-sm font-semibold text-foreground">
-                        {formatCurrency(Number(order.total_price))}
-                      </td>
-                      <td className="px-6 py-4">
-                        <Badge className={cfg.color}>
-                          {cfg.icon}
-                          <span className="ml-1">{cfg.label}</span>
-                        </Badge>
-                      </td>
-                      <td className="px-6 py-4 text-right">
+                    <TableRow key={order.id} className="hover:bg-muted/30 transition-colors border-border/40">
+                      <TableCell className="px-6 py-5 font-mono text-xs text-muted-foreground font-medium">
+                        #{(order.midtrans_order_id || order.id).substring(0, 12)}
+                      </TableCell>
+                      <TableCell className="px-6 py-5">
+                        <Typography variant="body-sm" className="font-bold truncate max-w-[220px]">
+                          {product?.title || "Produk Digital"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell className="px-6 py-5 text-muted-foreground whitespace-nowrap">
+                        <Typography variant="body-sm">
+                          {formatDate(order.created_at)}
+                        </Typography>
+                      </TableCell>
+                      <TableCell className="px-6 py-5">
+                        <Typography variant="body-sm" className="font-black text-primary">
+                          {formatCurrency(Number(order.total_price))}
+                        </Typography>
+                      </TableCell>
+                      <TableCell className="px-6 py-5 text-center">
+                        <DashboardStatusBadge
+                          status={order.payment_status}
+                          size="sm"
+                          className="justify-center"
+                        />
+                      </TableCell>
+                      <TableCell className="px-6 py-5 text-right">
                         <Link
                           href={`/dashboard/orders/${order.id}`}
-                          className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 font-medium transition-colors"
+                          className="inline-flex items-center gap-1.5 text-xs bg-primary/5 hover:bg-primary text-primary hover:text-white px-4 py-2 rounded-full font-bold transition-all duration-200 border border-primary/20"
                         >
-                          <Eye className="h-3.5 w-3.5" />
-                          Detail
+                          <EyeIcon className="h-3.5 w-3.5" />
+                          Lihat Detail
                         </Link>
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   );
                 })}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
 
           {/* Mobile cards */}
-          <div className="md:hidden divide-y divide-border/30">
+          <div className="md:hidden divide-y divide-border/50">
             {allOrders.map((order) => {
-              const product = order.products as {
-                title: string;
-              } | null;
-              const cfg =
-                statusConfig[order.payment_status] || statusConfig.FAILED;
+              const product = order.products as { title: string } | null;
+
               return (
-                <div key={order.id} className="p-4 space-y-2">
-                  <div className="flex items-start justify-between gap-2">
+                <div key={order.id} className="p-5 space-y-4">
+                  <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">
-                      <p className="font-medium text-foreground truncate">
-                        {product?.title || "Produk"}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-0.5">
+                      <Typography variant="body-sm" className="font-bold truncate">
+                        {product?.title || "Produk Digital"}
+                      </Typography>
+                      <Typography variant="caption" color="muted" className="mt-0.5">
                         {formatDate(order.created_at)}
-                      </p>
+                      </Typography>
                     </div>
-                    <Badge className={cfg.color}>
-                      {cfg.icon}
-                      <span className="ml-1">{cfg.label}</span>
-                    </Badge>
+                    <DashboardStatusBadge
+                      status={order.payment_status}
+                      size="sm"
+                    />
                   </div>
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-semibold text-foreground">
-                      {formatCurrency(Number(order.total_price))}
-                    </p>
+                  <div className="flex items-center justify-between pt-2 border-t border-border/30">
+                    <div>
+                      <Typography variant="caption" color="muted" className="font-bold uppercase tracking-wider mb-0.5">Total</Typography>
+                      <Typography variant="body-sm" className="font-black text-primary">
+                        {formatCurrency(Number(order.total_price))}
+                      </Typography>
+                    </div>
                     <Link
                       href={`/dashboard/orders/${order.id}`}
-                      className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 font-medium"
+                      className="inline-flex items-center gap-1.5 text-xs bg-primary/5 text-primary px-4 py-2 rounded-full font-bold border border-primary/20"
                     >
-                      <Eye className="h-3.5 w-3.5" />
+                      <EyeIcon className="h-3.5 w-3.5" />
                       Detail
                     </Link>
                   </div>
@@ -201,31 +161,28 @@ export default async function OrdersPage() {
           </div>
         </div>
       ) : (
-        // ── Empty state ──
-        <div className="relative rounded-3xl border border-dashed border-border/60 bg-card/40 overflow-hidden py-20 text-center">
+        /* ── Empty state ── */
+        <div className="relative rounded-xl border border-dashed border-border bg-card/50 overflow-hidden py-24 text-center">
           <div
             aria-hidden
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full pointer-events-none blur-[80px]"
-            style={{
-              background: "color-mix(in oklch, var(--primary) 6%, transparent)",
-            }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full pointer-events-none blur-[100px] bg-primary/5"
           />
-          <div className="relative z-10 flex flex-col items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center border border-border/50">
-              <AlertCircle className="h-8 w-8 text-muted-foreground/40" />
+          <div className="relative z-10 flex flex-col items-center gap-6 max-w-sm mx-auto px-6">
+            <div className="w-20 h-20 rounded-xl bg-muted flex items-center justify-center border border-border shadow-inner">
+              <ExclamationCircleIcon className="h-10 w-10 text-muted-foreground/30" />
             </div>
-            <div>
-              <h3 className="text-lg font-bold text-foreground">
-                Belum ada pesanan
-              </h3>
-              <p className="mt-1 text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
-                Kamu belum memiliki riwayat pesanan.
-              </p>
+            <div className="space-y-2">
+              <Typography variant="h4" as="h3" className="font-bold">
+                Belum Ada Pesanan
+              </Typography>
+              <Typography variant="body-sm" color="muted">
+                Sepertinya Anda belum melakukan transaksi apa pun. Temukan produk impian Anda di katalog kami.
+              </Typography>
             </div>
             <Link href="/products">
-              <button className="inline-flex items-center gap-2 mt-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] shadow-sm shadow-primary/30">
-                Jelajahi Katalog
-                <ArrowRight className="w-4 h-4" />
+              <button className="group inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 text-sm font-bold text-white hover:bg-primary/90 transition-all duration-200 hover:shadow-lg hover:shadow-primary/20 active:scale-95">
+                Jelajahi Produk
+                <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>
           </div>

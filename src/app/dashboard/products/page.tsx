@@ -16,6 +16,8 @@ import {
 import { DownloadButton } from "../download-button";
 import { getDashboardData, formatDate } from "../lib";
 import { Typography } from "@/components/ui/typography";
+import { HeaderBanner } from "../header-banner";
+import { DashboardStatusBadge } from "../status-badge";
 
 export const dynamic = "force-dynamic";
 
@@ -31,43 +33,14 @@ export default async function ProductsPage() {
       {/* ════════════════════════════════════════════════════ */}
 
       {/* ── Banner: Header ── */}
-      <div className="relative rounded-xl overflow-hidden bg-primary px-6 py-8 md:px-10 border border-white/5">
-        {/* Decorative elements */}
-        <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10 pointer-events-none" />
-        <div className="absolute bottom-[-20px] left-[20%] h-32 w-32 rounded-full bg-white/5 pointer-events-none" />
-
-        {/* Konten banner */}
-        <div className="relative z-10 flex items-start justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-white/15 text-white mb-4 backdrop-blur-md border border-white/10">
-              <InboxStackIcon className="w-3.5 h-3.5" />
-              <Typography variant="caption" className="font-semibold text-primary-foreground">
-                Produk Saya
-              </Typography>
-            </div>
-
-            <Typography variant="h2" as="h1" className="text-white tracking-tight">
-              Produk Digital Saya
-            </Typography>
-            <Typography variant="body-sm" className="text-white/70 mt-2 font-medium max-w-md">
-              Koleksi produk digital yang telah Anda beli. Akses unduhan tersedia sesuai kuota.
-            </Typography>
-          </div>
-
-          <div className="hidden md:flex flex-col items-end gap-3 shrink-0">
-            <div className="flex w-14 h-14 rounded-xl bg-white/15 items-center justify-center border border-white/20 backdrop-blur-md">
-              <SparklesIcon className="w-7 h-7 text-primary-foreground" />
-            </div>
-            {uniquePaidProducts.length > 0 && (
-              <div className="px-3 py-1 bg-white/10 border border-white/20 rounded-full backdrop-blur-sm">
-                <Typography variant="caption" className="text-white font-bold whitespace-nowrap">
-                  {uniquePaidProducts.length} Produk Koleksi
-                </Typography>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+      <HeaderBanner
+        title="Produk Digital Saya"
+        description="Koleksi produk digital yang telah Anda beli. Akses unduhan tersedia sesuai kuota."
+        badgeLabel="Produk Saya"
+        badgeIcon={<InboxStackIcon className="w-3.5 h-3.5 text-white" />}
+        actionIcon={<SparklesIcon className="w-7 h-7 text-white" />}
+        extraBadge={uniquePaidProducts.length > 0 ? `${uniquePaidProducts.length} Produk Koleksi` : undefined}
+      />
 
       {/* ════════════════════════════════════════════════════ */}
       {/* PRODUCT GRID / EMPTY STATE                          */}
@@ -123,9 +96,12 @@ export default async function ProductsPage() {
                       </div>
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
-                    <div className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-primary/10 border border-primary/20 text-primary backdrop-blur-md">
-                      <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                      <Typography variant="caption" className="font-bold">Lunas</Typography>
+                    <div className="absolute top-3 left-3">
+                      <DashboardStatusBadge
+                        status="PAID"
+                        surface="overlay"
+                        size="sm"
+                      />
                     </div>
                     <div className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-black/40 backdrop-blur-sm text-white/90">
                       <CalendarDaysIcon className="w-3.5 h-3.5" />
@@ -153,28 +129,37 @@ export default async function ProductsPage() {
                     </div>
 
                     {/* Kuota download */}
-                    <div className="rounded-xl bg-muted/30 border border-border px-4 py-4 space-y-3">
+                    <div className="rounded-xl bg-muted/30 border border-border/60 px-4 py-4 space-y-3">
                       <div className="flex items-center justify-between">
-                        <Typography variant="body-xs" color="muted" className="font-semibold uppercase tracking-widest">
+                        <Typography variant="body-xs" color="muted" className="font-extrabold uppercase">
                           Kuota Download
                         </Typography>
-                        <Typography variant="body-sm" className="font-bold">
-                          <span className={remainingColor}>
-                            {downloadCount}
-                          </span>{" "}
-                          / {MAX_DOWNLOADS}
-                        </Typography>
+                        <div className="flex items-center">
+                          <Typography variant="body-sm" color="muted" className="font-bold">
+                            <span className={`font-black ${remainingColor}`}>
+                              {downloadCount}
+                            </span>{" "}
+                            / {MAX_DOWNLOADS}
+                          </Typography>
+                        </div>
                       </div>
-                      <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                      <div className="h-2 bg-muted rounded-full overflow-hidden border border-border/10">
                         <div
-                          className={`h-full rounded-full transition-all duration-500 ${progressColor}`}
+                          className={`h-full rounded-full transition-all duration-500 ease-out ${progressColor}`}
                           style={{ width: `${Math.min(progress, 100)}%` }}
                         />
                       </div>
-                      <div className="flex justify-end">
-                        <Typography variant="caption" className={`font-bold ${remainingColor}`}>
-                          {remainingLabel}
+                      <div className="flex items-center justify-between">
+                        <Typography variant="caption" color="muted" className="font-medium italic">
+                          {remaining <= 0
+                            ? "Limit tercapai"
+                            : `Tersisa ${remaining} kali unduh`}
                         </Typography>
+                        <div className={`px-2 py-0.5 rounded-full border bg-background/50 border-border/50`}>
+                          <Typography variant="caption" className={`font-extrabold uppercase text-[9px] ${remainingColor}`}>
+                            {remainingLabel}
+                          </Typography>
+                        </div>
                       </div>
                     </div>
 

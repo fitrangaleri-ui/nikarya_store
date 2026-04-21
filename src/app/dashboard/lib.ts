@@ -1,36 +1,29 @@
-import { Download, Clock, XCircle } from "lucide-react";
-import { createElement } from "react";
+import { getDashboardStatusMeta } from "./status-badge";
 
 // ── Status config ──
 export const statusConfig: Record<
     string,
-    { label: string; color: string; icon: React.ReactNode }
+    { label: string; color: string }
 > = {
     PAID: {
-        label: "Lunas",
-        color:
-            "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50",
-        icon: createElement(Download, { className: "h-3 w-3" }),
+        label: getDashboardStatusMeta("PAID").label,
+        color: "border-primary/20 bg-primary/10 text-primary",
     },
     PENDING: {
-        label: "Menunggu Bayar",
-        color: "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-50",
-        icon: createElement(Clock, { className: "h-3 w-3" }),
+        label: getDashboardStatusMeta("PENDING").label,
+        color: "border-warning/20 bg-warning/10 text-warning",
     },
     PENDING_MANUAL: {
-        label: "Menunggu Konfirmasi",
-        color: "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-50",
-        icon: createElement(Clock, { className: "h-3 w-3" }),
+        label: getDashboardStatusMeta("PENDING_MANUAL").label,
+        color: "border-warning/20 bg-warning/10 text-warning",
     },
     EXPIRED: {
-        label: "Kadaluarsa",
-        color: "bg-red-50 text-red-600 border-red-200 hover:bg-red-50",
-        icon: createElement(XCircle, { className: "h-3 w-3" }),
+        label: getDashboardStatusMeta("EXPIRED").label,
+        color: "border-destructive/20 bg-destructive/10 text-destructive",
     },
     FAILED: {
-        label: "Gagal",
-        color: "bg-red-50 text-red-600 border-red-200 hover:bg-red-50",
-        icon: createElement(XCircle, { className: "h-3 w-3" }),
+        label: getDashboardStatusMeta("FAILED").label,
+        color: "border-destructive/20 bg-destructive/10 text-destructive",
     },
 };
 

@@ -9,7 +9,7 @@ import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { ExclamationTriangleIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import { DownloadModal } from "./download-modal";
-import { PrimaryButton } from "@/components/ui/primary-button";
+import { Button } from "@/components/ui/button";
 
 const MAX_DOWNLOADS = 25;
 
@@ -32,20 +32,25 @@ export function DownloadButton({
   // ── Tombol disabled (limit tercapai) ─────────────────────
   if (isMaxed) {
     return (
-      <PrimaryButton variant="disabled-outline" size="md">
+      <Button
+        variant="outline"
+        size="sm"
+        disabled
+        className="rounded-full bg-muted border-border/40 hover:bg-muted text-muted-foreground opacity-80"
+      >
         <ExclamationTriangleIcon className="h-4 w-4" />
         Limit Tercapai
-      </PrimaryButton>
+      </Button>
     );
   }
 
   // ── Tombol aksi (buka modal) ──────────────────────────────
   return (
     <>
-      <PrimaryButton size="md" onClick={() => setModalOpen(true)}>
+      <Button variant="brand" size="sm" className="rounded-full w-full" onClick={() => setModalOpen(true)}>
         <ArrowDownTrayIcon className="h-4 w-4" />
         Akses File
-      </PrimaryButton>
+      </Button>
 
       {/* Modal — logika tidak diubah */}
       <DownloadModal

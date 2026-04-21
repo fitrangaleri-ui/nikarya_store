@@ -1,19 +1,15 @@
-// ============================================================
-// FILE: src/app/dashboard/settings/page.tsx
-// PERUBAHAN: Redesign visual — konsisten dengan dashboard/page.tsx
-//            Logika & data tidak diubah
-// ============================================================
-
 import {
-  Settings,
-  User,
-  Mail,
-  Shield,
-  Bell,
-  Lock,
-  Sparkles,
-} from "lucide-react";
+  Cog6ToothIcon,
+  UserIcon,
+  EnvelopeIcon,
+  ShieldCheckIcon,
+  BellIcon,
+  LockClosedIcon,
+  SparklesIcon,
+} from "@heroicons/react/24/outline";
 import { getDashboardData } from "../lib";
+import { Typography } from "@/components/ui/typography";
+import { HeaderBanner } from "../header-banner";
 
 export const dynamic = "force-dynamic";
 
@@ -26,193 +22,152 @@ export default async function SettingsPage() {
   const initial = displayName.charAt(0).toUpperCase();
 
   return (
-    <div className="space-y-8">
-      {/* ════════════════════════════════════════════════════ */}
-      {/* HEADER BANNER — konsisten dengan dashboard/page.tsx */}
-      {/* ════════════════════════════════════════════════════ */}
-      <div className="relative rounded-3xl overflow-hidden bg-primary px-6 py-8 md:px-10 shadow-lg shadow-primary/20">
-        {/* Ambient glow */}
-        <div
-          aria-hidden
-          className="absolute -top-10 -right-10 w-64 h-64 rounded-full pointer-events-none blur-[80px]"
-          style={{ background: "rgba(255,255,255,0.08)" }}
-        />
-        <div
-          aria-hidden
-          className="absolute bottom-0 left-1/3 w-48 h-48 rounded-full pointer-events-none blur-[60px]"
-          style={{ background: "rgba(255,255,255,0.05)" }}
-        />
-
-        {/* Glass shimmer overlay */}
-        <div
-          aria-hidden
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)",
-          }}
-        />
-        {/* Stroke border */}
-        <div
-          aria-hidden
-          className="absolute inset-0 rounded-3xl pointer-events-none"
-          style={{
-            boxShadow:
-              "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
-            border: "1px solid rgba(255,255,255,0.15)",
-          }}
-        />
-
-        {/* Konten */}
-        <div className="relative z-10 flex items-start justify-between gap-4">
-          <div>
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-white/15 text-primary-foreground text-[11px] font-bold uppercase tracking-[-0.005em] mb-3">
-              <Settings className="w-3 h-3" />
-              Pengaturan
-            </span>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-primary-foreground leading-tight tracking-tight">
-              Pengaturan Akun
-            </h1>
-            <p className="mt-1.5 text-sm text-primary-foreground/70 leading-relaxed">
-              Kelola profil dan preferensi akun kamu.
-            </p>
-          </div>
-
-          {/* Icon dekorasi */}
-          <div className="hidden md:flex shrink-0 w-14 h-14 rounded-2xl bg-white/15 items-center justify-center border border-white/20">
-            <Sparkles className="w-6 h-6 text-primary-foreground" />
-          </div>
-        </div>
-      </div>
+    <div className="space-y-6 md:space-y-8">
+      {/* ── Banner: Header ── */}
+      <HeaderBanner
+        title="Pengaturan Akun"
+        description="Sesuaikan data diri dan preferensi akun Anda untuk pengalaman yang lebih personall."
+        badgeLabel="Akun & Privasi"
+        badgeIcon={<Cog6ToothIcon className="w-3.5 h-3.5 text-white" />}
+        actionIcon={<SparklesIcon className="w-8 h-8 text-white" />}
+      />
 
       {/* ════════════════════════════════════════════════════ */}
       {/* PROFIL CARD                                          */}
       {/* ════════════════════════════════════════════════════ */}
-      <div>
-        <div className="rounded-2xl bg-card border border-border/50 shadow-sm overflow-hidden">
-          {/* Avatar + nama + email */}
-          <div className="flex items-center gap-5 px-6 py-6 border-b border-border/40">
-            {/* Avatar inisial besar */}
-            <div className="relative shrink-0">
-              <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-                <span className="text-2xl font-extrabold text-primary">
-                  {initial}
-                </span>
-              </div>
-              {/* Dot online */}
-              <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-card" />
+      <div className="rounded-xl bg-card border border-border  overflow-hidden">
+        {/* Avatar + Info Header */}
+        <div className="flex items-center gap-6 px-6 py-8 border-b border-border/50 bg-muted/20">
+          <div className="relative shrink-0">
+            <div className="w-20 h-20 rounded-xl bg-primary/10 border-2 border-primary/20 flex items-center justify-center shadow-inner">
+              <Typography variant="h3" className="text-primary font-black">
+                {initial}
+              </Typography>
             </div>
+            <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-success border-4 border-card " />
+          </div>
 
-            {/* Info */}
-            <div className="min-w-0 flex-1">
-              <p className="text-lg font-extrabold text-foreground leading-snug truncate">
-                {displayName}
-              </p>
-              <p className="flex items-center gap-1.5 mt-1 text-sm text-muted-foreground truncate">
-                <Mail className="h-3.5 w-3.5 shrink-0" />
+          <div className="min-w-0">
+            <Typography variant="h5" className="font-bold truncate">
+              {displayName}
+            </Typography>
+            <div className="flex items-center gap-2 mt-1 px-2 py-0.5 rounded-md bg-muted/50 border border-border/50 inline-flex">
+              <EnvelopeIcon className="h-3.5 w-3.5 text-muted-foreground" />
+              <Typography variant="caption" color="muted" className="font-medium truncate">
                 {email}
-              </p>
+              </Typography>
+            </div>
+          </div>
+        </div>
+
+        {/* Form sections */}
+        <div className="divide-y divide-border/50">
+          {/* Section: Personal Info */}
+          <div className="px-6 py-6 group hover:bg-muted/10 transition-colors">
+            <div className="flex items-center justify-between">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-white transition-all">
+                  <UserIcon className="h-5 w-5 text-primary group-hover:text-white transition-colors" />
+                </div>
+                <div>
+                  <Typography variant="caption" className="font-bold uppercase  text-muted-foreground mb-1">
+                    Nama Lengkap
+                  </Typography>
+                  <Typography variant="body-base" className="font-bold">
+                    {displayName}
+                  </Typography>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Detail rows */}
-          <div className="divide-y divide-border/40">
-            {/* Row: Nama */}
-            <div className="flex items-center justify-between px-6 py-4">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                  <User className="h-3.5 w-3.5 text-primary" />
+          {/* Section: Account Email */}
+          <div className="px-6 py-6 group hover:bg-muted/10 transition-colors">
+            <div className="flex items-center justify-between">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-white transition-all">
+                  <EnvelopeIcon className="h-5 w-5 text-primary group-hover:text-white transition-colors" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[-0.005em] text-muted-foreground">
-                    Nama Lengkap
-                  </p>
-                  <p className="text-sm font-semibold text-foreground mt-0.5">
-                    {displayName}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Row: Email */}
-            <div className="flex items-center justify-between px-6 py-4">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                  <Mail className="h-3.5 w-3.5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[-0.005em] text-muted-foreground">
-                    Email
-                  </p>
-                  <p className="text-sm font-semibold text-foreground mt-0.5">
+                  <Typography variant="caption" className="font-bold uppercase  text-muted-foreground mb-1">
+                    Alamat Email
+                  </Typography>
+                  <Typography variant="body-base" className="font-bold">
                     {email}
-                  </p>
+                  </Typography>
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Row: Status akun */}
-            <div className="flex items-center justify-between px-6 py-4">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0">
-                  <Shield className="h-3.5 w-3.5 text-emerald-600" />
+          {/* Section: Security Status */}
+          <div className="px-6 py-6 group hover:bg-muted/10 transition-colors">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center shrink-0 border border-success/20 group-hover:bg-success transition-all">
+                  <ShieldCheckIcon className="h-5 w-5 text-success group-hover:text-white transition-colors" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[-0.005em] text-muted-foreground">
-                    Status Akun
-                  </p>
-                  <p className="text-sm font-semibold text-emerald-600 mt-0.5">
+                  <Typography variant="caption" className="font-bold uppercase  text-muted-foreground mb-1">
+                    Keamanan Akun
+                  </Typography>
+                  <Typography variant="body-base" color="success" className="font-bold">
                     Terverifikasi & Aktif
-                  </p>
+                  </Typography>
                 </div>
               </div>
-              {/* Badge status */}
-              <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-[10px] font-bold">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                Aktif
-              </span>
+              <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-success/10 border border-success/20">
+                <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
+                <Typography variant="caption" className="font-bold text-success uppercase ">
+                  Aktif
+                </Typography>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* ════════════════════════════════════════════════════ */}
-      {/* COMING SOON — fitur lanjutan                        */}
+      {/* ADDITIONAL FEATURES                                  */}
       {/* ════════════════════════════════════════════════════ */}
-      <div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {/* Coming soon: Ubah Password */}
-          <div className="relative flex items-center gap-4 rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden opacity-60">
-            <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-muted blur-xl pointer-events-none" />
-            <div className="w-11 h-11 rounded-2xl bg-muted flex items-center justify-center shrink-0">
-              <Lock className="h-5 w-5 text-muted-foreground" />
+      <div className="grid gap-4 sm:grid-cols-2">
+        {/* Feature: Security Settings */}
+        <div className="group relative overflow-hidden rounded-xl bg-card border border-border p-5 hover:border-primary/30 transition-all opacity-60 grayscale-[0.5]">
+          <div className="relative z-10 flex items-start gap-4">
+            <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center shrink-0 border border-border/50">
+              <LockClosedIcon className="h-6 w-6 text-muted-foreground" />
             </div>
             <div>
-              <p className="font-bold text-foreground text-sm">Ubah Password</p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Perbarui kata sandi akun
-              </p>
+              <div className="flex items-center gap-2 mb-1">
+                <Typography variant="body-base" className="font-bold">Keamanan</Typography>
+                <div className="px-1.5 py-0.5 rounded-md bg-muted border border-border/50">
+                  <Typography variant="caption" className="text-[9px] font-black uppercase tracking-tighter text-muted-foreground">Soon</Typography>
+                </div>
+              </div>
+              <Typography variant="body-xs" color="muted" className="leading-relaxed">
+                Kelola kata sandi dan keamanan otentikasi dua faktor.
+              </Typography>
             </div>
-            <span className="ml-auto shrink-0 rounded-full px-2.5 py-1 bg-muted border border-border/50 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-              Soon
-            </span>
           </div>
+        </div>
 
-          {/* Coming soon: Notifikasi */}
-          <div className="relative flex items-center gap-4 rounded-2xl bg-card border border-border/50 px-5 py-5 shadow-sm overflow-hidden opacity-60">
-            <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-muted blur-xl pointer-events-none" />
-            <div className="w-11 h-11 rounded-2xl bg-muted flex items-center justify-center shrink-0">
-              <Bell className="h-5 w-5 text-muted-foreground" />
+        {/* Feature: Notifications */}
+        <div className="group relative overflow-hidden rounded-xl bg-card border border-border p-5 hover:border-primary/30 transition-all opacity-60 grayscale-[0.5]">
+          <div className="relative z-10 flex items-start gap-4">
+            <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center shrink-0 border border-border/50">
+              <BellIcon className="h-6 w-6 text-muted-foreground" />
             </div>
             <div>
-              <p className="font-bold text-foreground text-sm">Notifikasi</p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Atur preferensi notifikasi
-              </p>
+              <div className="flex items-center gap-2 mb-1">
+                <Typography variant="body-base" className="font-bold">Notifikasi</Typography>
+                <div className="px-1.5 py-0.5 rounded-md bg-muted border border-border/50">
+                  <Typography variant="caption" className="text-[9px] font-black uppercase tracking-tighter text-muted-foreground">Soon</Typography>
+                </div>
+              </div>
+              <Typography variant="body-xs" color="muted" className="leading-relaxed">
+                Atur preferensi pemberitahuan produk dan promo terbaru.
+              </Typography>
             </div>
-            <span className="ml-auto shrink-0 rounded-full px-2.5 py-1 bg-muted border border-border/50 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-              Soon
-            </span>
           </div>
         </div>
       </div>

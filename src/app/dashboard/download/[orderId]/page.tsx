@@ -16,9 +16,9 @@ import {
   HashtagIcon,
   ArrowTopRightOnSquareIcon
 } from "@heroicons/react/24/outline";
-import { ShieldCheckIcon } from "@heroicons/react/20/solid";
 import { Typography } from "@/components/ui/typography";
 import { DownloadButton } from "../../download-button";
+import { DashboardStatusBadge } from "../../status-badge";
 
 export const dynamic = "force-dynamic";
 
@@ -82,7 +82,7 @@ export default async function DownloadPage({
         ? "bg-warning"
         : "bg-primary";
 
-  const statusColor =
+  const statusColor: "destructive" | "warning" | "success" =
     remaining <= 0
       ? "destructive"
       : remaining <= 5
@@ -123,11 +123,12 @@ export default async function DownloadPage({
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
 
         {/* Badge Lunas */}
-        <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 bg-success text-white shadow-lg border border-white/10">
-          <ShieldCheckIcon className="h-3.5 w-3.5" />
-          <Typography variant="caption" className="font-bold text-white">
-            Pembayaran Lunas
-          </Typography>
+        <div className="absolute top-4 left-4">
+          <DashboardStatusBadge
+            status="PAID"
+            surface="overlay"
+            labelOverride="Pembayaran Lunas"
+          />
         </div>
       </div>
 
@@ -198,7 +199,7 @@ export default async function DownloadPage({
                 </Typography>
               </span>
               <Typography variant="body-sm" color="muted" className="font-bold">
-                <Typography as="span" variant="body-sm" color={statusColor as any} className="font-extrabold">
+                <Typography as="span" variant="body-sm" color={statusColor} className="font-extrabold">
                   {downloadCount}
                 </Typography>{" "}
                 / {MAX_DOWNLOADS}
@@ -221,7 +222,7 @@ export default async function DownloadPage({
                   : `Tersisa ${remaining} download`}
               </Typography>
               {/* Indikator warna */}
-              <Typography variant="caption" color={statusColor as any} className="font-semibold">
+              <Typography variant="caption" color={statusColor} className="font-semibold">
                 {remaining <= 0
                   ? "Habis"
                   : remaining <= 5

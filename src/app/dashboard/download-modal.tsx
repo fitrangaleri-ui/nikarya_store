@@ -20,6 +20,7 @@ import {
   ExclamationTriangleIcon,
 } from "@heroicons/react/20/solid";
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 
@@ -44,6 +45,7 @@ export function DownloadModal({
   orderDate,
   orderDisplayId,
 }: DownloadModalProps) {
+  const router = useRouter();
   // ── State — tidak diubah ─────────────────────────────────
   const [loading, setLoading] = useState(false);
   const [count, setCount] = useState(initialCount);
@@ -109,6 +111,7 @@ export function DownloadModal({
         window.open(data.url, "_blank");
         setCount(data.download_count);
         setSuccess(true);
+        router.refresh();
       }
     } catch {
       setError("Terjadi kesalahan. Silakan coba lagi.");
@@ -249,42 +252,6 @@ export function DownloadModal({
               </div>
             </div>
 
-            {/* Kuota download */}
-            <div className="rounded-xl bg-muted/20 border border-border/60 px-4 py-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <Typography variant="body-xs" color="muted" className="font-extrabold uppercase ">
-                  Kuota Unduhan
-                </Typography>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center">
-                    <Typography variant="body-sm" color="muted" className="font-bold">
-                      <Typography as="span" variant="body-sm" color={statusColorToken as any} className="font-black">
-                        {count}
-                      </Typography>{" "}
-                      / {MAX_DOWNLOADS}
-                    </Typography>
-                  </div>
-                </div>
-              </div>
-              <div className="h-2 bg-muted rounded-full overflow-hidden border border-border/10">
-                <div
-                  className={`h-full rounded-full transition-all duration-500 ease-out ${progressColor}`}
-                  style={{ width: `${Math.min(progress, 100)}%` }}
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <Typography variant="caption" color="muted" className="font-medium italic">
-                  {isMaxed
-                    ? "Limit tercapai"
-                    : `Tersisa ${remaining} kali unduh`}
-                </Typography>
-                <div className={`px-2 py-0.5 rounded-full border bg-background/50 border-border/50`}>
-                  <Typography variant="caption" color={statusColorToken as any} className="font-extrabold uppercase text-[9px]">
-                    {quotaLabel}
-                  </Typography>
-                </div>
-              </div>
-            </div>
 
             {/* Instruksi */}
             {!isMaxed && (
