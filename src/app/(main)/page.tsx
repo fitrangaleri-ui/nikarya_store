@@ -28,7 +28,7 @@ type HomePageProduct = {
   sku: string | null;
   tags: string[] | null;
   demo_link: string | null;
-  categories: { name: string } | null;
+  categories: { name: string }[] | null;
   product_demo_links: {
     id: string;
     label: string;
@@ -91,7 +91,10 @@ export default async function HomePage() {
 
   const categoriesWithProducts =
     featuredCategoriesRaw
-      ?.map((cat) => ({ ...cat, products: cat.products as HomePageProduct[] }))
+      ?.map((cat) => ({
+        ...cat,
+        products: (cat.products ?? []) as HomePageProduct[],
+      }))
       .filter((cat) => cat.products.length > 0) || [];
 
   const newArrivals =
