@@ -10,13 +10,17 @@ import {
 import { Typography } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 
+type CategorySectionProduct = {
+  id: string;
+};
+
 interface CategorySectionProps {
   category: {
     id: string;
     name: string;
     slug: string;
   };
-  products: any[];
+  products: CategorySectionProduct[];
 }
 
 export function CategorySection({ category, products }: CategorySectionProps) {
@@ -66,7 +70,7 @@ export function CategorySection({ category, products }: CategorySectionProps) {
         </div>
 
         {/* --- PRODUCT GRID --- */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 animate-in fade-in zoom-in-95 duration-700">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 animate-in fade-in zoom-in-95 duration-700">
           {displayedProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

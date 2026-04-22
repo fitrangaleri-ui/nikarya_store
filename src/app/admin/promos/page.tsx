@@ -212,7 +212,7 @@ export default function AdminPromosPage() {
                                 <TicketIcon className="h-4 w-4 text-primary" />
                             </div>
                         </div>
-                        <Typography variant="h3" as="p" className="tracking-tight">
+                        <Typography variant="h3" as="p" className="tracking-tight font-mono">
                             {totalPromos}
                         </Typography>
                         <Typography variant="caption" color="muted" className="mt-1">
@@ -230,7 +230,7 @@ export default function AdminPromosPage() {
                                 <HashtagIcon className="h-4 w-4 text-primary" />
                             </div>
                         </div>
-                        <Typography variant="h3" as="p" className="tracking-tight">
+                        <Typography variant="h3" as="p" className="tracking-tight font-mono">
                             {promos.reduce((s, p) => s + p.stats.usage_count, 0)}
                         </Typography>
                         <Typography variant="caption" color="muted" className="mt-1">
@@ -248,7 +248,7 @@ export default function AdminPromosPage() {
                                 <BanknotesIcon className="h-4 w-4 text-primary" />
                             </div>
                         </div>
-                        <Typography variant="h4" as="p" className="tracking-tight">
+                        <Typography variant="h4" as="p" className="tracking-tight font-mono">
                             {fmt(totalDiscountGiven)}
                         </Typography>
                         <Typography variant="caption" color="muted" className="mt-1">
@@ -266,7 +266,7 @@ export default function AdminPromosPage() {
                                 <ArrowTrendingUpIcon className="h-4 w-4 text-primary" />
                             </div>
                         </div>
-                        <Typography variant="h4" as="p" className="tracking-tight">
+                        <Typography variant="h4" as="p" className="tracking-tight font-mono">
                             {fmt(totalRevenue)}
                         </Typography>
                         <Typography variant="caption" color="primary" className="font-bold mt-1 flex items-center gap-1.5">
@@ -357,7 +357,7 @@ export default function AdminPromosPage() {
                                                 className="hover:bg-muted/30 border-border/40 transition-colors"
                                             >
                                                 <TableCell className="py-4">
-                                                    <Typography variant="body-sm" as="span" color="primary" className="font-black bg-primary/10 px-2.5 py-1 rounded-sm">
+                                                    <Typography variant="body-sm" as="span" color="primary" className="font-black font-mono bg-primary/10 px-2.5 py-1 rounded-sm">
                                                         {promo.code}
                                                     </Typography>
                                                 </TableCell>
@@ -367,19 +367,19 @@ export default function AdminPromosPage() {
                                                     </Typography>
                                                 </TableCell>
                                                 <TableCell className="py-4 whitespace-nowrap">
-                                                    <Typography variant="body-sm" className="font-bold">
+                                                    <Typography variant="body-sm" className="font-bold font-mono">
                                                         {promo.discount_type === "percentage"
                                                             ? `${promo.discount_value}%`
                                                             : fmt(promo.discount_value)}
                                                     </Typography>
                                                     {promo.max_discount_cap && (
-                                                        <Typography variant="caption" color="muted" as="span" className="ml-1">
+                                                        <Typography variant="caption" color="muted" as="span" className="ml-1 font-mono">
                                                             (maks {fmt(promo.max_discount_cap)})
                                                         </Typography>
                                                     )}
                                                 </TableCell>
                                                 <TableCell className="py-4">
-                                                    <Typography variant="body-sm" className="font-bold">
+                                                    <Typography variant="body-sm" className="font-bold font-mono">
                                                         <span className="text-primary">
                                                             {promo.stats.usage_count}
                                                         </span>
@@ -391,7 +391,7 @@ export default function AdminPromosPage() {
                                                     </Typography>
                                                 </TableCell>
                                                 <TableCell className="py-4 whitespace-nowrap">
-                                                    <Typography variant="caption" color="muted" className="font-medium">
+                                                    <Typography variant="caption" color="muted" className="font-medium font-mono">
                                                         {fmtDate(promo.start_date)} — {fmtDate(promo.end_date)}
                                                     </Typography>
                                                 </TableCell>

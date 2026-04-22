@@ -7,7 +7,7 @@ import { ReactNode } from "react";
 
 interface StickyHeaderProps {
   title: string;
-  description?: string;
+  description?: ReactNode;
   backHref?: string;
   backLabel?: string;
   children?: ReactNode;

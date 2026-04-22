@@ -18,28 +18,32 @@ export const metadata = {
 
 const wksFaqs = [
   {
-    q: "Berapa lama pembuatan template",
-    a: "Untuk estimasi proses pengerjaan maksimal 2 hari setelah semua data kami terima, tidak menutup kemungkinan bisa lebih cepat.",
+    q: "Apa itu Tema Walimatul Khitan Series?",
+    a: "Tema Batik Megamendung Series adalah template undangan digital bertema Khitanan yang disediakan dalam format JSON dan dirancang untuk digunakan di Elementor. Template ini bisa langsung diimpor melalui Dashboard Wordpress dan digunakan tanpa perlu coding.",
   },
   {
-    q: "Apakah bisa hapus ucapan yang ditulis oleh tamu undangan?",
-    a: "Bisa, nanti kakak bisa informasikan detail ucapan mana yang mau dihapus.",
+    q: "Plugin apakah yang dibutuhkan untuk menggunakan template ini?",
+    a: "Template ini memerlukan plugin Elementor Pro dan WeddingPress untuk berfungsi sepenuhnya. Mohon pastikan kedua plugin tersebut sudah terpasang dan aktif di website Anda.",
   },
   {
-    q: "Apakah bisa revisi?",
-    a: "Bisa, kami menyediakan revisi untuk memastikan undangan sesuai dengan keinginan kakak.",
+    q: "Apakah file ini bisa langsung digunakan di WordPress?",
+    a: "Ya, file ini bisa langsung digunakan di WordPress yang sudah terpasang plugin Elementor Pro dan Weddingpress. Anda hanya perlu mengimpor file JSON ke dalam halaman Elementor.",
   },
   {
-    q: "Apakah bisa undangan tidak menggunakan foto?",
-    a: "Bisa, undangan tetap bisa dibuat tanpa foto sesuai permintaan kakak.",
+    q: "Format file apa saja yang akan saya dapatkan?",
+    a: "Anda akan mendapatkan file utama dalam format JSON siap install yang bisa langsung diimpor ke Wordpress, serta file pendukung berupa gambar berformat WEBP, ikon SVG, dan juga beberapa script HTML serta animasi CSS yang digunakan untuk mempercantik tampilan tema.",
   },
   {
-    q: "Berapa lama proses revisi selesai?",
-    a: "Proses revisi biasanya selesai dalam 1×24 jam setelah permintaan revisi diterima.",
+    q: "Berapa Harga Minimum Penjualan?",
+    a: "Tidak ada batasan harga jual yang ditetapkan secara resmi. Namun, kami menyarankan harga minimum penjualan sebesar Rp100.000-Rp200.000 per tema kepada end-user, agar tetap menjaga nilai produk dan ekosistem penjual.",
   },
   {
-    q: "Apa itu fitur RSVP?",
-    a: "RSVP adalah fitur konfirmasi kehadiran tamu secara digital langsung dari undangan, sehingga kakak bisa memantau siapa saja yang hadir.",
+    q: "Apa Lisensi yang Didapat?",
+    a: "Setiap pembelian produk dari NIKARYA DIGITAL dilengkapi dengan lisensi personal dan komersial terbatas, yang mengizinkan Anda menggunakan tema ini untuk proyek klien, portofolio, atau penjualan jasa undangan digital. Namun, dilarang keras menjual ulang atau mendistribusikan file mentah JSON secara massal, baik gratis maupun berbayar, tanpa izin resmi.",
+  },
+  {
+    q: "Apakah Ada Garansi Uang Kembali?",
+    a: "Karena produk ini berupa file digital yang langsung bisa diakses, maka kami tidak menyediakan garansi uang kembali. Namun, kami berkomitmen memberikan bantuan teknis apabila Anda mengalami kendala teknis atau kesulitan dalam penggunaan file yang telah dibeli.",
   },
 ];
 
@@ -79,11 +83,8 @@ export default async function WKSSeriesPage() {
         <section id="templates" className="py-20 md:py-24 bg-transparent border-t border-border/50">
           <div className="container mx-auto px-4 md:px-6">
             <ScrollReveal className="max-w-xl mx-auto text-center mb-12 md:mb-16">
-              <Typography variant="h3" className="mb-2 text-center">
-                Pilihan Tema Eksklusif
-              </Typography>
-              <Typography variant="body-sm" color="muted" className="text-center">
-                Jelajahi koleksi desain undangan digital terbaik kami yang siap mempercantik hari spesial Anda.
+              <Typography variant="h3" className="text-center">
+                Semua Tema
               </Typography>
             </ScrollReveal>
 

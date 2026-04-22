@@ -58,7 +58,7 @@ export async function createProduct(formData: FormData) {
   const tags = tagsRaw
     ? tagsRaw
       .split(",")
-      .map((t) => t.trim())
+      .map((t) => t.trim().toLowerCase())
       .filter((t) => t.length > 0)
     : [];
 
@@ -194,7 +194,7 @@ export async function updateProduct(productId: string, formData: FormData) {
   const tags = tagsRaw
     ? tagsRaw
       .split(",")
-      .map((t) => t.trim())
+      .map((t) => t.trim().toLowerCase())
       .filter((t) => t.length > 0)
     : [];
 

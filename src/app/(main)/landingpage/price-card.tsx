@@ -103,18 +103,18 @@ export function PriceCard({
                 <div className="flex items-center gap-3">
                   <Typography
                     variant="h6"
-                    className="line-through text-white/40 font-medium"
+                    className="line-through text-white/40 font-mono font-medium"
                   >
                     Rp{Number(price).toLocaleString("id-ID")}
                   </Typography>
-                  <Badge variant="sale" className="font-normal uppercase">
+                  <Badge variant="sale" className="font-normal font-monouppercase">
                     Hemat {Math.round(((price - discountPrice) / price) * 100)}%
                   </Badge>
                 </div>
               )}
               <div className="flex items-baseline gap-2">
-                <Typography variant="h3" className="font-bold text-white/80">Rp</Typography>
-                <Typography variant="h1" className="text-white">
+                <Typography variant="h3" className="font-bold font-mono text-white/80">Rp</Typography>
+                <Typography variant="h1" className="text-white font-mono">
                   {Number(displayPrice).toLocaleString("id-ID")}
                 </Typography>
               </div>

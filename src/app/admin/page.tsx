@@ -90,7 +90,7 @@ export default async function AdminDashboard() {
                 <BanknotesIcon className="h-4 w-4 text-primary" />
               </div>
             </div>
-            <Typography variant="h4" as="p" className="tracking-tight">
+            <Typography variant="h4" as="p" className="tracking-tight font-mono">
               {new Intl.NumberFormat("id-ID", {
                 style: "currency",
                 currency: "IDR",
@@ -113,7 +113,7 @@ export default async function AdminDashboard() {
                 <ShoppingBagIcon className="h-4 w-4 text-primary" />
               </div>
             </div>
-            <Typography variant="h3" as="p" className="tracking-tight">
+            <Typography variant="h3" as="p" className="tracking-tight font-mono">
               {ordersCount || 0}
             </Typography>
             <Typography variant="caption" color="muted" className="mt-1">
@@ -131,7 +131,7 @@ export default async function AdminDashboard() {
                 <CubeIcon className="h-4 w-4 text-primary" />
               </div>
             </div>
-            <Typography variant="h3" as="p" className="tracking-tight">
+            <Typography variant="h3" as="p" className="tracking-tight font-mono">
               {productsCount || 0}
             </Typography>
             <Typography variant="caption" color="muted" className="mt-1">
@@ -149,7 +149,7 @@ export default async function AdminDashboard() {
                 <UsersIcon className="h-4 w-4 text-primary" />
               </div>
             </div>
-            <Typography variant="h3" as="p" className="tracking-tight">
+            <Typography variant="h3" as="p" className="tracking-tight font-mono">
               {customersCount || 0}
             </Typography>
             <Typography variant="caption" color="muted" className="mt-1">
@@ -220,7 +220,7 @@ export default async function AdminDashboard() {
                             </Typography>
                           </TableCell>
                           <TableCell className="py-4 whitespace-nowrap">
-                            <Typography variant="body-sm" color="primary" className="font-black">
+                            <Typography variant="body-sm" color="primary" className="font-black font-mono">
                               Rp {Number(order.total_price).toLocaleString("id-ID")}
                             </Typography>
                           </TableCell>
@@ -316,7 +316,7 @@ export default async function AdminDashboard() {
                       </div>
 
                       <div className="w-full sm:w-auto flex items-center justify-between sm:flex-col sm:items-end flex-shrink-0 mt-1 sm:mt-0 pt-3 sm:pt-0 border-t sm:border-0 border-border/50">
-                        <Typography variant="body-sm" className="font-black">
+                        <Typography variant="body-sm" className="font-black font-mono">
                           Rp {Number(product.price).toLocaleString("id-ID")}
                         </Typography>
                         <Badge

@@ -172,7 +172,7 @@ export async function SiteFooter() {
                         <Typography
                           variant="caption"
                           as="span"
-                          className="text-primary font-bold mt-0.5"
+                          className="text-primary font-bold font-mono mt-0.5"
                         >
                           {formatPrice(displayPrice)}
                         </Typography>

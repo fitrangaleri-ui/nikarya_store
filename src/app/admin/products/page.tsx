@@ -134,7 +134,7 @@ export default async function AdminProductsPage({
       {/* ── Sticky Header ── */}
       <StickyHeader
         title="Produk"
-        description={`${count || 0} produk terdaftar`}
+        description={<><span className="font-mono">{count || 0}</span> produk terdaftar</>}
       >
         <div className="flex items-center gap-2.5">
           <ImportExportSection />
@@ -261,7 +261,7 @@ export default async function AdminProductsPage({
                         ?.name || "—"}{" "}
                       · /{product.slug}
                     </Typography>
-                    <Typography variant="body-base" color="primary" className="font-black mt-1.5 tracking-tight">
+                    <Typography variant="body-base" color="primary" className="font-black mt-1.5 tracking-tight font-mono">
                       Rp {Number(product.price).toLocaleString("id-ID")}
                     </Typography>
                   </div>
@@ -392,7 +392,7 @@ export default async function AdminProductsPage({
                           </Typography>
                         </TableCell>
                         <TableCell className="py-4 whitespace-nowrap">
-                          <Typography variant="body-sm" color="primary" className="font-black">
+                          <Typography variant="body-sm" color="primary" className="font-black font-mono">
                             Rp {Number(product.price).toLocaleString("id-ID")}
                           </Typography>
                         </TableCell>
@@ -484,7 +484,7 @@ export default async function AdminProductsPage({
                         isActive={currentPage === pageNum}
                         className={currentPage === pageNum ? "font-black" : "font-bold text-muted-foreground hover:text-primary"}
                       >
-                        {pageNum}
+                        <span className="font-mono">{pageNum}</span>
                       </PaginationLink>
                     )}
                   </PaginationItem>

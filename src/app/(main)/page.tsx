@@ -11,13 +11,36 @@ import { HeroSection } from "@/components/hero-section";
 import { FaqSection } from "@/components/faq-section";
 import { WarnSection } from "@/components/warn";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { ProductCard } from "@/components/product-card";
 import { CategoryCarousel } from "@/components/category-carousel";
 import { CategorySection } from "@/components/category-section";
 import { BottomNav } from "@/components/bottom-nav";
 import { Typography } from "@/components/ui/typography";
 
 export const dynamic = "force-dynamic";
+
+type HomePageProduct = {
+  id: string;
+  title: string;
+  slug: string;
+  price: number;
+  discount_price: number | null;
+  thumbnail_url: string | null;
+  sku: string | null;
+  tags: string[] | null;
+  demo_link: string | null;
+  categories: { name: string } | null;
+  product_demo_links: {
+    id: string;
+    label: string;
+    url: string;
+    image_url: string | null;
+    sort_order: number;
+  }[];
+  product_images: {
+    image_url: string;
+    sort_order: number;
+  }[];
+};
 
 export default async function HomePage() {
   // ─── Data Fetching (TIDAK DIUBAH) ─────────────────────────
@@ -26,7 +49,7 @@ export default async function HomePage() {
   const [
     { data: allCategoriesRaw },
     { data: featuredCategoriesRaw },
-    { data: newArrivals },
+    { data: newArrivalsRaw },
   ] = await Promise.all([
     supabase
       .from("categories")
@@ -54,9 +77,9 @@ export default async function HomePage() {
         "id, title, slug, price, discount_price, thumbnail_url, sku, tags, demo_link, categories(name), product_demo_links(id, label, url, image_url, sort_order), product_images(image_url, sort_order)",
       )
       .eq("is_active", true)
-      .contains("tags", ["new"])
+      .not("tags", "is", null)
       .order("created_at", { ascending: false })
-      .limit(8),
+      .limit(24),
   ]);
 
   // ─── Data Transform (TIDAK DIUBAH) ────────────────────────
@@ -68,8 +91,14 @@ export default async function HomePage() {
 
   const categoriesWithProducts =
     featuredCategoriesRaw
-      ?.map((cat) => ({ ...cat, products: cat.products as any[] }))
+      ?.map((cat) => ({ ...cat, products: cat.products as HomePageProduct[] }))
       .filter((cat) => cat.products.length > 0) || [];
+
+  const newArrivals =
+    newArrivalsRaw?.filter((product: HomePageProduct) =>
+      Array.isArray(product.tags) &&
+      product.tags.some((tag) => tag.trim().toLowerCase() === "new"),
+    ).slice(0, 8) || [];
 
   return (
     <main className="min-h-screen bg-background text-foreground pb-24 md:pb-20 overflow-x-hidden">
@@ -116,7 +145,7 @@ export default async function HomePage() {
             <CategorySection
               key={category.id}
               category={category}
-              products={category.products as any[]}
+              products={category.products}
             />
           ))}
         </div>

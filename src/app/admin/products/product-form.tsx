@@ -724,11 +724,11 @@ export function ProductForm({
                     id="tags"
                     name="tags"
                     defaultValue={product?.tags?.join(", ") || ""}
-                    placeholder="tag1, tag2, tag3"
+                    placeholder="new, populer, best-seller"
                     className={`h-11 ${inputClass}`}
                   />
                   <Typography variant="caption" color="muted" className="ml-1 font-medium">
-                    Pisahkan dengan koma (contoh: tag1, tag2).
+                    Pisahkan dengan koma. Gunakan tag <span className="font-bold text-foreground">new</span> agar produk otomatis tampil di bagian Baru Rilis.
                   </Typography>
                 </div>
               </div>
