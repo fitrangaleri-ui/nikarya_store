@@ -8,6 +8,7 @@ import { login, loginWithGoogle } from "../(auth)/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import {
   ArrowRightStartOnRectangleIcon,
   EnvelopeIcon,
@@ -15,19 +16,29 @@ import {
   ExclamationTriangleIcon,
   EyeIcon,
   EyeSlashIcon,
+  HomeIcon,
 } from "@heroicons/react/24/solid";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 function LoginFormInner() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || "";
 
   const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [isLoginPending, startLoginTransition] = useTransition();
+  const [isGooglePending, startGoogleTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
 
   async function handleSubmit(formData: FormData) {
     setError(null);
-    startTransition(async () => {
+    startLoginTransition(async () => {
       const result = await login(formData);
       if (result?.error) {
         setError(result.error);
@@ -37,7 +48,7 @@ function LoginFormInner() {
 
   const handleGoogleLogin = () => {
     setError(null);
-    startTransition(async () => {
+    startGoogleTransition(async () => {
       const result = await loginWithGoogle(redirectTo || "/dashboard");
       if (result?.error) {
         setError(result.error);
@@ -51,7 +62,25 @@ function LoginFormInner() {
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10" />
       <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] -z-10" />
 
-      <div className="w-full max-w-[420px] glass rounded-xl overflow-hidden animate-in fade-in zoom-in-95 duration-500">
+      <div className="flex flex-col items-center gap-6 w-full max-w-[420px] relative z-10">
+        <Breadcrumb className="self-start ml-2">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/" className="flex items-center gap-1.5 hover:text-primary transition-colors">
+                  <HomeIcon className="h-4 w-4" />
+                  Beranda
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="font-semibold text-primary/80">Login</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
+        <div className="w-full glass rounded-xl overflow-hidden animate-in fade-in zoom-in-95 duration-500">
         {/* ── Header Banner ── */}
         <div className="relative bg-gradient-to-br from-primary to-secondary-foreground px-8 pt-9 pb-8 overflow-hidden">
           {/* Decorative Circles */}
@@ -166,10 +195,13 @@ function LoginFormInner() {
               variant="brand"
               size="lg"
               className="w-full mt-2"
-              disabled={isPending}
+              disabled={isLoginPending || isGooglePending}
             >
-              {isPending ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin" />
+              {isLoginPending ? (
+                <>
+                  <ArrowPathIcon className="h-4 w-4 mr-2 animate-spin" />
+                  Memproses...
+                </>
               ) : (
                 <>
                   <ArrowRightStartOnRectangleIcon className="h-5 w-5 mr-2" />
@@ -198,18 +230,29 @@ function LoginFormInner() {
             size="lg"
             className="w-full"
             onClick={handleGoogleLogin}
-            disabled={isPending}
+            disabled={isLoginPending || isGooglePending}
           >
-            <Image
-              src="/google.png"
-              alt="Google"
-              width={20}
-              height={20}
-              className="mr-3 shrink-0"
-            />
-            <Typography variant="body-sm" className="font-bold">
-              {isPending ? "Memproses..." : "Google Account"}
-            </Typography>
+            {isGooglePending ? (
+              <div className="flex items-center justify-center gap-2">
+                <ArrowPathIcon className="h-4 w-4 animate-spin" />
+                <Typography variant="body-sm" className="font-bold">
+                  Memproses...
+                </Typography>
+              </div>
+            ) : (
+              <>
+                <Image
+                  src="/google.png"
+                  alt="Google"
+                  width={20}
+                  height={20}
+                  className="mr-3 shrink-0"
+                />
+                <Typography variant="body-sm" className="font-bold">
+                  Google Account
+                </Typography>
+              </>
+            )}
           </Button>
 
           {/* Register Link */}
@@ -224,6 +267,7 @@ function LoginFormInner() {
               </Link>
             </Typography>
           </div>
+        </div>
         </div>
       </div>
     </div>

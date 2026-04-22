@@ -7,13 +7,11 @@ import { Label } from "@/components/ui/label";
 import { Typography } from "@/components/ui/typography";
 import {
   LockClosedIcon,
-  ArrowRightStartOnRectangleIcon,
   CheckCircleIcon,
   ExclamationCircleIcon,
   ArrowPathIcon,
 } from "@heroicons/react/24/outline";
 import { changePassword } from "./actions";
-import { logout } from "@/app/(auth)/actions";
 
 export function SecuritySection() {
   const [error, setError] = useState<string | null>(null);
@@ -122,20 +120,6 @@ export function SecuritySection() {
         </div>
       </div>
 
-      {/* Logout */}
-      <div className="rounded-xl border border-border bg-card overflow-hidden">
-        <div className="p-5 md:p-7">
-          <form action={logout}>
-            <Button
-              variant="outline"
-              className="w-full h-12 justify-center gap-3 rounded-full border border-destructive/20 text-destructive bg-destructive/5 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 font-bold transition-all active:scale-95 shadow-none"
-            >
-              <ArrowRightStartOnRectangleIcon className="h-5 w-5" />
-              Keluar dari Akun
-            </Button>
-          </form>
-        </div>
-      </div>
     </div>
   );
 }

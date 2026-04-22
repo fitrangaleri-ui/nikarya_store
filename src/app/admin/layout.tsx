@@ -12,7 +12,9 @@ import {
   Store,
   Ticket,
   ExternalLink,
+  LogOut,
 } from "lucide-react";
+import { logout } from "@/app/(auth)/actions";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -161,6 +163,17 @@ export default function AdminLayout({
           </div>
           <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Lihat Toko</Typography>
         </a>
+
+        <div className="h-px w-full bg-[var(--glass-border)] my-2" />
+
+        <form action={logout} className="px-3 pb-4">
+          <button className="group flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-all duration-200 text-destructive/80 hover:bg-destructive/10 hover:text-destructive active:scale-[0.98]">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 bg-destructive/5 group-hover:bg-destructive/15">
+              <LogOut className="h-[16px] w-[16px] transition-colors text-destructive" />
+            </div>
+            <Typography variant="body-sm" as="span" className="truncate font-bold flex-1 text-left">Keluar Akun</Typography>
+          </button>
+        </form>
       </nav>
     </>
   );
