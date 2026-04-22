@@ -105,7 +105,7 @@ function PromoCard({ promo, isExpired }: { promo: Promo; isExpired: boolean }) {
       )}
 
       <CardContent className="z-10 p-6 md:p-8 flex-1 flex flex-col">
-        <div className="flex items-start justify-between mb-6 md:mb-8 gap-4">
+        <div className="flex items-start justify-between mb-4 md:mb-6 gap-4">
           <div className="flex flex-col min-w-0">
             <div className="flex flex-col">
               <span
@@ -148,7 +148,7 @@ function PromoCard({ promo, isExpired }: { promo: Promo; isExpired: boolean }) {
           </Badge>
         </div>
 
-        <div className="space-y-4 mb-10">
+        <div className="space-y-4 mb-4">
           <Typography
             variant="h4"
             className={cn(
@@ -170,7 +170,7 @@ function PromoCard({ promo, isExpired }: { promo: Promo; isExpired: boolean }) {
               </Badge>
             )}
             <Badge
-              variant="default"
+              variant="destructive"
               className="gap-1.5 h-7 border-transparent"
             >
               <InformationCircleIcon className="size-3.5" />
@@ -183,21 +183,23 @@ function PromoCard({ promo, isExpired }: { promo: Promo; isExpired: boolean }) {
           </div>
         </div>
 
-        <div className="mt-auto space-y-4">
+        <div className="mt-auto space-y-2">
           {promo.min_order_amount && (
-            <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground/90 bg-muted/30 hover:bg-muted/50 transition-colors p-4 rounded-xl border border-border/20">
-              <div className="p-2 rounded-xl bg-background  text-primary">
-                <ExclamationCircleIcon className="size-4" />
-              </div>
+            <Badge
+              variant="outline"
+              className="w-full flex items-center justify-start gap-2 p-3 rounded-xl border-border/50 bg-background/50 hover:bg-muted/50 transition-colors"
+            >
+              <ExclamationCircleIcon className="size-4 text-primary" />
               <Typography variant="caption" as="span" className="font-bold">
                 Min. belanja {fmt(promo.min_order_amount)}
               </Typography>
-            </div>
+            </Badge>
           )}
-          <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground/90 bg-muted/30 hover:bg-muted/50 transition-colors p-4 rounded-xl border border-border/20">
-            <div className="p-2 rounded-xl bg-background  text-amber-500">
-              <ClockIcon className="size-4" />
-            </div>
+          <Badge
+            variant="outline"
+            className="w-full flex items-center justify-start gap-2 p-3 rounded-xl border-border/50 bg-background/50 hover:bg-muted/50 transition-colors"
+          >
+            <ClockIcon className="size-4 text-amber-500" />
             <Typography variant="caption" as="span" className="font-bold">
               {isExpired ? "Berakhir pada " : "Berlaku hingga "}
               <span className="text-foreground font-black">
@@ -210,11 +212,11 @@ function PromoCard({ promo, isExpired }: { promo: Promo; isExpired: boolean }) {
                   : "Seterusnya"}
               </span>
             </Typography>
-          </div>
+          </Badge>
         </div>
       </CardContent>
 
-      <div className="p-6 md:p-8 pt-0 z-10">
+      <div className="p-6 md:p-8 pt-0 -mt-2 z-10">
         <div
           className={cn(
             "flex items-center justify-between rounded-xl overflow-hidden p-2 border transition-all duration-300",
@@ -335,7 +337,7 @@ export default function PromoClient({ initialPromos }: PromoClientProps) {
             <PromoSection title="Promo Berlangsung" count={active.length} />
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
             {active.map((promo, index) => (
               <ScrollReveal key={promo.id} delay={index * 100}>
                 <PromoCard promo={promo} isExpired={false} />
@@ -360,7 +362,7 @@ export default function PromoClient({ initialPromos }: PromoClientProps) {
             />
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
             {expired.map((promo, index) => (
               <ScrollReveal key={promo.id} delay={index * 100}>
                 <PromoCard promo={promo} isExpired={true} />
