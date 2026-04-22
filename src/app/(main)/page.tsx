@@ -10,7 +10,6 @@
 import { HeroSection } from "@/components/hero-section";
 import { FaqSection } from "@/components/faq-section";
 import { WarnSection } from "@/components/warn";
-import { FeaturesGrid } from "@/components/feature-card";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { ProductCard } from "@/components/product-card";
 import { CategoryCarousel } from "@/components/category-carousel";
@@ -80,30 +79,6 @@ export default async function HomePage() {
         {/* END HERO SECTION                                             */}
         {/* ============================================================ */}
 
-        {/* ============================================================ */}
-        {/* FEATURES SECTION                                              */}
-        {/* ============================================================ */}
-        <section
-          id="why-us"
-          className="mx-auto w-full max-w-6xl px-4 md:px-0 scroll-mt-24"
-        >
-          {/* ── Section Header ── */}
-          <div className="mb-8 md:mb-10">
-            <Typography variant="h2" className="mb-2">
-              Miliki Semua Fiturnya
-            </Typography>
-            <Typography variant="body-base" color="muted" className="max-w-xl">
-              Fitur-fitur kami dirancang untuk menghadirkan pengalaman undangan
-              digital yang informatif, interaktif dan tak terlupakan.
-            </Typography>
-          </div>
-
-          {/* ── Grid Fitur — semua logic ada di FeaturesGrid ── */}
-          <FeaturesGrid />
-        </section>
-        {/* ============================================================ */}
-        {/* END FEATURES SECTION                                          */}
-        {/* ============================================================ */}
 
         {/* ============================================================ */}
         {/* CATEGORY CAROUSEL SECTION                                     */}
@@ -111,7 +86,6 @@ export default async function HomePage() {
         <section className="bg-transparent">
           <div className="mx-auto max-w-6xl px-4 md:px-0">
             <div className="mb-6 md:mb-8 flex items-center gap-3">
-              <span className="w-1.5 h-6 bg-primary rounded-full block" />
               <Typography variant="h3">
                 Kategori Populer
               </Typography>
@@ -126,29 +100,10 @@ export default async function HomePage() {
         {/* ============================================================ */}
         {/* NEW ARRIVALS SECTION                                          */}
         {/* ============================================================ */}
-        <section className="bg-transparent">
-          <div className="mx-auto max-w-6xl px-4 md:px-0">
-            <div className="flex items-center gap-3 mb-6 md:mb-8">
-              <span className="w-1.5 h-6 bg-primary rounded-full block" />
-              <Typography variant="h3">
-                Baru Rilis
-              </Typography>
-            </div>
-            {newArrivals && newArrivals.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-6">
-                {newArrivals.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            ) : (
-              <div className="py-16 text-center border border-dashed border-border/50 rounded-2xl bg-card/30 backdrop-blur-sm">
-                <Typography variant="body-sm" color="muted">
-                  Belum ada produk baru saat ini.
-                </Typography>
-              </div>
-            )}
-          </div>
-        </section>
+        <CategorySection
+          category={{ id: "new-arrivals", name: "Baru Rilis", slug: "baru-rilis" }}
+          products={newArrivals || []}
+        />
         {/* ============================================================ */}
         {/* END NEW ARRIVALS SECTION                                      */}
         {/* ============================================================ */}

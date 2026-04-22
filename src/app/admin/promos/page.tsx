@@ -301,7 +301,7 @@ export default function AdminPromosPage() {
                         {loading ? (
                             <div className="py-16 text-center">
                                 <ArrowPathIcon className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
-                                <Typography variant="body-sm" color="muted" className="font-medium">
+                                <Typography variant="body-sm" color="muted" className="font-medium text-center">
                                     Memuat data...
                                 </Typography>
                             </div>

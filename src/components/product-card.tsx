@@ -11,6 +11,7 @@ import { EyeIcon } from "@heroicons/react/24/solid";
 import { Typography } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 import { resolveImageSrc } from "@/lib/resolve-image";
+import { cn } from "@/lib/utils";
 import { DemoLinksModal } from "@/components/demo-links-modal";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CarouselDots } from "@/components/ui/carousel";
 
@@ -25,10 +26,9 @@ export function ProductCard({ product }: { product: any }) {
       ? Math.round(((price - discountPrice) / price) * 100)
       : 0;
 
-  const firstTag =
-    product.tags && Array.isArray(product.tags) && product.tags.length > 0
-      ? product.tags[0]
-      : null;
+  const displayTag = (product.tags && Array.isArray(product.tags))
+    ? (product.tags.includes("new") ? "new" : product.tags[0])
+    : null;
 
   const displayPrice = discountPrice || price;
   const imageSrc = resolveImageSrc(product.thumbnail_url);
@@ -82,7 +82,7 @@ export function ProductCard({ product }: { product: any }) {
   const galleryImages = buildImageList();
 
   return (
-    <div className="group flex flex-col glass rounded-2xl overflow-hidden transition-all duration-500 h-full relative hover:shadow-elevation-lg hover:translate-y-[-4px] hover:border-primary/40">
+    <div className="group flex flex-col glass rounded-xl overflow-hidden transition-all duration-500 h-full relative hover:shadow-elevation-lg hover:translate-y-[-4px] hover:border-primary/40">
       {/* 1. IMAGE */}
       <div className="relative aspect-square bg-muted/30 overflow-hidden border-b border-border/40 group/carousel isolate w-full">
         {galleryImages.length > 1 ? (
@@ -138,10 +138,18 @@ export function ProductCard({ product }: { product: any }) {
         )}
 
         {/* Badge: Tag */}
-        {firstTag && (
+        {displayTag && (
           <div className="absolute top-3 left-3 z-10">
-            <Badge variant="outline" className="bg-background/80 backdrop-blur-md border-border/50 font-medium lowercase tracking-tight">
-              {firstTag}
+            <Badge 
+              variant={displayTag === "new" ? "default" : "outline"} 
+              className={cn(
+                "backdrop-blur-md font-medium lowercase tracking-tight",
+                displayTag === "new" 
+                  ? "bg-primary text-primary-foreground border-none px-2.5 shadow-lg shadow-primary/20" 
+                  : "bg-background/80 border-border/50"
+              )}
+            >
+              {displayTag}
             </Badge>
           </div>
         )}

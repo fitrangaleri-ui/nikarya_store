@@ -175,7 +175,6 @@ export default async function ProductsPage({
         {/* ── HEADER ── */}
         <div className="container mx-auto max-w-6xl px-4 md:px-6">
           <div className="flex items-center gap-3">
-            <span className="w-1.5 h-6 md:h-7 bg-primary rounded-full block" />
             <Typography variant="h3" as="h1">
               {activeCategory ? activeCategory.name : "Semua Produk"}
             </Typography>

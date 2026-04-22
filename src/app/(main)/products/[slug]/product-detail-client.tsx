@@ -422,7 +422,6 @@ export function ProductDetailClient({
                 aria-expanded={isDescOpen}
               >
                 <div className="flex items-center gap-3">
-                  <span className="w-1.5 h-6 bg-primary rounded-full block" />
                   <h2 className="text-lg md:text-xl font-bold text-foreground tracking-tight">
                     Deskripsi Produk
                   </h2>
@@ -456,7 +455,6 @@ export function ProductDetailClient({
           <section className="container mx-auto max-w-6xl px-4 md:px-6 mt-6">
             <div className="flex items-center justify-between mb-6 md:mb-8">
               <h2 className="text-xl md:text-2xl font-bold text-foreground flex items-center gap-3 tracking-tight">
-                <span className="w-1.5 h-7 bg-primary rounded-full block" />
                 Produk Terkait
               </h2>
             </div>

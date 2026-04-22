@@ -19,11 +19,11 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({
-  title = "Selamat Datang di Nikarya Themes",
-  description = "Nikarya Digital adalah solusi terbaik buat Anda yang ingin membuat undangan digital. Kami menyediakan layanan jasa pembuatan undangan digital untuk acara dan acara khusus lainnya.",
+  title = "Elevate Your Digital Invitation Standard",
+  description = "Template yang dirancang untuk menghadirkan kesan profesional sekaligus menyederhanakan cara kamu membuat undangan digital.",
   imageSrc = "/landingpage/wks-series.png",
-  badgeLabel = "Platform E-Invitation Indonesia",
-  buttonLabel = "Lihat Tema",
+  badgeLabel = "Platform E-Template Indonesia",
+  buttonLabel = "Explore Now",
   buttonHref = "/products",
   descriptionClassName,
   fullWidth = false,
@@ -34,7 +34,7 @@ export function HeroSection({
       fullWidth ? "max-w-[100vw]" : "max-w-7xl"
     )}>
       <section className={cn(
-        "relative overflow-hidden mt-4 md:mt-8 rounded-2xl md:rounded-3xl border border-border bg-gradient-to-br from-primary to-secondary-foreground text-primary-foreground shadow-xl animate-in fade-in duration-700"
+        "relative overflow-hidden mt-4 md:mt-8 rounded-xl md:rounded-xl border border-border bg-gradient-to-br from-primary to-secondary-foreground text-primary-foreground shadow-xl animate-in fade-in duration-700"
       )}>
         {/* Decorative Circles */}
         <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10 pointer-events-none z-0" />
@@ -53,7 +53,7 @@ export function HeroSection({
             </div>
 
             <div className="space-y-4">
-              <Typography variant="h1" className="text-white drop-shadow-sm">
+              <Typography variant="h1" className="text-white leading-snug drop-shadow-sm">
                 {title}
               </Typography>
             </div>
