@@ -7,7 +7,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { ArrowRight, Instagram, Youtube } from "lucide-react";
+import { Instagram, Youtube } from "lucide-react";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 import { Typography } from "@/components/ui/typography";
 
 // ── Data Fetching ─────────────────────────────────────────────
@@ -74,7 +75,7 @@ export async function SiteFooter() {
       <div className="h-px w-full bg-gradient-to-r from-transparent via-border to-transparent" />
 
       {/* ── Main Content ── */}
-      <div className="mx-auto max-w-6xl px-4 md:px-0 py-10 md:py-14">
+      <div className="mx-auto max-w-6xl px-4 md:px-0 pt-6 pb-10 md:pt-8 md:pb-14">
         <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-10 md:gap-12">
           {/* ════════════════════════════════════════════════ */}
           {/* KOLOM 1 — Kategori                              */}
@@ -82,25 +83,28 @@ export async function SiteFooter() {
           {/* ════════════════════════════════════════════════ */}
           <div className="flex flex-col gap-4">
             <Typography
-              variant="caption"
-              className="font-bold uppercase tracking-wider text-foreground/45"
+              variant="body-sm"
+              className="font-bold uppercase  text-foreground/40"
             >
               Kategori
             </Typography>
 
-            <ul className="flex flex-col gap-2.5">
+            <ul className="flex flex-col divide-y divide-border/40">
               {categories.length > 0 ? (
                 categories.map((cat) => (
-                  <li key={cat.id}>
+                  <li key={cat.id} className="py-2.5 first:pt-0 last:pb-0">
                     <Link
                       href={`/products?category=${cat.slug}`}
-                      className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors duration-200 group/link"
+                      className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors duration-200 group/link w-fit"
                     >
-                      {/* Arrow muncul saat hover */}
-                      <ArrowRight className="w-3 h-3 shrink-0 opacity-0 -translate-x-1 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-200" />
-                      <Typography variant="body-sm" as="span" className="inherit">
+                      <Typography
+                        variant="body-sm"
+                        as="span"
+                        className="text-foreground/90 group-hover/link:text-primary transition-colors duration-200"
+                      >
                         {cat.name}
                       </Typography>
+                      <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5 shrink-0 text-foreground/90 group-hover/link:text-primary group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-all duration-200" />
                     </Link>
                   </li>
                 ))
@@ -120,13 +124,13 @@ export async function SiteFooter() {
           {/* ════════════════════════════════════════════════ */}
           <div className="flex flex-col gap-4">
             <Typography
-              variant="caption"
-              className="font-bold uppercase tracking-wider text-foreground/45"
+              variant="body-sm"
+              className="font-bold uppercase  text-foreground/40"
             >
               Rekomendasi
             </Typography>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col divide-y divide-border/40">
               {products.length > 0 ? (
                 products.map((product) => {
                   // Tampilkan harga diskon jika ada, fallback ke harga normal
@@ -136,7 +140,7 @@ export async function SiteFooter() {
                     <Link
                       key={product.id}
                       href={`/products/${product.slug}`}
-                      className="group/prod flex items-center gap-3 py-1"
+                      className="group/prod flex items-center gap-3 py-3 first:pt-0 last:pb-0"
                     >
                       {/* Thumbnail produk */}
                       <div className="shrink-0 w-14 h-14 rounded-[4px] overflow-hidden bg-background border border-border/40 group-hover/prod:border-primary/40 transition-colors duration-200">
@@ -155,18 +159,20 @@ export async function SiteFooter() {
                       </div>
 
                       {/* Info produk: judul + harga */}
-                      <div className="flex flex-col gap-0.5 min-w-0">
-                        <Typography
-                          variant="body-sm"
-                          as="span"
-                          className="font-medium text-foreground group-hover/prod:text-primary transition-colors duration-200 line-clamp-1"
-                        >
-                          {product.title}
-                        </Typography>
+                      <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+                        <div className="w-full">
+                          <Typography
+                            variant="body-sm"
+                            as="span"
+                            className="font-medium text-foreground/90 group-hover/prod:text-primary transition-colors duration-200 line-clamp-2 block leading-snug"
+                          >
+                            {product.title}
+                          </Typography>
+                        </div>
                         <Typography
                           variant="caption"
                           as="span"
-                          className="text-primary font-bold"
+                          className="text-primary font-bold mt-0.5"
                         >
                           {formatPrice(displayPrice)}
                         </Typography>
@@ -188,8 +194,8 @@ export async function SiteFooter() {
           {/* ════════════════════════════════════════════════ */}
           <div className="flex flex-col gap-4">
             <Typography
-              variant="caption"
-              className="font-bold uppercase tracking-wider text-foreground/45"
+              variant="body-sm"
+              className="font-bold uppercase  text-foreground/40"
             >
               Ikuti kami
             </Typography>
@@ -215,11 +221,6 @@ export async function SiteFooter() {
                 </a>
               ))}
             </div>
-
-            {/* Tagline */}
-            <Typography variant="body-sm" className="text-muted-foreground/80 leading-relaxed">
-              Ikuti kami untuk inspirasi undangan dan penawaran terbaru.
-            </Typography>
           </div>
         </div>
       </div>

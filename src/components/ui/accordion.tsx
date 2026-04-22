@@ -18,7 +18,7 @@ function AccordionItem({
     <AccordionPrimitive.Item
       data-slot="accordion-item"
       className={cn(
-        "group rounded-2xl overflow-hidden transition-all duration-300",
+        "group rounded-lg overflow-hidden transition-all duration-300",
         "data-[state=closed]:bg-card data-[state=closed]:border data-[state=closed]:border-border data-[state=closed]:hover:border-primary/30 data-[state=closed]:hover:shadow-md data-[state=closed]:hover:shadow-primary/5",
         "data-[state=open]:bg-primary data-[state=open]:shadow-lg data-[state=open]:shadow-primary/20",
         className

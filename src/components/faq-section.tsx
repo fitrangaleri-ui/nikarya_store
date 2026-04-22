@@ -84,11 +84,11 @@ function AccordionItem({
   return (
     <div
       className={`
-        group rounded-2xl overflow-hidden
+        group rounded-lg overflow-hidden
         transition-all duration-300
         ${isOpen
-          ? "bg-primary shadow-lg shadow-primary/20"
-          : "bg-card border border-border hover:border-primary/30 hover:shadow-md hover:shadow-primary/5"
+          ? "bg-primary"
+          : "bg-card border border-border hover:border-primary/30"
         }
       `}
     >
@@ -99,7 +99,7 @@ function AccordionItem({
       >
         {/* Nomor + Pertanyaan */}
         <Typography
-          variant="body-base"
+          variant="body-sm"
           as="span"
           className={`
             font-medium leading-snug transition-colors duration-200
@@ -172,13 +172,13 @@ interface FaqSectionProps {
   subtitle?: string;
 }
 
-export function FaqSection({ 
-  customFaqs, 
-  title = "Ada yang ingin ditanyakan?", 
-  subtitle = "Temukan jawaban atas pertanyaan umum seputar layanan kami di sini." 
+export function FaqSection({
+  customFaqs,
+  title = "Ada yang ingin ditanyakan?",
+  subtitle = "Temukan jawaban atas pertanyaan umum seputar layanan kami di sini."
 }: FaqSectionProps) {
   const displayFaqs = customFaqs || faqs;
-  const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   const handleToggle = (idx: number) => {
     setOpenIdx((prev) => (prev === idx ? null : idx));
@@ -188,12 +188,8 @@ export function FaqSection({
   const rightFaqs = displayFaqs.filter((_, i) => i % 2 !== 0);
 
   return (
-    <section className="w-full bg-background py-16 md:py-24 relative overflow-hidden">
-      {/* ── Ambient glow ── */}
-      <div
-        aria-hidden
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full pointer-events-none opacity-20 bg-[radial-gradient(circle_at_center,var(--primary)_0%,transparent_70%)]"
-      />
+    <section className="w-full bg-background pt-16 pb-0 md:pt-24 md:pb-0 relative overflow-hidden">
+
 
       <div className="mx-auto max-w-6xl px-4 md:px-0 relative z-10">
         {/* ── Header ── */}

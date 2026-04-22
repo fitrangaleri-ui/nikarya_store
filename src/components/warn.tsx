@@ -53,7 +53,7 @@ function AccordionItem({
   return (
     <div
       className={`
-        group rounded-2xl overflow-hidden
+        group rounded-lg overflow-hidden
         transition-all duration-300 border
         ${isOpen
           ? "bg-warning shadow-2xl border-warning scale-[1.02]"
@@ -66,7 +66,7 @@ function AccordionItem({
         className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
       >
         <Typography
-          variant="body-base"
+          variant="body-sm"
           as="span"
           className={`
             font-medium leading-snug transition-colors duration-200
