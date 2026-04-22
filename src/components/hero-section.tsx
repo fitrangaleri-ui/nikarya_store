@@ -15,6 +15,7 @@ interface HeroSectionProps {
   buttonLabel?: string;
   buttonHref?: string;
   descriptionClassName?: string;
+  fullWidth?: boolean;
 }
 
 export function HeroSection({
@@ -25,17 +26,26 @@ export function HeroSection({
   buttonLabel = "Lihat Tema",
   buttonHref = "/products",
   descriptionClassName,
+  fullWidth = false,
 }: HeroSectionProps) {
   return (
-    <div className="w-full px-4 md:px-6 pt-2 md:pt-4 mx-auto max-w-7xl">
-      <section className="relative overflow-hidden mt-4 md:mt-8 rounded-xl border border-border bg-gradient-to-br from-primary to-secondary-foreground text-primary-foreground shadow-xl animate-in fade-in duration-700">
+    <div className={cn(
+      "w-full pt-2 md:pt-4 mx-auto px-4 md:px-6 lg:px-8 transition-all duration-700",
+      fullWidth ? "max-w-[100vw]" : "max-w-7xl"
+    )}>
+      <section className={cn(
+        "relative overflow-hidden mt-4 md:mt-8 rounded-2xl md:rounded-3xl border border-border bg-gradient-to-br from-primary to-secondary-foreground text-primary-foreground shadow-xl animate-in fade-in duration-700"
+      )}>
         {/* Decorative Circles */}
         <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10 pointer-events-none z-0" />
         <div className="absolute bottom-[-20px] left-[20%] h-32 w-32 rounded-full bg-white/5 pointer-events-none z-0" />
 
         <div className="flex flex-col-reverse md:flex-row md:items-stretch relative z-10">
           {/* ── Left Column: Content ── */}
-          <div className="w-full md:w-3/5 flex flex-col justify-center gap-6 md:gap-8 text-left px-6 py-12 md:px-12 md:py-20 animate-in slide-in-from-left duration-700 delay-100">
+          <div className={cn(
+            "w-full md:w-3/5 flex flex-col justify-center gap-6 md:gap-8 text-left py-12 md:py-20 animate-in slide-in-from-left duration-700 delay-100",
+            fullWidth ? "px-6 md:px-16 lg:px-24" : "px-6 md:px-12"
+          )}>
             <div>
               <Badge variant="glass" className="bg-white/10 hover:bg-white/20 transition-colors">
                 {badgeLabel}
@@ -48,8 +58,8 @@ export function HeroSection({
               </Typography>
             </div>
 
-            <Typography 
-              variant="body-base" 
+            <Typography
+              variant="body-base"
               className={cn("max-w-xl text-white/80 leading-relaxed", descriptionClassName)}
             >
               {description}
@@ -58,10 +68,10 @@ export function HeroSection({
             {/* ── CTA Button ── */}
             <div className="flex items-center">
               <Link href={buttonHref} passHref>
-                <Button 
-                  variant="secondary" 
-                  size="lg" 
-                  className="rounded-full shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 active:translate-y-0"
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="rounded-full hover:shadow-xl transition-all hover:-translate-y-0.5 active:translate-y-0"
                 >
                   {buttonLabel}
                 </Button>

@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import PromoClient from "@/app/(main)/promo/promo-client";
+import { HeroSection } from "@/components/hero-section";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 export const metadata = {
   title: "Promo & Diskon | Custom Galeri Store",
@@ -25,8 +27,20 @@ export default async function PromoPage() {
   }
 
   return (
-    <main className="w-full max-w-7xl mx-auto px-4 pt-24 md:pt-32 pb-24 overflow-x-hidden">
-      <PromoClient initialPromos={promos || []} />
+    <main className="flex flex-col min-h-screen pb-20">
+      <HeroSection
+        title="Dapatkan Penawaran Terbaik Untukmu"
+        description="Salin kode promo di bawah ini dan gunakan saat checkout untuk menikmati potongan harga eksklusif di order kamu hari ini."
+        imageSrc="/landingpage/wks-series.png"
+        badgeLabel="Promo & Diskon Eksklusif"
+        buttonLabel="Lihat Koleksi"
+        buttonHref="/products"
+        fullWidth
+      />
+
+      <div className="w-full px-4 md:px-8 lg:px-12 py-12 md:py-16">
+        <PromoClient initialPromos={promos || []} />
+      </div>
     </main>
   );
 }
