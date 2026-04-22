@@ -8,52 +8,36 @@ import { Badge } from "@/components/ui/badge";
 
 const faqs = [
   {
-    q: "Berapa lama proses pengerjaan undangan web?",
-    a: "Untuk estimasi proses pengerjaan maksimal 2 hari setelah semua data kami terima, tidak menutup kemungkinan bisa lebih cepat.",
+    q: "Apa itu Nikarya Digital?",
+    a: "Nikarya Digital adalah sebuah platform yang menyediakan berbagai macam template undangan digital premium dalam format JSON. Template dari Nikarya Digital dirancang khusus untuk mempermudah penyedia jasa pembuatan undangan digital agar bisa bekerja lebih cepat dan efisien.",
   },
   {
-    q: "Apakah bisa hapus ucapan yang ditulis oleh tamu undangan?",
-    a: "Bisa, nanti kakak bisa informasikan detail ucapan mana yang mau dihapus.",
+    q: "Apakah saya perlu hosting dan domain sendiri?",
+    a: "Ya, Nikarya Digital adalah Template WordPress. Anda harus memiliki hosting dan domain sendiri untuk menginstal WordPress dan Template kami.",
   },
   {
-    q: "Apakah bisa revisi?",
-    a: "Bisa, kami menyediakan revisi untuk memastikan undangan sesuai dengan keinginan kakak.",
+    q: "Apakah saya akan mendapatkan dukungan teknis?",
+    a: "Ya, kami menyediakan dukungan teknis melalui Whatsapp atau Telegram. Tim kami siap membantu jika Anda mengalami kendala saat menggunakan Template kami.",
   },
   {
-    q: "Apakah bisa undangan tidak menggunakan foto?",
-    a: "Bisa, undangan tetap bisa dibuat tanpa foto sesuai permintaan kakak.",
+    q: "Apakah saya bisa menjual kembali tema yang sudah saya edit?",
+    a: "Anda tidak diizinkan untuk menjual kembali file JSON template kami. Anda hanya bisa menggunakan tema ini untuk layanan jasa pembuatan undangan digital.",
   },
   {
-    q: "Berapa lama proses revisi selesai?",
-    a: "Proses revisi biasanya selesai dalam 1×24 jam setelah permintaan revisi diterima.",
+    q: "Plugin apakah yang dibutuhkan untuk menggunakan template ini?",
+    a: "Plugin ini memerlukan beberapa plugin tambahan untuk bisa menggunakan tema template yaitu Elementor Pro dan WeddingPress agar bisa berfungsi sepenuhnya. Mohon pastikan kedua plugin tersebut sudah terpasang dan aktif di website Anda.",
   },
   {
-    q: "Apakah bisa merubah atau custom desain?",
-    a: "Untuk custom desain bisa didiskusikan terlebih dahulu dengan tim kami, tergantung tingkat perubahan yang diinginkan.",
+    q: "Apakah ada garansi uang kembali?",
+    a: "Kami tidak menawarkan garansi uang kembali karena produk kami adalah produk digital. Kami menyarankan Anda untuk melihat demo produk kami terlebih dahulu sebelum membeli.",
   },
   {
-    q: "Apakah jika mengurangi fitur mengurangi harga?",
-    a: "Untuk pengurangan fitur tidak serta merta mengurangi harga, silakan konsultasikan dulu dengan admin kami.",
+    q: "Berapa Harga Minimum Penjualan?",
+    a: "Tidak ada batasan harga jual yang ditetapkan secara resmi. Namun, kami menyarankan harga minimum penjualan sebesar Rp100.000-Rp200.000 per tema kepada end-user, agar tetap menjaga nilai produk dan ekosistem penjual.",
   },
   {
-    q: "Jika acaranya mundur apakah bisa dirubah?",
-    a: "Bisa, perubahan tanggal acara bisa diajukan ke admin dan akan diproses secepatnya.",
-  },
-  {
-    q: "Apakah bisa request lagu untuk backsound?",
-    a: "Bisa, kakak bisa request lagu favorit untuk dijadikan backsound undangan.",
-  },
-  {
-    q: "Apa itu fitur RSVP?",
-    a: "RSVP adalah fitur konfirmasi kehadiran tamu secara digital langsung dari undangan, sehingga kakak bisa memantau siapa saja yang hadir.",
-  },
-  {
-    q: "Nama tamu di undangan siapa yang isikan?",
-    a: "Nama tamu diisikan oleh kakak saat mengirimkan link undangan. Kami akan menyediakan panduan penggunaannya.",
-  },
-  {
-    q: "Perbedaan paket basic dan premium apa yah ka?",
-    a: "Perbedaan utamanya ada pada jumlah fitur yang tersedia. Paket premium mencakup lebih banyak fitur seperti galeri foto, RSVP, dan live streaming. Silakan cek halaman paket untuk detail lengkapnya.",
+    q: "Bagaimana cara instalasi template Nikarya Digital?",
+    a: "Instalasi template sama seperti instalasi template WordPress pada umumnya. Setelah mengunduh file, Anda bisa mengunggahnya melalui dashboard WordPress, Panduan detail juga tersedia di website kami.",
   },
 ];
 

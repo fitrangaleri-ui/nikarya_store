@@ -11,6 +11,10 @@ const warningItems = [
     a: "Pastikan Anda sudah memahami cara kerja WordPress dan Elementor, minimal cara membuat halaman baru, mengedit dengan Elementor, serta mengimpor template.",
   },
   {
+    q: "Sudah Menginstal Plugin Elementor Pro & WeddingPress",
+    a: "Template ini memerlukan Elementor Pro dan plugin WeddingPress untuk berfungsi sepenuhnya. Mohon pastikan kedua plugin tersebut sudah terpasang dan aktif di website Anda.",
+  },
+  {
     q: "Menggunakan Tema WordPress yang Ringan & Compatible",
     a: "Disarankan menggunakan tema WordPress Hello Elementor untuk performa maksimal dan kompatibilitas yang optimal.",
   },

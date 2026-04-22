@@ -84,7 +84,7 @@ export async function SiteFooter() {
           <div className="flex flex-col gap-4">
             <Typography
               variant="body-sm"
-              className="font-bold uppercase  text-foreground/40"
+              className="font-semibold uppercase  text-foreground/40"
             >
               Kategori
             </Typography>
@@ -100,7 +100,7 @@ export async function SiteFooter() {
                       <Typography
                         variant="body-sm"
                         as="span"
-                        className="text-foreground/90 group-hover/link:text-primary transition-colors duration-200"
+                        className=" font-medium text-foreground/90 group-hover/link:text-primary transition-colors duration-200"
                       >
                         {cat.name}
                       </Typography>
