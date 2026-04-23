@@ -464,23 +464,23 @@ export function CategorySection({
           />
         </div>
 
-        <div className="overflow-x-auto w-full">
+        <div className="overflow-x-auto px-4 sm:px-4 py-4">
           <Table className="w-full min-w-[600px]">
-            <TableHeader className="bg-primary/95 border-b border-primary-bg/20">
+            <TableHeader className="bg-background/95 border-b border-border/40">
               <TableRow className="hover:bg-transparent border-transparent">
-                <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest w-20 sm:w-24 pl-5 py-4">
+                <TableHead className="text-[11px] font-bold text-muted-foreground uppercase t w-20 sm:w-24 pl-5 py-4">
                   Gambar
                 </TableHead>
-                <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest min-w-[150px] py-4">
+                <TableHead className="text-[11px] font-bold text-muted-foreground uppercase t">
                   Nama Kategori
                 </TableHead>
-                <TableHead className="hidden xs:table-cell text-[11px] font-bold text-white/80 uppercase tracking-widest min-w-[120px] py-4">
+                <TableHead className="hidden xs:table-cell text-[11px] font-bold text-muted-foreground uppercase t min-w-[120px] py-4">
                   Slug
                 </TableHead>
-                <TableHead className="text-center text-[11px] font-bold text-white/80 uppercase tracking-widest w-20 sm:w-24 py-4">
+                <TableHead className="text-center text-[11px] font-bold text-muted-foreground uppercase t w-20 sm:w-24 py-4">
                   Produk
                 </TableHead>
-                <TableHead className="text-right text-[11px] font-bold text-white/80 uppercase tracking-widest pr-5 py-4">
+                <TableHead className="text-right text-[11px] font-bold text-muted-foreground uppercase t pr-5 py-4">
                   Aksi
                 </TableHead>
               </TableRow>

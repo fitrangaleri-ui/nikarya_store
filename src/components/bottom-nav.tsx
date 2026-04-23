@@ -34,7 +34,7 @@ export function BottomNav() {
   const pathname = usePathname();
   const { openCart, cartCount, isCartOpen } = useCart();
   const { user } = useAuth();
-  const { open: openFilter, isOpen: isFilterOpen } = useFilterDrawer();
+  const { toggle: toggleFilter, isOpen: isFilterOpen } = useFilterDrawer();
 
   const isProductsPage = pathname.startsWith("/products");
   const akunHref = user ? "/dashboard" : "/login";
@@ -107,14 +107,15 @@ export function BottomNav() {
 
           <button
             type="button"
-            onClick={openFilter}
+            onClick={toggleFilter}
             className={cn(
               baseItemClass,
               isFilterOpen
                 ? "text-primary-hover font-bold"
                 : "text-muted-foreground hover:text-primary",
             )}
-            aria-label="Buka filter"
+            aria-label={isFilterOpen ? "Tutup filter" : "Buka filter"}
+            aria-pressed={isFilterOpen}
           >
             <FunnelIcon
               className={cn(

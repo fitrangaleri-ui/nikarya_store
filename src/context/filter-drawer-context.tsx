@@ -1,11 +1,18 @@
 "use client";
 
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 
 type FilterDrawerContextValue = {
   isOpen: boolean;
   open: () => void;
   close: () => void;
+  toggle: () => void;
 };
 
 const FilterDrawerContext = createContext<FilterDrawerContextValue | null>(
@@ -18,14 +25,20 @@ export function FilterDrawerProvider({
   children: React.ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const open = useCallback(() => setIsOpen(true), []);
+  const close = useCallback(() => setIsOpen(false), []);
+  const toggle = useCallback(() => {
+    setIsOpen((current) => !current);
+  }, []);
 
   const value = useMemo<FilterDrawerContextValue>(
     () => ({
       isOpen,
-      open: () => setIsOpen(true),
-      close: () => setIsOpen(false),
+      open,
+      close,
+      toggle,
     }),
-    [isOpen],
+    [close, isOpen, open, toggle],
   );
 
   return (

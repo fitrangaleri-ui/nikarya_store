@@ -205,7 +205,7 @@ export default function AdminPromosPage() {
                     {/* Total Promo */}
                     <div className="rounded-xl bg-card border border-border px-5 py-5 overflow-hidden hover:border-primary/30 transition-all duration-200">
                         <div className="flex items-center justify-between mb-3">
-                            <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase tracking-widest">
+                            <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase ">
                                 Total Promo
                             </Typography>
                             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -223,7 +223,7 @@ export default function AdminPromosPage() {
                     {/* Penggunaan */}
                     <div className="rounded-xl bg-card border border-border px-5 py-5 overflow-hidden hover:border-primary/30 transition-all duration-200">
                         <div className="flex items-center justify-between mb-3">
-                            <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase tracking-widest">
+                            <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase ">
                                 Penggunaan
                             </Typography>
                             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -241,7 +241,7 @@ export default function AdminPromosPage() {
                     {/* Diskon */}
                     <div className="rounded-xl bg-card border border-border px-5 py-5 overflow-hidden hover:border-primary/30 transition-all duration-200">
                         <div className="flex items-center justify-between mb-3">
-                            <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase tracking-widest">
+                            <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase ">
                                 Diskon
                             </Typography>
                             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -259,7 +259,7 @@ export default function AdminPromosPage() {
                     {/* Revenue */}
                     <div className="rounded-xl bg-card border border-border px-5 py-5 overflow-hidden hover:border-primary/30 transition-all duration-200">
                         <div className="flex items-center justify-between mb-3">
-                            <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase tracking-widest">
+                            <Typography variant="caption" as="span" color="muted" className="font-semibold uppercase ">
                                 Revenue
                             </Typography>
                             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -327,25 +327,25 @@ export default function AdminPromosPage() {
                                 <Table className="min-w-[800px]">
                                     <TableHeader className="bg-background/95 border-b border-border/40">
                                         <TableRow className="hover:bg-transparent border-transparent">
-                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase ">
                                                 Kode
                                             </TableHead>
-                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase ">
                                                 Nama
                                             </TableHead>
-                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase ">
                                                 Diskon
                                             </TableHead>
-                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase ">
                                                 Penggunaan
                                             </TableHead>
-                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase ">
                                                 Periode
                                             </TableHead>
-                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase ">
                                                 Status
                                             </TableHead>
-                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest text-right pr-4">
+                                            <TableHead className="text-[11px] font-bold text-muted-foreground uppercase  text-right pr-4">
                                                 Aksi
                                             </TableHead>
                                         </TableRow>

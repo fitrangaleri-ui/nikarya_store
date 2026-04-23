@@ -62,7 +62,7 @@ export function ProductCard({ product }: { product: any }) {
     const demoImages = product.product_demo_links && Array.isArray(product.product_demo_links)
       ? product.product_demo_links.map((d: any) => resolveImageSrc(d.image_url)).filter(Boolean) as string[]
       : [];
-    
+
     galleryRaw.push(...demoImages);
 
     if (galleryRaw.length === 0) {
@@ -82,7 +82,7 @@ export function ProductCard({ product }: { product: any }) {
   const galleryImages = buildImageList();
 
   return (
-    <div className="group flex flex-col glass rounded-xl overflow-hidden transition-all duration-500 h-full relative hover:shadow-elevation-lg hover:translate-y-[-4px] hover:border-primary/40">
+    <div className="group flex flex-col glass shadow-none rounded-xl overflow-hidden transition-all duration-500 h-full relative hover:translate-y-[-4px] hover:border-primary/40">
       {/* 1. IMAGE */}
       <div className="relative aspect-square bg-muted/30 overflow-hidden border-b border-border/40 group/carousel isolate w-full">
         {galleryImages.length > 1 ? (
@@ -140,13 +140,13 @@ export function ProductCard({ product }: { product: any }) {
         {/* Badge: Tag */}
         {displayTag && (
           <div className="absolute top-3 left-3 z-10">
-            <Badge 
-              variant={displayTag === "new" ? "default" : "outline"} 
+            <Badge
+              variant="outline"
               className={cn(
-                "backdrop-blur-md font-medium lowercase tracking-tight",
-                displayTag === "new" 
-                  ? "bg-primary text-primary-foreground border-none px-2.5 shadow-lg shadow-primary/20" 
-                  : "bg-background/80 border-border/50"
+                "font-semibold tracking-tight px-2.5 backdrop-blur-md border-none",
+                displayTag === "new"
+                  ? "bg-primary/80 text-white"
+                  : "bg-black/40 text-white"
               )}
             >
               {displayTag}
@@ -157,7 +157,10 @@ export function ProductCard({ product }: { product: any }) {
         {/* Badge: Discount */}
         {discountPercentage > 0 && (
           <div className="absolute top-3 right-3 z-10">
-            <Badge variant="destructive">
+            <Badge
+              variant="outline"
+              className="bg-destructive/80 text-white border-none backdrop-blur-md px-2.5 font-bold"
+            >
               -{discountPercentage}%
             </Badge>
           </div>
@@ -174,7 +177,7 @@ export function ProductCard({ product }: { product: any }) {
             className="font-semibold leading-tight group-hover:text-primary transition-colors line-clamp-2"
           >
             {product.sku && (
-              <Badge variant="default" className="h-8 text-primary-foreground border-none mr-2 align-middle px-4 py-0">
+              <Badge variant="outline" className="h-7 bg-primary/10 text-primary border-primary/20 mr-2 align-middle px-3 backdrop-blur-md font-bold">
                 {product.sku}
               </Badge>
             )}

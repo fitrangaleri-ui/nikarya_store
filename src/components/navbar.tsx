@@ -10,7 +10,7 @@ import {
   ArrowRightOnRectangleIcon,
   ChevronDownIcon,
   ArrowRightIcon,
-} from "@heroicons/react/24/outline";
+} from "@heroicons/react/24/solid";
 import { Typography } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -148,7 +148,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/70 shadow-sm backdrop-blur-lg transition-all duration-300 flex items-center justify-center">
-      <div className="container mx-auto flex h-16 w-full items-center justify-between gap-3 px-4 md:px-6">
+      <div className="container mx-auto flex h-16 max-w-7xl w-full items-center justify-between gap-3 px-4 md:px-6 lg:px-8">
         <div className="flex shrink-0 items-center">
           <Link href="/" className="group flex items-center">
             <Image
@@ -301,24 +301,20 @@ export function Navbar() {
                 )}
               </div>
             ) : (
-              <Button variant="brand-pill" size="default" asChild>
+              <Button variant="brand-icon" size="default" asChild>
                 <Link
                   href="/login"
-                  className="group flex items-center justify-between gap-3 pr-1"
+                  className="group"
                 >
+                  <div className="brand-icon__symbol">
+                    <UserIcon className="h-4 w-4" />
+                  </div>
                   <Typography
                     variant="body-sm"
-                    className="font-bold tracking-tight transition-transform duration-200 ease-out group-active:translate-x-[2px] group-active:translate-y-[1px]"
+                    className="font-bold tracking-tight text-primary-foreground transition-transform duration-200 ease-out group-active:translate-x-[2px] group-active:translate-y-[1px]"
                   >
                     Login
                   </Typography>
-
-                  <span className="brand-pill__icon flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-background transition-colors duration-300 ease-out group-hover:bg-primary-foreground">
-                    <ArrowRightIcon
-                      className="h-4 w-4 text-foreground transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:translate-x-[2px] group-hover:scale-110 group-hover:text-primary group-active:translate-x-[4px]"
-                      strokeWidth={2}
-                    />
-                  </span>
                 </Link>
               </Button>
             )}

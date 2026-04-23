@@ -146,10 +146,8 @@ export default async function AdminOrdersPage({
 
         {/* ── Orders Table ── */}
         <div className="rounded-xl border border-border bg-card overflow-hidden">
-          <div className="w-full overflow-x-auto">
-            <div className="min-w-[1000px] w-full">
-              <Table className="w-full relative">
-                <TableHeader className="bg-primary border-b border-primary-bg/20">
+          <Table className="min-w-[1000px] relative">
+            <TableHeader className="bg-primary border-b border-primary-bg/20">
                   <TableRow className="hover:bg-transparent border-transparent">
                     <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest w-32 whitespace-nowrap py-4 pl-5">
                       Order ID
@@ -281,8 +279,6 @@ export default async function AdminOrdersPage({
                   )}
                 </TableBody>
               </Table>
-            </div>
-          </div>
         </div>
       </div>
     </div>

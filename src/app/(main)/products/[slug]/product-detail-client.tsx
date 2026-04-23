@@ -1,54 +1,38 @@
-// ============================================================
-// FILE: src/app/(main)/products/[slug]/product-detail-client.tsx
-// PERUBAHAN: Ganti <Button> shadcn pada CTA desktop → PrimaryButton
-//            Tombol "Tambah ke Keranjang" outline tetap pakai
-//            <Button> shadcn karena variant-nya berbeda (outline)
-//            Logika & konfigurasi tidak diubah
-// ============================================================
 "use client";
 
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  ShoppingBag,
-  Eye,
-  Tag,
-  Box,
-  BadgeCheck,
-  Home,
-  ChevronRight,
-  ShieldCheck,
-  ThumbsUp,
-  Lock,
-  ChevronDown,
-} from "lucide-react";
+  ArchiveBoxIcon,
+  CheckBadgeIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  EyeIcon,
+  HandThumbUpIcon,
+  HomeIcon,
+  LockClosedIcon,
+  PhotoIcon,
+  ShieldCheckIcon,
+  ShoppingCartIcon,
+  TagIcon,
+} from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
-import { PrimaryButton } from "@/components/ui/primary-button";
 import { BuyButton } from "./buy-button";
 import { ProductCard } from "@/components/product-card";
 import { useCart } from "@/context/cart-context";
 import { resolveImageSrc } from "@/lib/resolve-image";
+import { cn } from "@/lib/utils";
 import { DemoLinksModal } from "@/components/demo-links-modal";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CarouselDots } from "@/components/ui/carousel";
-
-// ── Custom Cart Icon — tidak diubah ──────────────────────────
-function CartAddIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className={className}
-      aria-hidden="true"
-    >
-      <circle cx="7" cy="22" r="2" />
-      <circle cx="17" cy="22" r="2" />
-      <path d="M23,3H21V1a1,1,0,0,0-2,0V3H17a1,1,0,0,0,0,2h2V7a1,1,0,0,0,2,0V5h2a1,1,0,0,0,0-2Z" />
-      <path d="M21.771,9.726a.994.994,0,0,0-1.162.806A3,3,0,0,1,17.657,13H5.418l-.94-8H13a1,1,0,0,0,0-2H4.242L4.2,2.648A3,3,0,0,0,1.222,0H1A1,1,0,0,0,1,2h.222a1,1,0,0,1,.993.883l1.376,11.7A5,5,0,0,0,8.557,19H19a1,1,0,0,0,0-2H8.557a3,3,0,0,1-2.829-2H17.657a5,5,0,0,0,4.921-4.112A1,1,0,0,0,21.771,9.726Z" />
-    </svg>
-  );
-}
+import {
+  Carousel,
+  CarouselContent,
+  CarouselDots,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Typography } from "@/components/ui/typography";
 
 interface ProductData {
   id: string;
@@ -67,31 +51,38 @@ interface ProductData {
   categories: { name: string } | null;
 }
 
+type ProductMediaImage = {
+  image_url?: string | null;
+  sort_order: number;
+};
+
+type RelatedProduct = {
+  id: string;
+};
+
 interface ProductDetailClientProps {
   product: ProductData;
   isLoggedIn: boolean;
-  relatedProducts: any[];
+  relatedProducts: RelatedProduct[];
 }
 
 export function ProductDetailClient({
   product,
-  isLoggedIn: _isLoggedIn,
+  isLoggedIn,
   relatedProducts,
 }: ProductDetailClientProps) {
   const { addToCart, openCart } = useCart();
   const [isDescOpen, setIsDescOpen] = useState(true);
+  void isLoggedIn;
 
-  // ── Kalkulasi harga — tidak diubah ───────────────────────
   const finalPrice = product.discount_price || product.price;
   const isDiscounted = !!product.discount_price;
   const discountPercentage = isDiscounted
     ? Math.round(
-      ((product.price - Number(product.discount_price)) / product.price) *
-      100,
-    )
+        ((product.price - Number(product.discount_price)) / product.price) * 100,
+      )
     : 0;
 
-  // ── Handler — tidak diubah ───────────────────────────────
   const handleAddToCart = () => {
     addToCart({
       id: product.id,
@@ -104,56 +95,66 @@ export function ProductDetailClient({
   };
 
   return (
-    <main className="min-h-screen bg-background pb-24 md:pb-20 overflow-x-hidden">
-      <div className="flex flex-col gap-8 pt-24 md:pt-32">
-        {/* ── BREADCRUMB ── */}
+    <main className="min-h-screen overflow-x-hidden bg-background pb-24 md:pb-20">
+      <div className="flex flex-col gap-8 pt-24 md:gap-10 md:pt-32">
         <div className="container mx-auto max-w-6xl px-4 md:px-6">
-          <nav className="flex items-center gap-1.5 text-xs md:text-sm text-muted-foreground bg-card/40 backdrop-blur-sm border border-border/50 rounded-full px-4 py-2.5 w-fit shadow-sm">
+          <nav className="flex w-fit items-center gap-1.5 rounded-full border border-border/50 bg-card/40 px-4 py-2.5 shadow-sm backdrop-blur-sm">
             <Link
               href="/"
-              className="flex items-center gap-1.5 hover:text-primary transition-colors"
+              className="flex items-center gap-1.5 rounded-full px-1 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <Home className="h-4 w-4" />
-              Beranda
+              <HomeIcon className="h-4 w-4" />
+              <Typography as="span" variant="caption" color="muted" className="font-semibold md:text-sm">
+                Beranda
+              </Typography>
             </Link>
-            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40" />
+            <ChevronRightIcon className="h-3.5 w-3.5 text-muted-foreground/40" />
             <Link
               href="/products"
-              className="hover:text-primary transition-colors"
+              className="rounded-full px-1 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              Produk
+              <Typography as="span" variant="caption" color="muted" className="font-semibold md:text-sm">
+                Produk
+              </Typography>
             </Link>
-            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40" />
-            <span className="text-foreground font-semibold line-clamp-1 max-w-[150px] md:max-w-[300px]">
+            <ChevronRightIcon className="h-3.5 w-3.5 text-muted-foreground/40" />
+            <Typography
+              as="span"
+              variant="caption"
+              className="line-clamp-1 max-w-[150px] font-semibold md:max-w-[300px] md:text-sm"
+            >
               {product.title}
-            </span>
+            </Typography>
           </nav>
         </div>
 
-        {/* ── TWO COLUMN GRID ── */}
         <section className="container mx-auto max-w-6xl px-4 md:px-6">
-          <div className="grid gap-8 lg:gap-12 lg:grid-cols-2 items-start">
-            {/* ════════════════════════════════════════════ */}
-            {/* KIRI — Gambar Produk                         */}
-            {/* ════════════════════════════════════════════ */}
-            <div className="relative aspect-square overflow-hidden rounded-3xl bg-muted/20 border border-border/40 shadow-xl shadow-primary/5 group/carousel">
+          <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
+            <div className="group/carousel relative aspect-square overflow-hidden rounded-3xl border border-border/40 bg-card shadow-elevation-md">
               {(() => {
                 const thumbnailSrc = resolveImageSrc(product.thumbnail_url);
                 const galleryRaw =
-                  product.product_images && Array.isArray(product.product_images) && product.product_images.length > 0
+                  product.product_images &&
+                  Array.isArray(product.product_images) &&
+                  product.product_images.length > 0
                     ? [...product.product_images]
-                        .sort((a: any, b: any) => a.sort_order - b.sort_order)
-                        .map((img: any) => resolveImageSrc(img.image_url))
+                        .sort(
+                          (a: ProductMediaImage, b: ProductMediaImage) =>
+                            a.sort_order - b.sort_order,
+                        )
+                        .map((img: ProductMediaImage) => resolveImageSrc(img.image_url))
                         .filter(Boolean) as string[]
                     : [];
 
-                const demoImages = product.demo_links && Array.isArray(product.demo_links)
-                  ? product.demo_links.map((d: any) => resolveImageSrc(d.image_url)).filter(Boolean) as string[]
-                  : [];
-                
+                const demoImages =
+                  product.demo_links && Array.isArray(product.demo_links)
+                    ? product.demo_links
+                        .map((d: { image_url?: string }) => resolveImageSrc(d.image_url))
+                        .filter(Boolean) as string[]
+                    : [];
+
                 galleryRaw.push(...demoImages);
 
-                // Smart merge: thumbnail first, then gallery (deduplicated)
                 let galleryImages: string[];
                 if (galleryRaw.length === 0) {
                   galleryImages = thumbnailSrc ? [thumbnailSrc] : [];
@@ -161,16 +162,16 @@ export function ProductDetailClient({
                   galleryImages = [thumbnailSrc, ...galleryRaw];
                 } else {
                   galleryImages = thumbnailSrc
-                    ? [thumbnailSrc, ...galleryRaw.filter(url => url !== thumbnailSrc)]
+                    ? [thumbnailSrc, ...galleryRaw.filter((url) => url !== thumbnailSrc)]
                     : galleryRaw;
                 }
 
                 if (galleryImages.length > 1) {
                   return (
-                    <Carousel opts={{ loop: true }} className="w-full h-full static">
+                    <Carousel opts={{ loop: true }} className="static h-full w-full">
                       <CarouselContent className="-ml-0 h-full">
                         {galleryImages.map((src, i) => (
-                          <CarouselItem key={i} className="pl-0 relative h-full aspect-square">
+                          <CarouselItem key={i} className="relative h-full aspect-square pl-0">
                             <Image
                               src={src}
                               alt={`${product.title} - Slide ${i + 1}`}
@@ -182,13 +183,9 @@ export function ProductDetailClient({
                           </CarouselItem>
                         ))}
                       </CarouselContent>
-                      <CarouselPrevious 
-                        className="absolute left-4 top-1/2 -translate-y-1/2 size-10 opacity-0 group-hover/carousel:opacity-100 transition-opacity disabled:opacity-0 bg-background/80 hover:bg-background/90" 
-                      />
-                      <CarouselNext 
-                        className="absolute right-4 top-1/2 -translate-y-1/2 size-10 opacity-0 group-hover/carousel:opacity-100 transition-opacity disabled:opacity-0 bg-background/80 hover:bg-background/90" 
-                      />
-                      <div className="absolute bottom-4 left-0 right-0 z-20 pointer-events-none">
+                      <CarouselPrevious className="absolute top-1/2 left-4 size-10 -translate-y-1/2 bg-background/80 transition-opacity disabled:opacity-0 group-hover/carousel:opacity-100 hover:bg-background/90" />
+                      <CarouselNext className="absolute top-1/2 right-4 size-10 -translate-y-1/2 bg-background/80 transition-opacity disabled:opacity-0 group-hover/carousel:opacity-100 hover:bg-background/90" />
+                      <div className="pointer-events-none absolute right-0 bottom-4 left-0 z-20">
                         <CarouselDots className="pointer-events-auto" />
                       </div>
                     </Carousel>
@@ -206,137 +203,138 @@ export function ProductDetailClient({
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center">
-                    <ShoppingBag className="h-16 w-16 text-muted-foreground/30" />
+                    <PhotoIcon className="h-16 w-16 text-muted-foreground/30" />
                   </div>
                 );
               })()}
-              <div className="absolute inset-0 bg-background/0 group-hover:bg-background/5 transition-colors duration-300 pointer-events-none" />
+
+              <div className="pointer-events-none absolute inset-0 bg-background/0 transition-colors duration-300 group-hover/carousel:bg-background/5" />
+
               {(() => {
-                // Build demo links from new table or fallback
                 const dLinks: { label: string; url: string; image_url?: string }[] =
                   product.demo_links && product.demo_links.length > 0
                     ? product.demo_links
                     : product.demo_link
                       ? [{ label: "Demo", url: product.demo_link }]
                       : [];
+
                 if (dLinks.length === 0) return null;
+
                 return (
                   <DemoLinksModal demoLinks={dLinks}>
-                    <span
-                      className="
-                        absolute bottom-3 right-3
-                        inline-flex items-center gap-1.5
-                        px-3 py-1.5 rounded-full
-                        bg-background/80 backdrop-blur-md
-                        border border-border/60
-                        text-xs font-semibold text-foreground
-                        shadow-md z-10
-                        hover:bg-primary hover:text-primary-foreground hover:border-primary
-                        transition-all duration-200 hover:scale-105
-                        cursor-pointer
-                      "
-                    >
-                      <Eye className="w-3.5 h-3.5 shrink-0" />
-                      Lihat Demo
+                    <span className="absolute right-3 bottom-3 z-10 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border/60 bg-background/80 px-3 py-1.5 shadow-md backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-primary hover:bg-primary hover:text-primary-foreground">
+                      <EyeIcon className="h-3.5 w-3.5 shrink-0" />
+                      <Typography as="span" variant="caption" className="font-semibold">
+                        Lihat Demo
+                      </Typography>
                     </span>
                   </DemoLinksModal>
                 );
               })()}
             </div>
 
-            {/* ════════════════════════════════════════════ */}
-            {/* KANAN — Detail Produk                        */}
-            {/* ════════════════════════════════════════════ */}
             <div className="flex flex-col gap-6">
-              {/* 1. JUDUL & BADGE */}
-              <div>
-                <h1 className="text-3xl font-bold lg:text-4xl leading-tight text-foreground mb-4 tracking-tight">
+              <div className="space-y-4">
+                <Typography variant="h2" as="h1">
                   {product.title}
-                </h1>
+                </Typography>
+
                 <div className="flex flex-wrap items-center gap-2">
                   {product.sku && (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-[11px] font-bold text-primary ring-1 ring-inset ring-primary/20 tracking-wider uppercase">
-                      <Box className="h-3 w-3" />
-                      {product.sku}
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-primary ring-1 ring-inset ring-primary/20 backdrop-blur-md">
+                      <ArchiveBoxIcon className="h-3 w-3" />
+                      <Typography as="span" variant="caption" color="primary" className="font-bold uppercase tracking-wider">
+                        {product.sku}
+                      </Typography>
                     </span>
                   )}
+
                   {product.categories?.name && (
-                    <span className="inline-flex items-center rounded-full bg-card/60 backdrop-blur-md px-3 py-1.5 text-[11px] font-medium text-foreground border border-border/50 tracking-wide uppercase shadow-sm">
-                      {product.categories.name}
+                    <span className="inline-flex items-center rounded-full border border-border/50 bg-card/60 px-3 py-1.5 shadow-sm backdrop-blur-md">
+                      <Typography as="span" variant="caption" className="font-medium uppercase tracking-wide">
+                        {product.categories.name}
+                      </Typography>
                     </span>
                   )}
-                  {product.tags?.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex items-center rounded-full bg-card/60 backdrop-blur-md px-3 py-1.5 text-[11px] font-medium text-muted-foreground border border-border/50 tracking-wide uppercase shadow-sm"
-                    >
-                      <Tag className="mr-1.5 h-3 w-3" />
-                      {tag}
-                    </span>
-                  ))}
+
+                  {product.tags?.map((tag) => {
+                    const isNew = tag.toLowerCase() === "new";
+                    return (
+                      <span
+                        key={tag}
+                        className={cn(
+                          "inline-flex items-center rounded-full px-3 py-1.5 transition-all backdrop-blur-md",
+                          isNew 
+                            ? "bg-primary/80 text-white border-none" 
+                            : "bg-black/40 text-white border-none"
+                        )}
+                      >
+                        <TagIcon className={cn("mr-1.5 h-3 w-3", isNew ? "text-white" : "text-white/70")} />
+                        <Typography as="span" variant="caption" className={cn("font-bold uppercase tracking-wide text-white")}>
+                          {tag}
+                        </Typography>
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* 2. HARGA */}
-              <div className="rounded-2xl bg-card/50 backdrop-blur-md border border-border/50 px-5 py-4 shadow-sm relative overflow-hidden">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 blur-[40px] rounded-full pointer-events-none" />
+              <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 px-5 py-4 shadow-sm backdrop-blur-md">
                 {isDiscounted ? (
-                  <div className="flex items-center justify-between relative z-10">
+                  <div className="relative z-10 flex items-center justify-between gap-4">
                     <div className="flex flex-col">
-                      <span className="text-sm md:text-base text-muted-foreground line-through mb-1 font-medium">
+                      <Typography variant="body-base" color="muted" as="span" className="mb-1 line-through font-medium">
                         Rp {Number(product.price).toLocaleString("id-ID")}
-                      </span>
-                      <span className="text-3xl font-bold text-primary tracking-tight">
+                      </Typography>
+                      <Typography variant="h3" color="primary" as="span">
                         Rp {Number(finalPrice).toLocaleString("id-ID")}
-                      </span>
+                      </Typography>
                     </div>
-                    <span className="bg-destructive/90 backdrop-blur-sm text-destructive-foreground text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
-                      Hemat {discountPercentage}%
+
+                    <span className="rounded-full bg-destructive/80 px-3 py-1.5 text-white backdrop-blur-md">
+                      <Typography as="span" variant="caption" className="font-bold">
+                        Hemat {discountPercentage}%
+                      </Typography>
                     </span>
                   </div>
                 ) : (
                   <div className="relative z-10">
-                    <span className="text-3xl font-black text-primary tracking-tight">
+                    <Typography variant="h3" color="primary" as="span" className="font-black">
                       Rp {Number(finalPrice).toLocaleString("id-ID")}
-                    </span>
+                    </Typography>
                   </div>
                 )}
               </div>
 
-              {/* 3. BENEFITS */}
-              <div className="space-y-3">
+              <div className="space-y-3 rounded-2xl border border-border/50 bg-card/40 p-5 shadow-sm backdrop-blur-sm">
                 {[
-                  "File digital — download langsung setelah bayar",
+                  "File digital - download langsung setelah bayar",
                   "Maks 5x download per pembelian",
                   "Pembayaran aman via payment gateway",
                   "Support tersedia jika ada kendala",
                 ].map((text) => (
-                  <p
-                    key={text}
-                    className="flex items-center gap-3 text-sm md:text-base text-muted-foreground font-medium"
-                  >
-                    <BadgeCheck className="h-5 w-5 text-primary flex-shrink-0" />
-                    {text}
-                  </p>
+                  <div key={text} className="flex items-center gap-3">
+                    <CheckBadgeIcon className="h-5 w-5 flex-shrink-0 text-primary" />
+                    <Typography variant="body-sm" color="muted" className="font-medium md:text-base">
+                      {text}
+                    </Typography>
+                  </div>
                 ))}
               </div>
 
-              {/* ════════════════════════════════════════════ */}
-              {/* 4. CTA BUTTONS — Desktop                     */}
-              {/* ════════════════════════════════════════════ */}
-              <div className="hidden lg:flex flex-col gap-3.5">
-                {/* Tambah ke Keranjang — tetap outline <Button> */}
+              <div className="hidden flex-col gap-3.5 lg:flex">
                 <Button
                   onClick={handleAddToCart}
                   size="lg"
                   variant="outline"
-                  className="w-full rounded-full border-primary/40 text-primary bg-primary/5 hover:bg-primary hover:text-primary-foreground shadow-sm h-14 transition-all active:scale-[0.98]"
+                  className="h-14 w-full rounded-full border-primary/40 bg-primary/5 text-primary shadow-sm transition-all hover:bg-primary hover:text-primary-foreground"
                 >
-                  <CartAddIcon className="mr-2 w-5 h-5" />
-                  Tambah ke Keranjang
+                  <ShoppingCartIcon className="mr-2 h-5 w-5" />
+                  <Typography as="span" variant="body-sm" className="font-semibold">
+                    Tambah ke Keranjang
+                  </Typography>
                 </Button>
 
-                {/* Beli Sekarang — PrimaryButton via BuyButton */}
                 <div className="h-14">
                   <BuyButton
                     product={{
@@ -351,21 +349,16 @@ export function ProductDetailClient({
                 </div>
               </div>
 
-              {/* ════════════════════════════════════════════ */}
-              {/* 4. CTA BUTTONS — Mobile                      */}
-              {/* ════════════════════════════════════════════ */}
-              <div className="flex lg:hidden gap-3 items-center mt-2">
-                {/* Tombol ikon keranjang bulat */}
+              <div className="mt-2 flex items-center gap-3 lg:hidden">
                 <button
                   onClick={handleAddToCart}
                   aria-label="Tambah ke Keranjang"
-                  className="flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-2xl border-2 border-primary/20 bg-primary/10 text-primary hover:bg-primary/20 transition-all active:scale-[0.96]"
+                  className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl border-2 border-primary/20 bg-primary/10 text-primary transition-all hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <CartAddIcon className="w-6 h-6" />
+                  <ShoppingCartIcon className="h-6 w-6" />
                 </button>
 
-                {/* Beli Sekarang — PrimaryButton via BuyButton */}
-                <div className="flex-1 h-14">
+                <div className="h-14 flex-1">
                   <BuyButton
                     product={{
                       id: product.id,
@@ -379,31 +372,30 @@ export function ProductDetailClient({
                 </div>
               </div>
 
-              {/* 5. TRUST BADGES */}
-              <div className="grid grid-cols-3 gap-2 pt-6 mt-2 border-t border-border/40">
+              <div className="mt-2 grid grid-cols-3 gap-2 border-t border-border/40 pt-6">
                 {[
-                  { icon: ShieldCheck, label: "Secure", sublabel: "Checkout" },
+                  { icon: ShieldCheckIcon, label: "Secure", sublabel: "Checkout" },
                   {
-                    icon: ThumbsUp,
+                    icon: HandThumbUpIcon,
                     label: "Satisfaction",
                     sublabel: "Guarantee",
                   },
-                  { icon: Lock, label: "Privacy", sublabel: "Protected" },
+                  { icon: LockClosedIcon, label: "Privacy", sublabel: "Protected" },
                 ].map((item) => (
                   <div
                     key={item.label}
-                    className="flex flex-col items-center gap-2 text-center p-2 group"
+                    className="group flex flex-col items-center gap-2 p-2 text-center"
                   >
-                    <div className="w-10 h-10 rounded-full bg-card/60 backdrop-blur-sm flex items-center justify-center border border-border/50 group-hover:border-primary/40 group-hover:bg-primary/5 transition-colors">
-                      <item.icon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border/50 bg-card/60 backdrop-blur-sm transition-colors group-hover:border-primary/40 group-hover:bg-primary/5">
+                      <item.icon className="h-5 w-5 text-muted-foreground transition-colors group-hover:text-primary" />
                     </div>
                     <div>
-                      <p className="text-[10px] md:text-xs font-bold text-foreground leading-tight tracking-wider uppercase">
+                      <Typography variant="caption" as="p" className="font-bold uppercase leading-tight tracking-wider">
                         {item.label}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">
+                      </Typography>
+                      <Typography variant="caption" as="p" color="muted" className="mt-0.5 leading-tight">
                         {item.sublabel}
-                      </p>
+                      </Typography>
                     </div>
                   </div>
                 ))}
@@ -412,37 +404,40 @@ export function ProductDetailClient({
           </div>
         </section>
 
-        {/* ── DESKRIPSI (ACCORDION) ── */}
         {product.description && (
-          <section className="container mx-auto max-w-6xl px-4 md:px-6 mt-4">
-            <div className="rounded-3xl border border-border/50 bg-card/40 backdrop-blur-md shadow-sm overflow-hidden">
+          <section className="container mx-auto mt-4 max-w-6xl px-4 md:px-6">
+            <div className="overflow-hidden rounded-3xl border border-border/50 bg-card/40 shadow-sm backdrop-blur-md">
               <button
                 onClick={() => setIsDescOpen(!isDescOpen)}
-                className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-card/50 transition-colors focus:outline-none"
+                className="flex w-full items-center justify-between p-6 transition-colors hover:bg-card/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:p-8"
                 aria-expanded={isDescOpen}
               >
-                <div className="flex items-center gap-3">
-                  <h2 className="text-lg md:text-xl font-bold text-foreground tracking-tight">
-                    Deskripsi Produk
-                  </h2>
-                </div>
-                <ChevronDown
-                  className={`w-6 h-6 text-muted-foreground transition-transform duration-300 ${isDescOpen ? "rotate-180" : ""
-                    }`}
+                <Typography variant="h5" as="h2">
+                  Deskripsi Produk
+                </Typography>
+                <ChevronDownIcon
+                  className={`h-6 w-6 text-muted-foreground transition-transform duration-300 ${
+                    isDescOpen ? "rotate-180" : ""
+                  }`}
                 />
               </button>
+
               <div
-                className={`grid transition-all duration-300 ease-in-out ${isDescOpen
-                    ? "grid-rows-[1fr] opacity-100"
-                    : "grid-rows-[0fr] opacity-0"
-                  }`}
+                className={`grid transition-all duration-300 ease-in-out ${
+                  isDescOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                }`}
               >
                 <div className="overflow-hidden">
-                  <div className="p-6 md:p-8 pt-0 md:pt-0">
-                    <div className="w-full h-px bg-border/50 mb-6" />
-                    <p className="whitespace-pre-wrap text-muted-foreground leading-relaxed text-sm md:text-base">
+                  <div className="p-6 pt-0 md:p-8 md:pt-0">
+                    <div className="mb-6 h-px w-full bg-border/50" />
+                    <Typography
+                      variant="body-base"
+                      color="muted"
+                      as="p"
+                      className="whitespace-pre-wrap leading-relaxed"
+                    >
                       {product.description}
-                    </p>
+                    </Typography>
                   </div>
                 </div>
               </div>
@@ -450,16 +445,15 @@ export function ProductDetailClient({
           </section>
         )}
 
-        {/* ── RELATED PRODUCTS ── */}
         {relatedProducts.length > 0 && (
-          <section className="container mx-auto max-w-6xl px-4 md:px-6 mt-6">
-            <div className="flex items-center justify-between mb-6 md:mb-8">
-              <h2 className="text-xl md:text-2xl font-bold text-foreground flex items-center gap-3 tracking-tight">
+          <section className="container mx-auto mt-6 max-w-6xl px-4 md:px-6">
+            <div className="mb-6 flex items-center justify-between md:mb-8">
+              <Typography variant="h4" as="h2">
                 Produk Terkait
-              </h2>
+              </Typography>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-6">
-              {relatedProducts.map((rp: any) => (
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-4 md:gap-6">
+              {relatedProducts.map((rp) => (
                 <ProductCard key={rp.id} product={rp} />
               ))}
             </div>

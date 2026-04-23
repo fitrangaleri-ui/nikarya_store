@@ -137,11 +137,11 @@ function PromoCard({ promo, isExpired }: { promo: Promo; isExpired: boolean }) {
           </div>
 
           <Badge
-            variant={isExpired ? "destructive" : "default"}
             className={cn(
-              "shrink-0 px-2.5 py-0.5 text-[10px] md:text-xs h-fit mt-0.5",
-              !isExpired && "bg-success text-success-foreground border-transparent",
-              isExpired && "shadow-none"
+              "shrink-0 px-3 rounded-full shadow-none font-bold h-fit sm:mt-2",
+              !isExpired
+                ? "bg-primary/10 text-primary border border-primary/20"
+                : "bg-muted text-muted-foreground border border-border/50"
             )}
           >
             {isExpired ? "Expired" : "Active"}

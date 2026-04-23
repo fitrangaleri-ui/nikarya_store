@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
@@ -30,6 +30,12 @@ type Category = {
 };
 
 type CategoryNode = Category & { children: CategoryNode[] };
+type PriceState = {
+  syncedPriceMin: number;
+  syncedPriceMax: number;
+  localPriceMin: number;
+  localPriceMax: number;
+};
 
 function buildTree(categories: Category[]): CategoryNode[] {
   const parents = categories.filter((c) => !c.parent_id);
@@ -62,6 +68,18 @@ function buildCategoryHref(
   return `/products${qs ? `?${qs}` : ""}`;
 }
 
+function buildToggleCategoryHref(
+  currentParams: URLSearchParams,
+  categorySlug: string,
+): string {
+  const activeSlug = currentParams.get("category");
+
+  return buildCategoryHref(
+    currentParams,
+    activeSlug === categorySlug ? null : categorySlug,
+  );
+}
+
 function CountBadge({ count, active }: { count: number; active: boolean }) {
   return (
     <span
@@ -91,13 +109,22 @@ function PriceRangeSlider({
   onChangeMin: (v: number) => void;
   onChangeMax: (v: number) => void;
 }) {
+  const [activeSide, setActiveSide] = useState<"min" | "max">("min");
   const range = globalMax - globalMin || 1;
-  const step = 5000;
+  const step = 1000;
   const minPct = ((valueMin - globalMin) / range) * 100;
   const maxPct = ((valueMax - globalMin) / range) * 100;
 
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const pct = x / rect.width;
+    // Jika kursor di kiri 50%, prioritaskan input minimal
+    setActiveSide(pct < 0.5 ? "min" : "max");
+  };
+
   return (
-    <div className="relative mx-1.5">
+    <div className="relative mx-3" onMouseMove={handleMouseMove}>
       <div className="relative h-2 my-6">
         {/* Background Track */}
         <div className="absolute inset-0 rounded-full bg-secondary/50 border border-border/20" />
@@ -108,13 +135,13 @@ function PriceRangeSlider({
         />
         {/* Thumb Min */}
         <div
-          className="absolute top-1/2 w-5 h-5 -translate-y-1/2 -translate-x-1/2 rounded-full bg-card border-2 border-primary shadow-none pointer-events-none transition-transform hover:scale-110"
-          style={{ left: `${minPct}%`, zIndex: 2 }}
+          className="absolute top-1/2 w-5 h-5 -translate-y-1/2 -translate-x-1/2 rounded-full bg-card border-2 border-primary pointer-events-none transition-transform hover:scale-110"
+          style={{ left: `${minPct}%`, zIndex: activeSide === "min" ? 5 : 3 }}
         />
         {/* Thumb Max */}
         <div
-          className="absolute top-1/2 w-5 h-5 -translate-y-1/2 -translate-x-1/2 rounded-full bg-card border-2 border-primary shadow-none pointer-events-none transition-transform hover:scale-110"
-          style={{ left: `${maxPct}%`, zIndex: 2 }}
+          className="absolute top-1/2 w-5 h-5 -translate-y-1/2 -translate-x-1/2 rounded-full bg-card border-2 border-primary pointer-events-none transition-transform hover:scale-110"
+          style={{ left: `${maxPct}%`, zIndex: activeSide === "max" ? 5 : 3 }}
         />
         <input
           type="range"
@@ -122,11 +149,12 @@ function PriceRangeSlider({
           max={globalMax}
           step={step}
           value={valueMin}
-          onChange={(e) =>
-            onChangeMin(Math.min(+e.target.value, valueMax - step))
-          }
+          onChange={(e) => {
+            const val = Math.min(+e.target.value, valueMax - step);
+            onChangeMin(val);
+          }}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-          style={{ zIndex: minPct >= maxPct - 5 ? 5 : 3 }}
+          style={{ zIndex: activeSide === "min" ? 5 : 3 }}
         />
         <input
           type="range"
@@ -134,11 +162,12 @@ function PriceRangeSlider({
           max={globalMax}
           step={step}
           value={valueMax}
-          onChange={(e) =>
-            onChangeMax(Math.max(+e.target.value, valueMin + step))
-          }
+          onChange={(e) => {
+            const val = Math.max(+e.target.value, valueMin + step);
+            onChangeMax(val);
+          }}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-          style={{ zIndex: 4 }}
+          style={{ zIndex: activeSide === "max" ? 5 : 3 }}
         />
       </div>
     </div>
@@ -162,7 +191,7 @@ export function CategorySidebar({
   currentPriceMax: number;
   categoryCounts: Record<string, number>;
 }) {
-  const { isOpen: mobileOpen, close } = useFilterDrawer();
+  const { isOpen: mobileOpen, open, close } = useFilterDrawer();
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -171,13 +200,32 @@ export function CategorySidebar({
   const activePriceFilter =
     searchParams.has("price_min") || searchParams.has("price_max");
 
-  const [localPriceMin, setLocalPriceMin] = useState(currentPriceMin);
-  const [localPriceMax, setLocalPriceMax] = useState(currentPriceMax);
+  const [priceState, setPriceState] = useState<PriceState>({
+    syncedPriceMin: currentPriceMin,
+    syncedPriceMax: currentPriceMax,
+    localPriceMin: currentPriceMin,
+    localPriceMax: currentPriceMax,
+  });
 
-  useEffect(() => {
-    setLocalPriceMin(currentPriceMin);
-    setLocalPriceMax(currentPriceMax);
-  }, [currentPriceMin, currentPriceMax]);
+  if (
+    priceState.syncedPriceMin !== currentPriceMin ||
+    priceState.syncedPriceMax !== currentPriceMax
+  ) {
+    setPriceState({
+      syncedPriceMin: currentPriceMin,
+      syncedPriceMax: currentPriceMax,
+      localPriceMin: currentPriceMin,
+      localPriceMax: currentPriceMax,
+    });
+  }
+
+  const { localPriceMin, localPriceMax } = priceState;
+  const setLocalPriceMin = (value: number) => {
+    setPriceState((current) => ({ ...current, localPriceMin: value }));
+  };
+  const setLocalPriceMax = (value: number) => {
+    setPriceState((current) => ({ ...current, localPriceMax: value }));
+  };
 
   // ── Swipe to close logic ──
   const touchStart = useRef<number | null>(null);
@@ -250,6 +298,14 @@ export function CategorySidebar({
     router.push(`/products${params.toString() ? `?${params.toString()}` : ""}`);
   }
 
+  function handleSheetOpenChange(nextOpen: boolean) {
+    if (nextOpen) {
+      open();
+    } else {
+      close();
+    }
+  }
+
   const panelContent = (
     <div className="flex flex-col gap-6 p-5">
       {/* CARI PRODUK */}
@@ -298,13 +354,25 @@ export function CategorySidebar({
           onChangeMax={setLocalPriceMax}
         />
 
-        <div className="flex items-center justify-between mt-3 mb-4">
-          <div className="bg-muted/40 border border-border/50 rounded-xl px-2.5 py-1 text-[10px] font-mono font-bold text-foreground">
-            Rp {localPriceMin.toLocaleString("id-ID")}
+        <div className="flex items-center justify-between gap-2 mt-3 mb-4">
+          <div className="relative flex-1 min-w-0 group">
+            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-muted-foreground group-focus-within:text-primary transition-colors">Rp</span>
+            <Input
+              type="number"
+              value={localPriceMin}
+              onChange={(e) => setLocalPriceMin(Number(e.target.value))}
+              className="h-9 w-full pl-7 pr-1 rounded-xl border-border/50 bg-muted/20 text-[10px] md:text-[11px] font-mono font-bold focus:bg-background focus:ring-1 focus:ring-primary shadow-none border-none"
+            />
           </div>
-          <span className="text-muted-foreground/40">—</span>
-          <div className="bg-muted/40 border border-border/50 rounded-xl px-2.5 py-1 text-[10px] font-mono font-bold text-foreground">
-            Rp {localPriceMax.toLocaleString("id-ID")}
+          <span className="text-muted-foreground/40 shrink-0 text-xs">—</span>
+          <div className="relative flex-1 min-w-0 group">
+            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-muted-foreground group-focus-within:text-primary transition-colors">Rp</span>
+            <Input
+              type="number"
+              value={localPriceMax}
+              onChange={(e) => setLocalPriceMax(Number(e.target.value))}
+              className="h-9 w-full pl-7 pr-1 rounded-xl border-border/50 bg-muted/20 text-[10px] md:text-[11px] font-mono font-bold focus:bg-background focus:ring-1 focus:ring-primary shadow-none border-none"
+            />
           </div>
         </div>
 
@@ -346,11 +414,11 @@ export function CategorySidebar({
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
+        <div className="flex flex-col gap-2">
           {tree.map((node) => (
             <Link
               key={node.id}
-              href={buildCategoryHref(searchParams, node.slug)}
+              href={buildToggleCategoryHref(searchParams, node.slug)}
               onClick={close}
               className={`flex flex-row items-center justify-between gap-1.5 rounded-2xl border px-3 py-2 transition-all shadow-none
                 ${activeSlug === node.slug
@@ -382,11 +450,11 @@ export function CategorySidebar({
                     <span className="w-1 h-3 bg-primary/60 rounded-full inline-block"></span>
                     {node.name}
                   </Typography>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="flex flex-col gap-2">
                     {node.children.map((child) => (
                       <Link
                         key={child.id}
-                        href={buildCategoryHref(searchParams, child.slug)}
+                        href={buildToggleCategoryHref(searchParams, child.slug)}
                         onClick={close}
                         className={`flex flex-row items-center justify-between gap-1.5 rounded-xl border px-2.5 py-1.5 transition-all shadow-none
                           ${activeSlug === child.slug
@@ -416,7 +484,7 @@ export function CategorySidebar({
 
   return (
     <>
-      <Sheet open={mobileOpen} onOpenChange={(val) => !val && close()}>
+      <Sheet open={mobileOpen} onOpenChange={handleSheetOpenChange}>
         <SheetContent
           side="left"
           hideClose

@@ -18,6 +18,29 @@ export const dynamic = "force-dynamic";
 
 const PER_PAGE = 12;
 
+function buildEffectivePriceFilter(
+  priceMin: number | null,
+  priceMax: number | null,
+) {
+  const discountedPriceFilters = ["discount_price.not.is.null"];
+  const regularPriceFilters = ["discount_price.is.null"];
+
+  if (priceMin !== null) {
+    discountedPriceFilters.push(`discount_price.gte.${priceMin}`);
+    regularPriceFilters.push(`price.gte.${priceMin}`);
+  }
+
+  if (priceMax !== null) {
+    discountedPriceFilters.push(`discount_price.lte.${priceMax}`);
+    regularPriceFilters.push(`price.lte.${priceMax}`);
+  }
+
+  return [
+    `and(${discountedPriceFilters.join(",")})`,
+    `and(${regularPriceFilters.join(",")})`,
+  ].join(",");
+}
+
 export default async function ProductsPage({
   searchParams,
 }: {
@@ -37,7 +60,6 @@ export default async function ProductsPage({
 
   const [
     { data: categories },
-    { data: minPriceArr },
     { data: maxPriceArr },
     { data: allProductsForCount },
   ] = await Promise.all([
@@ -49,18 +71,12 @@ export default async function ProductsPage({
       .from("products")
       .select("price")
       .eq("is_active", true)
-      .order("price", { ascending: true })
-      .limit(1),
-    supabase
-      .from("products")
-      .select("price")
-      .eq("is_active", true)
       .order("price", { ascending: false })
       .limit(1),
     supabase.from("products").select("category_id").eq("is_active", true),
   ]);
 
-  const globalMin = Math.floor((minPriceArr?.[0]?.price || 0) / 1000) * 1000;
+  const globalMin = 0;
   const globalMax =
     Math.ceil((maxPriceArr?.[0]?.price || 1000000) / 1000) * 1000;
 
@@ -111,8 +127,9 @@ export default async function ProductsPage({
     query = query.ilike("title", `%${search.trim()}%`);
   }
 
-  if (priceMinParam !== null) query = query.gte("price", priceMinParam);
-  if (priceMaxParam !== null) query = query.lte("price", priceMaxParam);
+  if (priceMinParam !== null || priceMaxParam !== null) {
+    query = query.or(buildEffectivePriceFilter(priceMinParam, priceMaxParam));
+  }
 
   switch (sort) {
     case "price-asc":
@@ -139,7 +156,7 @@ export default async function ProductsPage({
   return (
     <main className="min-h-screen mb-20 bg-background text-foreground pb-24 md:pb-20 overflow-x-hidden">
       {/* Mengembalikan padding atas global agar tidak mepet */}
-      <div className="flex flex-col gap-6 md:gap-8 pt-24 md:pt-32">
+      <div className="flex flex-col gap-4 md:gap-6 pt-4 md:pt-12">
         {/* ... breadcrumb ... */}
         {/* ... header ... */}
         {/* ... sidebar ... */}
@@ -221,7 +238,7 @@ export default async function ProductsPage({
 
               {products && products.length > 0 ? (
                 /* Grid Produk */
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 mt-4 md:mt-0">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mt-4 md:mt-0">
                   {products.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
@@ -232,12 +249,12 @@ export default async function ProductsPage({
                   <div className="w-16 h-16 mx-auto bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center mb-4">
                     <ShoppingBagIcon className="h-8 w-8 text-primary/60" />
                   </div>
-                  <Typography variant="h6" as="p" className="font-bold">
+                  <Typography variant="h6" as="p" className="text-center font-bold">
                     {search
                       ? `Tidak ditemukan produk untuk "${search}"`
                       : "Belum ada produk tersedia."}
                   </Typography>
-                  <Typography variant="body-sm" color="muted" className="mt-1.5">
+                  <Typography variant="body-sm" color="muted" className="text-center mt-1.5">
                     {search
                       ? "Coba kata kunci lain atau reset filter pencarian."
                       : "Produk baru akan segera hadir untuk Anda."}

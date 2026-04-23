@@ -30,7 +30,7 @@ export function CategorySection({ category, products }: CategorySectionProps) {
 
   return (
     <section className="scroll-mt-24 py-8 md:py-16" id={`cat-${category.slug}`}>
-      <div className="container mx-auto max-w-7xl px-4 md:px-6">
+      <div className="container mx-auto max-w-7xl px-8 md:px-6">
         {/* --- HEADER SECTION --- */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-6 border-b border-border/40 pb-6 relative">
           <div className="space-y-2">
@@ -39,7 +39,7 @@ export function CategorySection({ category, products }: CategorySectionProps) {
                 {category.name}
               </Typography>
               {(category.slug === "baru-rilis" || category.name === "Baru Rilis") && (
-                <Badge variant="destructive" className="animate-pulse">
+                <Badge variant="outline" className="bg-primary/80 text-primary-foreground border-none animate-pulse px-3 backdrop-blur-md font-bold">
                   New Release
                 </Badge>
               )}

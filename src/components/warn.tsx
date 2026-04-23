@@ -150,15 +150,6 @@ export function WarnSection({ transparent = false }: { transparent?: boolean }) 
         {/* ── Header ── */}
         <div className="text-center mb-12 md:mb-16">
           <div className="flex justify-center mb-6">
-            <Badge
-              variant="glass"
-              className="px-4 py-1.5 rounded-full border-white/30"
-            >
-              <ExclamationTriangleIcon className="w-4 h-4 mr-2 text-white" />
-              <Typography variant="caption" className="font-normal tracking-wider !text-white">
-                Perlu Diperhatikan
-              </Typography>
-            </Badge>
           </div>
           <Typography variant="h2" className="text-center !text-white text-3xl md:text-4xl lg:text-5xl">
             Penting untuk Diketahui

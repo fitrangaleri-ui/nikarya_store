@@ -330,22 +330,22 @@ export default async function AdminProductsPage({
               <Table className="w-full">
                 <TableHeader className="bg-primary border-b border-primary-bg/20">
                   <TableRow className="hover:bg-transparent border-transparent">
-                    <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest w-20 py-4 pl-5">
+                    <TableHead className="text-[11px] font-bold text-white/80 uppercase  w-20 py-4 pl-5">
                       Gambar
                     </TableHead>
-                    <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest min-w-[200px] py-4">
+                    <TableHead className="text-[11px] font-bold text-white/80 uppercase  min-w-[200px] py-4">
                       Nama Produk
                     </TableHead>
-                    <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest min-w-[150px] py-4">
+                    <TableHead className="text-[11px] font-bold text-white/80 uppercase  min-w-[150px] py-4">
                       Kategori
                     </TableHead>
-                    <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest min-w-[150px] py-4">
+                    <TableHead className="text-[11px] font-bold text-white/80 uppercase  min-w-[150px] py-4">
                       Harga
                     </TableHead>
-                    <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest text-center min-w-[150px] py-4">
+                    <TableHead className="text-[11px] font-bold text-white/80 uppercase  text-center min-w-[150px] py-4">
                       Status
                     </TableHead>
-                    <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest text-right w-32 pr-5 py-4">
+                    <TableHead className="text-[11px] font-bold text-white/80 uppercase  text-right w-32 pr-5 py-4">
                       Aksi
                     </TableHead>
                   </TableRow>

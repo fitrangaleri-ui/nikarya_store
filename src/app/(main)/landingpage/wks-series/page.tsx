@@ -81,10 +81,10 @@ export default async function WKSSeriesPage() {
         />
 
         <section id="templates" className="py-20 md:py-24 bg-transparent border-t border-border/50">
-          <div className="container mx-auto px-4 md:px-6">
+          <div className="container mx-auto px-8 md:px-6">
             <ScrollReveal className="max-w-xl mx-auto text-center mb-12 md:mb-16">
               <Typography variant="h3" className="text-center">
-                Semua Tema
+                Lihat Semua Tema
               </Typography>
             </ScrollReveal>
 
@@ -110,7 +110,7 @@ export default async function WKSSeriesPage() {
           </div>
         </section>
 
-        <section id="pricing" className="relative bg-gradient-to-br from-primary to-secondary-foreground shadow-2xl py-20 md:py-28 overflow-hidden">
+        <section id="pricing" className="relative bg-gradient-to-br from-primary to-secondary-foreground py-20 md:py-28 overflow-hidden">
           {/* Decorative Circles shared for both Price & Warn */}
           <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10 pointer-events-none" />
           <div className="absolute bottom-[10%] left-[10%] h-32 w-32 rounded-full bg-white/5 pointer-events-none" />

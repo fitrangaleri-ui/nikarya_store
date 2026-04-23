@@ -4,18 +4,18 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
-  Package,
-  ShoppingCart,
-  UserCircle,
-  CreditCard,
-  Store,
-  Ticket,
-  ExternalLink,
-  LogOut,
-} from "lucide-react";
+  Squares2X2Icon,
+  CubeIcon,
+  ShoppingCartIcon,
+  UserCircleIcon,
+  CreditCardIcon,
+  ShoppingBagIcon,
+  TicketIcon,
+  ArrowTopRightOnSquareIcon,
+  ArrowLeftStartOnRectangleIcon,
+  PhotoIcon,
+} from "@heroicons/react/24/outline";
 import { logout } from "@/app/(auth)/actions";
-import { PhotoIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Typography } from "@/components/ui/typography";
@@ -75,8 +75,8 @@ export default function AdminLayout({
 
   const getLinkClass = (active: boolean) =>
     `group flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${active
-      ? "bg-primary/15 text-primary shadow-sm"
-      : "text-muted-foreground hover:bg-primary/8 hover:text-foreground"
+      ? "bg-primary/10 text-primary shadow-sm ring-1 ring-primary/20"
+      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
     }`;
 
   const sidebarContent = (
@@ -87,7 +87,7 @@ export default function AdminLayout({
           className="flex items-center gap-2.5 hover:opacity-80 transition-opacity"
         >
           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Store className="h-4 w-4 text-primary" />
+            <ShoppingBagIcon className="h-4 w-4 text-primary" />
           </div>
           <Typography variant="h6" as="span" className="font-black tracking-tight text-foreground">
             Admin
@@ -95,85 +95,89 @@ export default function AdminLayout({
         </Link>
       </div>
 
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto custom-scrollbar">
-        <Typography variant="caption" as="p" className="px-3 font-bold text-muted-foreground/70 uppercase tracking-widest mb-1.5 mt-2">
-          Menu Utama
-        </Typography>
+      <nav className="flex-1 px-3 py-4 space-y-4 overflow-y-auto custom-scrollbar">
+        <div>
+          <Typography variant="caption" as="p" className="px-3 font-bold text-muted-foreground/70 uppercase mb-2 mt-2">
+            Menu Utama
+          </Typography>
+          <div className="flex flex-col divide-y divide-border/10">
+            <Link href="/admin" className={getLinkClass(isDashboard)}>
+              <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isDashboard ? "bg-primary/10" : "bg-muted/50 group-hover:bg-primary/10"}`}>
+                <Squares2X2Icon className={`h-[18px] w-[18px] transition-colors ${isDashboard ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+              </div>
+              <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Dashboard</Typography>
+            </Link>
 
-        <Link href="/admin" className={getLinkClass(isDashboard)}>
-          <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isDashboard ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
-            <LayoutDashboard className={`h-[16px] w-[16px] transition-colors ${isDashboard ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+            <Link href="/admin/products" className={getLinkClass(isProducts)}>
+              <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isProducts ? "bg-primary/10" : "bg-muted/50 group-hover:bg-primary/10"}`}>
+                <CubeIcon className={`h-[18px] w-[18px] transition-colors ${isProducts ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+              </div>
+              <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Produk</Typography>
+            </Link>
+
+            <Link href="/admin/orders" className={getLinkClass(isOrders)}>
+              <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isOrders ? "bg-primary/10" : "bg-muted/50 group-hover:bg-primary/10"}`}>
+                <ShoppingCartIcon className={`h-[18px] w-[18px] transition-colors ${isOrders ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+              </div>
+              <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Pesanan</Typography>
+            </Link>
+
+            <Link href="/admin/promos" className={getLinkClass(isPromos)}>
+              <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isPromos ? "bg-primary/10" : "bg-muted/50 group-hover:bg-primary/10"}`}>
+                <TicketIcon className={`h-[18px] w-[18px] transition-colors ${isPromos ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+              </div>
+              <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Promo</Typography>
+            </Link>
+
+            <Link href="/admin/media" className={getLinkClass(isMedia)}>
+              <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isMedia ? "bg-primary/10" : "bg-muted/50 group-hover:bg-primary/10"}`}>
+                <PhotoIcon className={`h-[18px] w-[18px] transition-colors ${isMedia ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+              </div>
+              <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Media</Typography>
+            </Link>
           </div>
-          <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Dashboard</Typography>
-        </Link>
+        </div>
 
-        <Link href="/admin/products" className={getLinkClass(isProducts)}>
-          <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isProducts ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
-            <Package className={`h-[16px] w-[16px] transition-colors ${isProducts ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+        <div>
+          <Typography variant="caption" as="p" className="px-3 font-bold text-muted-foreground/70 uppercase mb-2 mt-2">
+            Pengaturan
+          </Typography>
+          <div className="flex flex-col divide-y divide-border/10">
+            <Link href="/admin/payment-gateway" className={getLinkClass(isPayment)}>
+              <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isPayment ? "bg-primary/10" : "bg-muted/50 group-hover:bg-primary/10"}`}>
+                <CreditCardIcon className={`h-[18px] w-[18px] transition-colors ${isPayment ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+              </div>
+              <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Metode Bayar</Typography>
+            </Link>
+
+            <Link href="/admin/account" className={getLinkClass(isAccount)}>
+              <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isAccount ? "bg-primary/10" : "bg-muted/50 group-hover:bg-primary/10"}`}>
+                <UserCircleIcon className={`h-[18px] w-[18px] transition-colors ${isAccount ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+              </div>
+              <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Akun</Typography>
+            </Link>
           </div>
-          <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Produk</Typography>
-        </Link>
+        </div>
 
-        <Link href="/admin/orders" className={getLinkClass(isOrders)}>
-          <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isOrders ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
-            <ShoppingCart className={`h-[16px] w-[16px] transition-colors ${isOrders ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
+        <div className="pt-2">
+          <div className="flex flex-col divide-y divide-border/10">
+            <a href="/" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-muted-foreground hover:bg-muted/50 hover:text-foreground">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 bg-muted/50 group-hover:bg-primary/10">
+                <ArrowTopRightOnSquareIcon className="h-[18px] w-[18px] transition-colors text-muted-foreground group-hover:text-primary" />
+              </div>
+              <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Lihat Toko</Typography>
+            </a>
+
+            <form action={logout} className="py-1">
+              <button className="group flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-all duration-200 text-destructive/80 hover:bg-destructive/10 hover:text-destructive active:scale-[0.98] outline-none focus-visible:ring-2 focus-visible:ring-destructive/20">
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 bg-destructive/5 group-hover:bg-destructive/15">
+                  <ArrowLeftStartOnRectangleIcon className="h-[18px] w-[18px] transition-colors text-destructive" />
+                </div>
+                <Typography variant="body-sm" as="span" className="truncate font-bold flex-1 text-left">Keluar Akun</Typography>
+              </button>
+            </form>
           </div>
-          <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Pesanan</Typography>
-        </Link>
-
-        <Link href="/admin/promos" className={getLinkClass(isPromos)}>
-          <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isPromos ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
-            <Ticket className={`h-[16px] w-[16px] transition-colors ${isPromos ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
-          </div>
-          <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Promo</Typography>
-        </Link>
-
-        <Link href="/admin/media" className={getLinkClass(isMedia)}>
-          <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isMedia ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
-            <PhotoIcon className={`h-[16px] w-[16px] transition-colors ${isMedia ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
-          </div>
-          <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Media</Typography>
-        </Link>
-
-        <div className="h-px w-full bg-[var(--glass-border)] my-2" />
-
-        <Typography variant="caption" as="p" className="px-3 font-bold text-muted-foreground/70 uppercase tracking-widest mb-1.5 mt-2">
-          Pengaturan
-        </Typography>
-
-        <Link href="/admin/payment-gateway" className={getLinkClass(isPayment)}>
-          <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isPayment ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
-            <CreditCard className={`h-[16px] w-[16px] transition-colors ${isPayment ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
-          </div>
-          <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Metode Bayar</Typography>
-        </Link>
-
-        <Link href="/admin/account" className={getLinkClass(isAccount)}>
-          <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 ${isAccount ? "bg-primary/15" : "bg-muted/50 group-hover:bg-primary/10"}`}>
-            <UserCircle className={`h-[16px] w-[16px] transition-colors ${isAccount ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
-          </div>
-          <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Akun</Typography>
-        </Link>
-
-        <div className="h-px w-full bg-[var(--glass-border)] my-2" />
-
-        <a href="/" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-muted-foreground hover:bg-primary/8 hover:text-foreground">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 bg-muted/50 group-hover:bg-primary/10">
-            <ExternalLink className="h-[16px] w-[16px] transition-colors text-muted-foreground group-hover:text-primary" />
-          </div>
-          <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Lihat Toko</Typography>
-        </a>
-
-        <div className="h-px w-full bg-[var(--glass-border)] my-2" />
-
-        <form action={logout} className="px-3 pb-4">
-          <button className="group flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-all duration-200 text-destructive/80 hover:bg-destructive/10 hover:text-destructive active:scale-[0.98]">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 bg-destructive/5 group-hover:bg-destructive/15">
-              <LogOut className="h-[16px] w-[16px] transition-colors text-destructive" />
-            </div>
-            <Typography variant="body-sm" as="span" className="truncate font-bold flex-1 text-left">Keluar Akun</Typography>
-          </button>
-        </form>
+        </div>
       </nav>
     </>
   );
@@ -188,7 +192,7 @@ export default function AdminLayout({
           className="flex items-center gap-2.5"
         >
           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-            <Store className="h-4 w-4 text-primary" />
+            <ShoppingBagIcon className="h-4 w-4 text-primary" />
           </div>
           <Typography variant="h6" as="span" className="font-black tracking-tight text-foreground">
             Admin Panel
@@ -217,10 +221,10 @@ export default function AdminLayout({
               <SheetTitle>Admin Menu</SheetTitle>
             </SheetHeader>
           </VisuallyHidden>
-          
+
           {/* Decorative Glow */}
           <div className="absolute top-0 left-0 w-full h-32 bg-primary/5 blur-[50px] pointer-events-none -z-10" />
-          
+
           {sidebarContent}
         </SheetContent>
       </Sheet>

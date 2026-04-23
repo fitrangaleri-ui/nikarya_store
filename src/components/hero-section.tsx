@@ -28,6 +28,10 @@ export function HeroSection({
   descriptionClassName,
   fullWidth = false,
 }: HeroSectionProps) {
+  const hasValidImage = Boolean(
+    imageSrc && (typeof imageSrc === "string" ? imageSrc.trim() !== "" : typeof imageSrc === "object" && "src" in (imageSrc as any))
+  );
+
   return (
     <div className={cn(
       "w-full pt-2 md:pt-4 mx-auto px-4 md:px-6 lg:px-8 transition-all duration-700",
@@ -82,13 +86,15 @@ export function HeroSection({
 
           {/* ── Right Column: Image ── */}
           <div className="w-full mt-12 md:mt-0 md:w-2/5 relative min-h-[300px] md:min-h-[500px] flex items-end justify-end animate-in fade-in slide-in-from-right duration-1000 delay-200">
-            <Image
-              src={imageSrc}
-              alt={title}
-              fill
-              priority
-              className="object-cover md:object-contain object-center md:object-right-bottom transition-transform duration-500 hover:scale-[1.02]"
-            />
+            {hasValidImage ? (
+              <Image
+                src={imageSrc!}
+                alt={title || "Hero Image"}
+                fill
+                priority
+                className="object-cover md:object-contain object-center md:object-right-bottom transition-transform duration-500 hover:scale-[1.02]"
+              />
+            ) : null}
           </div>
           {/* ── End Right Column ── */}
         </div>

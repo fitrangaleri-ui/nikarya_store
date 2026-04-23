@@ -13,7 +13,7 @@ export function ProductCardDemo({ demoLink }: { demoLink: any }) {
   const imageSrc = resolveImageSrc(demoLink.image_url);
 
   return (
-    <div className="group flex flex-col glass rounded-2xl overflow-hidden transition-all duration-500 h-full relative hover:shadow-elevation-lg hover:-translate-y-1 hover:border-primary/40">
+    <div className="group flex flex-col glass rounded-2xl overflow-hidden transition-all duration-500 h-full relative hover:-translate-y-1 hover:border-primary/40">
       <div
         className="relative aspect-[4/3] bg-muted/30 overflow-hidden border-b border-border/40 w-full cursor-pointer"
         onClick={() => openPreview({ label: demoLink.label || "Demo", url: demoLink.url })}
