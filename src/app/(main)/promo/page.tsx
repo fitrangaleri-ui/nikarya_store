@@ -31,7 +31,7 @@ export default async function PromoPage() {
       <HeroSection
         title="Dapatkan Penawaran Terbaik Untukmu"
         description="Salin kode promo di bawah ini dan gunakan saat checkout untuk menikmati potongan harga eksklusif di order kamu hari ini."
-        imageSrc="/landingpage/wks-series.png"
+        imageSrc="/landing-assets/wks-series.png"
         badgeLabel="Promo & Diskon Eksklusif"
         buttonLabel="Lihat Koleksi"
         buttonHref="/products"

@@ -73,7 +73,7 @@ export default async function WKSSeriesPage() {
               <b>TEMA WALIMATUL KHITAN</b> dari <b>NIKARYA DIGITAL</b> hadir dengan desain elegan, responsif, interaktif dan siap pakai dalam format <b>JSON</b> tema ini dirancang khusus untuk penyedia layanan jasa pembuatan undangan digital profesional.
             </>
           }
-          imageSrc="/landingpage/wks-series.png"
+          imageSrc="/landing-assets/wks-series.png"
           buttonLabel="Lihat Koleksi"
           buttonHref="#templates"
           badgeLabel="Koleksi Walimatul Khitan"

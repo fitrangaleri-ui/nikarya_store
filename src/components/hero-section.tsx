@@ -21,7 +21,7 @@ interface HeroSectionProps {
 export function HeroSection({
   title = "Elevate Your Digital Invitation Standard",
   description = "Template yang dirancang untuk menghadirkan kesan profesional sekaligus menyederhanakan cara kamu membuat undangan digital.",
-  imageSrc = "/landingpage/wks-series.png",
+  imageSrc = "/landing-assets/wks-series.png",
   badgeLabel = "Platform E-Template Indonesia",
   buttonLabel = "Explore Now",
   buttonHref = "/products",
