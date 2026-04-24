@@ -16,7 +16,7 @@ import {
   ShieldCheckIcon,
   ShoppingCartIcon,
   TagIcon,
-} from "@heroicons/react/24/outline";
+} from "@heroicons/react/24/solid";
 import { Button } from "@/components/ui/button";
 import { BuyButton } from "./buy-button";
 import { ProductCard } from "@/components/product-card";
@@ -33,6 +33,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Typography } from "@/components/ui/typography";
+import { Badge } from "@/components/ui/badge";
 
 interface ProductData {
   id: string;
@@ -79,8 +80,8 @@ export function ProductDetailClient({
   const isDiscounted = !!product.discount_price;
   const discountPercentage = isDiscounted
     ? Math.round(
-        ((product.price - Number(product.discount_price)) / product.price) * 100,
-      )
+      ((product.price - Number(product.discount_price)) / product.price) * 100,
+    )
     : 0;
 
   const handleAddToCart = () => {
@@ -96,9 +97,9 @@ export function ProductDetailClient({
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-background pb-24 md:pb-20">
-      <div className="flex flex-col gap-8 pt-24 md:gap-10 md:pt-32">
+      <div className="flex flex-col gap-4 pt-4 md:gap-6 md:pt-12">
         <div className="container mx-auto max-w-6xl px-4 md:px-6">
-          <nav className="flex w-fit items-center gap-1.5 rounded-full border border-border/50 bg-card/40 px-4 py-2.5 shadow-sm backdrop-blur-sm">
+          <nav className="flex w-fit items-center gap-1.5 rounded-full border border-border/50 bg-card/40 px-4 py-2.5 backdrop-blur-sm">
             <Link
               href="/"
               className="flex items-center gap-1.5 rounded-full px-1 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -130,27 +131,27 @@ export function ProductDetailClient({
 
         <section className="container mx-auto max-w-6xl px-4 md:px-6">
           <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
-            <div className="group/carousel relative aspect-square overflow-hidden rounded-3xl border border-border/40 bg-card shadow-elevation-md">
+            <div className="group/carousel relative aspect-square overflow-hidden rounded-xl border border-border/40 bg-card">
               {(() => {
                 const thumbnailSrc = resolveImageSrc(product.thumbnail_url);
                 const galleryRaw =
                   product.product_images &&
-                  Array.isArray(product.product_images) &&
-                  product.product_images.length > 0
+                    Array.isArray(product.product_images) &&
+                    product.product_images.length > 0
                     ? [...product.product_images]
-                        .sort(
-                          (a: ProductMediaImage, b: ProductMediaImage) =>
-                            a.sort_order - b.sort_order,
-                        )
-                        .map((img: ProductMediaImage) => resolveImageSrc(img.image_url))
-                        .filter(Boolean) as string[]
+                      .sort(
+                        (a: ProductMediaImage, b: ProductMediaImage) =>
+                          a.sort_order - b.sort_order,
+                      )
+                      .map((img: ProductMediaImage) => resolveImageSrc(img.image_url))
+                      .filter(Boolean) as string[]
                     : [];
 
                 const demoImages =
                   product.demo_links && Array.isArray(product.demo_links)
                     ? product.demo_links
-                        .map((d: { image_url?: string }) => resolveImageSrc(d.image_url))
-                        .filter(Boolean) as string[]
+                      .map((d: { image_url?: string }) => resolveImageSrc(d.image_url))
+                      .filter(Boolean) as string[]
                     : [];
 
                 galleryRaw.push(...demoImages);
@@ -222,9 +223,9 @@ export function ProductDetailClient({
 
                 return (
                   <DemoLinksModal demoLinks={dLinks}>
-                    <span className="absolute right-3 bottom-3 z-10 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border/60 bg-background/80 px-3 py-1.5 shadow-md backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-primary hover:bg-primary hover:text-primary-foreground">
+                    <span className="absolute right-3 bottom-3 z-10 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border/60 bg-background/80 px-3 py-1.5 backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-primary hover:bg-primary hover:text-primary-foreground">
                       <EyeIcon className="h-3.5 w-3.5 shrink-0" />
-                      <Typography as="span" variant="caption" className="font-semibold">
+                      <Typography as="span" variant="caption" className="font-semibold hover:text-primary-foreground">
                         Lihat Demo
                       </Typography>
                     </span>
@@ -241,77 +242,67 @@ export function ProductDetailClient({
 
                 <div className="flex flex-wrap items-center gap-2">
                   {product.sku && (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-primary ring-1 ring-inset ring-primary/20 backdrop-blur-md">
+                    <Badge variant="secondary" className="uppercase">
                       <ArchiveBoxIcon className="h-3 w-3" />
-                      <Typography as="span" variant="caption" color="primary" className="font-bold uppercase tracking-wider">
-                        {product.sku}
-                      </Typography>
-                    </span>
+                      {product.sku}
+                    </Badge>
                   )}
 
                   {product.categories?.name && (
-                    <span className="inline-flex items-center rounded-full border border-border/50 bg-card/60 px-3 py-1.5 shadow-sm backdrop-blur-md">
-                      <Typography as="span" variant="caption" className="font-medium uppercase tracking-wide">
-                        {product.categories.name}
-                      </Typography>
-                    </span>
+                    <Badge variant="secondary" className="backdrop-blur-md px-3 py-1.5 h-auto font-medium uppercase tracking-wide text-[10px]">
+                      {product.categories.name}
+                    </Badge>
                   )}
 
                   {product.tags?.map((tag) => {
                     const isNew = tag.toLowerCase() === "new";
                     return (
-                      <span
+                      <Badge
                         key={tag}
+                        variant="secondary"
                         className={cn(
-                          "inline-flex items-center rounded-full px-3 py-1.5 transition-all backdrop-blur-md",
-                          isNew 
-                            ? "bg-primary/80 text-white border-none" 
-                            : "bg-black/40 text-white border-none"
+                          "px-3 py-1.5 h-auto font-bold uppercase tracking-wide text-[10px] backdrop-blur-md border-none",
+                          isNew && "bg-primary/80 text-white"
                         )}
                       >
-                        <TagIcon className={cn("mr-1.5 h-3 w-3", isNew ? "text-white" : "text-white/70")} />
-                        <Typography as="span" variant="caption" className={cn("font-bold uppercase tracking-wide text-white")}>
-                          {tag}
-                        </Typography>
-                      </span>
+                        <TagIcon className={cn("mr-1.5 h-3 w-3", isNew ? "text-white" : "text-secondary-foreground/70")} />
+                        {tag}
+                      </Badge>
                     );
                   })}
                 </div>
               </div>
 
-              <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 px-5 py-4 shadow-sm backdrop-blur-md">
+              <div className="relative overflow-hidden rounded-xl border border-border/50 bg-card/50 px-5 py-4 backdrop-blur-md">
                 {isDiscounted ? (
                   <div className="relative z-10 flex items-center justify-between gap-4">
                     <div className="flex flex-col">
-                      <Typography variant="body-base" color="muted" as="span" className="mb-1 line-through font-medium">
+                      <Typography variant="body-base" color="muted" as="span" className="mb-1 line-through font-mono font-medium">
                         Rp {Number(product.price).toLocaleString("id-ID")}
                       </Typography>
-                      <Typography variant="h3" color="primary" as="span">
+                      <Typography variant="h3" color="primary" as="span" className="font-mono">
                         Rp {Number(finalPrice).toLocaleString("id-ID")}
                       </Typography>
                     </div>
 
-                    <span className="rounded-full bg-destructive/80 px-3 py-1.5 text-white backdrop-blur-md">
-                      <Typography as="span" variant="caption" className="font-bold">
-                        Hemat {discountPercentage}%
-                      </Typography>
-                    </span>
+                    <Badge variant="destructive" className="bg-destructive/80 text-white border-none backdrop-blur-md px-3 py-1.5 h-auto font-bold">
+                      Hemat {discountPercentage}%
+                    </Badge>
                   </div>
                 ) : (
                   <div className="relative z-10">
-                    <Typography variant="h3" color="primary" as="span" className="font-black">
+                    <Typography variant="h3" color="primary" as="span" className="font-black font-mono">
                       Rp {Number(finalPrice).toLocaleString("id-ID")}
                     </Typography>
                   </div>
                 )}
               </div>
 
-              <div className="space-y-3 rounded-2xl border border-border/50 bg-card/40 p-5 shadow-sm backdrop-blur-sm">
+              <div className="space-y-3 rounded-xl border border-border/50 bg-card/40 p-5 backdrop-blur-sm">
                 {[
-                  "File digital - download langsung setelah bayar",
-                  "Maks 5x download per pembelian",
-                  "Pembayaran aman via payment gateway",
-                  "Support tersedia jika ada kendala",
+                  "One Time Purchase",
+                  "Lifetime Access",
+                  "Support Available",
                 ].map((text) => (
                   <div key={text} className="flex items-center gap-3">
                     <CheckBadgeIcon className="h-5 w-5 flex-shrink-0 text-primary" />
@@ -327,10 +318,10 @@ export function ProductDetailClient({
                   onClick={handleAddToCart}
                   size="lg"
                   variant="outline"
-                  className="h-14 w-full rounded-full border-primary/40 bg-primary/5 text-primary shadow-sm transition-all hover:bg-primary hover:text-primary-foreground"
+                  className="h-14 w-full rounded-full border-primary/40 bg-primary/5 text-primary transition-all hover:bg-primary hover:text-primary-foreground"
                 >
                   <ShoppingCartIcon className="mr-2 h-5 w-5" />
-                  <Typography as="span" variant="body-sm" className="font-semibold">
+                  <Typography as="span" variant="body-base" className="font-semibold text-inherit">
                     Tambah ke Keranjang
                   </Typography>
                 </Button>
@@ -353,7 +344,7 @@ export function ProductDetailClient({
                 <button
                   onClick={handleAddToCart}
                   aria-label="Tambah ke Keranjang"
-                  className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl border-2 border-primary/20 bg-primary/10 text-primary transition-all hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl border-2 border-primary/20 bg-primary/10 text-primary transition-all hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <ShoppingCartIcon className="h-6 w-6" />
                 </button>
@@ -406,7 +397,7 @@ export function ProductDetailClient({
 
         {product.description && (
           <section className="container mx-auto mt-4 max-w-6xl px-4 md:px-6">
-            <div className="overflow-hidden rounded-3xl border border-border/50 bg-card/40 shadow-sm backdrop-blur-md">
+            <div className="overflow-hidden rounded-xl border border-border/50 bg-card/40 backdrop-blur-md">
               <button
                 onClick={() => setIsDescOpen(!isDescOpen)}
                 className="flex w-full items-center justify-between p-6 transition-colors hover:bg-card/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:p-8"
@@ -416,16 +407,14 @@ export function ProductDetailClient({
                   Deskripsi Produk
                 </Typography>
                 <ChevronDownIcon
-                  className={`h-6 w-6 text-muted-foreground transition-transform duration-300 ${
-                    isDescOpen ? "rotate-180" : ""
-                  }`}
+                  className={`h-6 w-6 text-muted-foreground transition-transform duration-300 ${isDescOpen ? "rotate-180" : ""
+                    }`}
                 />
               </button>
 
               <div
-                className={`grid transition-all duration-300 ease-in-out ${
-                  isDescOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-                }`}
+                className={`grid transition-all duration-300 ease-in-out ${isDescOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                  }`}
               >
                 <div className="overflow-hidden">
                   <div className="p-6 pt-0 md:p-8 md:pt-0">

@@ -127,7 +127,7 @@ export function WhatsAppButton() {
   return (
     <>
       {/* ── FAB Button ── */}
-      <div className="pointer-events-none fixed inset-x-0 bottom-6 z-[60] flex justify-end px-4 md:right-6 md:left-auto md:px-0">
+      <div className="pointer-events-none fixed inset-x-0 bottom-10 z-[60] flex justify-end px-4 md:right-6 md:left-auto md:px-0">
         <button
           type="button"
           onClick={() => setIsOpen((open) => !open)}

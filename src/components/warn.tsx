@@ -146,7 +146,7 @@ export function WarnSection({ transparent = false }: { transparent?: boolean }) 
         </>
       )}
 
-      <div className="mx-auto max-w-4xl px-6 relative z-10">
+      <div className="mx-auto max-w-6xl px-6 relative z-10">
         {/* ── Header ── */}
         <div className="text-center mb-12 md:mb-16">
           <div className="flex justify-center mb-6">
@@ -155,21 +155,40 @@ export function WarnSection({ transparent = false }: { transparent?: boolean }) 
             Penting untuk Diketahui
           </Typography>
           <Typography variant="body-base" className="text-sm mt-4 text-center md:text-base !text-white/80 max-w-lg mx-auto leading-relaxed">
-            Sebelum memulai penggunaan template, pastikan Anda memahami beberapa poin penting berikut demi kelancaran proses instalasi.
+            Sebelum memulai penggunaan template, pastikan Anda memahami beberapa poin penting berikut ini :
           </Typography>
         </div>
 
-        {/* ── Accordion List ── */}
-        <div className="flex flex-col gap-4">
-          {warningItems.map((item, i) => (
-            <AccordionItem
-              key={i}
-              question={item.q}
-              answer={item.a}
-              isOpen={openIdx === i}
-              onToggle={() => handleToggle(i)}
-            />
-          ))}
+        {/* ── Accordion List (2 Kolom di Desktop) ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+          {/* Kolom Kiri */}
+          <div className="flex flex-col gap-4">
+            {warningItems.filter((_, i) => i % 2 === 0).map((item, i) => (
+              <AccordionItem
+                key={i * 2}
+                question={item.q}
+                answer={item.a}
+                isOpen={openIdx === i * 2}
+                onToggle={() => handleToggle(i * 2)}
+              />
+            ))}
+          </div>
+
+          {/* Kolom Kanan */}
+          <div className="flex flex-col gap-4">
+            {warningItems.filter((_, i) => i % 2 !== 0).map((item, i) => {
+              const globalIdx = i * 2 + 1;
+              return (
+                <AccordionItem
+                  key={globalIdx}
+                  question={item.q}
+                  answer={item.a}
+                  isOpen={openIdx === globalIdx}
+                  onToggle={() => handleToggle(globalIdx)}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

@@ -118,12 +118,22 @@ async function sendFonnteMessage(target: string, message: string) {
                     response.status,
                     errorText,
                 );
+                return false;
             }
+
+            const result = await response.json().catch(() => null);
+            if (result && typeof result === "object" && "status" in result && !result.status) {
+                console.error("Fonnte notification rejected:", result);
+                return false;
+            }
+
+            return true;
         } finally {
             clearTimeout(timeout);
         }
     } catch (error) {
         console.error("Fonnte notification error:", error);
+        return false;
     }
 }
 

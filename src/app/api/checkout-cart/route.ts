@@ -259,27 +259,33 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    void notifyAdminNewOrder({
-      orderId,
-      customerName,
-      totalPayment: finalTotal,
-      paymentMethod:
-        paymentMethod ||
-        manualPaymentMethodId ||
-        paymentResult.payment_type ||
-        paymentResult.gateway_name ||
-        (isManual ? "manual" : null),
-    });
-
-    if (isManual) {
-      void notifyCustomerManualPaymentOrder({
+    const notificationJobs = [
+      notifyAdminNewOrder({
         orderId,
         customerName,
-        customerPhone,
         totalPayment: finalTotal,
-        manualPaymentMethodId,
-      });
+        paymentMethod:
+          paymentMethod ||
+          manualPaymentMethodId ||
+          paymentResult.payment_type ||
+          paymentResult.gateway_name ||
+          (isManual ? "manual" : null),
+      }),
+    ];
+
+    if (isManual) {
+      notificationJobs.push(
+        notifyCustomerManualPaymentOrder({
+          orderId,
+          customerName,
+          customerPhone,
+          totalPayment: finalTotal,
+          manualPaymentMethodId,
+        }),
+      );
     }
+
+    await Promise.allSettled(notificationJobs);
 
     // 10. Record promo usage
     if (appliedPromoId && appliedPromoCode) {

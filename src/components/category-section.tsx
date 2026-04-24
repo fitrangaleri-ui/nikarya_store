@@ -29,10 +29,10 @@ export function CategorySection({ category, products }: CategorySectionProps) {
   const displayedProducts = isExpanded ? products : products.slice(0, 4);
 
   return (
-    <section className="scroll-mt-24 py-8 md:py-16" id={`cat-${category.slug}`}>
-      <div className="container mx-auto max-w-7xl px-8 md:px-6">
+    <section className="scroll-mt-24 py-4 md:py-8" id={`cat-${category.slug}`}>
+      <div className="container mx-auto max-w-7xl px-4 md:px-6">
         {/* --- HEADER SECTION --- */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-6 border-b border-border/40 pb-6 relative">
+        <div className="flex flex-col md:flex-row md:items-end mb-6 md:mb-10 border-b border-border/40 pb-6 relative">
           <div className="space-y-2">
             <div className="flex items-center gap-3 flex-wrap">
               <Typography variant="h3">
@@ -78,7 +78,7 @@ export function CategorySection({ category, products }: CategorySectionProps) {
 
         {/* --- MOBILE BUTTON (Klik untuk Expand) --- */}
         {products.length > 4 && (
-          <div className="mt-10 md:hidden">
+          <div className="mt-8 md:hidden">
             <Button
               variant="outline"
               onClick={() => setIsExpanded(!isExpanded)}

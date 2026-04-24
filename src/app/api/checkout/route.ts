@@ -100,12 +100,14 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        void notifyAdminNewOrder({
-            orderId,
-            customerName: profile?.full_name || 'Customer',
-            totalPayment: effectivePrice,
-            paymentMethod: paymentMethod || paymentResult.payment_type || paymentResult.gateway_name || (isManual ? 'manual' : null),
-        })
+        await Promise.allSettled([
+            notifyAdminNewOrder({
+                orderId,
+                customerName: profile?.full_name || 'Customer',
+                totalPayment: effectivePrice,
+                paymentMethod: paymentMethod || paymentResult.payment_type || paymentResult.gateway_name || (isManual ? 'manual' : null),
+            }),
+        ])
 
         // 7. Return result to frontend
         return NextResponse.json({

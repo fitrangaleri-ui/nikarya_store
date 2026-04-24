@@ -209,7 +209,7 @@ export default async function ProductsPage({
             {/* Sidebar */}
             <Suspense
               fallback={
-                <div className="hidden lg:block w-64 h-64 animate-pulse bg-muted rounded-2xl border border-border/50" />
+                <div className="hidden lg:block w-64 h-64 animate-pulse bg-muted rounded-xl border border-border/50" />
               }
             >
               <CategorySidebar
@@ -245,7 +245,7 @@ export default async function ProductsPage({
                 </div>
               ) : (
                 /* Empty State (Liquid Glass) */
-                <div className="py-20 mt-4 text-center border border-dashed border-border/50 rounded-3xl bg-card/30 backdrop-blur-sm">
+                <div className="py-20 mt-4 text-center border border-dashed border-border/50 rounded-xl bg-card/30 backdrop-blur-sm">
                   <div className="w-16 h-16 mx-auto bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center mb-4">
                     <ShoppingBagIcon className="h-8 w-8 text-primary/60" />
                   </div>

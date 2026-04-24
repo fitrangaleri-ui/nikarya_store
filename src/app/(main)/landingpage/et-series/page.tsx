@@ -1,4 +1,3 @@
-
 import { HeroSection } from "@/components/hero-section";
 import { FaqSection } from "@/components/faq-section";
 import { WarnSection } from "@/components/warn";
@@ -12,14 +11,14 @@ import { ScrollReveal } from "@/components/scroll-reveal";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "WKS Series | Nikarya Store",
-  description: "Landing page for WKS Series",
+  title: "ET Series | Nikarya Store",
+  description: "Landing page for ET Series",
 };
 
-const wksFaqs = [
+const etFaqs = [
   {
-    q: "Apa itu Tema Walimatul Khitan Series?",
-    a: "Tema Batik Megamendung Series adalah template undangan digital bertema Khitanan yang disediakan dalam format JSON dan dirancang untuk digunakan di Elementor. Template ini bisa langsung diimpor melalui Dashboard Wordpress dan digunakan tanpa perlu coding.",
+    q: "Apa itu Tema Batik Series Series?",
+    a: "Tema Batik Series Series adalah template undangan digital bertema Engagement / Lamaran yang disediakan dalam format JSON dan dirancang untuk digunakan di Elementor. Template ini bisa langsung diimpor melalui Dashboard Wordpress dan digunakan tanpa perlu coding.",
   },
   {
     q: "Plugin apakah yang dibutuhkan untuk menggunakan template ini?",
@@ -47,19 +46,19 @@ const wksFaqs = [
   },
 ];
 
-export default async function WKSSeriesPage() {
+export default async function ETSeriesPage() {
   const supabase = createAdminClient();
-  const { data: wksProduct } = await supabase
+  const { data: etProduct } = await supabase
     .from("products")
     .select(
       "id, sku, slug, title, price, discount_price, thumbnail_url, product_demo_links(id, label, url, image_url, sort_order)"
     )
     .eq("is_active", true)
-    .ilike("sku", "wks-series")
+    .ilike("sku", "et-series")
     .limit(1)
     .maybeSingle();
 
-  const demoLinks = [...(wksProduct?.product_demo_links || [])].sort(
+  const demoLinks = [...(etProduct?.product_demo_links || [])].sort(
     (a: any, b: any) => (a.sort_order || 0) - (b.sort_order || 0)
   );
 
@@ -67,16 +66,16 @@ export default async function WKSSeriesPage() {
     <DemoPreviewProvider>
       <main className="flex flex-col min-h-screen pb-20">
         <HeroSection
-          title="Template Walimatul Khitan Series"
+          title="Template Wedding Batik Series"
           description={
             <>
-              <b>TEMA WALIMATUL KHITAN</b> dari <b>NIKARYA DIGITAL</b> hadir dengan desain elegan, responsif, interaktif dan siap pakai dalam format <b>JSON</b> tema ini dirancang khusus untuk penyedia layanan jasa pembuatan undangan digital profesional.
+              <b>TEMA Batik Series</b> dari <b>NIKARYA DIGITAL</b> hadir dengan desain elegan, responsif, interaktif dan siap pakai dalam format <b>JSON</b> tema ini dirancang khusus untuk penyedia layanan jasa pembuatan undangan digital profesional.
             </>
           }
-          imageSrc="/landingpage/wks-series.png"
+          imageSrc="/landingpage/et-series.png"
           buttonLabel="Lihat Koleksi"
           buttonHref="#templates"
-          badgeLabel="Koleksi Walimatul Khitan"
+          badgeLabel="Koleksi Batik Series"
           descriptionClassName="text-sm"
         />
 
@@ -87,7 +86,7 @@ export default async function WKSSeriesPage() {
                 Preview Tema
               </Typography>
               <Typography variant="body-base" color="muted" className="text-center mt-2">
-                Lihat 5 tema premium <b>Walimatul Khitan</b> Series
+                Lihat 5 tema premium <b>Batik Series</b> Series
               </Typography>
             </ScrollReveal>
 
@@ -128,7 +127,7 @@ export default async function WKSSeriesPage() {
 
             <ScrollReveal delay={200}>
               <PriceCard
-                product={wksProduct || undefined}
+                product={etProduct || undefined}
                 themeCount={demoLinks.length > 0 ? demoLinks.length : 5}
               />
             </ScrollReveal>
@@ -141,7 +140,7 @@ export default async function WKSSeriesPage() {
           </div>
         </section>
 
-        <FaqSection customFaqs={wksFaqs} />
+        <FaqSection customFaqs={etFaqs} />
       </main>
     </DemoPreviewProvider>
   );

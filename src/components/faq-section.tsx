@@ -179,13 +179,6 @@ export function FaqSection({
         {/* ── Header ── */}
         <div className="text-center mb-12 md:mb-16">
           <div className="flex justify-center mb-6">
-            <Badge
-              variant="outline"
-              className="bg-primary/8 border-primary/15 text-primary px-4 py-1.5 rounded-full hover:bg-primary/12 transition-colors duration-300"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse mr-2" />
-              Pertanyaan Umum
-            </Badge>
           </div>
           <Typography variant="h2" className="text-center">
             {title}

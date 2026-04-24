@@ -6,6 +6,7 @@
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { Typography } from "@/components/ui/typography";
 
 interface PrimaryButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
@@ -15,9 +16,9 @@ interface PrimaryButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const sizeMap = {
-  sm: "h-9  text-xs",
-  md: "h-10 text-sm",
-  lg: "h-12 text-sm",
+  sm: "h-9",
+  md: "h-10",
+  lg: "h-12",
 };
 
 export function PrimaryButton({
@@ -44,7 +45,9 @@ export function PrimaryButton({
         )}
         {...props}
       >
-        {children}
+        <Typography as="span" variant="body-base" className="relative flex items-center gap-2 text-inherit">
+          {children}
+        </Typography>
       </button>
     );
   }
@@ -58,8 +61,7 @@ export function PrimaryButton({
         "bg-primary hover:bg-primary/90",
         "text-primary-foreground font-medium",
         "flex items-center justify-center gap-2",
-        "transition-all duration-200",
-        "hover:scale-[1.01] active:scale-[0.98]",
+        "transition-all hover:scale-105 active:scale-95",
         "disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100",
         sizeMap[size],
         className,
@@ -79,14 +81,12 @@ export function PrimaryButton({
         aria-hidden
         className="absolute inset-0 rounded-full pointer-events-none"
         style={{
-          boxShadow:
-            "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
           border: "1px solid rgba(255,255,255,0.15)",
         }}
       />
 
       {/* Label + loading state */}
-      <span className="relative flex items-center gap-2">
+      <Typography as="span" variant="body-base" className="relative flex items-center gap-2 font-semibold text-inherit">
         {loading ? (
           <>
             <ArrowPathIcon className="h-4 w-4 animate-spin" />
@@ -95,7 +95,7 @@ export function PrimaryButton({
         ) : (
           children
         )}
-      </span>
+      </Typography>
     </button>
   );
 }

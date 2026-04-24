@@ -356,7 +356,15 @@ export function DemoPreviewProvider({ children }: { children: ReactNode }) {
 export function useDemoPreview() {
   const context = useContext(DemoPreviewContext);
   if (!context) {
-    throw new Error("useDemoPreview must be used within a DemoPreviewProvider");
+    return {
+      closePreview: () => {},
+      openPreview: ({ url }: DemoPreviewRequest) => {
+        if (typeof window === "undefined" || !isValidPreviewUrl(url)) return;
+
+        // Gracefully degrade when a consumer renders outside the provider tree.
+        window.open(url, "_blank", "noopener,noreferrer");
+      },
+    };
   }
   return context;
 }

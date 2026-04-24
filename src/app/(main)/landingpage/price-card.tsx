@@ -134,8 +134,7 @@ export function PriceCard({
                 Investasi Terbaik untuk Efisiensi Bisnis Undangan Digital Anda.
               </Typography>
               <Typography variant="body-sm" color="muted" className=" text-[12px] md:text-base leading-relaxed">
-                <span className="font-bold text-foreground">NIKARYA THEME</span> dirancang khusus untuk mempermudah alur kerja Anda.
-                Setiap template dalam format <span className="font-bold text-foreground">JSON</span> siap impor, memungkinkan Anda melayani klien lebih cepat dengan hasil yang tetap mewah dan profesional.
+                Template <span className="font-bold text-foreground">NIKARYA THEME</span> hadir untuk efisiensi bisnis Anda. Dapatkan akses ke tema undangan digital dalam format <span className="font-bold text-foreground">JSON</span> yang siap impor. Solusi tercepat untuk memberikan layanan undangan digital profesional kepada klien.
               </Typography>
             </div>
           </div>
