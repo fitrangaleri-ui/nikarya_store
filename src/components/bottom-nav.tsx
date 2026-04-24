@@ -37,7 +37,12 @@ export function BottomNav() {
   const { toggle: toggleFilter, isOpen: isFilterOpen } = useFilterDrawer();
 
   const isProductsPage = pathname.startsWith("/products");
+  const isLandingPage = pathname.startsWith("/landingpage");
   const akunHref = user ? "/dashboard" : "/login";
+
+  if (isLandingPage) {
+    return null;
+  }
 
   const handleCartClick = useCallback(() => {
     openCart();

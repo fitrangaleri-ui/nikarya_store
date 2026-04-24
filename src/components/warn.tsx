@@ -5,6 +5,20 @@ import { PlusIcon, MinusIcon, ExclamationTriangleIcon } from "@heroicons/react/2
 import { Typography } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 
+const keywords = ["WeddingPress", "Elementor", "JSON", "WordPress"];
+
+const boldKeywords = (text: string) => {
+  if (!text) return text;
+  const regex = new RegExp(`(${keywords.join("|")})`, "gi");
+  return text.split(regex).map((part, i) =>
+    keywords.some((k) => k.toLowerCase() === part.toLowerCase()) ? (
+      <b key={i} className="font-bold">{part}</b>
+    ) : (
+      part
+    )
+  );
+};
+
 const warningItems = [
   {
     q: "Wajib Paham Dasar WordPress & Elementor",
@@ -77,7 +91,7 @@ function AccordionItem({
             ${isOpen ? "!text-white" : "!text-white"}
           `}
         >
-          {question}
+          {boldKeywords(question)}
         </Typography>
 
         <span
@@ -120,7 +134,7 @@ function AccordionItem({
               ${isOpen ? "!text-white/90" : "!text-white/70"}
             `}
           >
-            {answer}
+            {boldKeywords(answer)}
           </Typography>
         </div>
       </div>

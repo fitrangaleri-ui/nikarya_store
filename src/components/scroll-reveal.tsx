@@ -22,28 +22,30 @@ export function ScrollReveal({
   distance = 40,
   duration = 1000,
   threshold = 0.1,
-  once = false,
+  once = true,
 }: ScrollRevealProps) {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const currentRef = ref.current;
+    
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-        } else {
-          // Only reset visibility if the element leaves through the bottom of the viewport
-          // (i.e., user is scrolling UP)
+          if (once && currentRef) {
+            observer.unobserve(currentRef);
+          }
+        } else if (!once) {
           if (entry.boundingClientRect.top > 0) {
             setIsVisible(false);
           }
         }
       },
-      { threshold }
+      { threshold, rootMargin: "50px" }
     );
 
-    const currentRef = ref.current;
     if (currentRef) {
       observer.observe(currentRef);
     }
@@ -84,6 +86,7 @@ export function ScrollReveal({
         transitionDuration: `${duration}ms`,
         transitionDelay: `${delay}ms`,
         transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+        willChange: "transform, opacity",
       }}
     >
       {children}

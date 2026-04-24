@@ -6,6 +6,20 @@ import { PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
 import { Typography } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 
+const keywords = ["WeddingPress", "Elementor", "JSON", "WordPress"];
+
+const boldKeywords = (text: string) => {
+  if (!text) return text;
+  const regex = new RegExp(`(${keywords.join("|")})`, "gi");
+  return text.split(regex).map((part, i) =>
+    keywords.some((k) => k.toLowerCase() === part.toLowerCase()) ? (
+      <b key={i} className="font-bold">{part}</b>
+    ) : (
+      part
+    )
+  );
+};
+
 const faqs = [
   {
     q: "Apa itu Nikarya Digital?",
@@ -90,7 +104,7 @@ function AccordionItem({
             ${isOpen ? "!text-primary-foreground" : "text-foreground group-hover:text-primary"}
           `}
         >
-          {question}
+          {boldKeywords(question)}
         </Typography>
 
         {/* Icon Plus/Minus */}
@@ -136,7 +150,7 @@ function AccordionItem({
               ${isOpen ? "!text-primary-foreground/80" : "text-muted-foreground"}
             `}
           >
-            {answer}
+            {boldKeywords(answer)}
           </Typography>
         </div>
       </div>

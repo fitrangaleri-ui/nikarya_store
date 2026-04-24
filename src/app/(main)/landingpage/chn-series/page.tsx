@@ -13,14 +13,14 @@ import { TemplatesAndPricingSkeleton } from "../skeleton-fallback";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "ET Series | Nikarya Store",
-  description: "Landing page for ET Series",
+  title: "CHN Series | Nikarya Store",
+  description: "Landing page for CHN Series",
 };
 
-const etFaqs = [
+const chnFaqs = [
   {
-    q: "Apa itu Tema Batik Series Series?",
-    a: "Tema Batik Series Series adalah template undangan digital bertema Engagement / Lamaran yang disediakan dalam format JSON dan dirancang untuk digunakan di Elementor. Template ini bisa langsung diimpor melalui Dashboard Wordpress dan digunakan tanpa perlu coding.",
+    q: "Apa itu Tema Chinese Series?",
+    a: "Tema Chinese Series adalah template undangan digital yang disediakan dalam format JSON dan dirancang untuk digunakan di Elementor. Template ini bisa langsung diimpor melalui Dashboard Wordpress dan digunakan tanpa perlu coding.",
   },
   {
     q: "Plugin apakah yang dibutuhkan untuk menggunakan template ini?",
@@ -48,19 +48,19 @@ const etFaqs = [
   },
 ];
 
-async function ETSeriesData() {
+async function CHNSeriesData() {
   const supabase = createAdminClient();
-  const { data: etProduct } = await supabase
+  const { data: chnProduct } = await supabase
     .from("products")
     .select(
       "id, sku, slug, title, price, discount_price, thumbnail_url, product_demo_links(id, label, url, image_url, sort_order)"
     )
     .eq("is_active", true)
-    .ilike("sku", "et-series")
+    .ilike("sku", "chn-series")
     .limit(1)
     .maybeSingle();
 
-  const demoLinks = [...(etProduct?.product_demo_links || [])].sort(
+  const demoLinks = [...(chnProduct?.product_demo_links || [])].sort(
     (a: any, b: any) => (a.sort_order || 0) - (b.sort_order || 0)
   );
 
@@ -73,7 +73,7 @@ async function ETSeriesData() {
               Preview Tema
             </Typography>
             <Typography variant="body-base" color="muted" className="text-center mt-2">
-              Lihat 5 tema premium <b>Batik Series</b> Series
+              Lihat {demoLinks.length > 0 ? demoLinks.length : 5} tema premium <b>CHINESE</b> Series
             </Typography>
           </ScrollReveal>
 
@@ -85,8 +85,8 @@ async function ETSeriesData() {
                   delay={(index % 3) * 100}
                   className="w-full h-full"
                 >
-                  <ProductCardDemo 
-                    demoLink={demo} 
+                  <ProductCardDemo
+                    demoLink={demo}
                     badgeLabel={index === demoLinks.length - 1 ? "Bonus Template" : "Design Premium"}
                     badgeVariant={index === demoLinks.length - 1 ? "destructive" : "glass"}
                   />
@@ -118,15 +118,17 @@ async function ETSeriesData() {
 
           <ScrollReveal delay={200}>
             <PriceCard
-              product={etProduct || undefined}
+              product={chnProduct || undefined}
               themeCount={demoLinks.length > 0 ? demoLinks.length : 5}
               features={[
-                "Tema Batik Series Eksklusif",
-                "Desain Elegan, Khas Nusantara, dan Responsif",
+                "Tema Chinese Series Eksklusif",
+                "Desain Elegan, Oriental, dan Responsif",
                 "Struktur JSON rapih dan mudah diedit",
-                `${demoLinks.length > 0 ? demoLinks.length : 5} Premium Theme`,
+                "4 Premium Theme",
+                "Bonus 1 Template Tema Papua",
                 "Gratis Aset Script Motion Control",
                 "Gratis Asset Script Animasi (HTML & CSS)",
+
                 "Gratis Asset Image (WEBP & SVG)"
               ]}
             />
@@ -143,29 +145,29 @@ async function ETSeriesData() {
   );
 }
 
-export default function ETSeriesPage() {
+export default function CHNSeriesPage() {
   return (
     <DemoPreviewProvider>
       <main className="flex flex-col min-h-screen pb-20">
         <HeroSection
-          title="Template Wedding Batik Series"
+          title="Template Wedding Chinese Series"
           description={
             <>
-              <b>TEMA Batik Series</b> dari <b>NIKARYA DIGITAL</b> hadir dengan desain elegan, responsif, interaktif dan siap pakai dalam format <b>JSON</b> tema ini dirancang khusus untuk penyedia layanan jasa pembuatan undangan digital profesional.
+              <b>TEMA CHINESE SERIES</b> dari <b>NIKARYA DIGITAL</b> hadir dengan desain elegan, responsif, interaktif dan siap pakai dalam format <b>JSON</b> tema ini dirancang khusus untuk penyedia layanan jasa pembuatan undangan digital profesional.
             </>
           }
-          imageSrc="/landing-assets/et-series.png"
+          imageSrc="/landing-assets/chn-series.png"
           buttonLabel="Lihat Koleksi"
           buttonHref="#templates"
-          badgeLabel="Koleksi Batik Series"
+          badgeLabel="Koleksi CHN Series"
           descriptionClassName="text-sm"
         />
 
         <Suspense fallback={<TemplatesAndPricingSkeleton />}>
-          <ETSeriesData />
+          <CHNSeriesData />
         </Suspense>
 
-        <FaqSection customFaqs={etFaqs} />
+        <FaqSection customFaqs={chnFaqs} />
       </main>
     </DemoPreviewProvider>
   );

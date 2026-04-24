@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Typography } from "@/components/ui/typography";
+import { cn } from "@/lib/utils";
 
 const WHATSAPP_BASE_URL = "https://wa.me/6285155201380";
 const WHATSAPP_TOGGLE_EVENT = "whatsapp:toggle";
@@ -124,6 +125,8 @@ export function WhatsAppButton() {
     return null;
   }
 
+  const isLandingPage = pathname?.startsWith("/landingpage");
+
   return (
     <>
       {/* ── FAB Button ── */}
@@ -132,7 +135,10 @@ export function WhatsAppButton() {
           type="button"
           onClick={() => setIsOpen((open) => !open)}
           aria-label={isOpen ? "Tutup WhatsApp" : "Buka WhatsApp"}
-          className="pointer-events-auto relative hidden h-16 w-16 items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 md:flex"
+          className={cn(
+            "pointer-events-auto relative h-16 w-16 items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95",
+            isLandingPage ? "flex" : "hidden md:flex"
+          )}
         >
           <span className="absolute right-1 top-1 z-10 h-3.5 w-3.5 rounded-full bg-red-500 ring-2 ring-white" />
           <Image

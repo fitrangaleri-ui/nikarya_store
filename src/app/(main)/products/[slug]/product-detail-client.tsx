@@ -242,14 +242,14 @@ export function ProductDetailClient({
 
                 <div className="flex flex-wrap items-center gap-2">
                   {product.sku && (
-                    <Badge variant="secondary" className="uppercase">
-                      <ArchiveBoxIcon className="h-3 w-3" />
+                    <Badge variant="outline" className="uppercase h-auto py-1.5 px-3">
+                      <ArchiveBoxIcon className="mr-1.5 h-3 w-3" />
                       {product.sku}
                     </Badge>
                   )}
 
                   {product.categories?.name && (
-                    <Badge variant="secondary" className="backdrop-blur-md px-3 py-1.5 h-auto font-medium uppercase tracking-wide text-[10px]">
+                    <Badge variant="outline" className="backdrop-blur-md px-3 py-1.5 h-auto font-medium uppercase tracking-wide text-[10px]">
                       {product.categories.name}
                     </Badge>
                   )}
@@ -259,13 +259,13 @@ export function ProductDetailClient({
                     return (
                       <Badge
                         key={tag}
-                        variant="secondary"
+                        variant="outline"
                         className={cn(
-                          "px-3 py-1.5 h-auto font-bold uppercase tracking-wide text-[10px] backdrop-blur-md border-none",
-                          isNew && "bg-primary/80 text-white"
+                          "px-3 py-1.5 h-auto font-bold uppercase tracking-wide text-[10px] backdrop-blur-md",
+                          isNew ? "bg-primary/10 text-primary border-primary/20" : "text-secondary-foreground/70"
                         )}
                       >
-                        <TagIcon className={cn("mr-1.5 h-3 w-3", isNew ? "text-white" : "text-secondary-foreground/70")} />
+                        <TagIcon className={cn("mr-1.5 h-3 w-3", isNew ? "text-primary" : "text-secondary-foreground/70")} />
                         {tag}
                       </Badge>
                     );
@@ -441,7 +441,7 @@ export function ProductDetailClient({
                 Produk Terkait
               </Typography>
             </div>
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-4 md:gap-6">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6">
               {relatedProducts.map((rp) => (
                 <ProductCard key={rp.id} product={rp} />
               ))}
@@ -452,3 +452,5 @@ export function ProductDetailClient({
     </main>
   );
 }
+
+

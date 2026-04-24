@@ -143,7 +143,7 @@ export function ProductCard({ product }: { product: any }) {
             <Badge
               variant="outline"
               className={cn(
-                "font-semibold tracking-tight px-2.5 backdrop-blur-md border-none",
+                "capitalize tracking-tight px-2.5 backdrop-blur-md border-none",
                 displayTag === "new"
                   ? "bg-primary/80 text-white"
                   : "bg-black/40 text-white"
@@ -159,7 +159,7 @@ export function ProductCard({ product }: { product: any }) {
           <div className="absolute top-3 right-3 z-10">
             <Badge
               variant="outline"
-              className="bg-destructive/80 text-white border-none backdrop-blur-md px-2.5 font-bold"
+              className="bg-destructive/80 text-white border-none backdrop-blur-md px-2.5"
             >
               -{discountPercentage}%
             </Badge>
@@ -177,7 +177,7 @@ export function ProductCard({ product }: { product: any }) {
             className="font-semibold leading-tight group-hover:text-primary transition-colors line-clamp-2"
           >
             {product.sku && (
-              <Badge variant="outline" className="h-7 bg-primary/10 text-primary border-primary/20 mr-2 align-middle px-3 backdrop-blur-md font-bold">
+              <Badge variant="default" className="h-7 text-white  align-middle px-3  font-bold uppercase">
                 {product.sku}
               </Badge>
             )}
