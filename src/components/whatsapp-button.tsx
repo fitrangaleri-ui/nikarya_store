@@ -130,7 +130,7 @@ export function WhatsAppButton() {
   return (
     <>
       {/* ── FAB Button ── */}
-      <div className="pointer-events-none fixed inset-x-0 bottom-10 z-[60] flex justify-end px-4 md:right-6 md:left-auto md:px-0">
+      <div className="pointer-events-none fixed inset-x-4 bottom-16 z-[60] flex justify-end px-4 md:right-6 md:left-auto md:px-0">
         <button
           type="button"
           onClick={() => setIsOpen((open) => !open)}
@@ -144,8 +144,9 @@ export function WhatsAppButton() {
           <Image
             src="/icon/logo-whatsapp.png"
             alt="WhatsApp"
-            width={48}
-            height={48}
+            width={128}
+            height={128}
+            quality={100}
             className="h-full w-full object-contain filter drop-shadow-lg"
           />
         </button>
@@ -174,8 +175,9 @@ export function WhatsAppButton() {
                   <Image
                     src="/icon/logo-nikarya.jpg"
                     alt="Admin Profile"
-                    width={48}
-                    height={48}
+                    width={96}
+                    height={96}
+                    quality={100}
                     className="h-full w-full object-cover"
                   />
                 </div>
@@ -185,8 +187,9 @@ export function WhatsAppButton() {
                     <Image
                       src="/icon/verify.png"
                       alt="Verified"
-                      width={14}
-                      height={14}
+                      width={32}
+                      height={32}
+                      quality={100}
                       className="h-3.5 w-3.5 object-contain pb-0.5"
                     />
                   </div>

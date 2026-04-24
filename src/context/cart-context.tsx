@@ -131,10 +131,28 @@ export function CartProvider({ children }: { children: ReactNode }) {
   );
 }
 
+const defaultContext: CartContextType = {
+  cartItems: [],
+  isCartOpen: false,
+  openCart: () => {},
+  closeCart: () => {},
+  addToCart: () => {},
+  removeFromCart: () => {},
+  increaseQuantity: () => {},
+  decreaseQuantity: () => {},
+  clearCart: () => {},
+  cartCount: 0,
+  subtotal: 0,
+};
+
 // ── Hook ───────────────────────────────────────────────
 export function useCart() {
   const context = useContext(CartContext);
   if (!context) {
+    if (typeof window === "undefined") {
+      // During SSR (Next.js), if context is lost due to streaming/Suspense boundaries, fallback safely
+      return defaultContext;
+    }
     throw new Error("useCart must be used within a CartProvider");
   }
   return context;
