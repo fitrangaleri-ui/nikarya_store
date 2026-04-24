@@ -8,7 +8,15 @@ import { resolveImageSrc } from "@/lib/resolve-image";
 import { useDemoPreview } from "@/components/demo-preview-provider";
 import { Badge } from "@/components/ui/badge";
 
-export function ProductCardDemo({ demoLink }: { demoLink: any }) {
+export function ProductCardDemo({ 
+  demoLink, 
+  badgeLabel = "Design Premium",
+  badgeVariant = "glass"
+}: { 
+  demoLink: any;
+  badgeLabel?: string;
+  badgeVariant?: "default" | "secondary" | "destructive" | "outline" | "ghost" | "link" | "glass" | "sale";
+}) {
   const { openPreview } = useDemoPreview();
   const imageSrc = resolveImageSrc(demoLink.image_url);
 
@@ -34,8 +42,8 @@ export function ProductCardDemo({ demoLink }: { demoLink: any }) {
         )}
         <div className="absolute inset-0 bg-background/0 group-hover:bg-background/10 transition-colors duration-300" />
         <div className="absolute top-3 left-3 z-10">
-          <Badge variant="glass" className="backdrop-blur-md tracking-tight">
-            Premium Desain
+          <Badge variant={badgeVariant} className="backdrop-blur-md tracking-tight">
+            {badgeLabel}
           </Badge>
         </div>
       </div>

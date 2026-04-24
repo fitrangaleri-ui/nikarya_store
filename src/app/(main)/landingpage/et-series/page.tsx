@@ -98,7 +98,11 @@ export default async function ETSeriesPage() {
                     delay={(index % 3) * 100}
                     className="w-full h-full"
                   >
-                    <ProductCardDemo demoLink={demo} />
+                    <ProductCardDemo 
+                      demoLink={demo} 
+                      badgeLabel={index === demoLinks.length - 1 ? "Bonus Template" : "Design Premium"}
+                      badgeVariant={index === demoLinks.length - 1 ? "destructive" : "glass"}
+                    />
                   </ScrollReveal>
                 ))}
               </div>
