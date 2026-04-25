@@ -118,6 +118,7 @@ async function CHNSeriesData() {
 
           <ScrollReveal delay={200}>
             <PriceCard
+              showCountdown={true}
               product={chnProduct || undefined}
               themeCount={demoLinks.length > 0 ? demoLinks.length : 5}
               features={[

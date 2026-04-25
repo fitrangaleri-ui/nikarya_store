@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "@/context/cart-context";
-import { CheckCircleIcon, RectangleStackIcon, ShoppingCartIcon, PaperAirplaneIcon } from "@heroicons/react/24/solid";
+import { CheckCircleIcon, RectangleStackIcon, ShoppingCartIcon, PaperAirplaneIcon, ClockIcon } from "@heroicons/react/24/solid";
 import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,11 +21,13 @@ interface PriceCardProps {
   };
   features?: string[];
   themeCount?: number;
+  showCountdown?: boolean;
 }
 
 export function PriceCard({
   product,
   themeCount = 5,
+  showCountdown = false,
   features = [
     "Desain clean, elegan, dan responsif",
     "Layout container",
@@ -38,6 +40,34 @@ export function PriceCard({
 }: PriceCardProps) {
   const { clearCart, addToCart } = useCart();
   const [loading, setLoading] = useState(false);
+  const [remainingTime, setRemainingTime] = useState("");
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+
+    if (!showCountdown) return;
+
+    const updateCountdown = () => {
+      const now = new Date();
+      const nextMidnight = new Date(now);
+      nextMidnight.setHours(24, 0, 0, 0);
+
+      const diff = nextMidnight.getTime() - now.getTime();
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      setRemainingTime(
+        `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
+      );
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, [showCountdown]);
 
   const price = product?.price || 0;
   const discountPrice = product?.discount_price;
@@ -85,7 +115,6 @@ export function PriceCard({
         <div className="relative z-10 px-6 flex flex-col md:flex-row md:items-end justify-between gap-8 md:gap-12">
           <div>
             {/* Title Badge - Premium Collection Seal */}
-            {/* Title Badge - Premium Collection Seal */}
             <Badge variant="glass" className="mb-6 md:mb-8 pl-1.5 pr-5 py-1.5 rounded-full group">
               <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0">
                 <RectangleStackIcon className="h-5 w-5 md:h-6 md:w-6 text-white" />
@@ -107,7 +136,7 @@ export function PriceCard({
                   >
                     Rp{Number(price).toLocaleString("id-ID")}
                   </Typography>
-                  <Badge variant="sale" className="font-normal font-monouppercase">
+                  <Badge variant="outline" className="font-normal text-white bg-yellow-500 font-monouppercase">
                     Hemat {Math.round(((price - discountPrice) / price) * 100)}%
                   </Badge>
                 </div>
@@ -118,6 +147,19 @@ export function PriceCard({
                   {Number(displayPrice).toLocaleString("id-ID")}
                 </Typography>
               </div>
+
+              {/* Countdown Timer */}
+              {showCountdown && isClient && (
+                <div className="mt-4">
+                  <Badge variant="destructive" className="font-mono text-[11px] gap-2 px-3 py-1 ring-4 ring-destructive/10">
+                    <ClockIcon className="h-3.5 w-3.5" />
+                    <span className="font-sans font-bold uppercase text-[10px] opacity-90 border-r border-white/20 pr-2 leading-none">
+                      Promo Berakhir Dalam
+                    </span>
+                    <span className="leading-none">{remainingTime || "00:00:00"}</span>
+                  </Badge>
+                </div>
+              )}
             </div>
           </div>
         </div>
