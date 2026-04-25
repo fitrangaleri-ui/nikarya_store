@@ -60,7 +60,7 @@ export function DemoLinksModal({ demoLinks, children }: DemoLinksModalProps) {
                 {children}
             </div>
             <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent showCloseButton={false} className="max-w-[400px] overflow-hidden border-border/40 bg-card p-0 gap-0 animate-in fade-in zoom-in-95 duration-500 rounded-xl">
+                <DialogContent showCloseButton={false} className="w-[calc(100%-3rem)] max-w-[400px] overflow-hidden border-border/40 bg-card p-0 gap-0 animate-in fade-in zoom-in-95 duration-500 rounded-xl">
                     {/* ── Premium Header ── */}
                     <div className="relative bg-primary px-7 pt-10 pb-9">
 
@@ -88,9 +88,11 @@ export function DemoLinksModal({ demoLinks, children }: DemoLinksModalProps) {
                     </div>
 
                     {/* ── Demo List ── */}
-                    <div className="bg-grid-pattern relative px-6 pt-8 pb-10">
-                        {/* White overlay to soften grid and make demo bars pop */}
-                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/60 via-white/40 to-white/80 dark:from-card/60 dark:via-card/40 dark:to-card/80" />
+                    <div className="relative px-6 pt-8 pb-10 overflow-hidden">
+                        {/* Background Layer (Behind content) */}
+                        <div className="bg-grid-pattern absolute inset-0 pointer-events-none opacity-60" />
+                        <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-white/70 pointer-events-none dark:from-card/40 dark:to-card/70" />
+
                         <div className="relative z-10 space-y-3.5">
                             {demoLinks.map((link, index) => (
                                 <button
