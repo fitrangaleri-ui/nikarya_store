@@ -6,11 +6,11 @@ import { PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
 import { Typography } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 
-const keywords = ["WeddingPress", "Elementor", "JSON", "WordPress"];
+const keywords = ["WeddingPress", "Elementor", "JSON", "WordPress", "HTML", "SVG", "CSS", "WEBP", "PRO"];
 
 const boldKeywords = (text: string) => {
   if (!text) return text;
-  const regex = new RegExp(`(${keywords.join("|")})`, "gi");
+  const regex = new RegExp(`\\b(${keywords.join("|")})\\b`, "gi");
   return text.split(regex).map((part, i) =>
     keywords.some((k) => k.toLowerCase() === part.toLowerCase()) ? (
       <b key={i} className="font-bold">{part}</b>

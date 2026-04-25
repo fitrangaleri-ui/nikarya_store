@@ -7,7 +7,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { Instagram, Youtube } from "lucide-react";
+import { MessageCircle, Send } from "lucide-react";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 import { Typography } from "@/components/ui/typography";
 
@@ -43,26 +43,12 @@ function formatPrice(price: number) {
   }).format(price);
 }
 
-// ── Icon TikTok (tidak tersedia di lucide-react) ──────────────
-function TikTokIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className={className}
-      aria-hidden="true"
-    >
-      <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z" />
-    </svg>
-  );
-}
 
 // ── Data Sosial Media ─────────────────────────────────────────
 // Ganti href sesuai akun resmi brand
 const socials = [
-  { label: "YouTube", href: "https://youtube.com", icon: Youtube },
-  { label: "TikTok", href: "https://tiktok.com", icon: TikTokIcon },
-  { label: "Instagram", href: "https://instagram.com", icon: Instagram },
+  { label: "WhatsApp", href: "https://wa.me/6285155201380", icon: MessageCircle },
+  { label: "Telegram", href: "https://t.me/+3eECVmQKaqBmNTI1", icon: Send },
 ];
 
 // ── Komponen Utama ────────────────────────────────────────────

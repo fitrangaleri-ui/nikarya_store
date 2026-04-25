@@ -1,2 +1,26 @@
-New Admin : afitranzrandika@gmail.com
-Pass : &zL-NUPtfQW%49m
+### OBJECTIVE:
+
+Membuat halaman landing page baru bernama 'bmm-series' dengan melakukan replikasi serta modifikasi dari struktur halaman 'wks-series' yang sudah ada.
+
+
+
+### TASK STEPS:
+
+1. Pelajari struktur kode dan logika pengambilan data pada file referensi: `D:\next-js\nikarya_store\src\app\(main)\landingpage\wks-series\page.tsx`.
+
+2. Buat direktori dan file baru di: `src/app/(main)/landingpage/bmm-series/page.tsx`.
+
+3. Lakukan refactoring pada file baru tersebut:
+
+   - Ubah semua referensi data, variabel, dan fetcher agar secara eksklusif memfilter atau menampilkan produk dengan SKU: "bmm-series".
+
+   - Pertahankan konsistensi desain, komponen UI, dan layout agar identik dengan format 'wks-series'.
+
+
+
+### CONSTRAINTS:
+
+- Gunakan data produk yang sesuai dengan filter SKU "bmm-series".
+
+- Jangan mengubah file sumber (wks-series), fokus hanya pada pembuatan halaman baru.
+

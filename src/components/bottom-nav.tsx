@@ -40,10 +40,6 @@ export function BottomNav() {
   const isLandingPage = pathname.startsWith("/landingpage");
   const akunHref = user ? "/dashboard" : "/login";
 
-  if (isLandingPage) {
-    return null;
-  }
-
   const handleCartClick = useCallback(() => {
     openCart();
   }, [openCart]);
@@ -51,6 +47,10 @@ export function BottomNav() {
   const handleChatClick = useCallback(() => {
     openWhatsAppPreview();
   }, []);
+
+  if (isLandingPage) {
+    return null;
+  }
 
   const cartNavItem = (
     <button

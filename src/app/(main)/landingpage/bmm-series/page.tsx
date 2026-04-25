@@ -13,14 +13,14 @@ import { TemplatesAndPricingSkeleton } from "../skeleton-fallback";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "CHN Series | Nikarya Store",
-  description: "Landing page for CHN Series",
+  title: "BMM Series | Nikarya Store",
+  description: "Landing page for BMM Series",
 };
 
-const chnFaqs = [
+const bmmFaqs = [
   {
-    q: "Apa itu Tema Chinese Series?",
-    a: "Tema Chinese Series adalah template undangan digital yang disediakan dalam format JSON dan dirancang untuk digunakan di Elementor. Template ini bisa langsung diimpor melalui Dashboard Wordpress dan digunakan tanpa perlu coding.",
+    q: "Apa itu Tema Batik Megamendung Series?",
+    a: "Tema Batik Megamendung Series adalah template undangan digital bertema Batik Megamendung yang disediakan dalam format JSON dan dirancang untuk digunakan di Elementor. Template ini bisa langsung diimpor melalui Dashboard Wordpress dan digunakan tanpa perlu coding.",
   },
   {
     q: "Plugin apakah yang dibutuhkan untuk menggunakan template ini?",
@@ -48,19 +48,19 @@ const chnFaqs = [
   },
 ];
 
-async function CHNSeriesData() {
+async function BMMSeriesData() {
   const supabase = createAdminClient();
-  const { data: chnProduct } = await supabase
+  const { data: bmmProduct } = await supabase
     .from("products")
     .select(
       "id, sku, slug, title, price, discount_price, thumbnail_url, product_demo_links(id, label, url, image_url, sort_order)"
     )
     .eq("is_active", true)
-    .ilike("sku", "chn-series")
+    .ilike("sku", "bmm-series")
     .limit(1)
     .maybeSingle();
 
-  const demoLinks = [...(chnProduct?.product_demo_links || [])].sort(
+  const demoLinks = [...(bmmProduct?.product_demo_links || [])].sort(
     (a: any, b: any) => (a.sort_order || 0) - (b.sort_order || 0)
   );
 
@@ -73,7 +73,7 @@ async function CHNSeriesData() {
               Preview Tema
             </Typography>
             <Typography variant="body-base" color="muted" className="text-center mt-2">
-              Lihat {demoLinks.length > 0 ? demoLinks.length : 5} tema premium <b>CHINESE</b> Series
+              Lihat koleksi premium <b>Batik Megamendung</b> Series
             </Typography>
           </ScrollReveal>
 
@@ -87,8 +87,6 @@ async function CHNSeriesData() {
                 >
                   <ProductCardDemo
                     demoLink={demo}
-                    badgeLabel={index === demoLinks.length - 1 ? "Bonus Template" : "Design Premium"}
-                    badgeVariant={index === demoLinks.length - 1 ? "destructive" : "glass"}
                   />
                 </ScrollReveal>
               ))}
@@ -119,17 +117,15 @@ async function CHNSeriesData() {
           <ScrollReveal delay={200}>
             <PriceCard
               showCountdown={true}
-              product={chnProduct || undefined}
+              product={bmmProduct || undefined}
               themeCount={demoLinks.length > 0 ? demoLinks.length : 5}
               features={[
-                "Tema Chinese Series Eksklusif",
-                "Desain Elegan, Oriental, dan Responsif",
+                "Tema Batik Megamendung Eksklusif",
+                "Desain Elegan, Unik, dan Responsif",
                 "Struktur JSON rapih dan mudah diedit",
-                "4 Premium Theme",
-                "Bonus 1 Template Tema Papua",
+                `${demoLinks.length > 0 ? demoLinks.length : 5} Premium Theme`,
                 "Gratis Aset Script Motion Control",
                 "Gratis Asset Script Animasi (HTML & CSS)",
-                "Gratis Aset Karakter Animasi 3D",
                 "Gratis Asset Image (WEBP & SVG)"
               ]}
             />
@@ -146,29 +142,29 @@ async function CHNSeriesData() {
   );
 }
 
-export default function CHNSeriesPage() {
+export default function BMMSeriesPage() {
   return (
     <DemoPreviewProvider>
       <main className="flex flex-col min-h-screen pb-20">
         <HeroSection
-          title="Template Wedding Chinese Series"
+          title="Template Batik Megamendung Series"
           description={
             <>
-              <b>TEMA CHINESE SERIES</b> dari <b>NIKARYA DIGITAL</b> hadir dengan desain elegan, responsif, interaktif dan siap pakai dalam format <b>JSON</b> tema ini dirancang khusus untuk penyedia layanan jasa pembuatan undangan digital profesional.
+              <b>TEMA BATIK MEGAMENDUNG</b> dari <b>NIKARYA DIGITAL</b> hadir dengan desain khas nusantara yang elegan, responsif, interaktif dan siap pakai dalam format <b>JSON</b> tema ini dirancang khusus untuk penyedia layanan jasa pembuatan undangan digital profesional.
             </>
           }
-          imageSrc="/landing-assets/chn-series.png"
+          imageSrc="/landing-assets/bmm-series.png"
           buttonLabel="Lihat Koleksi"
           buttonHref="#templates"
-          badgeLabel="Koleksi CHN Series"
+          badgeLabel="Koleksi Batik Megamendung"
           descriptionClassName="text-sm"
         />
 
         <Suspense fallback={<TemplatesAndPricingSkeleton />}>
-          <CHNSeriesData />
+          <BMMSeriesData />
         </Suspense>
 
-        <FaqSection customFaqs={chnFaqs} />
+        <FaqSection customFaqs={bmmFaqs} />
       </main>
     </DemoPreviewProvider>
   );

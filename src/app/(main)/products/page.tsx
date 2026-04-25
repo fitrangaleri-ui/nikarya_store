@@ -16,7 +16,7 @@ import { Typography } from "@/components/ui/typography";
 
 export const dynamic = "force-dynamic";
 
-const PER_PAGE = 12;
+const PER_PAGE = 20;
 
 function buildEffectivePriceFilter(
   priceMin: number | null,
@@ -160,7 +160,7 @@ export default async function ProductsPage({
         {/* ... breadcrumb ... */}
         {/* ... header ... */}
         {/* ... sidebar ... */}
-        <div className="container mx-auto max-w-6xl px-4 md:px-6">
+        <div className="px-4 md:px-8 2xl:px-12">
           <nav className="flex items-center gap-1.5 text-muted-foreground bg-card/40 backdrop-blur-sm border border-border/50 rounded-full px-4 py-2.5 w-fit">
             <Link
               href="/"
@@ -190,7 +190,7 @@ export default async function ProductsPage({
         </div>
 
         {/* ── HEADER ── */}
-        <div className="container mx-auto max-w-6xl px-4 md:px-6">
+        <div className="px-4 md:px-8 2xl:px-12">
           <div className="flex items-center gap-3">
             <Typography variant="h3" as="h1">
               {activeCategory ? activeCategory.name : "Semua Produk"}
@@ -199,12 +199,12 @@ export default async function ProductsPage({
           <Typography variant="body-sm" color="muted" className="mt-2">
             {activeCategory
               ? `Menampilkan koleksi terbaik untuk kategori ${activeCategory.name}.`
-              : "Temukan desain undangan website terbaik untuk momen spesial Anda."}
+              : "Temukan desain template json premium."}
           </Typography>
         </div>
 
         {/* ── LAYOUT: Sidebar + Products ── */}
-        <div className="container mx-auto max-w-6xl px-4 md:px-6">
+        <div className="px-6 md:px-8 2xl:px-12">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             {/* Sidebar */}
             <Suspense
@@ -238,7 +238,7 @@ export default async function ProductsPage({
 
               {products && products.length > 0 ? (
                 /* Grid Produk */
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mt-4 md:mt-0">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-4 md:gap-6 mt-4 md:mt-0">
                   {products.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}

@@ -96,7 +96,7 @@ export function ProductCard({ product }: { product: any }) {
                       alt={`${product.title || "Product image"} - Slide ${i + 1}`}
                       fill
                       sizes="100vw"
-                      quality={100}
+                      unoptimized
                       className="object-cover group-hover/img:scale-110 group-hover/img:rotate-1 transition-transform duration-700 ease-out"
                     />
                     <div className="absolute inset-0 bg-background/0 group-hover/img:bg-background/10 transition-colors duration-300" />
@@ -125,7 +125,7 @@ export function ProductCard({ product }: { product: any }) {
                 alt={product.title || "Product image"}
                 fill
                 sizes="100vw"
-                quality={100}
+                unoptimized
                 className="object-cover group-hover/img:scale-110 group-hover/img:rotate-1 transition-transform duration-700 ease-out"
               />
             ) : (

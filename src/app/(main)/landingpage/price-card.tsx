@@ -136,7 +136,7 @@ export function PriceCard({
                   >
                     Rp{Number(price).toLocaleString("id-ID")}
                   </Typography>
-                  <Badge variant="outline" className="font-normal text-white bg-yellow-500 font-monouppercase">
+                  <Badge variant="outline" className="font-semibold text-warning-foreground bg-warning font-monouppercase">
                     Hemat {Math.round(((price - discountPrice) / price) * 100)}%
                   </Badge>
                 </div>
