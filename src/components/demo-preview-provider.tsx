@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/dialog";
 import {
   ExclamationTriangleIcon,
-  ArrowTopRightOnSquareIcon,
   XMarkIcon,
   DevicePhoneMobileIcon,
   ArrowPathIcon,
@@ -116,6 +115,26 @@ function PreviewFrame({
   url: string;
 }) {
   const [loading, setLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (!loading || !validUrl) return;
+
+    // Animasi persentase simulasi yang semakin melambat saat mendekati 99%
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        const remaining = 99 - prev;
+        const step = Math.max(1, Math.ceil(remaining * 0.15));
+        if (prev >= 99) {
+          clearInterval(interval);
+          return 99;
+        }
+        return prev + step;
+      });
+    }, 150);
+
+    return () => clearInterval(interval);
+  }, [loading, validUrl]);
 
   return (
     <div
@@ -133,10 +152,37 @@ function PreviewFrame({
 
       {/* Loading state */}
       {loading && validUrl && (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-foreground/90">
-          <ArrowPathIcon className="h-8 w-8 animate-spin text-primary" />
-          <Typography variant="caption" as="span" className="text-background/60">
-            Memuat preview...
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-5 bg-foreground/95 backdrop-blur-md transition-opacity duration-300">
+          <div className="relative flex items-center justify-center">
+            {/* Animating ring */}
+            <svg className="w-16 h-16 -rotate-90" viewBox="0 0 100 100">
+              <circle
+                className="text-background/10 stroke-current"
+                strokeWidth="6"
+                cx="50" cy="50" r="42"
+                fill="transparent"
+              ></circle>
+              <circle
+                className="text-primary stroke-current transition-all duration-300 ease-out"
+                strokeWidth="6"
+                strokeLinecap="round"
+                cx="50" cy="50" r="42"
+                fill="transparent"
+                strokeDasharray="263.89"
+                strokeDashoffset={263.89 - (263.89 * progress) / 100}
+              ></circle>
+            </svg>
+            
+            {/* Percentage text */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Typography variant="body-xs" className="font-bold text-background font-mono">
+                {progress}%
+              </Typography>
+            </div>
+          </div>
+          
+          <Typography variant="caption" as="span" className="text-background/70 font-medium tracking-wide animate-pulse">
+            Memuat Preview...
           </Typography>
         </div>
       )}
@@ -168,8 +214,7 @@ function PreviewFrame({
               Preview tidak tersedia
             </Typography>
             <Typography variant="caption" as="p" className="text-background/60">
-              Link demo tidak valid atau kosong. Buka di tab baru jika kamu masih
-              ingin mencoba mengaksesnya.
+              Link demo tidak valid atau tidak tersedia saat ini.
             </Typography>
           </div>
         </div>
@@ -261,33 +306,19 @@ function DemoPreviewDialog({
                 className="flex w-full max-w-[390px] items-center justify-between"
               >
                 <div className="flex min-w-0 items-center gap-2">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-primary/20 bg-primary/10">
-                    <DevicePhoneMobileIcon className="h-4 w-4 text-primary" />
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary">
+                    <DevicePhoneMobileIcon className="h-4 w-4 text-primary-foreground" />
                   </div>
                   <Typography variant="body-sm" as="span" className="truncate font-semibold text-background">
                     {payload.label}
                   </Typography>
                 </div>
                 <div className="flex items-center gap-2">
-                  <a
-                    href={payload.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-background/10 text-background/70 transition-all hover:bg-background/20 hover:text-background active:scale-95"
-                    aria-label="Buka di tab baru"
-                    title="Buka di tab baru"
-                    aria-disabled={!isValidUrl}
-                    tabIndex={isValidUrl ? 0 : -1}
-                    onClick={(event) => {
-                      if (!isValidUrl) event.preventDefault();
-                    }}
-                  >
-                    <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5" />
-                  </a>
+
                   <button
                     type="button"
                     onClick={onClose}
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-background/10 text-background/70 transition-all hover:bg-background/20 hover:text-background active:scale-95"
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-warning text-primary-foreground transition-all hover:bg-primary/50 hover:text-primary-foreground active:scale-95"
                     aria-label="Tutup preview"
                   >
                     <XMarkIcon className="h-4 w-4" />
@@ -357,13 +388,8 @@ export function useDemoPreview() {
   const context = useContext(DemoPreviewContext);
   if (!context) {
     return {
-      closePreview: () => {},
-      openPreview: ({ url }: DemoPreviewRequest) => {
-        if (typeof window === "undefined" || !isValidPreviewUrl(url)) return;
-
-        // Gracefully degrade when a consumer renders outside the provider tree.
-        window.open(url, "_blank", "noopener,noreferrer");
-      },
+      closePreview: () => { },
+      openPreview: () => { },
     };
   }
   return context;

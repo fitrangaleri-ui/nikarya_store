@@ -12,6 +12,7 @@ import { ProductsToolbar } from "./products-toolbar";
 import { MobileSortDropdown } from "./mobile-sort-dropdown";
 import { Pagination } from "./pagination";
 import { Typography } from "@/components/ui/typography";
+import { FilterDrawerProvider } from "@/context/filter-drawer-context";
 
 
 export const dynamic = "force-dynamic";
@@ -154,7 +155,8 @@ export default async function ProductsPage({
   const totalPages = Math.ceil(totalCount / PER_PAGE);
 
   return (
-    <main className="min-h-screen mb-20 bg-background text-foreground pb-24 md:pb-20 overflow-x-hidden">
+    <FilterDrawerProvider>
+      <main className="min-h-screen mb-20 bg-background text-foreground pb-24 md:pb-20 overflow-x-hidden">
       {/* Mengembalikan padding atas global agar tidak mepet */}
       <div className="flex flex-col gap-4 md:gap-6 pt-4 md:pt-12">
         {/* ... breadcrumb ... */}
@@ -269,7 +271,8 @@ export default async function ProductsPage({
           </div>
         </div>
       </div>
-    </main>
+      </main>
+    </FilterDrawerProvider>
   );
 }
 
