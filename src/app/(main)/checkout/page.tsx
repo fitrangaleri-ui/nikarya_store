@@ -322,45 +322,48 @@ export default function CheckoutPage() {
 
   // ── MAIN CHECKOUT PAGE ──
   return (
-    <main className="min-h-screen bg-background relative overflow-hidden">
+    <div className="flex flex-col items-center justify-start bg-background py-10 md:py-10 px-4 relative overflow-hidden min-h-screen">
       {/* Background decoration */}
-      <div className="absolute top-[10%] left-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -z-10" />
-      <div className="absolute bottom-[20%] right-[-5%] w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] -z-10" />
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10" />
+      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] -z-10" />
 
-      <div className="mx-auto max-w-6xl px-4 md:px-6 py-8 md:py-12 relative z-10 animate-in fade-in duration-700">
-        <div className="flex items-center gap-3 mb-10">
-          <span className="w-1.5 h-8 bg-gradient-to-b from-primary to-secondary-foreground rounded-full block" />
-          <Typography variant="h2" as="h1" className="tracking-tight">
-            Checkout Pesanan
-          </Typography>
-        </div>
+      <div className="w-full max-w-[1000px] glass rounded-xl overflow-hidden animate-in fade-in zoom-in-95 duration-500">
+        {/* ── Header Banner ── (Full Width) */}
+        <div className="relative bg-gradient-to-br transition-all duration-500 from-primary to-secondary-foreground px-4 pt-9 pb-8 overflow-hidden">
+          <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/10 pointer-events-none" />
+          <div className="absolute bottom-[-20px] left-[15%] h-32 w-32 rounded-full bg-white/5 pointer-events-none" />
 
-        <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
-          {/* ── LEFT: Customer Info Form ── */}
-          <div className="space-y-8">
-
-            {/* Informasi Pelanggan */}
-            <div className="glass rounded-xl overflow-hidden animate-in fade-in slide-in-from-left duration-500">
-              {/* Login-style Header Banner */}
-              <div className="relative bg-gradient-to-br from-primary to-secondary-foreground px-6 py-6 overflow-hidden">
-                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10 pointer-events-none" />
-                <div className="absolute bottom-[-10px] left-[10%] h-16 w-16 rounded-full bg-white/5 pointer-events-none" />
-                <div className="relative z-10 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
-                    <UserIcon className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="flex flex-col">
-                    <Typography variant="h5" className="text-white leading-tight">
-                      Informasi Pelanggan
-                    </Typography>
-                    <Typography variant="body-xs" className="text-white/80 font-medium tracking-wide">
-                      Lengkapi data diri untuk keperluan akses pesanan
-                    </Typography>
-                  </div>
+          <div className="relative z-10 flex flex-col items-start text-white">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center shrink-0">
+                <ShoppingBagIcon className="h-7 w-7 text-white" />
+              </div>
+              <div>
+                <Typography variant="h4" className="text-white leading-tight">
+                  Checkout Pesanan
+                </Typography>
+                <div className="mt-2 flex flex-wrap items-center gap-3">
+                  <Typography variant="body-xs" className="text-white/70 font-medium shrink-0">
+                    Lengkapi data dan pilih metode pembayaran
+                  </Typography>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
 
-              <div className="p-6 md:p-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1fr_400px] gap-0 divide-y md:divide-y-0 md:divide-x divide-border/30">
+          {/* ── Left Column: Customer Info Form & Payment ── */}
+          <div className="px-4 py-9 space-y-8 bg-background/40">
+
+            {/* Informasi Pelanggan */}
+            <div className="rounded-xl border border-border/60 bg-card overflow-hidden">
+              <div className="bg-primary px-6 py-4 border-b border-primary-bg/10 flex items-center justify-between">
+                <Typography variant="caption" className="text-white font-black uppercase ">Informasi Pelanggan</Typography>
+                <UserIcon className="w-4 h-4 text-white/50" />
+              </div>
+
+              <div className="px-6 py-6">
                 {user ? (
                   <div className="rounded-2xl bg-background/50 border border-border/40 overflow-hidden">
                     <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border/40">
@@ -518,28 +521,13 @@ export default function CheckoutPage() {
             </div>
 
             {/* Payment Method Selection - Gateway / Manual */}
-            <div className="glass rounded-xl overflow-hidden animate-in fade-in slide-in-from-left duration-500 delay-100">
-              <div className="relative bg-gradient-to-br from-primary to-secondary-foreground px-6 py-6 overflow-hidden">
-                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10 pointer-events-none" />
-                <div className="absolute bottom-[-10px] left-[15%] h-16 w-16 rounded-full bg-white/5 pointer-events-none" />
-                <div className="relative z-10 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
-                    <CreditCardIcon className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="flex flex-col">
-                    <Typography variant="h5" className="text-white leading-tight">
-                      Metode Pembayaran
-                    </Typography>
-                    {paymentConfig?.mode === "manual" && (
-                      <Typography variant="body-xs" className="text-white/80 font-medium tracking-wide">
-                        Pilih Rekening Tujuan Transfer
-                      </Typography>
-                    )}
-                  </div>
-                </div>
+            <div className="rounded-xl border border-border/60 bg-card overflow-hidden">
+              <div className="bg-primary px-6 py-4 border-b border-primary-bg/10 flex items-center justify-between">
+                <Typography variant="caption" className="text-white font-black uppercase ">Metode Pembayaran</Typography>
+                <CreditCardIcon className="w-4 h-4 text-white/50" />
               </div>
 
-              <div className="p-6 md:p-8">
+              <div className="px-6 py-6">
                 {/* Gateway Choice */}
                 {paymentConfig?.mode === "gateway" && (
                   <div className="space-y-4">
@@ -641,26 +629,14 @@ export default function CheckoutPage() {
           </div>
 
           {/* ── RIGHT: Order Summary + Button ── */}
-          <div className="space-y-6">
-            <div className="glass rounded-xl overflow-hidden lg:sticky lg:top-24 animate-in fade-in zoom-in-95 duration-500 delay-200">
-              <div className="relative bg-gradient-to-br from-primary to-secondary-foreground px-6 py-6 overflow-hidden">
-                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10 pointer-events-none" />
-                <div className="relative z-10 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
-                    <ClipboardDocumentListIcon className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="flex flex-col">
-                    <Typography variant="h5" className="text-white leading-tight">
-                      Ringkasan
-                    </Typography>
-                    <Typography variant="body-xs" className="text-white/80 font-medium tracking-wide">
-                      Tinjau kembali rincian pesanan Anda
-                    </Typography>
-                  </div>
-                </div>
+          <div className="px-4 py-9 space-y-8 bg-muted/5 backdrop-blur-sm">
+            <div className="rounded-xl border border-border/60 bg-card overflow-hidden lg:sticky lg:top-6">
+              <div className="bg-primary px-6 py-4 border-b border-primary-bg/10 flex items-center justify-between">
+                <Typography variant="caption" className="text-white font-black uppercase ">Ringkasan</Typography>
+                <ClipboardDocumentListIcon className="w-4 h-4 text-white/50" />
               </div>
 
-              <div className="p-6 md:p-8">
+              <div className="px-6 py-6">
                 {/* Cart Items */}
                 <ul className="space-y-4 mb-8">
                   {cartItems.map((item) => (
@@ -810,6 +786,6 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
-    </main >
+    </div>
   );
 }

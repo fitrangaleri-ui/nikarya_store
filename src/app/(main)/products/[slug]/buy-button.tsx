@@ -1,8 +1,3 @@
-// ============================================================
-// FILE: src/app/(main)/products/[slug]/buy-button.tsx
-// PERUBAHAN: Ganti <Button> shadcn → <PrimaryButton>
-//            Logika & konfigurasi tidak diubah
-// ============================================================
 "use client";
 
 import { useRouter } from "next/navigation";

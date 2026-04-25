@@ -242,14 +242,14 @@ export function ProductDetailClient({
 
                 <div className="flex flex-wrap items-center gap-2">
                   {product.sku && (
-                    <Badge variant="outline" className="uppercase h-auto py-1.5 px-3">
+                    <Badge variant="outline" className="backdrop-blur-md px-3 py-1.5 h-auto font-bold uppercase tracking-wide text-[10px]">
                       <ArchiveBoxIcon className="mr-1.5 h-3 w-3" />
                       {product.sku}
                     </Badge>
                   )}
 
                   {product.categories?.name && (
-                    <Badge variant="outline" className="backdrop-blur-md px-3 py-1.5 h-auto font-medium uppercase tracking-wide text-[10px]">
+                    <Badge variant="outline" className="backdrop-blur-md px-3 py-1.5 h-auto font-bold uppercase tracking-wide text-[10px]">
                       {product.categories.name}
                     </Badge>
                   )}
@@ -262,10 +262,10 @@ export function ProductDetailClient({
                         variant="outline"
                         className={cn(
                           "px-3 py-1.5 h-auto font-bold uppercase tracking-wide text-[10px] backdrop-blur-md",
-                          isNew ? "bg-primary/10 text-primary border-primary/20" : "text-secondary-foreground/70"
+                          isNew ? "bg-primary/10 text-primary border-primary/20" : ""
                         )}
                       >
-                        <TagIcon className={cn("mr-1.5 h-3 w-3", isNew ? "text-primary" : "text-secondary-foreground/70")} />
+                        <TagIcon className={cn("mr-1.5 h-3 w-3", isNew ? "text-primary" : "")} />
                         {tag}
                       </Badge>
                     );
@@ -344,7 +344,7 @@ export function ProductDetailClient({
                 <button
                   onClick={handleAddToCart}
                   aria-label="Tambah ke Keranjang"
-                  className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl border-2 border-primary/20 bg-primary/10 text-primary transition-all hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full border-2 border-primary/20 bg-primary/10 text-primary transition-all hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <ShoppingCartIcon className="h-6 w-6" />
                 </button>
@@ -420,7 +420,7 @@ export function ProductDetailClient({
                   <div className="p-6 pt-0 md:p-8 md:pt-0">
                     <div className="mb-6 h-px w-full bg-border/50" />
                     <Typography
-                      variant="body-base"
+                      variant="body-sm"
                       color="muted"
                       as="p"
                       className="whitespace-pre-wrap leading-relaxed"

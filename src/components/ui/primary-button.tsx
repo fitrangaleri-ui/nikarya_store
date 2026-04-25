@@ -3,7 +3,7 @@
 // Reusable button dengan style rounded-full + glass shimmer
 // ============================================================
 
-import { ArrowPathIcon } from "@heroicons/react/24/outline";
+
 import { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Typography } from "@/components/ui/typography";
@@ -88,10 +88,7 @@ export function PrimaryButton({
       {/* Label + loading state */}
       <Typography as="span" variant="body-base" className="relative flex items-center gap-2 font-semibold text-inherit">
         {loading ? (
-          <>
-            <ArrowPathIcon className="h-4 w-4 animate-spin" />
-            Memproses...
-          </>
+          <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
         ) : (
           children
         )}
