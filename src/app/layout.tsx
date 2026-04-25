@@ -10,6 +10,7 @@ import { DemoPreviewProvider } from "@/components/demo-preview-provider";
 import { CartSidebar } from "@/components/cart-sidebar";
 import { MenuSidebar } from "@/components/menu-sidebar";
 import { WhatsAppButton } from "@/components/whatsapp-button";
+import { FilterDrawerProvider } from "@/context/filter-drawer-context";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
@@ -61,11 +62,13 @@ export default function RootLayout({
               storageKey="nikarya-theme"
             >
               <DemoPreviewProvider>
-                {children}
-                {authModal}
-                <CartSidebar />
-                <MenuSidebar />
-                <WhatsAppButton />
+                <FilterDrawerProvider>
+                  {children}
+                  {authModal}
+                  <CartSidebar />
+                  <MenuSidebar />
+                  <WhatsAppButton />
+                </FilterDrawerProvider>
               </DemoPreviewProvider>
             </ThemeProvider>
           </CartProvider>

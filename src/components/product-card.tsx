@@ -177,7 +177,7 @@ export function ProductCard({ product }: { product: any }) {
             className="font-semibold leading-tight group-hover:text-primary transition-colors line-clamp-2"
           >
             {product.sku && (
-              <Badge variant="default" className="h-7 text-white  align-middle px-3  font-bold uppercase">
+              <Badge variant="default" className="h-7 text-white align-middle px-3 font-bold uppercase mr-2">
                 {product.sku}
               </Badge>
             )}

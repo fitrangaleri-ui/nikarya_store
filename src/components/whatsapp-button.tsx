@@ -130,7 +130,7 @@ export function WhatsAppButton() {
   return (
     <>
       {/* ── FAB Button ── */}
-      <div className="pointer-events-none fixed inset-x-4 bottom-16 z-[60] flex justify-end px-4 md:right-6 md:left-auto md:px-0">
+      <div className="pointer-events-none fixed inset-x-4 bottom-16 z-40 flex justify-end px-4 md:right-6 md:left-auto md:px-0">
         <button
           type="button"
           onClick={() => setIsOpen((open) => !open)}
@@ -154,7 +154,7 @@ export function WhatsAppButton() {
 
       {/* ── Centered Modal ── */}
       {isRendered && (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[45] flex items-center justify-center p-4">
           {/* Backdrop */}
           <div
             className={`absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${isVisible ? "opacity-100" : "opacity-0"

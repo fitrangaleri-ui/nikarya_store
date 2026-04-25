@@ -152,7 +152,7 @@ function PreviewFrame({
 
       {/* Loading state */}
       {loading && validUrl && (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-5 bg-foreground/95 backdrop-blur-md transition-opacity duration-300">
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-5 bg-foreground/95 backdrop-blur-md transition-opacity duration-300 overflow-hidden rounded-[inherit]">
           <div className="relative flex items-center justify-center">
             {/* Animating ring */}
             <svg className="w-16 h-16 -rotate-90" viewBox="0 0 100 100">
@@ -192,7 +192,7 @@ function PreviewFrame({
         <iframe
           src={url}
           title={`Preview: ${label}`}
-          className="block w-full bg-background"
+          className="block w-full bg-background rounded-[inherit]"
           style={{
             border: "none",
             display: "block",
@@ -284,7 +284,8 @@ function DemoPreviewDialog({
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="flex max-h-[calc(100dvh-2rem)] items-center justify-center overflow-hidden border-0 bg-transparent p-0 shadow-none sm:max-w-[calc(100vw-2rem)]"
+        overlayClassName="bg-black/40 backdrop-blur-sm transition-all duration-300"
+        className="z-[100] flex max-h-[calc(100dvh-2rem)] items-center justify-center overflow-hidden border-0 bg-transparent p-0 shadow-none sm:max-w-[calc(100vw-2rem)]"
         onCloseAutoFocus={(event) => {
           event.preventDefault();
           lastFocusedRef.current?.focus();
