@@ -1,5 +1,4 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -70,15 +69,7 @@ export default async function AdminOrdersPage({
     })
     : orders;
 
-  const statusColors: Record<string, string> = {
-    PENDING:
-      "bg-warning/10 text-warning border border-warning/20 rounded-full shadow-none font-bold px-3 py-1",
-    PENDING_MANUAL:
-      "bg-warning/10 text-warning border border-warning/20 rounded-full shadow-none font-bold px-3 py-1",
-    PAID: "bg-primary/10 text-primary border border-primary/20 rounded-full shadow-none font-bold px-3 py-1",
-    FAILED:
-      "bg-destructive/10 text-destructive border border-destructive/20 rounded-full shadow-none font-bold px-3 py-1",
-  };
+
 
   return (
     <div className="w-full max-w-full overflow-x-hidden pb-10">
@@ -161,11 +152,8 @@ export default async function AdminOrdersPage({
                     <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest min-w-[130px] whitespace-nowrap py-4">
                       Total
                     </TableHead>
-                    <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest min-w-[120px] whitespace-nowrap py-4">
-                      Status
-                    </TableHead>
                     <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest min-w-[150px] whitespace-nowrap py-4">
-                      Ubah Status
+                      Status
                     </TableHead>
                     <TableHead className="text-[11px] font-bold text-white/80 uppercase tracking-widest text-center w-24 whitespace-nowrap py-4">
                       Akses
@@ -215,16 +203,6 @@ export default async function AdminOrdersPage({
                             </Typography>
                           </TableCell>
                           <TableCell className="py-4">
-                            <Badge
-                              className={
-                                statusColors[order.payment_status] ||
-                                "rounded-full shadow-none font-bold whitespace-nowrap px-3 py-1"
-                              }
-                            >
-                              {order.payment_status === "PENDING_MANUAL" ? "PENDING" : order.payment_status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="py-4">
                             <OrderStatusSelect
                               orderId={order.id}
                               currentStatus={order.payment_status}
@@ -258,7 +236,7 @@ export default async function AdminOrdersPage({
                   ) : (
                     <TableRow>
                       <TableCell
-                        colSpan={8}
+                        colSpan={7}
                         className="text-center py-20 hover:bg-transparent"
                       >
                         <div className="flex flex-col items-center gap-3">
