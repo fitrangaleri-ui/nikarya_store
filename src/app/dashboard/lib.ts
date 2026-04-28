@@ -81,7 +81,7 @@ export async function getDashboardData() {
 
     const { data: profile } = await admin
         .from("profiles")
-        .select("full_name, email")
+        .select("full_name, email, phone")
         .eq("id", user.id)
         .single();
 

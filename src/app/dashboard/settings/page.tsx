@@ -6,10 +6,12 @@ import {
   BellIcon,
   LockClosedIcon,
   SparklesIcon,
+  PhoneIcon,
 } from "@heroicons/react/24/outline";
 import { getDashboardData } from "../lib";
 import { Typography } from "@/components/ui/typography";
 import { HeaderBanner } from "../header-banner";
+import { ChangePasswordForm } from "./change-password-form";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +19,7 @@ export default async function SettingsPage() {
   // ── Data fetching — tidak diubah ──────────────────────────
   const { user, profile } = await getDashboardData();
 
-  const displayName = profile?.full_name || profile?.email || "User";
+  const displayName = profile?.full_name || "User";
   const email = profile?.email || user.email || "-";
   const initial = displayName.charAt(0).toUpperCase();
 
@@ -26,7 +28,7 @@ export default async function SettingsPage() {
       {/* ── Banner: Header ── */}
       <HeaderBanner
         title="Pengaturan Akun"
-        description="Sesuaikan data diri dan preferensi akun Anda untuk pengalaman yang lebih personall."
+        description="Sesuaikan data diri dan preferensi akun Anda untuk pengalaman yang lebih personal."
         badgeLabel="Akun & Privasi"
         badgeIcon={<Cog6ToothIcon className="w-3.5 h-3.5 text-white" />}
         actionIcon={<SparklesIcon className="w-8 h-8 text-white" />}
@@ -51,7 +53,7 @@ export default async function SettingsPage() {
             <Typography variant="h5" className="font-bold truncate">
               {displayName}
             </Typography>
-            <div className="flex items-center gap-2 mt-1 px-2 py-0.5 rounded-md bg-muted/50 border border-border/50 inline-flex">
+            <div className="inline-flex items-center gap-2 mt-1 px-2 py-0.5 rounded-md bg-muted/50 border border-border/50">
               <EnvelopeIcon className="h-3.5 w-3.5 text-muted-foreground" />
               <Typography variant="caption" color="muted" className="font-medium truncate">
                 {email}
@@ -100,6 +102,25 @@ export default async function SettingsPage() {
             </div>
           </div>
 
+          {/* Section: WhatsApp Number */}
+          <div className="px-6 py-6 group hover:bg-muted/10 transition-colors">
+            <div className="flex items-center justify-between">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-white transition-all">
+                  <PhoneIcon className="h-5 w-5 text-primary group-hover:text-white transition-colors" />
+                </div>
+                <div>
+                  <Typography variant="caption" className="font-bold uppercase  text-muted-foreground mb-1">
+                    Nomor WhatsApp
+                  </Typography>
+                  <Typography variant="body-base" className="font-bold">
+                    {profile?.phone || "-"}
+                  </Typography>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Section: Security Status */}
           <div className="px-6 py-6 group hover:bg-muted/10 transition-colors">
             <div className="flex items-center justify-between flex-wrap gap-4">
@@ -109,7 +130,7 @@ export default async function SettingsPage() {
                 </div>
                 <div>
                   <Typography variant="caption" className="font-bold uppercase  text-muted-foreground mb-1">
-                    Keamanan Akun
+                    Status Akun
                   </Typography>
                   <Typography variant="body-base" color="success" className="font-bold">
                     Terverifikasi & Aktif
@@ -132,24 +153,7 @@ export default async function SettingsPage() {
       {/* ════════════════════════════════════════════════════ */}
       <div className="grid gap-4 sm:grid-cols-2">
         {/* Feature: Security Settings */}
-        <div className="group relative overflow-hidden rounded-xl bg-card border border-border p-5 hover:border-primary/30 transition-all opacity-60 grayscale-[0.5]">
-          <div className="relative z-10 flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center shrink-0 border border-border/50">
-              <LockClosedIcon className="h-6 w-6 text-muted-foreground" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <Typography variant="body-base" className="font-bold">Keamanan</Typography>
-                <div className="px-1.5 py-0.5 rounded-md bg-muted border border-border/50">
-                  <Typography variant="caption" className="text-[9px] font-black uppercase tracking-tighter text-muted-foreground">Soon</Typography>
-                </div>
-              </div>
-              <Typography variant="body-xs" color="muted" className="leading-relaxed">
-                Kelola kata sandi dan keamanan otentikasi dua faktor.
-              </Typography>
-            </div>
-          </div>
-        </div>
+        <ChangePasswordForm email={email} />
 
         {/* Feature: Notifications */}
         <div className="group relative overflow-hidden rounded-xl bg-card border border-border p-5 hover:border-primary/30 transition-all opacity-60 grayscale-[0.5]">
