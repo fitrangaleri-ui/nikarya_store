@@ -1,1 +1,721 @@
-{"types":"export type Json =\n  | string\n  | number\n  | boolean\n  | null\n  | { [key: string]: Json | undefined }\n  | Json[]\n\nexport type Database = {\n  // Allows to automatically instantiate createClient with right options\n  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)\n  __InternalSupabase: {\n    PostgrestVersion: \"14.1\"\n  }\n  public: {\n    Tables: {\n      categories: {\n        Row: {\n          created_at: string | null\n          id: string\n          name: string\n          parent_id: string | null\n          slug: string\n          thumbnail_url: string | null\n        }\n        Insert: {\n          created_at?: string | null\n          id?: string\n          name: string\n          parent_id?: string | null\n          slug: string\n          thumbnail_url?: string | null\n        }\n        Update: {\n          created_at?: string | null\n          id?: string\n          name?: string\n          parent_id?: string | null\n          slug?: string\n          thumbnail_url?: string | null\n        }\n        Relationships: [\n          {\n            foreignKeyName: \"categories_parent_id_fkey\"\n            columns: [\"parent_id\"]\n            isOneToOne: false\n            referencedRelation: \"categories\"\n            referencedColumns: [\"id\"]\n          },\n        ]\n      }\n      manual_payment_methods: {\n        Row: {\n          account_name: string\n          account_number: string\n          created_at: string\n          id: string\n          is_active: boolean\n          logo_url: string | null\n          provider_name: string\n          sort_order: number\n          type: string\n          updated_at: string\n        }\n        Insert: {\n          account_name: string\n          account_number: string\n          created_at?: string\n          id?: string\n          is_active?: boolean\n          logo_url?: string | null\n          provider_name: string\n          sort_order?: number\n          type: string\n          updated_at?: string\n        }\n        Update: {\n          account_name?: string\n          account_number?: string\n          created_at?: string\n          id?: string\n          is_active?: boolean\n          logo_url?: string | null\n          provider_name?: string\n          sort_order?: number\n          type?: string\n          updated_at?: string\n        }\n        Relationships: []\n      }\n      orders: {\n        Row: {\n          created_at: string\n          discount_amount: number | null\n          download_count: number\n          guest_email: string | null\n          guest_name: string | null\n          guest_phone: string | null\n          id: string\n          manual_payment_method_id: string | null\n          midtrans_order_id: string | null\n          midtrans_transaction_id: string | null\n          original_total: number | null\n          payment_code: string | null\n          payment_confirmed_at: string | null\n          payment_deadline: string | null\n          payment_gateway: string | null\n          payment_method: string | null\n          payment_status: Database[\"public\"][\"Enums\"][\"payment_status\"]\n          payment_type: string | null\n          product_id: string\n          promo_code: string | null\n          quantity: number\n          snap_token: string | null\n          total_price: number\n          user_id: string | null\n        }\n        Insert: {\n          created_at?: string\n          discount_amount?: number | null\n          download_count?: number\n          guest_email?: string | null\n          guest_name?: string | null\n          guest_phone?: string | null\n          id?: string\n          manual_payment_method_id?: string | null\n          midtrans_order_id?: string | null\n          midtrans_transaction_id?: string | null\n          original_total?: number | null\n          payment_code?: string | null\n          payment_confirmed_at?: string | null\n          payment_deadline?: string | null\n          payment_gateway?: string | null\n          payment_method?: string | null\n          payment_status?: Database[\"public\"][\"Enums\"][\"payment_status\"]\n          payment_type?: string | null\n          product_id: string\n          promo_code?: string | null\n          quantity?: number\n          snap_token?: string | null\n          total_price: number\n          user_id?: string | null\n        }\n        Update: {\n          created_at?: string\n          discount_amount?: number | null\n          download_count?: number\n          guest_email?: string | null\n          guest_name?: string | null\n          guest_phone?: string | null\n          id?: string\n          manual_payment_method_id?: string | null\n          midtrans_order_id?: string | null\n          midtrans_transaction_id?: string | null\n          original_total?: number | null\n          payment_code?: string | null\n          payment_confirmed_at?: string | null\n          payment_deadline?: string | null\n          payment_gateway?: string | null\n          payment_method?: string | null\n          payment_status?: Database[\"public\"][\"Enums\"][\"payment_status\"]\n          payment_type?: string | null\n          product_id?: string\n          promo_code?: string | null\n          quantity?: number\n          snap_token?: string | null\n          total_price?: number\n          user_id?: string | null\n        }\n        Relationships: [\n          {\n            foreignKeyName: \"orders_manual_payment_method_id_fkey\"\n            columns: [\"manual_payment_method_id\"]\n            isOneToOne: false\n            referencedRelation: \"manual_payment_methods\"\n            referencedColumns: [\"id\"]\n          },\n          {\n            foreignKeyName: \"orders_product_id_fkey\"\n            columns: [\"product_id\"]\n            isOneToOne: false\n            referencedRelation: \"products\"\n            referencedColumns: [\"id\"]\n          },\n          {\n            foreignKeyName: \"orders_user_id_fkey\"\n            columns: [\"user_id\"]\n            isOneToOne: false\n            referencedRelation: \"profiles\"\n            referencedColumns: [\"id\"]\n          },\n        ]\n      }\n      payment_gateway_config: {\n        Row: {\n          api_key: string\n          created_at: string\n          display_name: string\n          environment: string\n          gateway_name: string\n          id: string\n          is_active: boolean\n          merchant_id: string | null\n          payment_mode: string\n          secret_key: string\n          updated_at: string\n          webhook_url: string | null\n        }\n        Insert: {\n          api_key: string\n          created_at?: string\n          display_name: string\n          environment?: string\n          gateway_name: string\n          id?: string\n          is_active?: boolean\n          merchant_id?: string | null\n          payment_mode?: string\n          secret_key: string\n          updated_at?: string\n          webhook_url?: string | null\n        }\n        Update: {\n          api_key?: string\n          created_at?: string\n          display_name?: string\n          environment?: string\n          gateway_name?: string\n          id?: string\n          is_active?: boolean\n          merchant_id?: string | null\n          payment_mode?: string\n          secret_key?: string\n          updated_at?: string\n          webhook_url?: string | null\n        }\n        Relationships: []\n      }\n      payment_methods: {\n        Row: {\n          code: string\n          created_at: string\n          description: string | null\n          enabled_payments: string[]\n          id: string\n          is_active: boolean\n          label: string\n          sort_order: number\n        }\n        Insert: {\n          code: string\n          created_at?: string\n          description?: string | null\n          enabled_payments: string[]\n          id?: string\n          is_active?: boolean\n          label: string\n          sort_order?: number\n        }\n        Update: {\n          code?: string\n          created_at?: string\n          description?: string | null\n          enabled_payments?: string[]\n          id?: string\n          is_active?: boolean\n          label?: string\n          sort_order?: number\n        }\n        Relationships: []\n      }\n      payment_settings: {\n        Row: {\n          api_key: string\n          environment: string\n          gateway_name: string\n          id: string\n          merchant_id: string | null\n          secret_key: string\n          updated_at: string | null\n        }\n        Insert: {\n          api_key: string\n          environment?: string\n          gateway_name: string\n          id?: string\n          merchant_id?: string | null\n          secret_key: string\n          updated_at?: string | null\n        }\n        Update: {\n          api_key?: string\n          environment?: string\n          gateway_name?: string\n          id?: string\n          merchant_id?: string | null\n          secret_key?: string\n          updated_at?: string | null\n        }\n        Relationships: []\n      }\n      product_demo_links: {\n        Row: {\n          created_at: string\n          id: string\n          image_url: string | null\n          label: string\n          product_id: string\n          sort_order: number\n          url: string\n        }\n        Insert: {\n          created_at?: string\n          id?: string\n          image_url?: string | null\n          label: string\n          product_id: string\n          sort_order?: number\n          url: string\n        }\n        Update: {\n          created_at?: string\n          id?: string\n          image_url?: string | null\n          label?: string\n          product_id?: string\n          sort_order?: number\n          url?: string\n        }\n        Relationships: [\n          {\n            foreignKeyName: \"product_demo_links_product_id_fkey\"\n            columns: [\"product_id\"]\n            isOneToOne: false\n            referencedRelation: \"products\"\n            referencedColumns: [\"id\"]\n          },\n        ]\n      }\n      product_images: {\n        Row: {\n          created_at: string | null\n          id: string\n          image_url: string\n          product_id: string\n          sort_order: number | null\n        }\n        Insert: {\n          created_at?: string | null\n          id?: string\n          image_url: string\n          product_id: string\n          sort_order?: number | null\n        }\n        Update: {\n          created_at?: string | null\n          id?: string\n          image_url?: string\n          product_id?: string\n          sort_order?: number | null\n        }\n        Relationships: [\n          {\n            foreignKeyName: \"product_images_product_id_fkey\"\n            columns: [\"product_id\"]\n            isOneToOne: false\n            referencedRelation: \"products\"\n            referencedColumns: [\"id\"]\n          },\n        ]\n      }\n      products: {\n        Row: {\n          badge: string | null\n          category_id: string | null\n          created_at: string\n          demo_link: string | null\n          demo_url: string | null\n          description: string | null\n          discount_percent: number | null\n          discount_price: number | null\n          drive_file_url: string | null\n          id: string\n          is_active: boolean\n          original_price: number | null\n          price: number\n          product_code: string | null\n          sku: string | null\n          slug: string\n          tags: string[] | null\n          thumbnail_url: string | null\n          title: string\n        }\n        Insert: {\n          badge?: string | null\n          category_id?: string | null\n          created_at?: string\n          demo_link?: string | null\n          demo_url?: string | null\n          description?: string | null\n          discount_percent?: number | null\n          discount_price?: number | null\n          drive_file_url?: string | null\n          id?: string\n          is_active?: boolean\n          original_price?: number | null\n          price: number\n          product_code?: string | null\n          sku?: string | null\n          slug: string\n          tags?: string[] | null\n          thumbnail_url?: string | null\n          title: string\n        }\n        Update: {\n          badge?: string | null\n          category_id?: string | null\n          created_at?: string\n          demo_link?: string | null\n          demo_url?: string | null\n          description?: string | null\n          discount_percent?: number | null\n          discount_price?: number | null\n          drive_file_url?: string | null\n          id?: string\n          is_active?: boolean\n          original_price?: number | null\n          price?: number\n          product_code?: string | null\n          sku?: string | null\n          slug?: string\n          tags?: string[] | null\n          thumbnail_url?: string | null\n          title?: string\n        }\n        Relationships: [\n          {\n            foreignKeyName: \"products_category_id_fkey\"\n            columns: [\"category_id\"]\n            isOneToOne: false\n            referencedRelation: \"categories\"\n            referencedColumns: [\"id\"]\n          },\n        ]\n      }\n      profiles: {\n        Row: {\n          avatar_url: string | null\n          created_at: string\n          email: string\n          full_name: string | null\n          id: string\n          phone: string | null\n          role: string\n          updated_at: string | null\n        }\n        Insert: {\n          avatar_url?: string | null\n          created_at?: string\n          email: string\n          full_name?: string | null\n          id: string\n          phone?: string | null\n          role?: string\n          updated_at?: string | null\n        }\n        Update: {\n          avatar_url?: string | null\n          created_at?: string\n          email?: string\n          full_name?: string | null\n          id?: string\n          phone?: string | null\n          role?: string\n          updated_at?: string | null\n        }\n        Relationships: []\n      }\n      promo_usages: {\n        Row: {\n          created_at: string\n          discount_amount: number\n          guest_email: string | null\n          id: string\n          order_id: string\n          promo_id: string\n          user_id: string | null\n        }\n        Insert: {\n          created_at?: string\n          discount_amount?: number\n          guest_email?: string | null\n          id?: string\n          order_id: string\n          promo_id: string\n          user_id?: string | null\n        }\n        Update: {\n          created_at?: string\n          discount_amount?: number\n          guest_email?: string | null\n          id?: string\n          order_id?: string\n          promo_id?: string\n          user_id?: string | null\n        }\n        Relationships: [\n          {\n            foreignKeyName: \"promo_usages_promo_id_fkey\"\n            columns: [\"promo_id\"]\n            isOneToOne: false\n            referencedRelation: \"promos\"\n            referencedColumns: [\"id\"]\n          },\n        ]\n      }\n      promos: {\n        Row: {\n          code: string\n          created_at: string\n          discount_type: string\n          discount_value: number\n          end_date: string | null\n          global_usage_limit: number | null\n          id: string\n          is_active: boolean\n          max_discount_cap: number | null\n          min_order_amount: number | null\n          name: string\n          per_user_usage_limit: number | null\n          scope_ref_id: string | null\n          scope_type: string\n          start_date: string | null\n        }\n        Insert: {\n          code: string\n          created_at?: string\n          discount_type: string\n          discount_value: number\n          end_date?: string | null\n          global_usage_limit?: number | null\n          id?: string\n          is_active?: boolean\n          max_discount_cap?: number | null\n          min_order_amount?: number | null\n          name: string\n          per_user_usage_limit?: number | null\n          scope_ref_id?: string | null\n          scope_type?: string\n          start_date?: string | null\n        }\n        Update: {\n          code?: string\n          created_at?: string\n          discount_type?: string\n          discount_value?: number\n          end_date?: string | null\n          global_usage_limit?: number | null\n          id?: string\n          is_active?: boolean\n          max_discount_cap?: number | null\n          min_order_amount?: number | null\n          name?: string\n          per_user_usage_limit?: number | null\n          scope_ref_id?: string | null\n          scope_type?: string\n          start_date?: string | null\n        }\n        Relationships: []\n      }\n    }\n    Views: {\n      [_ in never]: never\n    }\n    Functions: {\n      get_user_role: { Args: { user_id: string }; Returns: string }\n    }\n    Enums: {\n      payment_status:\n        | \"PENDING\"\n        | \"PAID\"\n        | \"FAILED\"\n        | \"PENDING_MANUAL\"\n        | \"EXPIRED\"\n    }\n    CompositeTypes: {\n      [_ in never]: never\n    }\n  }\n}\n\ntype DatabaseWithoutInternals = Omit<Database, \"__InternalSupabase\">\n\ntype DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, \"public\">]\n\nexport type Tables<\n  DefaultSchemaTableNameOrOptions extends\n    | keyof (DefaultSchema[\"Tables\"] & DefaultSchema[\"Views\"])\n    | { schema: keyof DatabaseWithoutInternals },\n  TableName extends DefaultSchemaTableNameOrOptions extends {\n    schema: keyof DatabaseWithoutInternals\n  }\n    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"] &\n        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Views\"])\n    : never = never,\n> = DefaultSchemaTableNameOrOptions extends {\n  schema: keyof DatabaseWithoutInternals\n}\n  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"] &\n      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Views\"])[TableName] extends {\n      Row: infer R\n    }\n    ? R\n    : never\n  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema[\"Tables\"] &\n        DefaultSchema[\"Views\"])\n    ? (DefaultSchema[\"Tables\"] &\n        DefaultSchema[\"Views\"])[DefaultSchemaTableNameOrOptions] extends {\n        Row: infer R\n      }\n      ? R\n      : never\n    : never\n\nexport type TablesInsert<\n  DefaultSchemaTableNameOrOptions extends\n    | keyof DefaultSchema[\"Tables\"]\n    | { schema: keyof DatabaseWithoutInternals },\n  TableName extends DefaultSchemaTableNameOrOptions extends {\n    schema: keyof DatabaseWithoutInternals\n  }\n    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"]\n    : never = never,\n> = DefaultSchemaTableNameOrOptions extends {\n  schema: keyof DatabaseWithoutInternals\n}\n  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"][TableName] extends {\n      Insert: infer I\n    }\n    ? I\n    : never\n  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema[\"Tables\"]\n    ? DefaultSchema[\"Tables\"][DefaultSchemaTableNameOrOptions] extends {\n        Insert: infer I\n      }\n      ? I\n      : never\n    : never\n\nexport type TablesUpdate<\n  DefaultSchemaTableNameOrOptions extends\n    | keyof DefaultSchema[\"Tables\"]\n    | { schema: keyof DatabaseWithoutInternals },\n  TableName extends DefaultSchemaTableNameOrOptions extends {\n    schema: keyof DatabaseWithoutInternals\n  }\n    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"]\n    : never = never,\n> = DefaultSchemaTableNameOrOptions extends {\n  schema: keyof DatabaseWithoutInternals\n}\n  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"][TableName] extends {\n      Update: infer U\n    }\n    ? U\n    : never\n  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema[\"Tables\"]\n    ? DefaultSchema[\"Tables\"][DefaultSchemaTableNameOrOptions] extends {\n        Update: infer U\n      }\n      ? U\n      : never\n    : never\n\nexport type Enums<\n  DefaultSchemaEnumNameOrOptions extends\n    | keyof DefaultSchema[\"Enums\"]\n    | { schema: keyof DatabaseWithoutInternals },\n  EnumName extends DefaultSchemaEnumNameOrOptions extends {\n    schema: keyof DatabaseWithoutInternals\n  }\n    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions[\"schema\"]][\"Enums\"]\n    : never = never,\n> = DefaultSchemaEnumNameOrOptions extends {\n  schema: keyof DatabaseWithoutInternals\n}\n  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions[\"schema\"]][\"Enums\"][EnumName]\n  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema[\"Enums\"]\n    ? DefaultSchema[\"Enums\"][DefaultSchemaEnumNameOrOptions]\n    : never\n\nexport type CompositeTypes<\n  PublicCompositeTypeNameOrOptions extends\n    | keyof DefaultSchema[\"CompositeTypes\"]\n    | { schema: keyof DatabaseWithoutInternals },\n  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {\n    schema: keyof DatabaseWithoutInternals\n  }\n    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions[\"schema\"]][\"CompositeTypes\"]\n    : never = never,\n> = PublicCompositeTypeNameOrOptions extends {\n  schema: keyof DatabaseWithoutInternals\n}\n  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions[\"schema\"]][\"CompositeTypes\"][CompositeTypeName]\n  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema[\"CompositeTypes\"]\n    ? DefaultSchema[\"CompositeTypes\"][PublicCompositeTypeNameOrOptions]\n    : never\n\nexport const Constants = {\n  public: {\n    Enums: {\n      payment_status: [\n        \"PENDING\",\n        \"PAID\",\n        \"FAILED\",\n        \"PENDING_MANUAL\",\n        \"EXPIRED\",\n      ],\n    },\n  },\n} as const\n"}
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.1"
+  }
+  public: {
+    Tables: {
+      categories: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          parent_id: string | null
+          slug: string
+          thumbnail_url: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          parent_id?: string | null
+          slug: string
+          thumbnail_url?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          parent_id?: string | null
+          slug?: string
+          thumbnail_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      manual_payment_methods: {
+        Row: {
+          account_name: string
+          account_number: string
+          created_at: string
+          id: string
+          is_active: boolean
+          logo_url: string | null
+          provider_name: string
+          sort_order: number
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          account_name: string
+          account_number: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          provider_name: string
+          sort_order?: number
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          account_name?: string
+          account_number?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          provider_name?: string
+          sort_order?: number
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          created_at: string
+          discount_amount: number | null
+          download_count: number
+          guest_email: string | null
+          guest_name: string | null
+          guest_phone: string | null
+          id: string
+          manual_payment_method_id: string | null
+          midtrans_order_id: string | null
+          midtrans_transaction_id: string | null
+          original_total: number | null
+          payment_code: string | null
+          payment_confirmed_at: string | null
+          payment_deadline: string | null
+          payment_gateway: string | null
+          payment_method: string | null
+          payment_status: Database["public"]["Enums"]["payment_status"]
+          payment_type: string | null
+          product_id: string
+          promo_code: string | null
+          quantity: number
+          snap_token: string | null
+          total_price: number
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          discount_amount?: number | null
+          download_count?: number
+          guest_email?: string | null
+          guest_name?: string | null
+          guest_phone?: string | null
+          id?: string
+          manual_payment_method_id?: string | null
+          midtrans_order_id?: string | null
+          midtrans_transaction_id?: string | null
+          original_total?: number | null
+          payment_code?: string | null
+          payment_confirmed_at?: string | null
+          payment_deadline?: string | null
+          payment_gateway?: string | null
+          payment_method?: string | null
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          payment_type?: string | null
+          product_id: string
+          promo_code?: string | null
+          quantity?: number
+          snap_token?: string | null
+          total_price: number
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          discount_amount?: number | null
+          download_count?: number
+          guest_email?: string | null
+          guest_name?: string | null
+          guest_phone?: string | null
+          id?: string
+          manual_payment_method_id?: string | null
+          midtrans_order_id?: string | null
+          midtrans_transaction_id?: string | null
+          original_total?: number | null
+          payment_code?: string | null
+          payment_confirmed_at?: string | null
+          payment_deadline?: string | null
+          payment_gateway?: string | null
+          payment_method?: string | null
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          payment_type?: string | null
+          product_id?: string
+          promo_code?: string | null
+          quantity?: number
+          snap_token?: string | null
+          total_price?: number
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_manual_payment_method_id_fkey"
+            columns: ["manual_payment_method_id"]
+            isOneToOne: false
+            referencedRelation: "manual_payment_methods"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_gateway_config: {
+        Row: {
+          api_key: string
+          created_at: string
+          display_name: string
+          environment: string
+          gateway_name: string
+          id: string
+          is_active: boolean
+          merchant_id: string | null
+          payment_mode: string
+          secret_key: string
+          updated_at: string
+          webhook_url: string | null
+        }
+        Insert: {
+          api_key: string
+          created_at?: string
+          display_name: string
+          environment?: string
+          gateway_name: string
+          id?: string
+          is_active?: boolean
+          merchant_id?: string | null
+          payment_mode?: string
+          secret_key: string
+          updated_at?: string
+          webhook_url?: string | null
+        }
+        Update: {
+          api_key?: string
+          created_at?: string
+          display_name?: string
+          environment?: string
+          gateway_name?: string
+          id?: string
+          is_active?: boolean
+          merchant_id?: string | null
+          payment_mode?: string
+          secret_key?: string
+          updated_at?: string
+          webhook_url?: string | null
+        }
+        Relationships: []
+      }
+      payment_methods: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          enabled_payments: string[]
+          id: string
+          is_active: boolean
+          label: string
+          sort_order: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          enabled_payments: string[]
+          id?: string
+          is_active?: boolean
+          label: string
+          sort_order?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          enabled_payments?: string[]
+          id?: string
+          is_active?: boolean
+          label?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      payment_settings: {
+        Row: {
+          api_key: string
+          environment: string
+          gateway_name: string
+          id: string
+          merchant_id: string | null
+          secret_key: string
+          updated_at: string | null
+        }
+        Insert: {
+          api_key: string
+          environment?: string
+          gateway_name: string
+          id?: string
+          merchant_id?: string | null
+          secret_key: string
+          updated_at?: string | null
+        }
+        Update: {
+          api_key?: string
+          environment?: string
+          gateway_name?: string
+          id?: string
+          merchant_id?: string | null
+          secret_key?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      product_demo_links: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          label: string
+          product_id: string
+          sort_order: number
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          label: string
+          product_id: string
+          sort_order?: number
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          label?: string
+          product_id?: string
+          sort_order?: number
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_demo_links_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_images: {
+        Row: {
+          created_at: string | null
+          id: string
+          image_url: string
+          product_id: string
+          sort_order: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          image_url: string
+          product_id: string
+          sort_order?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          image_url?: string
+          product_id?: string
+          sort_order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          badge: string | null
+          category_id: string | null
+          created_at: string
+          demo_link: string | null
+          demo_url: string | null
+          description: string | null
+          discount_percent: number | null
+          discount_price: number | null
+          drive_file_url: string | null
+          id: string
+          is_active: boolean
+          original_price: number | null
+          price: number
+          product_code: string | null
+          sku: string | null
+          slug: string
+          tags: string[] | null
+          thumbnail_url: string | null
+          title: string
+        }
+        Insert: {
+          badge?: string | null
+          category_id?: string | null
+          created_at?: string
+          demo_link?: string | null
+          demo_url?: string | null
+          description?: string | null
+          discount_percent?: number | null
+          discount_price?: number | null
+          drive_file_url?: string | null
+          id?: string
+          is_active?: boolean
+          original_price?: number | null
+          price: number
+          product_code?: string | null
+          sku?: string | null
+          slug: string
+          tags?: string[] | null
+          thumbnail_url?: string | null
+          title: string
+        }
+        Update: {
+          badge?: string | null
+          category_id?: string | null
+          created_at?: string
+          demo_link?: string | null
+          demo_url?: string | null
+          description?: string | null
+          discount_percent?: number | null
+          discount_price?: number | null
+          drive_file_url?: string | null
+          id?: string
+          is_active?: boolean
+          original_price?: number | null
+          price?: number
+          product_code?: string | null
+          sku?: string | null
+          slug?: string
+          tags?: string[] | null
+          thumbnail_url?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          role: string
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          role?: string
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          role?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      promo_usages: {
+        Row: {
+          created_at: string
+          discount_amount: number
+          guest_email: string | null
+          id: string
+          order_id: string
+          promo_id: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          discount_amount?: number
+          guest_email?: string | null
+          id?: string
+          order_id: string
+          promo_id: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          discount_amount?: number
+          guest_email?: string | null
+          id?: string
+          order_id?: string
+          promo_id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "promo_usages_promo_id_fkey"
+            columns: ["promo_id"]
+            isOneToOne: false
+            referencedRelation: "promos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      promos: {
+        Row: {
+          code: string
+          created_at: string
+          discount_type: string
+          discount_value: number
+          end_date: string | null
+          global_usage_limit: number | null
+          id: string
+          is_active: boolean
+          max_discount_cap: number | null
+          min_order_amount: number | null
+          name: string
+          per_user_usage_limit: number | null
+          scope_ref_id: string | null
+          scope_type: string
+          start_date: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          discount_type: string
+          discount_value: number
+          end_date?: string | null
+          global_usage_limit?: number | null
+          id?: string
+          is_active?: boolean
+          max_discount_cap?: number | null
+          min_order_amount?: number | null
+          name: string
+          per_user_usage_limit?: number | null
+          scope_ref_id?: string | null
+          scope_type?: string
+          start_date?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          discount_type?: string
+          discount_value?: number
+          end_date?: string | null
+          global_usage_limit?: number | null
+          id?: string
+          is_active?: boolean
+          max_discount_cap?: number | null
+          min_order_amount?: number | null
+          name?: string
+          per_user_usage_limit?: number | null
+          scope_ref_id?: string | null
+          scope_type?: string
+          start_date?: string | null
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      get_user_role: { Args: { user_id: string }; Returns: string }
+    }
+    Enums: {
+      payment_status:
+        | "PENDING"
+        | "PAID"
+        | "FAILED"
+        | "PENDING_MANUAL"
+        | "EXPIRED"
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      payment_status: [
+        "PENDING",
+        "PAID",
+        "FAILED",
+        "PENDING_MANUAL",
+        "EXPIRED",
+      ],
+    },
+  },
+} as const
