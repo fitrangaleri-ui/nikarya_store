@@ -5,10 +5,10 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { login, loginWithGoogle } from "../(auth)/actions";
+import { PrimaryButton } from "@/components/ui/primary-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
-import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import {
   ArrowRightStartOnRectangleIcon,
   EnvelopeIcon,
@@ -190,25 +190,16 @@ function LoginFormInner() {
             </div>
 
             {/* Submit */}
-            <Button
+            <PrimaryButton
               type="submit"
-              variant="brand"
               size="lg"
               className="w-full mt-2"
-              disabled={isLoginPending || isGooglePending}
+              loading={isLoginPending}
+              disabled={isGooglePending}
             >
-              {isLoginPending ? (
-                <>
-                  <ArrowPathIcon className="h-4 w-4 mr-2 animate-spin" />
-                  Memproses...
-                </>
-              ) : (
-                <>
-                  <ArrowRightStartOnRectangleIcon className="h-5 w-5 mr-2" />
-                  Masuk Sekarang
-                </>
-              )}
-            </Button>
+              <ArrowRightStartOnRectangleIcon className="h-5 w-5 mr-2" />
+              Masuk Sekarang
+            </PrimaryButton>
           </form>
 
           {/* Divider */}
@@ -234,7 +225,7 @@ function LoginFormInner() {
           >
             {isGooglePending ? (
               <div className="flex items-center justify-center gap-2">
-                <ArrowPathIcon className="h-4 w-4 animate-spin" />
+                <div className="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
                 <Typography variant="body-sm" className="font-bold">
                   Memproses...
                 </Typography>

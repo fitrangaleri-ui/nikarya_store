@@ -88,7 +88,7 @@ export async function getDashboardData() {
     const { data: orders } = await admin
         .from("orders")
         .select(
-            "*, products(title, thumbnail_url, slug, price, discount_price, drive_file_url)",
+            "*, products(title, thumbnail_url, slug, price, discount_price)",
         )
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });

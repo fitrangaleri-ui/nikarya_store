@@ -27,6 +27,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useCart } from "@/context/cart-context";
 import { useAuth } from "@/components/auth-provider";
+import { PrimaryButton } from "@/components/ui/primary-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
@@ -307,14 +308,13 @@ export default function CheckoutPage() {
           <Typography variant="body-sm" color="muted" className="mt-2 mb-8 font-medium">
             Belum ada produk untuk di-checkout. Mari mulai berbelanja!
           </Typography>
-          <Button
+          <PrimaryButton
             onClick={() => router.push("/products")}
-            variant="brand"
             size="lg"
             className="w-full h-12"
           >
             Lihat Katalog Produk
-          </Button>
+          </PrimaryButton>
         </div>
       </main>
     );
@@ -697,16 +697,14 @@ export default function CheckoutPage() {
                         className="h-11 rounded-lg text-sm flex-1 bg-background/50 border-border"
                         onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
                       />
-                      <Button
-                        variant="brand"
-                        className="h-11 rounded-full px-6 font-bold"
+                      <PrimaryButton
+                        className="h-11 px-6 font-bold w-auto"
                         onClick={handleApplyPromo}
-                        disabled={promoLoading || !promoInput.trim()}
+                        loading={promoLoading}
+                        disabled={!promoInput.trim()}
                       >
-                        {promoLoading ? (
-                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        ) : "Apply"}
-                      </Button>
+                        Apply
+                      </PrimaryButton>
                     </div>
                   )}
 
@@ -758,21 +756,15 @@ export default function CheckoutPage() {
                     </div>
                   )}
 
-                  <Button
+                  <PrimaryButton
                     onClick={handleCheckout}
-                    disabled={loading || cartItems.length === 0}
-                    variant="brand"
                     size="lg"
-                    className="w-full h-14 rounded-full hover:-translate-y-0.5 transition-all duration-300"
+                    className="w-full h-14"
+                    loading={loading}
+                    disabled={cartItems.length === 0}
                   >
-                    {loading ? (
-                      <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <Typography variant="body-base" className="text-primary-foreground">
-                        {user ? "Bayar Sekarang" : "Daftar & Bayar"}
-                      </Typography>
-                    )}
-                  </Button>
+                    {user ? "Bayar Sekarang" : "Daftar & Bayar"}
+                  </PrimaryButton>
 
                   {!user && (
                     <Typography variant="body-xs" color="muted" className="font-bold text-center pt-2">

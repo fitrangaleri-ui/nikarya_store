@@ -21,10 +21,9 @@ import {
 } from "@heroicons/react/20/solid";
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { PrimaryButton } from "@/components/ui/primary-button";
 import { Typography } from "@/components/ui/typography";
-
-const MAX_DOWNLOADS = 25;
+import { MAX_DOWNLOADS } from "@/lib/constants";
 
 interface DownloadModalProps {
   isOpen: boolean;
@@ -34,6 +33,7 @@ interface DownloadModalProps {
   productTitle: string;
   orderDate: string;
   orderDisplayId: string;
+  onCountUpdate?: (newCount: number) => void;
 }
 
 export function DownloadModal({
@@ -44,6 +44,7 @@ export function DownloadModal({
   productTitle,
   orderDate,
   orderDisplayId,
+  onCountUpdate,
 }: DownloadModalProps) {
   const router = useRouter();
   // ── State — tidak diubah ─────────────────────────────────
@@ -93,26 +94,29 @@ export function DownloadModal({
     };
   }, [isOpen, onClose]);
 
-  // ── Handler — tidak diubah ───────────────────────────────
+  // ── Handler — menggunakan proxy route agar URL Drive tidak terekspos ──
   const handleOpenFile = useCallback(async () => {
     if (isMaxed || loading) return;
     setLoading(true);
     setError(null);
     setSuccess(false);
     try {
-      const res = await fetch(`/api/download/${orderId}`);
+      // Pre-flight: validasi kuota + increment download_count di server
+      const res = await fetch(`/api/download/${orderId}`, {
+        method: "POST",
+      });
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "Gagal mengakses file.");
         if (data.download_count !== undefined) setCount(data.download_count);
         return;
       }
-      if (data.url) {
-        window.open(data.url, "_blank");
-        setCount(data.download_count);
-        setSuccess(true);
-        router.refresh();
-      }
+      // Increment berhasil — buka file melalui proxy route (URL Drive tidak terekspos di JS)
+      window.open(`/api/download/${orderId}/file`, "_blank");
+      setCount(data.download_count);
+      onCountUpdate?.(data.download_count);
+      setSuccess(true);
+      router.refresh();
     } catch {
       setError("Terjadi kesalahan. Silakan coba lagi.");
     } finally {
@@ -299,35 +303,24 @@ export function DownloadModal({
           {/* ════════════════════════════════════════════════ */}
           <div className="px-6 pb-6 pt-2">
             {isMaxed ? (
-              <Button
-                variant="outline"
+              <PrimaryButton
+                variant="disabled-outline"
                 size="lg"
-                disabled
-                className="w-full rounded-full bg-muted border-border/40 hover:bg-muted text-muted-foreground opacity-80"
+                className="w-full"
               >
                 <ExclamationTriangleIcon className="h-4 w-4" />
                 Limit Tercapai ({MAX_DOWNLOADS}/{MAX_DOWNLOADS})
-              </Button>
+              </PrimaryButton>
             ) : (
-              <Button
-                variant="brand"
+              <PrimaryButton
                 size="lg"
-                className="w-full rounded-full"
+                className="w-full"
                 onClick={handleOpenFile}
-                disabled={loading}
+                loading={loading}
               >
-                {loading ? (
-                  <>
-                    <ArrowPathIcon className="h-4 w-4 animate-spin" />
-                    Memproses...
-                  </>
-                ) : (
-                  <>
-                    <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-                    Akses File Digital
-                  </>
-                )}
-              </Button>
+                <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                Akses File Digital
+              </PrimaryButton>
             )}
           </div>
         </div>

@@ -4,6 +4,7 @@ import { useActionState, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { register } from "../../(auth)/actions";
+import { PrimaryButton } from "@/components/ui/primary-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
@@ -128,14 +129,13 @@ function RegisterModalInner() {
               </div>
             </div>
 
-            <Button
+            <PrimaryButton
               size="lg"
-              variant="brand"
               onClick={() => handleOpenChange(false)}
               className="w-full"
             >
               Tutup
-            </Button>
+            </PrimaryButton>
           </div>
         </DialogContent>
       </Dialog>
@@ -291,22 +291,15 @@ function RegisterModalInner() {
           </div>
 
           {/* Submit */}
-          <Button
+          <PrimaryButton
             type="submit"
-            variant="brand"
             size="lg"
             className="w-full mt-4"
-            disabled={isPending}
+            loading={isPending}
           >
-            {isPending ? (
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin" />
-            ) : (
-              <>
-                <UserPlusIcon className="h-5 w-5 mr-2" />
-                Daftar Sekarang
-              </>
-            )}
-          </Button>
+            <UserPlusIcon className="h-5 w-5 mr-2" />
+            Daftar Sekarang
+          </PrimaryButton>
 
           {/* Login Link */}
           <div className="text-center pt-2">

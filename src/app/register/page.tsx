@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import Link from "next/link";
 import { register } from "../(auth)/actions";
+import { PrimaryButton } from "@/components/ui/primary-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
@@ -87,9 +88,14 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            <Button asChild size="lg" variant="brand" className="w-full">
-              <Link href="/login">Kembali ke Login</Link>
-            </Button>
+            <Link
+              href="/login"
+              className="relative w-full rounded-full overflow-hidden bg-primary hover:bg-primary/90 text-primary-foreground font-medium flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 h-12 no-underline"
+            >
+              <span className="relative flex items-center gap-2 font-semibold text-inherit">
+                Kembali ke Login
+              </span>
+            </Link>
           </div>
         </div>
       </div>
@@ -227,22 +233,15 @@ export default function RegisterPage() {
           </div>
 
           {/* Submit */}
-          <Button
+          <PrimaryButton
             type="submit"
-            variant="brand"
             size="lg"
             className="w-full mt-4"
-            disabled={isPending}
+            loading={isPending}
           >
-            {isPending ? (
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin" />
-            ) : (
-              <>
-                <UserPlusIcon className="h-5 w-5 mr-2" />
-                Daftar Sekarang
-              </>
-            )}
-          </Button>
+            <UserPlusIcon className="h-5 w-5 mr-2" />
+            Daftar Sekarang
+          </PrimaryButton>
 
           {/* Login Link */}
           <div className="text-center pt-2">

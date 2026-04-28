@@ -19,18 +19,12 @@ import {
 import { Typography } from "@/components/ui/typography";
 import { DownloadButton } from "../../download-button";
 import { DashboardStatusBadge } from "../../status-badge";
+import { MAX_DOWNLOADS, DOWNLOAD_WARNING_THRESHOLD } from "@/lib/constants";
+import { formatDate } from "../../lib";
 
 export const dynamic = "force-dynamic";
 
-const MAX_DOWNLOADS = 25;
 
-function formatDate(date: string) {
-  return new Date(date).toLocaleDateString("id-ID", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-}
 
 export default async function DownloadPage({
   params,
@@ -51,7 +45,7 @@ export default async function DownloadPage({
   const { data: order, error } = await admin
     .from("orders")
     .select(
-      "*, products(id, title, slug, thumbnail_url, price, discount_price, drive_file_url)",
+      "*, products(id, title, slug, thumbnail_url, price, discount_price)",
     )
     .eq("id", orderId)
     .single();
@@ -67,12 +61,11 @@ export default async function DownloadPage({
     thumbnail_url: string | null;
     price: number;
     discount_price: number | null;
-    drive_file_url: string | null;
   } | null;
 
   const downloadCount = order.download_count || 0;
   const remaining = MAX_DOWNLOADS - downloadCount;
-  const progress = (downloadCount / MAX_DOWNLOADS) * 100;
+  const progress = (remaining / MAX_DOWNLOADS) * 100;
 
   // Warna progress bar sesuai sisa kuota (menggunakan semantic tokens)
   const progressColor =
@@ -200,7 +193,7 @@ export default async function DownloadPage({
               </span>
               <Typography variant="body-sm" color="muted" className="font-bold">
                 <Typography as="span" variant="body-sm" color={statusColor} className="font-extrabold">
-                  {downloadCount}
+                  {remaining}
                 </Typography>{" "}
                 / {MAX_DOWNLOADS}
               </Typography>

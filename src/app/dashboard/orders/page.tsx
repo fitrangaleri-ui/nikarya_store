@@ -179,11 +179,12 @@ export default async function OrdersPage() {
                 Sepertinya Anda belum melakukan transaksi apa pun. Temukan produk impian Anda di katalog kami.
               </Typography>
             </div>
-            <Link href="/products">
-              <button className="group inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 text-sm font-bold text-white hover:bg-primary/90 transition-all duration-200 hover:shadow-lg hover:shadow-primary/20 active:scale-95">
+            <Link
+              href="/products"
+              className="group inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 text-sm font-bold text-white hover:bg-primary/90 transition-all duration-200 hover:shadow-lg hover:shadow-primary/20 active:scale-95"
+            >
                 Jelajahi Produk
                 <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
             </Link>
           </div>
         </div>

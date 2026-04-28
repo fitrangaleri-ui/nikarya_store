@@ -3,6 +3,7 @@
 import { Suspense, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { PrimaryButton } from "@/components/ui/primary-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
@@ -101,15 +102,14 @@ function ConfirmEmailContent() {
               </div>
             </div>
 
-            <Button
+            <PrimaryButton
               size="lg"
-              variant="brand"
               className="w-full"
               onClick={() => router.push("/login")}
             >
               <ArrowRightStartOnRectangleIcon className="h-5 w-5 mr-2" />
               Masuk ke Akun
-            </Button>
+            </PrimaryButton>
           </div>
         </div>
       </div>
@@ -156,9 +156,8 @@ function ConfirmEmailContent() {
               </div>
             </div>
 
-            <Button
+            <PrimaryButton
               size="lg"
-              variant="outline"
               className="w-full"
               onClick={() => {
                 setSuccess(false);
@@ -166,7 +165,7 @@ function ConfirmEmailContent() {
               }}
             >
               Kirim Ulang Jika Belum Menerima
-            </Button>
+            </PrimaryButton>
           </div>
         </div>
       </div>
@@ -240,22 +239,15 @@ function ConfirmEmailContent() {
           </div>
 
           {/* Submit */}
-          <Button
+          <PrimaryButton
             type="submit"
             size="lg"
-            variant="brand"
             className="w-full"
-            disabled={loading}
+            loading={loading}
           >
-            {loading ? (
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin" />
-            ) : (
-              <>
-                <PaperAirplaneIcon className="h-5 w-5 mr-2 -rotate-45" />
-                Kirim Link Verifikasi
-              </>
-            )}
-          </Button>
+            <PaperAirplaneIcon className="h-5 w-5 mr-2 -rotate-45" />
+            Kirim Link Verifikasi
+          </PrimaryButton>
 
           {/* Login link */}
           <div className="text-center pt-2">

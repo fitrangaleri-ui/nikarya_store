@@ -10,8 +10,7 @@ import { ExclamationTriangleIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import { DownloadModal } from "./download-modal";
 import { Button } from "@/components/ui/button";
-
-const MAX_DOWNLOADS = 25;
+import { MAX_DOWNLOADS } from "@/lib/constants";
 
 export function DownloadButton({
   orderId,
@@ -19,12 +18,14 @@ export function DownloadButton({
   productTitle,
   orderDate,
   orderDisplayId,
+  onCountUpdate,
 }: {
   orderId: string;
   downloadCount: number;
   productTitle: string;
   orderDate: string;
   orderDisplayId: string;
+  onCountUpdate?: (newCount: number) => void;
 }) {
   const [modalOpen, setModalOpen] = useState(false);
   const isMaxed = downloadCount >= MAX_DOWNLOADS;
@@ -61,6 +62,7 @@ export function DownloadButton({
         productTitle={productTitle}
         orderDate={orderDate}
         orderDisplayId={orderDisplayId}
+        onCountUpdate={onCountUpdate}
       />
     </>
   );

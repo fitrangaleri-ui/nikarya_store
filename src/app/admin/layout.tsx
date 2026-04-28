@@ -15,7 +15,7 @@ import {
   ArrowLeftStartOnRectangleIcon,
   PhotoIcon,
 } from "@heroicons/react/24/outline";
-import { logout } from "@/app/(auth)/actions";
+import { useAuth } from "@/components/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Typography } from "@/components/ui/typography";
@@ -58,6 +58,7 @@ export default function AdminLayout({
 }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { signOut } = useAuth();
 
   // Otomatis menutup sidebar jika rute/halaman berubah (khusus mobile)
   useEffect(() => {
@@ -168,14 +169,17 @@ export default function AdminLayout({
               <Typography variant="body-sm" as="span" className="truncate font-medium flex-1">Lihat Toko</Typography>
             </a>
 
-            <form action={logout} className="py-1">
-              <button className="group flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-all duration-200 text-destructive/80 hover:bg-destructive/10 hover:text-destructive active:scale-[0.98] outline-none focus-visible:ring-2 focus-visible:ring-destructive/20">
+            <div className="py-1">
+              <button
+                onClick={() => signOut()}
+                className="group flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-all duration-200 text-destructive/80 hover:bg-destructive/10 hover:text-destructive active:scale-[0.98] outline-none focus-visible:ring-2 focus-visible:ring-destructive/20"
+              >
                 <div className="flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 transition-colors duration-200 bg-destructive/5 group-hover:bg-destructive/15">
                   <ArrowLeftStartOnRectangleIcon className="h-[18px] w-[18px] transition-colors text-destructive" />
                 </div>
-                <Typography variant="body-sm" as="span" className="truncate font-bold flex-1 text-left">Keluar Akun</Typography>
+                <Typography variant="body-sm" as="span" className="truncate font-bold flex-1 text-left">Keluar Sekarang</Typography>
               </button>
-            </form>
+            </div>
           </div>
         </div>
       </nav>

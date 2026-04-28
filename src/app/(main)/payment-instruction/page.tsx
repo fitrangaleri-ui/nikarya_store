@@ -406,7 +406,7 @@ function PaymentInstructionContent() {
                       {isPaid ? "Selesai!" : methodLabel}
                     </Typography>
                     <div className="mt-2 flex flex-wrap items-center gap-3">
-                      <Typography variant="body-xs" className="text-white/70 font-medium shrink-0">
+                      <Typography variant="body-xs" className="text-white/70 font-mono font-medium shrink-0">
                         Order #{data.orderId.split("-")[0].toUpperCase()}
                       </Typography>
                       {!isPaid && data.paymentDeadline && (
@@ -463,17 +463,17 @@ function PaymentInstructionContent() {
                             <div className="space-y-2.5 border-b border-border/30 pb-5">
                               <div className="flex justify-between items-center text-xs">
                                 <Typography variant="body-xs" color="muted" className="font-medium text-muted-foreground">Subtotal</Typography>
-                                <Typography variant="body-xs" className="font-bold">Rp {data.originalTotal.toLocaleString("id-ID")}</Typography>
+                                <Typography variant="body-xs" className="font-bold font-mono">Rp {data.originalTotal.toLocaleString("id-ID")}</Typography>
                               </div>
                               <div className="flex justify-between items-center text-primary text-xs">
                                 <Typography variant="body-xs" className="font-bold">Diskon Promo</Typography>
-                                <Typography variant="body-xs" className="font-black">-Rp {data.discountAmount.toLocaleString("id-ID")}</Typography>
+                                <Typography variant="body-xs" className="font-black font-mono">-Rp {data.discountAmount.toLocaleString("id-ID")}</Typography>
                               </div>
                             </div>
                           )}
                           <div className="flex items-center justify-between gap-4">
                             <div className="space-y-1">
-                              <Typography variant="h3" color="primary" className="font-black tracking-tight leading-none">
+                              <Typography variant="h3" color="primary" className="font-mono font-black tracking-tight leading-none">
                                 Rp {data.totalAmount.toLocaleString("id-ID")}
                               </Typography>
                               <Typography variant="caption" color="muted" className="font-medium">Sudah termasuk pajak & biaya</Typography>

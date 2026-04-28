@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { login, loginWithGoogle } from "../../(auth)/actions";
+import { PrimaryButton } from "@/components/ui/primary-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
@@ -30,7 +31,8 @@ function LoginModalInner() {
   const redirectTo = searchParams.get("redirectTo") || "";
 
   const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [isLoginPending, startLoginTransition] = useTransition();
+  const [isGooglePending, startGoogleTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -43,7 +45,7 @@ function LoginModalInner() {
 
   async function handleSubmit(formData: FormData) {
     setError(null);
-    startTransition(async () => {
+    startLoginTransition(async () => {
       const result = await login(formData);
       if (result?.error) {
         setError(result.error);
@@ -55,7 +57,7 @@ function LoginModalInner() {
 
   const handleGoogleLogin = () => {
     setError(null);
-    startTransition(async () => {
+    startGoogleTransition(async () => {
       const result = await loginWithGoogle(redirectTo || "/dashboard");
       if (result?.error) {
         setError(result.error);
@@ -211,22 +213,16 @@ function LoginModalInner() {
             </div>
 
             {/* Submit */}
-            <Button
+            <PrimaryButton
               type="submit"
-              variant="brand"
               size="lg"
               className="w-full mt-2"
-              disabled={isPending}
+              loading={isLoginPending}
+              disabled={isGooglePending}
             >
-              {isPending ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin" />
-              ) : (
-                <>
-                  <ArrowRightStartOnRectangleIcon className="h-5 w-5 mr-2" />
-                  Masuk Sekarang
-                </>
-              )}
-            </Button>
+              <ArrowRightStartOnRectangleIcon className="h-5 w-5 mr-2" />
+              Masuk Sekarang
+            </PrimaryButton>
           </form>
 
           {/* Divider */}
@@ -248,7 +244,7 @@ function LoginModalInner() {
             size="lg"
             className="w-full"
             onClick={handleGoogleLogin}
-            disabled={isPending}
+            disabled={isLoginPending || isGooglePending}
           >
             <Image
               src="/google.png"
@@ -258,7 +254,14 @@ function LoginModalInner() {
               className="mr-3 shrink-0"
             />
             <Typography variant="body-sm" className="font-bold">
-              {isPending ? "Memproses..." : "Google Account"}
+              {isGooglePending ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+                  <span>Memproses...</span>
+                </div>
+              ) : (
+                "Google Account"
+              )}
             </Typography>
           </Button>
 

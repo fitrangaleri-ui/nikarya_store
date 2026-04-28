@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { MAX_DOWNLOADS } from '@/lib/constants'
 
-const MAX_DOWNLOADS = 25
-
-export async function GET(
+export async function POST(
     request: NextRequest,
     { params }: { params: Promise<{ orderId: string }> }
 ) {
@@ -18,11 +17,11 @@ export async function GET(
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
-        // 2. Fetch order by ID (use admin client to get drive_file_url from products)
+        // 2. Fetch order by ID
         const adminClient = createAdminClient()
         const { data: order, error: orderError } = await adminClient
             .from('orders')
-            .select('*, products(drive_file_url, title)')
+            .select('*, products(title)')
             .eq('id', orderId)
             .single()
 
@@ -57,32 +56,42 @@ export async function GET(
             )
         }
 
-        // 6. Get drive_file_url
-        const product = order.products as { drive_file_url: string | null; title: string } | null
-        const driveUrl = product?.drive_file_url
+        // 6. Increment download_count (dilakukan di sini agar terjamin selesai
+        //    sebelum response dikembalikan — proxy /file route hanya redirect)
+        const newCount = currentCount + 1
+        const { data: updateData, error: updateError } = await adminClient
+            .from('orders')
+            .update({ download_count: newCount })
+            .eq('id', orderId)
+            .select('download_count')
+            .single()
 
-        if (!driveUrl) {
+        if (updateError) {
+            console.error('Failed to update download_count:', {
+                orderId,
+                currentCount,
+                newCount,
+                error: updateError,
+                code: updateError.code,
+                message: updateError.message,
+                details: updateError.details,
+                hint: updateError.hint,
+            })
             return NextResponse.json(
-                { error: 'File tidak tersedia. Hubungi admin.' },
-                { status: 404 }
+                { error: 'Gagal memperbarui kuota download.', details: updateError.message },
+                { status: 500 }
             )
         }
 
-        // 7. Increment download_count and record timestamp
-        const newCount = currentCount + 1
-        await adminClient
-            .from('orders')
-            .update({
-                download_count: newCount,
-                last_download_at: new Date().toISOString(),
-            })
-            .eq('id', orderId)
+        // Gunakan nilai dari database (bukan kalkulasi lokal) untuk akurasi
+        const confirmedCount = updateData?.download_count ?? newCount
 
-        // 8. Return the drive URL + metadata
+        const product = order.products as { title: string } | null
+
+        // 7. Return updated metadata (URL tidak dikembalikan — proxy /file route yang handle)
         return NextResponse.json({
-            url: driveUrl,
-            download_count: newCount,
-            remaining: MAX_DOWNLOADS - newCount,
+            download_count: confirmedCount,
+            remaining: MAX_DOWNLOADS - confirmedCount,
             max: MAX_DOWNLOADS,
             product_title: product?.title || 'Produk',
         })

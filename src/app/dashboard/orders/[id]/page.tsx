@@ -22,27 +22,12 @@ import { DownloadButton } from "../../download-button";
 import { Typography } from "@/components/ui/typography";
 import { HeaderBanner } from "../../header-banner";
 import { DashboardStatusBadge, getDashboardStatusMeta } from "../../status-badge";
+import { formatCurrency, formatDateTime } from "../../lib";
+import { MAX_DOWNLOADS, DOWNLOAD_WARNING_THRESHOLD } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
-function formatCurrency(amount: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
 
-function formatDateTime(date: string) {
-  return new Date(date).toLocaleDateString("id-ID", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
 
 export default async function OrderDetailPage({
   params,
@@ -62,7 +47,7 @@ export default async function OrderDetailPage({
   const { data: order, error } = await admin
     .from("orders")
     .select(
-      "*, products(id, title, slug, thumbnail_url, price, discount_price, drive_file_url)",
+      "*, products(id, title, slug, thumbnail_url, price, discount_price)",
     )
     .eq("id", id)
     .single();
@@ -78,7 +63,6 @@ export default async function OrderDetailPage({
     thumbnail_url: string | null;
     price: number;
     discount_price: number | null;
-    drive_file_url: string | null;
   } | null;
 
   const cfg = getDashboardStatusMeta(order.payment_status);
@@ -177,31 +161,31 @@ export default async function OrderDetailPage({
               {/* Paid: download quota + button */}
               {isPaid && (
                 <div className="space-y-4">
-                  <div className="rounded-sm bg-muted/30 border border-border/40 px-5 py-4 space-y-2.5">
+                  <div className="rounded-2xl bg-muted/30 border border-border/40 px-5 py-4 space-y-2.5">
                     <div className="flex items-center justify-between">
                       <Typography variant="body-xs" className="font-bold text-muted-foreground uppercase tracking-wider">
                         Kuota Download
                       </Typography>
                       <Typography
                         variant="body-sm"
-                        className={`font-black ${order.download_count >= 25
+                        className={`font-black ${order.download_count >= MAX_DOWNLOADS
                           ? "text-destructive"
                           : "text-foreground"
                           }`}
                       >
-                        {order.download_count}/25
+                        {order.download_count}/{MAX_DOWNLOADS}
                       </Typography>
                     </div>
                     <div className="h-2 bg-muted rounded-full overflow-hidden">
                       <div
-                        className={`h-full rounded-full transition-all duration-700 ease-in-out ${order.download_count >= 25
+                        className={`h-full rounded-full transition-all duration-700 ease-in-out ${order.download_count >= MAX_DOWNLOADS
                           ? "bg-destructive"
-                          : order.download_count >= 20
+                          : (MAX_DOWNLOADS - order.download_count) <= DOWNLOAD_WARNING_THRESHOLD
                             ? "bg-warning"
                             : "bg-primary shadow-[0_0_8px_rgba(1,105,111,0.4)]"
                           }`}
                         style={{
-                          width: `${Math.min((order.download_count / 25) * 100, 100)}%`,
+                          width: `${Math.min((order.download_count / MAX_DOWNLOADS) * 100, 100)}%`,
                         }}
                       />
                     </div>

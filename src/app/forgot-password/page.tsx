@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useActionState, Suspense } from "react";
 import Link from "next/link";
 import { forgotPassword } from "../(auth)/actions";
+import { PrimaryButton } from "@/components/ui/primary-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
@@ -67,15 +68,14 @@ function ForgotPasswordForm() {
               ke email Anda. Silakan periksa kotak masuk atau folder spam.
             </Typography>
 
-            <Button
+            <PrimaryButton
               size="lg"
-              variant="brand"
               className="w-full"
               onClick={() => router.push("/login")}
             >
               <ArrowLongLeftIcon className="w-5 h-5 mr-2" />
               Kembali ke Login
-            </Button>
+            </PrimaryButton>
           </div>
         </div>
       </div>
@@ -134,22 +134,15 @@ function ForgotPasswordForm() {
           </div>
 
           {/* Submit */}
-          <Button
+          <PrimaryButton
             type="submit"
             size="lg"
-            variant="brand"
             className="w-full mt-2"
-            disabled={isPending}
+            loading={isPending}
           >
-            {isPending ? (
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin" />
-            ) : (
-              <>
-                <ArrowPathIcon className="h-5 w-5 mr-2" />
-                Kirim Link Reset
-              </>
-            )}
-          </Button>
+            <ArrowPathIcon className="h-5 w-5 mr-2" />
+            Kirim Link Reset
+          </PrimaryButton>
 
           {/* Back to Login */}
           <div className="text-center pt-2">

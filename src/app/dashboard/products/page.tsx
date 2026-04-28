@@ -1,6 +1,7 @@
 // ============================================================
 // FILE: src/app/dashboard/products/page.tsx
-// FIX: Hapus karakter */} yang invalid pada komentar empty state
+// PERUBAHAN: Kuota download kini dikelola oleh client component
+//            ProductDownloadSection agar bisa update real-time
 // ============================================================
 
 import Image from "next/image";
@@ -13,15 +14,13 @@ import {
   SparklesIcon,
   DocumentMagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import { DownloadButton } from "../download-button";
+import { ProductDownloadSection } from "./product-download-section";
 import { getDashboardData, formatDate } from "../lib";
 import { Typography } from "@/components/ui/typography";
 import { HeaderBanner } from "../header-banner";
 import { DashboardStatusBadge } from "../status-badge";
 
 export const dynamic = "force-dynamic";
-
-const MAX_DOWNLOADS = 25;
 
 export default async function ProductsPage() {
   const { uniquePaidProducts } = await getDashboardData();
@@ -56,25 +55,6 @@ export default async function ProductsPage() {
               } | null;
 
               const downloadCount = order.download_count || 0;
-              const remaining = MAX_DOWNLOADS - downloadCount;
-              const progress = (downloadCount / MAX_DOWNLOADS) * 100;
-
-              const progressColor =
-                remaining <= 0
-                  ? "bg-destructive"
-                  : remaining <= 5
-                    ? "bg-warning"
-                    : "bg-primary";
-
-              const remainingLabel =
-                remaining <= 0 ? "Habis" : `${remaining} tersisa`;
-
-              const remainingColor =
-                remaining <= 0
-                  ? "text-destructive"
-                  : remaining <= 5
-                    ? "text-warning"
-                    : "text-primary";
 
               return (
                 <div
@@ -128,44 +108,10 @@ export default async function ProductsPage() {
                       )}
                     </div>
 
-                    {/* Kuota download */}
-                    <div className="rounded-xl bg-muted/30 border border-border/60 px-4 py-4 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <Typography variant="body-xs" color="muted" className="font-extrabold uppercase">
-                          Kuota Download
-                        </Typography>
-                        <div className="flex items-center">
-                          <Typography variant="body-sm" color="muted" className="font-bold">
-                            <span className={`font-black ${remainingColor}`}>
-                              {downloadCount}
-                            </span>{" "}
-                            / {MAX_DOWNLOADS}
-                          </Typography>
-                        </div>
-                      </div>
-                      <div className="h-2 bg-muted rounded-full overflow-hidden border border-border/10">
-                        <div
-                          className={`h-full rounded-full transition-all duration-500 ease-out ${progressColor}`}
-                          style={{ width: `${Math.min(progress, 100)}%` }}
-                        />
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <Typography variant="caption" color="muted" className="font-medium italic">
-                          {remaining <= 0
-                            ? "Limit tercapai"
-                            : `Tersisa ${remaining} kali unduh`}
-                        </Typography>
-                        <div className={`px-2 py-0.5 rounded-full border bg-background/50 border-border/50`}>
-                          <Typography variant="caption" className={`font-extrabold uppercase text-[9px] ${remainingColor}`}>
-                            {remainingLabel}
-                          </Typography>
-                        </div>
-                      </div>
-                    </div>
-
-                    <DownloadButton
+                    {/* Kuota download + Tombol — dikelola oleh client component */}
+                    <ProductDownloadSection
                       orderId={order.id}
-                      downloadCount={downloadCount}
+                      initialDownloadCount={downloadCount}
                       productTitle={product?.title || "Produk Tanpa Nama"}
                       orderDate={order.created_at}
                       orderDisplayId={order.midtrans_order_id || order.id}
@@ -191,11 +137,12 @@ export default async function ProductsPage() {
                 Koleksi produk digital Anda akan muncul di sini setelah transaksi berhasil dilakukan.
               </Typography>
             </div>
-            <Link href="/products">
-              <button className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-white hover:bg-primary-hover transition-all duration-200 active:scale-95">
-                Jelajahi Katalog
-                <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
+            <Link
+              href="/products"
+              className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-white hover:bg-primary-hover transition-all duration-200 active:scale-95"
+            >
+              Jelajahi Katalog
+              <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>
