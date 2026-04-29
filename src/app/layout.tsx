@@ -26,8 +26,13 @@ const jetbrainsMono = JetBrains_Mono({
 
 
 export const metadata: Metadata = {
-  title: "Custom Galeri Store",
+  title: "Nikarya Store",
   description: "Toko produk digital premium — Browse, Pay, Download.",
+  icons: {
+    icon: "/logo-nikarya-page.svg",
+    shortcut: "/logo-nikarya-page.svg",
+    apple: "/logo-nikarya-page.svg",
+  },
 };
 
 export default function RootLayout({

@@ -165,13 +165,13 @@ export function WhatsAppButton() {
 
           {/* Modal Content */}
           <div
-            className={`relative w-full max-w-[320px] overflow-hidden rounded-3xl bg-background/95 backdrop-blur-2xl shadow-[0_32px_64px_rgba(0,0,0,0.2)] border border-border/50 ring-0 transition-all duration-300 ${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+            className={`relative w-full max-w-[320px] md:max-w-[420px] overflow-hidden rounded-xl bg-background/95 backdrop-blur-2xl shadow-[0_32px_64px_rgba(0,0,0,0.2)] border border-border/50 ring-0 transition-all duration-300 ${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
               }`}
           >
             {/* Header */}
-            <div className="flex items-start justify-between bg-gradient-to-br from-[#01696f] to-[#0c4e54] px-4 py-5 text-white">
+            <div className="flex items-start justify-between bg-gradient-to-br from-[#01696f] to-[#0c4e54] px-4 py-5 md:px-6 md:py-7 text-white">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border-2 border-white/20">
+                <div className="flex h-12 w-12 md:h-14 md:w-14 items-center justify-center overflow-hidden rounded-full border-2 border-white/20">
                   <Image
                     src="/icon/logo-nikarya.jpg"
                     alt="Admin Profile"
@@ -183,7 +183,7 @@ export function WhatsAppButton() {
                 </div>
                 <div className="leading-tight">
                   <div className="flex items-center gap-1.5">
-                    <Typography variant="body-base" as="p" className="text-base font-semibold text-white">Nikarya Digital</Typography>
+                    <Typography variant="body-base" as="p" className="text-base md:text-lg font-semibold text-white">Nikarya Digital</Typography>
                     <Image
                       src="/icon/verify.png"
                       alt="Verified"
@@ -223,8 +223,8 @@ export function WhatsAppButton() {
             </div>
 
             {/* Body */}
-            <div className="px-4 py-5 space-y-5 bg-gradient-to-b from-muted/20 to-transparent">
-              <div className="rounded-2xl bg-card dark:bg-card p-4 text-card-foreground shadow-sm border border-border/40 relative">
+            <div className="px-4 py-5 md:px-6 md:py-7 space-y-5 bg-gradient-to-b from-muted/20 to-transparent">
+              <div className="rounded-xl bg-card dark:bg-card p-4 text-card-foreground shadow-sm border border-border/40 relative">
                 <div className="absolute -left-1.5 top-4 w-3 h-3 bg-card border-l border-t border-border/40 rotate-[-45deg]" />
                 <div className="flex items-center justify-between">
                   <Typography variant="caption" as="p" className="font-medium text-primary uppercase tracking-tight">
@@ -241,7 +241,7 @@ export function WhatsAppButton() {
 
               {/* Chat Input Bar */}
               <div className="space-y-1.5">
-                <div className="flex items-end gap-2 rounded-2xl bg-card border border-border/40 px-3 py-2 shadow-sm">
+                <div className="flex items-end gap-2 rounded-xl bg-card border border-border/40 px-3 py-2 md:px-4 md:py-3 shadow-sm">
                   <textarea
                     ref={textareaRef}
                     value={message}

@@ -4,7 +4,7 @@ import { HeroSection } from "@/components/hero-section";
 import { ScrollReveal } from "@/components/scroll-reveal";
 
 export const metadata = {
-  title: "Promo & Diskon | Custom Galeri Store",
+  title: "Promo & Diskon | Nikarya Store",
   description:
     "Lihat daftar kode promo, diskon, dan penawaran menarik kami. Dapatkan potongan harga maksimal di setiap pembelian Anda.",
 };
