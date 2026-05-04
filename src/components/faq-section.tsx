@@ -22,7 +22,7 @@ const boldKeywords = (text: string) => {
 
 const faqs = [
   {
-    q: "Apakahiad itu Nikarya Digital?",
+    q: "Apakah itu Nikarya Digital?",
     a: "Nikarya Digital adalah sebuah platform yang menyediakan berbagai macam template undangan digital premium dalam format JSON. Template dari Nikarya Digital dirancang khusus untuk mempermudah penyedia jasa pembuatan undangan digital agar bisa bekerja lebih cepat dan efisien.",
   },
   {
