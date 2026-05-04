@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  ArchiveBoxIcon,
   CheckBadgeIcon,
   ChevronDownIcon,
   ChevronRightIcon,
@@ -242,14 +241,13 @@ export function ProductDetailClient({
 
                 <div className="flex flex-wrap items-center gap-2">
                   {product.sku && (
-                    <Badge variant="outline" className="backdrop-blur-md px-3 py-1.5 h-auto font-bold uppercase tracking-wide text-[10px]">
-                      <ArchiveBoxIcon className="mr-1.5 h-3 w-3" />
+                    <Badge variant="outline" className="backdrop-blur-md px-3 py-1 font-semibold text-muted-foreground uppercase text-sm">
                       {product.sku}
                     </Badge>
                   )}
 
                   {product.categories?.name && (
-                    <Badge variant="outline" className="backdrop-blur-md px-3 py-1.5 h-auto font-bold uppercase tracking-wide text-[10px]">
+                    <Badge variant="outline" className="backdrop-blur-md px-3 py-1 font-semibold text-muted-foreground uppercase text-sm">
                       {product.categories.name}
                     </Badge>
                   )}
@@ -261,11 +259,12 @@ export function ProductDetailClient({
                         key={tag}
                         variant="outline"
                         className={cn(
-                          "px-3 py-1.5 h-auto font-bold uppercase tracking-wide text-[10px] backdrop-blur-md",
-                          isNew ? "bg-primary/10 text-primary border-primary/20" : ""
+                          "backdrop-blur-md px-3 py-1 font-semibold uppercase text-sm",
+                          isNew
+                            ? "bg-primary/10 text-primary border-primary/20"
+                            : "text-muted-foreground"
                         )}
                       >
-                        <TagIcon className={cn("mr-1.5 h-3 w-3", isNew ? "text-primary" : "")} />
                         {tag}
                       </Badge>
                     );
