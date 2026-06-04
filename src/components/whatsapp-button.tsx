@@ -81,10 +81,13 @@ export function WhatsAppButton() {
     }
   }, [isOpen]);
 
-  // Focus textarea when visible
+  // Focus textarea when visible (desktop only to prevent triggering soft keyboard on mobile)
   useEffect(() => {
     if (isVisible && textareaRef.current) {
-      textareaRef.current.focus();
+      const isMobile = window.matchMedia("(max-width: 768px)").matches;
+      if (!isMobile) {
+        textareaRef.current.focus();
+      }
     }
   }, [isVisible]);
 
