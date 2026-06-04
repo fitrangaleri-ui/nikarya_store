@@ -173,6 +173,16 @@ export default function CheckoutPage() {
         setPaymentConfig(data);
         if (data.mode === "gateway" && data.gateway_methods?.length) {
           setSelectedGatewayMethod(data.gateway_methods[0].code);
+        } else if (data.mode === "manual" && data.manual_methods?.length) {
+          // Set QRIS as default manual payment method if available, otherwise use first
+          const qris = data.manual_methods.find((m) =>
+            m.provider_name.toLowerCase().includes("qris")
+          );
+          if (qris) {
+            setSelectedManualMethodId(qris.id);
+          } else {
+            setSelectedManualMethodId(data.manual_methods[0].id);
+          }
         }
       })
       .catch(() => {
@@ -601,10 +611,12 @@ export default function CheckoutPage() {
                             className="accent-primary w-4 h-4 flex-shrink-0 cursor-pointer"
                           />
                           <div className="w-10 h-10 rounded-full bg-white border border-border/50 flex items-center justify-center flex-shrink-0 overflow-hidden p-1.5">
-                            {method.logo_url ? (
+                            {method.logo_url && !method.provider_name.toLowerCase().includes("qris") ? (
                               <Image src={method.logo_url} alt={method.provider_name} width={40} height={40} className="w-full h-full object-contain" />
                             ) : (
-                              <span className="text-lg">{method.type === "bank_transfer" ? "🏦" : "📱"}</span>
+                              <span className="text-lg">
+                                {method.provider_name.toLowerCase().includes("qris") ? "📲" : method.type === "bank_transfer" ? "🏦" : "📱"}
+                              </span>
                             )}
                           </div>
                           <Typography variant="body-sm" className="font-bold tracking-tight">

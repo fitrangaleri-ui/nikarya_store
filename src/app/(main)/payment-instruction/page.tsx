@@ -87,6 +87,22 @@ function getHowToPayInstructions(
   const pt = data.paymentType || "";
 
   if (data.manualMethod) {
+    if (data.manualMethod.provider_name.toLowerCase().includes("qris")) {
+      return [
+        {
+          title: "Cara Bayar QRIS",
+          steps: [
+            "Buka aplikasi e-wallet (GoPay, OVO, DANA, ShopeePay, dll) atau aplikasi mobile banking Anda yang mendukung scan QRIS",
+            "Pilih menu Scan QR / QRIS / Bayar",
+            "Arahkan kamera ke QR Code yang tampil di layar Anda",
+            "Masukkan jumlah pembayaran sesuai dengan total tagihan",
+            "Pastikan nama merchant sesuai (Ahmad Fitran Randika)",
+            "Masukkan PIN untuk menyelesaikan pembayaran",
+            "Simpan bukti transaksi Anda",
+          ],
+        },
+      ];
+    }
     if (data.manualMethod.type === "bank_transfer") {
       return [
         {
@@ -540,19 +556,39 @@ function PaymentInstructionContent() {
 
                           {data.manualMethod && (
                             <div className="space-y-5">
-                              <div className="flex items-center justify-between gap-4">
-                                <div className="flex-1 min-w-0 space-y-1">
-                                  <Typography variant="h4" className="font-mono font-black leading-none">{data.manualMethod.account_number}</Typography>
-                                  <Typography variant="caption" color="muted" className="font-medium">A/N: {data.manualMethod.account_name}</Typography>
+                              {data.manualMethod.provider_name.toLowerCase().includes("qris") ? (
+                                <div className="flex flex-col items-center gap-5 py-2">
+                                  <div className="p-3 bg-white border-2 border-primary/10 rounded-xl group transition-all hover:border-primary/30">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                      src={data.manualMethod.logo_url || "/banks/my-qris.jpg"}
+                                      alt="QRIS QR Code"
+                                      className="w-48 h-48 object-contain transition-transform group-hover:scale-[1.02]"
+                                    />
+                                  </div>
+                                  <Typography variant="caption" color="muted" className="font-bold uppercase flex items-center gap-2">
+                                    <MagnifyingGlassIcon className="w-4 h-4" /> Scan QRIS Untuk Bayar
+                                  </Typography>
+                                  <div className="w-full text-center border-t border-border/30 pt-4">
+                                    <Typography variant="caption" color="muted" className="font-medium block mb-1">Nama Merchant</Typography>
+                                    <Typography variant="body-sm" className="font-bold">{data.manualMethod.account_name}</Typography>
+                                  </div>
                                 </div>
-                                <button
-                                  onClick={() => handleCopy(data.manualMethod!.account_number, "manual")}
-                                  className={`flex items-center rounded-sm gap-2 px-4 py-2.5 text-xs font-bold transition-all duration-300 ${copiedField === "manual" ? "bg-green-500 text-white" : "bg-primary/10 text-primary hover:bg-primary/20"}`}
-                                >
-                                  {copiedField === "manual" ? <CheckCircleIcon className="h-4 w-4" /> : <ClipboardDocumentIcon className="h-4 w-4" />}
-                                  {copiedField === "manual" ? "Tersalin" : "Salin"}
-                                </button>
-                              </div>
+                              ) : (
+                                <div className="flex items-center justify-between gap-4">
+                                  <div className="flex-1 min-w-0 space-y-1">
+                                    <Typography variant="h4" className="font-mono font-black leading-none">{data.manualMethod.account_number}</Typography>
+                                    <Typography variant="caption" color="muted" className="font-medium">A/N: {data.manualMethod.account_name}</Typography>
+                                  </div>
+                                  <button
+                                    onClick={() => handleCopy(data.manualMethod!.account_number, "manual")}
+                                    className={`flex items-center rounded-sm gap-2 px-4 py-2.5 text-xs font-bold transition-all duration-300 ${copiedField === "manual" ? "bg-green-500 text-white" : "bg-primary/10 text-primary hover:bg-primary/20"}`}
+                                  >
+                                    {copiedField === "manual" ? <CheckCircleIcon className="h-4 w-4" /> : <ClipboardDocumentIcon className="h-4 w-4" />}
+                                    {copiedField === "manual" ? "Tersalin" : "Salin"}
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
