@@ -1,0 +1,6 @@
+New Admin : admin@customgaleri.com
+Pass : &zL-NUPtfQW%49m
+project_databasename : nikarya_store
+
+
+supabase sudah terhubung melalui mcp server dengan url project https://ebayweiakwknyhrzvpqx.supabase.co jadi kamu juga bisa mengakses supabase dan melakukan perubahan yang memang diperlukan
