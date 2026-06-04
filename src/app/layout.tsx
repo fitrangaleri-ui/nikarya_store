@@ -13,6 +13,7 @@ import { WhatsAppButton } from "@/components/whatsapp-button";
 import { FilterDrawerProvider } from "@/context/filter-drawer-context";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -73,6 +74,7 @@ export default function RootLayout({
                   <CartSidebar />
                   <MenuSidebar />
                   <WhatsAppButton />
+                  <Toaster position="top-center" />
                 </FilterDrawerProvider>
               </DemoPreviewProvider>
             </ThemeProvider>

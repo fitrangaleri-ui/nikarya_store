@@ -3,4 +3,42 @@ Pass : &zL-NUPtfQW%49m
 project_databasename : nikarya_store
 
 
-supabase sudah terhubung melalui mcp server dengan url project https://ebayweiakwknyhrzvpqx.supabase.co jadi kamu juga bisa mengakses supabase dan melakukan perubahan yang memang diperlukan
+supabase sudah terhubung melalui mcp server dengan url project https://ebayweiakwknyhrzvpqx.supabase.co jadi kamu juga bisa mengakses supabase dan melakukan perubahan yang memang diperlukan jika memang ada yang perlu di rubah dari sisi supabase
+
+
+
+
+
+
+ping cron jobs
+
+saya memiliki Masalah**: Supabase Free Tier menge-pause project otomatis setelah 7 hari tidak ada aktivitas database saya ingin mengatasi masalah tersebut dengan cara Vercel Cron Jobs ⭐ (Rekomendasi jika deploy di Vercel)
+Vercel punya fitur built-in cron job. Cukup buat dua file:
+app/api/keepalive/route.js
+js
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
+export async function GET() {
+  const { error } = await supabase
+    .from('keepalive')
+    .insert({ pinged_at: new Date().toISOString() });
+
+  if (error) return Response.json({ ok: false, error: error.message }, { status: 500 });
+  return Response.json({ ok: true, pinged_at: new Date().toISOString() });
+}
+vercel.json (di root project)
+json
+{
+  "crons": [
+    {
+      "path": "/api/keepalive",
+      "schedule": "0 1 * * *"
+    }
+  ]
+}
+Selesai! Vercel akan otomatis hit endpoint /api/keepalive setiap hari jam 01:00 UTC (08:00 WIB). kemudian supabase sudah terhubung melalui mcp server dengan url project https://ebayweiakwknyhrzvpqx.supabase.co jadi kamu juga bisa mengakses supabase dan melakukan perubahan yang memang diperlukan jika memang ada yang perlu di rubah dari sisi supabase

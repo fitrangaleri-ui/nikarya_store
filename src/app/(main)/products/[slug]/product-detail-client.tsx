@@ -12,6 +12,7 @@ import {
   HomeIcon,
   LockClosedIcon,
   PhotoIcon,
+  ShareIcon,
   ShieldCheckIcon,
   ShoppingCartIcon,
   TagIcon,
@@ -33,6 +34,7 @@ import {
 } from "@/components/ui/carousel";
 import { Typography } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
 interface ProductData {
   id: string;
@@ -92,6 +94,21 @@ export function ProductDetailClient({
       thumbnail_url: product.thumbnail_url,
     });
     openCart();
+  };
+
+  const handleShare = () => {
+    if (typeof window !== "undefined") {
+      const shareUrl = `${window.location.origin}/products/${product.slug}`;
+      navigator.clipboard
+        .writeText(shareUrl)
+        .then(() => {
+          toast.success("Link produk berhasil disalin! 🚀");
+        })
+        .catch((err) => {
+          console.error("Gagal menyalin link: ", err);
+          toast.error("Gagal menyalin link produk.");
+        });
+    }
   };
 
   return (
@@ -235,9 +252,19 @@ export function ProductDetailClient({
 
             <div className="flex flex-col gap-6">
               <div className="space-y-4">
-                <Typography variant="h2" as="h1">
-                  {product.title}
-                </Typography>
+                <div className="flex items-start justify-between gap-4">
+                  <Typography variant="h3" as="h1" className="flex-1">
+                    {product.title}
+                  </Typography>
+                  <button
+                    onClick={handleShare}
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border/50 bg-card/40 text-muted-foreground transition-all hover:scale-105 active:scale-95 hover:border-primary hover:text-primary hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    title="Bagikan produk"
+                    aria-label="Bagikan produk"
+                  >
+                    <ShareIcon className="h-5 w-5" />
+                  </button>
+                </div>
 
                 <div className="flex flex-wrap items-center gap-2">
                   {product.sku && (
