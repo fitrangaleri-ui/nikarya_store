@@ -12,9 +12,7 @@ import { ProductsToolbar } from "./products-toolbar";
 import { MobileSortDropdown } from "./mobile-sort-dropdown";
 import { Pagination } from "./pagination";
 import { Typography } from "@/components/ui/typography";
-
-
-export const dynamic = "force-dynamic";
+import { getProductsPageMeta } from "../lib";
 
 const PER_PAGE = 20;
 
@@ -58,42 +56,7 @@ export default async function ProductsPage({
   const currentPage = Math.max(1, parseInt(page || "1", 10) || 1);
   const supabase = createAdminClient();
 
-  const [
-    { data: categories },
-    { data: maxPriceArr },
-    { data: allProductsForCount },
-  ] = await Promise.all([
-    supabase
-      .from("categories")
-      .select("id, name, slug, parent_id, thumbnail_url")
-      .order("name"),
-    supabase
-      .from("products")
-      .select("price")
-      .eq("is_active", true)
-      .order("price", { ascending: false })
-      .limit(1),
-    supabase.from("products").select("category_id").eq("is_active", true),
-  ]);
-
-  const globalMin = 0;
-  const globalMax =
-    Math.ceil((maxPriceArr?.[0]?.price || 1000000) / 1000) * 1000;
-
-  const categoryCounts: Record<string, number> = {};
-  allProductsForCount?.forEach((p) => {
-    if (p.category_id) {
-      categoryCounts[p.category_id] = (categoryCounts[p.category_id] || 0) + 1;
-    }
-  });
-  categories
-    ?.filter((c) => c.parent_id)
-    .forEach((child) => {
-      if (child.parent_id && categoryCounts[child.id]) {
-        categoryCounts[child.parent_id] =
-          (categoryCounts[child.parent_id] || 0) + categoryCounts[child.id];
-      }
-    });
+  const { categories, globalMin, globalMax, categoryCounts } = await getProductsPageMeta();
 
   const priceMinParam = price_min ? Number(price_min) : null;
   const priceMaxParam = price_max ? Number(price_max) : null;

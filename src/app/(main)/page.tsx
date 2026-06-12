@@ -4,19 +4,25 @@
 //   - Hapus const features[] — dipindah ke feature-card.tsx
 //   - Hapus import lucide icons untuk features
 //   - Ganti <FeatureCard> loop → <FeaturesGrid />
+// ============================================================
+// FILE: src/app/(main)/page.tsx
+// PERUBAHAN:
+//   - Hapus const features[] — dipindah ke feature-card.tsx
+//   - Hapus import lucide icons untuk features
+//   - Ganti <FeatureCard> loop → <FeaturesGrid />
 //   - Semua fetching, data transform, section lain TIDAK DIUBAH
 // ============================================================
 
 import { HeroSection } from "@/components/hero-section";
 import { FaqSection } from "@/components/faq-section";
 import { WarnSection } from "@/components/warn";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { getHomepageCategories, getHomepageFeaturedCategories, getHomepageNewArrivals } from "./lib";
 import { CategoryCarousel } from "@/components/category-carousel";
 import { CategorySection } from "@/components/category-section";
 import { BottomNav } from "@/components/bottom-nav";
 import { Typography } from "@/components/ui/typography";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 type HomePageProduct = {
   id: string;
@@ -43,50 +49,19 @@ type HomePageProduct = {
 };
 
 export default async function HomePage() {
-  // ─── Data Fetching (TIDAK DIUBAH) ─────────────────────────
-  const supabase = createAdminClient();
-
   const [
-    { data: allCategoriesRaw },
-    { data: featuredCategoriesRaw },
-    { data: newArrivalsRaw },
+    allCategoriesRaw,
+    featuredCategoriesRaw,
+    newArrivalsRaw,
   ] = await Promise.all([
-    supabase
-      .from("categories")
-      .select("id, name, slug, thumbnail_url, products(count)")
-      .order("name")
-      .limit(8),
-
-    supabase
-      .from("categories")
-      .select(
-        `id, name, slug,
-         products (
-           id, title, slug, price, discount_price, thumbnail_url, sku, tags, demo_link,
-           categories(name),
-           product_demo_links(id, label, url, image_url, sort_order),
-           product_images(image_url, sort_order)
-         )`,
-      )
-      .not("products", "is", null)
-      .limit(4),
-
-    supabase
-      .from("products")
-      .select(
-        "id, title, slug, price, discount_price, thumbnail_url, sku, tags, demo_link, categories(name), product_demo_links(id, label, url, image_url, sort_order), product_images(image_url, sort_order)",
-      )
-      .eq("is_active", true)
-      .not("tags", "is", null)
-      .order("created_at", { ascending: false })
-      .limit(24),
+    getHomepageCategories(),
+    getHomepageFeaturedCategories(),
+    getHomepageNewArrivals(),
   ]);
-
-  // ─── Data Transform (TIDAK DIUBAH) ────────────────────────
   const carouselCategories =
     allCategoriesRaw?.map((cat) => ({
       ...cat,
-      productCount: cat.products?.[0]?.count || 0,
+      productCount: (cat.products as unknown as { count: number }[])?.[0]?.count || 0,
     })) || [];
 
   const categoriesWithProducts =

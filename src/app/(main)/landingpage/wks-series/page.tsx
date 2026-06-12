@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { HeroSection } from "@/components/hero-section";
 import { FaqSection } from "@/components/faq-section";
 import { WarnSection } from "@/components/warn";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { getLandingPageProduct } from "../../lib";
 import { ProductCardDemo } from "../product-card-demo";
 import { PriceCard } from "../price-card";
 import { Typography } from "@/components/ui/typography";
@@ -10,7 +10,7 @@ import { DemoPreviewProvider } from "@/components/demo-preview-provider";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { TemplatesAndPricingSkeleton } from "../skeleton-fallback";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 120;
 
 export const metadata = {
   title: "WKS Series | Nikarya Store",
@@ -18,6 +18,7 @@ export const metadata = {
 };
 
 const wksFaqs = [
+  // ... faq items unchanged ...
   {
     q: "Apa itu Tema Walimatul Khitan Series?",
     a: "Tema Batik Megamendung Series adalah template undangan digital bertema Khitanan yang disediakan dalam format JSON dan dirancang untuk digunakan di Elementor. Template ini bisa langsung diimpor melalui Dashboard Wordpress dan digunakan tanpa perlu coding.",
@@ -49,16 +50,7 @@ const wksFaqs = [
 ];
 
 async function WKSSeriesData() {
-  const supabase = createAdminClient();
-  const { data: wksProduct } = await supabase
-    .from("products")
-    .select(
-      "id, sku, slug, title, price, discount_price, thumbnail_url, product_demo_links(id, label, url, image_url, sort_order)"
-    )
-    .eq("is_active", true)
-    .ilike("sku", "wks-series")
-    .limit(1)
-    .maybeSingle();
+  const wksProduct = await getLandingPageProduct("wks-series");
 
   const demoLinks = [...(wksProduct?.product_demo_links || [])].sort(
     (a: any, b: any) => (a.sort_order || 0) - (b.sort_order || 0)

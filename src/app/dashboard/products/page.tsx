@@ -131,10 +131,10 @@ export default async function ProductsPage() {
               <ShoppingBagIcon className="h-10 w-10 text-muted-foreground/30" />
             </div>
             <div className="space-y-2">
-              <Typography variant="h4" className="font-bold">
+              <Typography variant="h4" className="text-center font-bold">
                 Belum ada produk
               </Typography>
-              <Typography variant="body-sm" color="muted" className="max-w-xs mx-auto font-medium">
+              <Typography variant="body-sm" color="muted" className="max-w-xs mx-auto text-center align-center font-medium">
                 Koleksi produk digital Anda akan muncul di sini setelah transaksi berhasil dilakukan.
               </Typography>
             </div>

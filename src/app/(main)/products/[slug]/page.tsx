@@ -1,7 +1,7 @@
-import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { ProductDetailClient } from "./product-detail-client";
+import { getProductBySlug, getRelatedProducts } from "../../lib";
 
 export default async function ProductDetailPage({
   params,
@@ -10,36 +10,20 @@ export default async function ProductDetailPage({
 }) {
   const { slug } = await params;
 
-  const adminClient = createAdminClient();
-  const { data: product } = await adminClient
-    .from("products")
-    .select(
-      "id, title, slug, description, price, discount_price, sku, demo_link, tags, thumbnail_url, category_id, categories(name), product_demo_links(id, label, url, image_url, sort_order), product_images(image_url, sort_order)",
-    )
-    .eq("slug", slug)
-    .eq("is_active", true)
-    .single();
+  const supabase = await createClient();
+
+  // Run main product query and auth query in parallel
+  const [product, { data: { user } }] = await Promise.all([
+    getProductBySlug(slug),
+    supabase.auth.getUser(),
+  ]);
 
   if (!product) notFound();
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  // Fetch related products (same category, exclude current, max 4)
-  let relatedProducts: any[] = [];
-  if (product.category_id) {
-    const { data: related } = await adminClient
-      .from("products")
-      .select("id, title, slug, price, discount_price, sku, demo_link, tags, thumbnail_url, product_demo_links(id, label, url, image_url, sort_order), product_images(image_url, sort_order)")
-      .eq("category_id", product.category_id)
-      .eq("is_active", true)
-      .neq("id", product.id)
-      .limit(4);
-
-    relatedProducts = related || [];
-  }
+  // Related products fetching
+  const relatedProducts = product.category_id
+    ? await getRelatedProducts(product.category_id, product.id)
+    : [];
 
   return (
     <ProductDetailClient

@@ -29,11 +29,27 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
+  const pathname = request.nextUrl.pathname;
+
+  // Skip auth check untuk rute publik agar mempercepat TTFB
+  const publicPrefixes = [
+    "/products",
+    "/promo",
+    "/landingpage",
+    "/checkout",
+    "/payment-instruction",
+  ];
+
+  const isPublicMainPage = pathname === "/";
+  const isPublicRoute = publicPrefixes.some(p => pathname.startsWith(p));
+
+  if (isPublicMainPage || isPublicRoute) {
+    return supabaseResponse;
+  }
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  const pathname = request.nextUrl.pathname;
 
   // ===== PERBAIKAN: Tambahkan helper function untuk cek role =====
   async function getUserRole(userId: string): Promise<string | null> {
