@@ -1,4 +1,3 @@
-import { createAdminClient } from "@/lib/supabase/admin";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -24,41 +23,19 @@ import Link from "next/link";
 import { Typography } from "@/components/ui/typography";
 import { StickyHeader } from "./sticky-header";
 
+import { getAdminDashboardStats } from "./lib";
+
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  const admin = createAdminClient();
-
-  // Fetch all data in parallel
-  const [
-    { count: productsCount },
-    { count: ordersCount },
-    { count: customersCount },
-    { data: paidOrders },
-    { data: recentOrders },
-    { data: recentProducts },
-  ] = await Promise.all([
-    admin.from("products").select("*", { count: "exact", head: true }),
-    admin.from("orders").select("*", { count: "exact", head: true }),
-    admin
-      .from("profiles")
-      .select("*", { count: "exact", head: true })
-      .eq("role", "USER"),
-    admin.from("orders").select("total_price").eq("payment_status", "PAID"),
-    admin
-      .from("orders")
-      .select("*, profiles(email, full_name), products(title)")
-      .order("created_at", { ascending: false })
-      .limit(5),
-    admin
-      .from("products")
-      .select("*, categories(name)")
-      .order("created_at", { ascending: false })
-      .limit(5),
-  ]);
-
-  const totalRevenue =
-    paidOrders?.reduce((acc, order) => acc + Number(order.total_price), 0) || 0;
+  const {
+    productsCount,
+    ordersCount,
+    customersCount,
+    totalRevenue,
+    recentOrders,
+    recentProducts,
+  } = await getAdminDashboardStats();
 
   // Using semantic design tokens instead of hardcoded amber colors
   const statusColors: Record<string, string> = {

@@ -93,8 +93,7 @@ export async function updateSession(request: NextRequest) {
       }
     }
   }
-
-  // Admin routes: /admin/* requires ADMIN role
+  // Admin routes: /admin/* requires authenticated user (strict role check is delegated to Layout)
   if (pathname.startsWith("/admin")) {
     if (!user) {
       const url = request.nextUrl.clone();
@@ -102,28 +101,6 @@ export async function updateSession(request: NextRequest) {
       url.searchParams.set("redirectTo", pathname);
       return NextResponse.redirect(url);
     }
-
-    // ===== PERBAIKAN: Gunakan helper function =====
-    const role = await getUserRole(user.id);
-
-    // Debug log (hapus setelah testing)
-    console.log(
-      "🔍 Middleware check - User:",
-      user.email,
-      "Role:",
-      role,
-      "Path:",
-      pathname,
-    );
-
-    if (role !== "ADMIN") {
-      console.log("❌ Access denied - redirecting to dashboard");
-      const url = request.nextUrl.clone();
-      url.pathname = "/dashboard";
-      return NextResponse.redirect(url);
-    }
-
-    console.log("✅ Admin access granted");
   }
 
   // ===== PERBAIKAN: Redirect logic untuk /login dan /register =====
