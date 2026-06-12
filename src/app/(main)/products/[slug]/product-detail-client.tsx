@@ -268,13 +268,13 @@ export function ProductDetailClient({
 
                 <div className="flex flex-wrap items-center gap-2">
                   {product.sku && (
-                    <Badge variant="outline" className="backdrop-blur-md px-3 py-1 font-semibold text-muted-foreground uppercase text-sm">
+                    <Badge variant="outline" className="backdrop-blur-md px-2.5 py-0.5 font-normal text-muted-foreground uppercase text-xs">
                       {product.sku}
                     </Badge>
                   )}
 
                   {product.categories?.name && (
-                    <Badge variant="outline" className="backdrop-blur-md px-3 py-1 font-semibold text-muted-foreground uppercase text-sm">
+                    <Badge variant="outline" className="backdrop-blur-md px-2.5 py-0.5 font-normal text-muted-foreground uppercase text-xs">
                       {product.categories.name}
                     </Badge>
                   )}
@@ -286,7 +286,7 @@ export function ProductDetailClient({
                         key={tag}
                         variant="outline"
                         className={cn(
-                          "backdrop-blur-md px-3 py-1 font-semibold uppercase text-sm",
+                          "backdrop-blur-md px-2.5 py-0.5 font-normal uppercase text-xs",
                           isNew
                             ? "bg-primary/10 text-primary border-primary/20"
                             : "text-muted-foreground"

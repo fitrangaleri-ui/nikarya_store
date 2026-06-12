@@ -8,7 +8,7 @@ import {
   SparklesIcon,
   PhoneIcon,
 } from "@heroicons/react/24/outline";
-import { getDashboardData } from "../lib";
+import { validateDashboardAccess, getDashboardProfileData } from "../lib";
 import { Typography } from "@/components/ui/typography";
 import { HeaderBanner } from "../header-banner";
 import { ChangePasswordForm } from "./change-password-form";
@@ -16,8 +16,8 @@ import { ChangePasswordForm } from "./change-password-form";
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
-  // ── Data fetching — tidak diubah ──────────────────────────
-  const { user, profile } = await getDashboardData();
+  const user = await validateDashboardAccess();
+  const profile = await getDashboardProfileData(user.id);
 
   const displayName = profile?.full_name || "User";
   const email = profile?.email || user.email || "-";

@@ -14,7 +14,8 @@ import {
   ArrowRightIcon,
 } from "@heroicons/react/24/outline";
 import {
-  getDashboardData,
+  validateDashboardAccess,
+  getDashboardOrdersData,
   formatCurrency,
   formatDate,
 } from "../lib";
@@ -25,7 +26,8 @@ import { DashboardStatusBadge } from "../status-badge";
 export const dynamic = "force-dynamic";
 
 export default async function OrdersPage() {
-  const { allOrders } = await getDashboardData();
+  const user = await validateDashboardAccess();
+  const allOrders = await getDashboardOrdersData(user.id);
 
   return (
     <div className="space-y-6 md:space-y-8">
@@ -74,7 +76,7 @@ export default async function OrdersPage() {
               </TableHeader>
               <TableBody>
                 {allOrders.map((order) => {
-                  const product = order.products as { title: string } | null;
+                  const product = order.products as unknown as { title: string } | null;
 
                   return (
                     <TableRow key={order.id} className="hover:bg-muted/30 transition-colors border-border/40">
@@ -122,7 +124,7 @@ export default async function OrdersPage() {
           {/* Mobile cards */}
           <div className="md:hidden divide-y divide-border/50">
             {allOrders.map((order) => {
-              const product = order.products as { title: string } | null;
+              const product = order.products as unknown as { title: string } | null;
 
               return (
                 <div key={order.id} className="p-5 space-y-4">

@@ -15,7 +15,7 @@ import {
   DocumentMagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { ProductDownloadSection } from "./product-download-section";
-import { getDashboardData, formatDate } from "../lib";
+import { validateDashboardAccess, getDashboardProductsData, formatDate } from "../lib";
 import { Typography } from "@/components/ui/typography";
 import { HeaderBanner } from "../header-banner";
 import { DashboardStatusBadge } from "../status-badge";
@@ -23,7 +23,8 @@ import { DashboardStatusBadge } from "../status-badge";
 export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
-  const { uniquePaidProducts } = await getDashboardData();
+  const user = await validateDashboardAccess();
+  const uniquePaidProducts = await getDashboardProductsData(user.id);
 
   return (
     <div className="space-y-8">
@@ -48,7 +49,7 @@ export default async function ProductsPage() {
         <>
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {uniquePaidProducts.map((order) => {
-              const product = order.products as {
+              const product = order.products as unknown as {
                 title: string;
                 thumbnail_url: string | null;
                 slug: string;

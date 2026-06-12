@@ -14,7 +14,7 @@ import {
   ArrowRightIcon,
   SparklesIcon,
 } from "@heroicons/react/24/outline";
-import { getDashboardData, formatCurrency } from "./lib";
+import { validateDashboardAccess, getDashboardProfileData, getDashboardOverviewData, formatCurrency } from "./lib";
 import { VerifiedToast } from "./verified-toast";
 import { Typography } from "@/components/ui/typography";
 import { HeaderBanner } from "./header-banner";
@@ -22,10 +22,15 @@ import { HeaderBanner } from "./header-banner";
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  // ── Data fetching — tidak diubah ──────────────────────────
-  const { profile, allOrders, paidOrders, totalSpent, uniquePaidProducts } =
-    await getDashboardData();
+  const user = await validateDashboardAccess();
+  
+  // Fetch profile and overview data concurrently
+  const [profile, overview] = await Promise.all([
+    getDashboardProfileData(user.id),
+    getDashboardOverviewData(user.id),
+  ]);
 
+  const { allOrdersCount, paidOrdersCount, totalSpent, uniquePaidProductsCount } = overview;
   const displayName = profile?.full_name || profile?.email || "User";
 
   return (
@@ -56,7 +61,7 @@ export default async function DashboardPage() {
             </div>
           </div>
           <Typography variant="h3" as="p" className="tracking-tight">
-            {allOrders.length}
+            {allOrdersCount}
           </Typography>
           <Typography variant="caption" color="muted" className="mt-1">
             Semua status
@@ -74,7 +79,7 @@ export default async function DashboardPage() {
             </div>
           </div>
           <Typography variant="h3" as="p" className="tracking-tight">
-            {paidOrders.length}
+            {paidOrdersCount}
           </Typography>
           <Typography variant="caption" color="primary" className="mt-1 font-bold">
             Sudah dibayar
@@ -110,7 +115,7 @@ export default async function DashboardPage() {
             </div>
           </div>
           <Typography variant="h3" as="p" className="tracking-tight">
-            {uniquePaidProducts.length}
+            {uniquePaidProductsCount}
           </Typography>
           <Typography variant="caption" color="muted" className="mt-1">
             Akses tersedia
@@ -140,7 +145,7 @@ export default async function DashboardPage() {
                     Produk Saya
                   </Typography>
                   <Typography variant="caption" color="muted" className="mt-0.5 font-medium">
-                    {uniquePaidProducts.length} produk tersedia
+                    {uniquePaidProductsCount} produk tersedia
                   </Typography>
                 </div>
               </div>
@@ -163,7 +168,7 @@ export default async function DashboardPage() {
                     Riwayat Pesanan
                   </Typography>
                   <Typography variant="caption" color="muted" className="mt-0.5 font-medium">
-                    {allOrders.length} transaksi tercatat
+                    {allOrdersCount} transaksi tercatat
                   </Typography>
                 </div>
               </div>

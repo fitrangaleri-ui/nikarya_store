@@ -184,6 +184,15 @@ export function DashboardFab() {
           <Squares2X2Icon className="h-7 w-7 transition-transform duration-500" />
         )}
       </button>
+
+      {/* Invisible link prefetch container to ensure instant transitions when FAB is opened */}
+      <div className="hidden" aria-hidden="true">
+        {navItems.map((item) => (
+          <Link key={item.href} href={item.href} prefetch={true}>
+            {item.label}
+          </Link>
+        ))}
+      </div>
     </>
   );
 }

@@ -2,43 +2,137 @@ New Admin : admin@customgaleri.com
 Pass : &zL-NUPtfQW%49m
 project_databasename : nikarya_store
 
-
-supabase sudah terhubung melalui mcp server dengan url project https://ebayweiakwknyhrzvpqx.supabase.co jadi kamu juga bisa mengakses supabase dan melakukan perubahan yang memang diperlukan jika memang ada yang perlu di rubah dari sisi supabase
-
-
+PENTING : kamu bisa scan terlebih dahulu kode dari file sebelum membuat kode baru  Jangan pernah merubah variant font dan color default yang sudah tersedia, perubahan hanya mengenai implementasi konsep dan fitur
+supabase sudah terhubung melalui mcp server dengan url project https://gmqqtgdujdcqabiahcgh.supabase.co jadi kamu juga bisa mengakses supabase dan melakukan perubahan yang memang diperlukan jika memang ada yang perlu di rubah dari sisi supabase
 
 
+git add .
+git commit -m "payment invite email"
+git push
 
 
-ping cron jobs
+DISKON26
 
-saya memiliki Masalah**: Supabase Free Tier menge-pause project otomatis setelah 7 hari tidak ada aktivitas database saya ingin mengatasi masalah tersebut dengan cara Vercel Cron Jobs ⭐ (Rekomendasi jika deploy di Vercel)
-Vercel punya fitur built-in cron job. Cukup buat dua file:
-app/api/keepalive/route.js
-js
-import { createClient } from '@supabase/supabase-js';
+http://localhost:3000/payment-instruction?orderId=CGS-1780974068740-4l1ht
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
 
-export async function GET() {
-  const { error } = await supabase
-    .from('keepalive')
-    .insert({ pinged_at: new Date().toISOString() });
 
-  if (error) return Response.json({ ok: false, error: error.message }, { status: 500 });
-  return Response.json({ ok: true, pinged_at: new Date().toISOString() });
-}
-vercel.json (di root project)
-json
-{
-  "crons": [
-    {
-      "path": "/api/keepalive",
-      "schedule": "0 1 * * *"
-    }
-  ]
-}
-Selesai! Vercel akan otomatis hit endpoint /api/keepalive setiap hari jam 01:00 UTC (08:00 WIB). kemudian supabase sudah terhubung melalui mcp server dengan url project https://ebayweiakwknyhrzvpqx.supabase.co jadi kamu juga bisa mengakses supabase dan melakukan perubahan yang memang diperlukan jika memang ada yang perlu di rubah dari sisi supabase
+pastikan untuk selalu scan kode dari D:\next-js\customgaleri-store\RULES-DESIGN.md sebelum membuat kode dan seluruh varian typography harus berasal dari D:\next-js\customgaleri-store\src\components\ui\typography.tsx gunakan juga variant color yang tersedia pada D:\next-js\customgaleri-store\src\app\globals.css
+
+
+Integrasi Notifikasi Pop-up (sonner)
+
+QB3TT15LaF55*
+
+
+
+tolong kamu Analisa kode dari 
+
+
+saya ingin melakukan optimasi font style pada @ pastikan untuk selalu menggunakan variant yang tersedia pada @ hapus semua hardcode seperti weight, tracking dan lainya
+
+lebar halaman 540px
+
+
+
+sekarang saya ingin menerapkan satu visual layout pada [navbar.tsx](file;file:///d%3A/next-js/customgaleri-store/src/components/navbar.tsx) hanya gunakan tampilan mobile saja dengan kata lain 
+
+
+
+Pastikan untuk menggunakan font style standar dari @typography.tsx jangan pernah menambahkan hardcode style seperti weight dan tracking
+
+jangan pernah melakukan build untuk perubahan kecil karena itu terlalu berlebihan 
+
+
+
+KOMPONEN RULES :
+tolong scan ulang seluruh file pada halaman [account](directory;file:///d%3A/next-js/customgaleri-store/src/app/admin/account) pastikan untuk selalu menggunakan variant typography dari [typography.tsx](file;file:///d%3A/next-js/customgaleri-store/src/components/ui/typography.tsx) variant badge dan [badge.tsx](file;file:///d%3A/next-js/customgaleri-store/src/components/ui/badge.tsx) dan variant color dari [globals.css](file;file:///d%3A/next-js/customgaleri-store/src/app/globals.css) pastikan juga untuk selalu menggunakan komponen dari folder [ui](directory;file:///d%3A/next-js/customgaleri-store/src/components/ui) hapus seluruh style shadow jika ada
+
+
+QB3TT15LaFF1661*
+
+tolong kamu analisa kode dari file [products](directory;file:///d%3A/next-js/customgaleri-store/src/app/dashboard/products) jadikan itu sebagai master design kemudian terapkan style yang sama pada halaman [%5Bid%5D](directory;file:///d%3A/next-js/customgaleri-store/src/app/dashboard/orders/%5Bid%5D) [orders](directory;file:///d%3A/next-js/customgaleri-store/src/app/dashboard/orders) pastikan untuk selalu menggunakan variant typography dari [typography.tsx](file;file:///d%3A/next-js/customgaleri-store/src/components/ui/typography.tsx) variant badge dan [badge.tsx](file;file:///d%3A/next-js/customgaleri-store/src/components/ui/badge.tsx) dan variant color dari [globals.css](file;file:///d%3A/next-js/customgaleri-store/src/app/globals.css) pastikan juga untuk selalu menggunakan komponen dari folder [ui](directory;file:///d%3A/next-js/customgaleri-store/src/components/ui) hapus seluruh style shadow jika ada jangan pernah menambahkan hardcode style seperti weight dan tracking
+
+
+
+
+tolong kamu lakukan optimasi pada kode pastikan untuk selalu mengikuti aturan @rules design
+
+
+saya ingin agar kamu langsung mengeksekusi perintah saya tanpa membuat implementation plan terlebih dahulu
+
+
+baik sekarang kamu bisa scan seluruh kode terlebih dahulu kode-kode pada folder 
+
+admin
+ yang berhubungan dengan pengelola kategori produk seperti 
+
+actions.ts
+ 
+
+category-section.tsx serta file yang terhubung kamu bisa pahami flow fitur jadikan itu sebagai referensi kemudian terapkan fitur dan logika yang sama kedalam file-file yang berhubungan dengan pengelolaan admin kategori di folder 
+
+admin
+ 
+
+products
+ PENTING : kamu bisa scan terlebih dahulu kode dari file 
+
+RULES-DESIGN.md
+ sebelum membuat kode baru  Jangan pernah merubah variant font dan color default yang sudah tersedia, perubahan hanya mengenai implementasi konsep dan fitur
+supabase sudah terhubung melalui mcp server dengan url project https://gmqqtgdujdcqabiahcgh.supabase.co jadi kamu juga bisa mengakses supabase dan melakukan perubahan yang memang diperlukan jika memang ada yang perlu di rubah dari sisi supabase
+
+
+
+tolong kamu hilangkan semua style shadow ada [pagination.tsx](file;file:///d%3A/next-js/customgaleri-store/src/app/%28main%29/products/pagination.tsx) Pastikan untuk menggunakan font style standar dari [typography.tsx](file;file:///d%3A/next-js/customgaleri-store/src/components/ui/typography.tsx)  jangan pernah menambahkan hardcode style seperti weight dan tracking
+
+
+
+
+
+
+PENTING : Jangan pernah merubah variant font dan color default yang sudah tersedia, perubahan hanya mengenai implementasi konsep dan fitur
+
+pada tahap ini saya harap perubahan hanya terjadi pada halaman admin produk saja, seperti halaman Utama produk, tambah dan edit produk serta global layout
+
+
+
+baik sekarang saya ingin kamu mengisi file [RULES-DESIGN.MD](file;file:///d%3A/next-js/customgaleri-store/RULES-DESIGN.MD) dengan aturan berikut pastikan untuk selalu menggunakan jenis font yang tersedia pada file [layout.tsx](file;file:///d%3A/next-js/customgaleri-store/src/app/layout.tsx) tidak boleh hardcode, pastikan untuk selalu menggunakan size font dan color yang tersedia pada file [globals.css](file;file:///d%3A/next-js/customgaleri-store/src/app/globals.css) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
