@@ -22,6 +22,7 @@ interface PriceCardProps {
   features?: string[];
   themeCount?: number;
   showCountdown?: boolean;
+  onBuyOverride?: () => void;
 }
 
 export function PriceCard({
@@ -36,7 +37,8 @@ export function PriceCard({
     "Gratis Aset Script Motion Control",
     "Gratis Asset Script Animasi (HTML & CSS)",
     "Gratis Asset Image (WEBP & SVG)"
-  ]
+  ],
+  onBuyOverride
 }: PriceCardProps) {
   const { clearCart, addToCart } = useCart();
   const [loading, setLoading] = useState(false);
@@ -74,6 +76,10 @@ export function PriceCard({
   const displayPrice = discountPrice || price;
 
   const handleBuy = () => {
+    if (onBuyOverride) {
+      onBuyOverride();
+      return;
+    }
     if (!product) return;
 
     const cartItem = {
