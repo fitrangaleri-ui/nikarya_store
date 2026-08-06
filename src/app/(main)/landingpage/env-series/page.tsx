@@ -78,8 +78,7 @@ async function ENVSeriesData() {
                 >
                   <ProductCardDemo
                     demoLink={demo}
-                    badgeLabel={index === demoLinks.length - 1 ? "Bonus Template" : "Design Premium"}
-                    badgeVariant={index === demoLinks.length - 1 ? "destructive" : "glass"}
+                    badgeStyle={{ backgroundColor: "#9A7437", color: "#FFFFFF" }}
                   />
                 </ScrollReveal>
               ))}

@@ -7,15 +7,20 @@ import { Typography } from "@/components/ui/typography";
 import { resolveImageSrc } from "@/lib/resolve-image";
 import { useDemoPreview } from "@/components/demo-preview-provider";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 export function ProductCardDemo({ 
   demoLink, 
   badgeLabel = "Design Premium",
-  badgeVariant = "glass"
+  badgeVariant = "glass",
+  badgeClassName,
+  badgeStyle
 }: { 
   demoLink: any;
   badgeLabel?: string;
   badgeVariant?: "default" | "secondary" | "destructive" | "outline" | "ghost" | "link" | "glass" | "sale";
+  badgeClassName?: string;
+  badgeStyle?: React.CSSProperties;
 }) {
   const { openPreview } = useDemoPreview();
   const imageSrc = resolveImageSrc(demoLink.image_url);
@@ -41,7 +46,11 @@ export function ProductCardDemo({
         )}
         <div className="absolute inset-0 bg-background/0 group-hover:bg-background/10 transition-colors duration-300" />
         <div className="absolute top-3 left-3 z-10">
-          <Badge variant={badgeVariant} className="backdrop-blur-md tracking-tight">
+          <Badge 
+            variant={badgeVariant} 
+            className={cn("backdrop-blur-md tracking-tight", badgeClassName)}
+            style={badgeStyle}
+          >
             {badgeLabel}
           </Badge>
         </div>
