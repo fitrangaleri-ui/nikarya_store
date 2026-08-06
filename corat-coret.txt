@@ -7,8 +7,11 @@ supabase sudah terhubung melalui mcp server dengan url project https://gmqqtgduj
 
 
 git add .
-git commit -m "payment invite email"
+git commit -m "main admin"
 git push
+
+
+QB3TT15LaF1661*
 
 
 DISKON26
@@ -22,7 +25,7 @@ pastikan untuk selalu scan kode dari D:\next-js\customgaleri-store\RULES-DESIGN.
 
 Integrasi Notifikasi Pop-up (sonner)
 
-QB3TT15LaF55*
+QB3TT15LaF33*
 
 
 
@@ -111,7 +114,23 @@ baik sekarang saya ingin kamu mengisi file [RULES-DESIGN.MD](file;file:///d%3A/n
 
 
 
+saya ingin agar kamu analisa kode ini terlebih dahulu  jangan menulis brief atau kode apapun terlebih dahulu jawab iya jika kamu paham 
 
+
+
+
+Role: Bertindaklah sebagai Senior Full-Stack Developer dan Performance Engineer spesialis Next.js dan Supabase.
+Masalah: Saya baru saja melakukan testing pada halaman user dashboard @ di website Next.js yang terintegrasi dengan Supabase. Masalah utamanya adalah proses navigasi dan perpindahan antar-halaman terasa lambat/delay (tidak instan).
+
+Tugas Kamu:
+
+Jangan membuat atau menulis kode perbaikan terlebih dahulu.
+Lakukan analisis, scan, dan cek struktur serta kode dari seluruh file di direktori halaman dashboard 
+
+Cari tahu bottleneck utamanya (apakah karena data fetching Supabase, client/server component rendering, atau masalah caching/middleware).
+
+Output yang Diharapkan:
+Buatkan sebuah Implementation Plan (Rencana Implementasi) yang komprehensif dan terstruktur langkah-demi-langkah untuk mengoptimalkan kecepatan navigasi tersebut.
 
 
 
