@@ -36,7 +36,7 @@ export function ModalPayment({ isOpen, onClose }: ModalPaymentProps) {
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent 
         showCloseButton={false}
-        className="max-w-md p-4 sm:p-6 overflow-hidden rounded-2xl border border-border/50 bg-card"
+        className="!w-[calc(100vw-2rem)] !max-w-[calc(100vw-2rem)] p-4 overflow-hidden rounded-2xl border border-border/50 bg-card sm:!w-full sm:!max-w-md sm:p-6"
       >
         <DialogTitle className="sr-only">Metode Pembayaran</DialogTitle>
         <div className="relative -mx-4 -mt-4 mb-3 w-[calc(100%+2rem)] rounded-t-2xl bg-gradient-to-br from-[#01696f] to-[#0c4e54] px-6 py-5 text-white sm:-mx-6 sm:-mt-6 sm:w-[calc(100%+3rem)] sm:px-6">
