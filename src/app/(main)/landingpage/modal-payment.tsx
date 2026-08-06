@@ -36,16 +36,13 @@ export function ModalPayment({ isOpen, onClose }: ModalPaymentProps) {
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent 
         showCloseButton={false}
-        className="max-w-md p-6 overflow-hidden rounded-2xl border border-border/50 bg-card"
+        className="max-w-md p-4 sm:p-6 overflow-hidden rounded-2xl border border-border/50 bg-card"
       >
         <DialogTitle className="sr-only">Metode Pembayaran</DialogTitle>
-        <div className="flex items-start justify-between bg-gradient-to-br from-[#01696f] to-[#0c4e54] px-6 py-5 text-white -mx-6 -mt-6 rounded-t-2xl mb-4">
-          <div className="leading-tight text-left">
-            <Typography variant="h4" as="h2" className="text-xl font-bold text-white">
+        <div className="relative -mx-4 -mt-4 mb-3 w-[calc(100%+2rem)] rounded-t-2xl bg-gradient-to-br from-[#01696f] to-[#0c4e54] px-6 py-5 text-white sm:-mx-6 sm:-mt-6 sm:w-[calc(100%+3rem)] sm:px-6">
+          <div className="flex w-full flex-col items-center text-center leading-tight pr-12 sm:pr-14">
+            <Typography variant="h4" as="h2" className="w-full text-center text-xl font-bold text-white uppercase">
               Metode Pembayaran
-            </Typography>
-            <Typography className="text-xs text-white/80 mt-1 max-w-xs leading-normal">
-              Pilih metode pembayaran yang paling memudahkan Anda untuk bertransaksi.
             </Typography>
           </div>
 
@@ -53,7 +50,7 @@ export function ModalPayment({ isOpen, onClose }: ModalPaymentProps) {
             type="button"
             onClick={onClose}
             aria-label="Tutup popup pembayaran"
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20 active:scale-95 shrink-0 mt-0.5"
+            className="absolute right-4 top-1/2 flex h-8 w-8 shrink-0 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20 active:scale-95 sm:right-6"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -71,8 +68,12 @@ export function ModalPayment({ isOpen, onClose }: ModalPaymentProps) {
           </button>
         </div>
 
+        <Typography className="mb-3 text-center text-xs leading-normal text-muted-foreground sm:mb-4">
+          Pilih metode pembayaran yang paling memudahkan Anda untuk bertransaksi.
+        </Typography>
+
         {/* Tab Selector */}
-        <div className="flex p-1 bg-muted rounded-xl gap-1 mt-4">
+        <div className="mt-0 flex gap-1 rounded-xl bg-muted p-1">
           <button
             onClick={() => setActiveTab("qris")}
             className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold rounded-lg transition-all duration-300 ${activeTab === "qris"
@@ -106,10 +107,10 @@ export function ModalPayment({ isOpen, onClose }: ModalPaymentProps) {
         </div>
 
         {/* Content Tabs */}
-        <div className="py-4 min-h-[300px] flex flex-col items-center justify-center">
+        <div className="flex min-h-[280px] flex-col items-center justify-center py-4">
           {activeTab === "qris" && (
-            <div className="flex flex-col items-center space-y-4 w-full animate-in fade-in duration-300">
-              <div className="relative p-4 bg-white rounded-xl border border-border/30 w-[220px] h-[220px] flex items-center justify-center">
+            <div className="flex w-full flex-col items-center space-y-3 animate-in fade-in duration-300">
+              <div className="relative flex h-[210px] w-[210px] items-center justify-center rounded-xl border border-border/30 bg-white p-4 sm:h-[220px] sm:w-[220px]">
                 <Image
                   src="/banks/my-qris.jpg"
                   alt="QRIS Code"
@@ -119,14 +120,14 @@ export function ModalPayment({ isOpen, onClose }: ModalPaymentProps) {
                   className="object-contain"
                 />
               </div>
-              <Typography variant="body-xs" color="muted" className="text-center text-[12px] px-2 leading-relaxed">
+              <Typography variant="body-xs" color="muted" className="px-2 text-center text-[12px] leading-relaxed">
                 Scan kode QR di atas menggunakan aplikasi M-Banking atau E-Wallet pilihan Anda.
               </Typography>
             </div>
           )}
 
           {activeTab === "shopeepay" && (
-            <div className="flex flex-col items-center space-y-6 w-full animate-in fade-in duration-300">
+            <div className="flex w-full flex-col items-center space-y-5 animate-in fade-in duration-300">
               <div className="relative w-44 h-16 flex items-center justify-center">
                 <Image
                   src="/banks/shopeepay.png"
@@ -137,7 +138,7 @@ export function ModalPayment({ isOpen, onClose }: ModalPaymentProps) {
                 />
               </div>
 
-              <div className="w-full bg-muted/40 p-4 rounded-xl border border-border/30 space-y-3">
+              <div className="w-full rounded-xl border border-border/30 bg-muted/40 p-4 space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-muted-foreground font-semibold">Nomor E-Wallet:</span>
                   <div className="flex items-center gap-1.5">
@@ -157,14 +158,14 @@ export function ModalPayment({ isOpen, onClose }: ModalPaymentProps) {
                 </div>
               </div>
 
-              <Typography variant="body-xs" color="muted" className="text-center text-[12px] px-2 leading-relaxed">
+              <Typography variant="body-xs" color="muted" className="px-2 text-center text-[12px] leading-relaxed">
                 Silakan lakukan transfer ke nomor ShopeePay di atas sebesar nominal pesanan Anda.
               </Typography>
             </div>
           )}
 
           {activeTab === "dana" && (
-            <div className="flex flex-col items-center space-y-6 w-full animate-in fade-in duration-300">
+            <div className="flex w-full flex-col items-center space-y-5 animate-in fade-in duration-300">
               <div className="relative w-36 h-16 flex items-center justify-center">
                 <Image
                   src="/banks/dana.png"
@@ -175,7 +176,7 @@ export function ModalPayment({ isOpen, onClose }: ModalPaymentProps) {
                 />
               </div>
 
-              <div className="w-full bg-muted/40 p-4 rounded-xl border border-border/30 space-y-3">
+              <div className="w-full rounded-xl border border-border/30 bg-muted/40 p-4 space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-muted-foreground font-semibold">Nomor E-Wallet:</span>
                   <div className="flex items-center gap-1.5">
@@ -195,7 +196,7 @@ export function ModalPayment({ isOpen, onClose }: ModalPaymentProps) {
                 </div>
               </div>
 
-              <Typography variant="body-xs" color="muted" className="text-center text-[12px] px-2 leading-relaxed">
+              <Typography variant="body-xs" color="muted" className="px-2 text-center text-[12px] leading-relaxed">
                 Silakan lakukan transfer ke nomor DANA di atas sebesar nominal pesanan Anda.
               </Typography>
             </div>
@@ -204,7 +205,7 @@ export function ModalPayment({ isOpen, onClose }: ModalPaymentProps) {
 
         {/* Footer info & WA link */}
         <div className="space-y-4 border-t border-border/50 pt-4">
-          <Typography variant="body-xs" color="muted" className="text-center text-[12px] px-2 leading-relaxed">
+          <Typography variant="body-xs" color="muted" className="px-2 text-center text-[12px] leading-relaxed">
             Setelah transfer berhasil, simpan bukti pembayaran dan klik tombol di bawah untuk konfirmasi ke WhatsApp admin.
           </Typography>
 
