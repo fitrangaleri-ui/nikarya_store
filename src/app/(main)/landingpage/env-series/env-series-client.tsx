@@ -42,7 +42,7 @@ export function ENVSeriesClient({ envProduct }: ENVSeriesClientProps) {
                 >
                   <ProductCardDemo
                     demoLink={demo}
-                    badgeStyle={{ backgroundColor: "#9A7437", color: "#FFFFFF" }}
+                    badgeVariant="sale"
                   />
                 </ScrollReveal>
               ))}

@@ -23,11 +23,13 @@ type PaymentMethod = "qris" | "shopeepay" | "dana";
 export function ModalPayment({ isOpen, onClose }: ModalPaymentProps) {
   const [activeTab, setActiveTab] = useState<PaymentMethod>("qris");
   const [copied, setCopied] = useState(false);
+  const shopeePayNumber = "085155201380";
+  const danaNumber = "083805560918";
 
   const waLink = "https://wa.me/6285155201380?text=Halo%20Admin%20Nikarya%20Store%2C%20saya%20ingin%20melakukan%20konfirmasi%20pembayaran%20untuk%20pembelian%20produk%20Envelope%20Series.";
 
-  const handleCopyNumber = () => {
-    navigator.clipboard.writeText("083805560918");
+  const handleCopyNumber = (number: string) => {
+    navigator.clipboard.writeText(number);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -142,9 +144,9 @@ export function ModalPayment({ isOpen, onClose }: ModalPaymentProps) {
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-muted-foreground font-semibold">Nomor E-Wallet:</span>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-sm font-mono font-bold text-foreground">083805560918</span>
+                    <span className="text-sm font-mono font-bold text-foreground">{shopeePayNumber}</span>
                     <button
-                      onClick={handleCopyNumber}
+                      onClick={() => handleCopyNumber(shopeePayNumber)}
                       className="p-1.5 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground"
                       title="Salin Nomor"
                     >
@@ -180,9 +182,9 @@ export function ModalPayment({ isOpen, onClose }: ModalPaymentProps) {
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-muted-foreground font-semibold">Nomor E-Wallet:</span>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-sm font-mono font-bold text-foreground">083805560918</span>
+                    <span className="text-sm font-mono font-bold text-foreground">{danaNumber}</span>
                     <button
-                      onClick={handleCopyNumber}
+                      onClick={() => handleCopyNumber(danaNumber)}
                       className="p-1.5 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground"
                       title="Salin Nomor"
                     >
