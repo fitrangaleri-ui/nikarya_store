@@ -58,7 +58,7 @@ function formatPrice(price: number) {
 // ── Data Sosial Media ─────────────────────────────────────────
 // Ganti href sesuai akun resmi brand
 const socials = [
-  { label: "WhatsApp", href: "https://wa.me/6285155201380", icon: WhatsAppIcon },
+  { label: "WhatsApp", href: "https://wa.me/6285175070016", icon: WhatsAppIcon },
   { label: "Telegram", href: "https://t.me/+3eECVmQKaqBmNTI1", icon: Send },
 ];
 

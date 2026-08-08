@@ -26,7 +26,7 @@ export function ModalPayment({ isOpen, onClose }: ModalPaymentProps) {
   const shopeePayNumber = "085155201380";
   const danaNumber = "083805560918";
 
-  const waLink = "https://wa.me/6285155201380?text=Halo%20Admin%20Nikarya%20Store%2C%20saya%20ingin%20melakukan%20konfirmasi%20pembayaran%20untuk%20pembelian%20produk%20Envelope%20Series.";
+  const waLink = "https://wa.me/6285175070016?text=Halo%20Admin%20Nikarya%20Store%2C%20saya%20ingin%20melakukan%20konfirmasi%20pembayaran%20untuk%20pembelian%20produk%20Envelope%20Series.";
 
   const handleCopyNumber = (number: string) => {
     navigator.clipboard.writeText(number);
