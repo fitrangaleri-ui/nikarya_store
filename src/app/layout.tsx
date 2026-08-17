@@ -12,6 +12,7 @@ import { MenuSidebar } from "@/components/menu-sidebar";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 import { FilterDrawerProvider } from "@/context/filter-drawer-context";
 import NextTopLoader from "nextjs-toploader";
+import { getSiteUrlObject } from "@/lib/site-url";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -25,10 +26,20 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
-
 export const metadata: Metadata = {
+  metadataBase: getSiteUrlObject(),
   title: "Nikarya Store",
-  description: "Toko produk digital premium — Browse, Pay, Download.",
+  description: "Toko produk digital premium - Browse, Pay, Download.",
+  openGraph: {
+    type: "website",
+    siteName: "Nikarya Store",
+    title: "Nikarya Store",
+    description: "Toko produk digital premium - Browse, Pay, Download.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   icons: {
     icon: "/logo-nikarya-page.svg",
     shortcut: "/logo-nikarya-page.svg",

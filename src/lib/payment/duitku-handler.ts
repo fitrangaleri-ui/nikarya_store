@@ -1,5 +1,6 @@
 import crypto from "crypto";
-import type { PaymentGatewayConfig, PaymentRequest, PaymentHandler, GatewayTransactionResult } from "./types";
+import type { PaymentGatewayConfig, PaymentRequest, PaymentHandler } from "./types";
+import { getSiteUrl } from "@/lib/site-url";
 
 const DUITKU_SANDBOX_URL = "https://sandbox.duitku.com/webapi/api/merchant/v2/inquiry";
 const DUITKU_PRODUCTION_URL = "https://passport.duitku.com/webapi/api/merchant/v2/inquiry";
@@ -31,7 +32,7 @@ export const duitkuHandler: PaymentHandler = {
             : DUITKU_SANDBOX_URL;
 
         // Determine callback and return URLs
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+        const appUrl = getSiteUrl();
 
         const payload = {
             merchantCode,

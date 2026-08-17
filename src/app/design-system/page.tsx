@@ -603,7 +603,7 @@ export default function DesignSystemPage() {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="store-email">Email toko</Label>
-                  <Input id="store-email" type="email" placeholder="support@nikarya.id" />
+                  <Input id="store-email" type="email" placeholder="support@nikarya.my.id" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="campaign-note">Catatan promo</Label>
