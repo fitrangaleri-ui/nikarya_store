@@ -117,7 +117,7 @@ export const getProductBySlug = unstable_cache(
     const { data } = await admin
       .from("products")
       .select(
-        "id, title, slug, description, price, discount_price, sku, demo_link, tags, thumbnail_url, category_id, categories(name), product_demo_links(id, label, url, image_url, sort_order), product_images(image_url, sort_order)"
+        "id, title, slug, description, price, discount_price, sku, demo_link, tags, thumbnail_url, video_url, category_id, categories(name), product_demo_links(id, label, url, image_url, sort_order), product_images(image_url, sort_order)"
       )
       .eq("slug", slug)
       .eq("is_active", true)
@@ -128,23 +128,46 @@ export const getProductBySlug = unstable_cache(
   { revalidate: 30 }
 );
 
-// Cache related products (max 4)
+// Cache related products (max 12)
 export const getRelatedProducts = unstable_cache(
   async (categoryId: string, excludeId: string) => {
     const admin = createAdminClient();
     const { data } = await admin
       .from("products")
       .select(
-        "id, title, slug, price, discount_price, sku, demo_link, tags, thumbnail_url, product_demo_links(id, label, url, image_url, sort_order), product_images(image_url, sort_order)"
+        "id, title, slug, price, discount_price, sku, demo_link, tags, thumbnail_url, video_url, product_demo_links(id, label, url, image_url, sort_order), product_images(image_url, sort_order)"
       )
       .eq("category_id", categoryId)
       .eq("is_active", true)
       .neq("id", excludeId)
-      .limit(4);
+      .limit(12);
     return data || [];
   },
   ["related-products"],
   { revalidate: 60 }
+);
+
+// Cache recommended products (4 random active products across all categories, excluding current product)
+export const getRecommendedProducts = unstable_cache(
+  async (excludeId: string) => {
+    const admin = createAdminClient();
+    const { data } = await admin
+      .from("products")
+      .select(
+        "id, title, slug, price, discount_price, sku, demo_link, tags, thumbnail_url, video_url, categories(name), product_demo_links(id, label, url, image_url, sort_order), product_images(image_url, sort_order)"
+      )
+      .eq("is_active", true)
+      .neq("id", excludeId)
+      .limit(30);
+
+    if (!data || data.length === 0) return [];
+
+    // Shuffle candidate pool and pick 4
+    const shuffled = [...data].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 4);
+  },
+  ["recommended-products"],
+  { revalidate: 30 }
 );
 
 // Cache landing page products by SKU pattern

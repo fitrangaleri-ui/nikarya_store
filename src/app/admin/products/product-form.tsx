@@ -32,6 +32,7 @@ import {
   DocumentTextIcon,
   TrashIcon,
   Square2StackIcon,
+  VideoCameraIcon,
 } from "@heroicons/react/24/outline";
 import { DocumentTextIcon as DocumentTextIconSolid } from "@heroicons/react/24/solid";
 import Link from "next/link";
@@ -66,6 +67,7 @@ type Product = {
   category_id: string | null;
   thumbnail_url: string | null;
   drive_file_url: string | null;
+  video_url?: string | null;
   is_active: boolean;
   gallery_images?: GalleryImage[];
 };
@@ -97,6 +99,62 @@ export function ProductForm({
   const [, startCategoryTransition] = useTransition();
   const [isDeleting, startDeleteTransition] = useTransition();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
+
+  // Video state
+  const [videoUrl, setVideoUrl] = useState(product?.video_url || "");
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState<string | null>(
+    product?.video_url || null
+  );
+  const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+
+  const handleVideoFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setVideoFile(file);
+      const localUrl = URL.createObjectURL(file);
+      setVideoPreviewUrl(localUrl);
+
+      setIsUploadingVideo(true);
+      setError(null);
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        const res = await uploadMediaDirect(formData);
+        if (res.url) {
+          setVideoUrl(res.url);
+          setVideoFile(null);
+        } else if (res.error) {
+          setError(`Upload video gagal: ${res.error}`);
+        }
+      } catch (err: any) {
+        setError(`Upload video gagal: ${err.message || "Gagal mengunggah video"}`);
+      } finally {
+        setIsUploadingVideo(false);
+      }
+    }
+  };
+
+  const handleVideoUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setVideoUrl(val);
+    if (!videoFile) {
+      setVideoPreviewUrl(val || null);
+    }
+  };
+
+  const handleRemoveVideo = () => {
+    if (videoFile && videoPreviewUrl?.startsWith("blob:")) {
+      URL.revokeObjectURL(videoPreviewUrl);
+    }
+    setVideoUrl("");
+    setVideoFile(null);
+    setVideoPreviewUrl(null);
+    if (videoInputRef.current) {
+      videoInputRef.current.value = "";
+    }
+  };
 
   // Media picker state
   const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
@@ -303,6 +361,33 @@ export function ProductForm({
     formData.set("existingGalleryUrls", JSON.stringify(existingGalleryUrls));
     formData.set("mediaGalleryUrls", JSON.stringify(mediaGalleryUrls));
 
+    // Handle product video
+    let finalVideoUrl = videoUrl;
+    if (videoFile) {
+      setIsUploadingVideo(true);
+      try {
+        const vFormData = new FormData();
+        vFormData.append("file", videoFile);
+        const vRes = await uploadMediaDirect(vFormData);
+        if (vRes.url) {
+          finalVideoUrl = vRes.url;
+          setVideoUrl(vRes.url);
+          setVideoFile(null);
+        } else if (vRes.error) {
+          setError(`Upload video gagal: ${vRes.error}`);
+          setIsUploadingVideo(false);
+          return;
+        }
+      } catch (err: any) {
+        setError(`Upload video gagal: ${err.message || "Gagal mengunggah video"}`);
+        setIsUploadingVideo(false);
+        return;
+      } finally {
+        setIsUploadingVideo(false);
+      }
+    }
+    formData.set("videoUrl", finalVideoUrl);
+
     startTransition(async () => {
       if (isEdit) {
         const result = await updateProduct(product.id, formData);
@@ -502,6 +587,102 @@ export function ProductForm({
                   <Typography variant="caption" color="muted" className="ml-1 font-medium">
                     Link download file asli yang akan diterima pembeli setelah
                     bayar.
+                  </Typography>
+                </div>
+
+                {/* Video Produk (Opsional) */}
+                <div className="space-y-2.5 pt-2 border-t border-border/40">
+                  <Label
+                    htmlFor="videoUrl"
+                    className="text-foreground font-bold flex items-center justify-between"
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <VideoCameraIcon className="h-4 w-4 text-primary" />
+                      Video Produk{" "}
+                      <span className="font-medium text-muted-foreground text-xs ml-1">
+                        (Opsional)
+                      </span>
+                    </span>
+                    {videoPreviewUrl && (
+                      <button
+                        type="button"
+                        onClick={handleRemoveVideo}
+                        className="text-xs font-semibold text-destructive hover:underline flex items-center gap-1"
+                      >
+                        <XMarkIcon className="h-3.5 w-3.5" /> Hapus Video
+                      </button>
+                    )}
+                  </Label>
+
+                  <div className="space-y-2">
+                    <Input
+                      id="videoUrl"
+                      name="videoUrl"
+                      type="url"
+                      value={videoUrl}
+                      onChange={handleVideoUrlChange}
+                      placeholder="URL Video (YouTube, Vimeo, MP4 direct link)..."
+                      className={`h-11 ${inputClass}`}
+                    />
+
+                    <div className="flex items-center gap-2">
+                      <input
+                        ref={videoInputRef}
+                        type="file"
+                        accept="video/mp4,video/webm,video/ogg,video/quicktime"
+                        onChange={handleVideoFileChange}
+                        className="hidden"
+                        id="videoFileInput"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={isUploadingVideo}
+                        onClick={() => videoInputRef.current?.click()}
+                        className="rounded-full border-border bg-background/50 text-muted-foreground hover:text-primary hover:border-primary/30"
+                      >
+                        {isUploadingVideo ? (
+                          <>
+                            <span className="w-3.5 h-3.5 mr-1.5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+                            Mengunggah Video...
+                          </>
+                        ) : (
+                          <>
+                            <ArrowUpTrayIcon className="h-4 w-4 mr-1.5" />
+                            {videoFile ? videoFile.name : "Upload File Video (.mp4, .webm)"}
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {videoPreviewUrl && (
+                    <div className="mt-3 rounded-lg overflow-hidden border border-border/60 bg-black/80 p-2">
+                      {videoPreviewUrl.includes("youtube.com") || videoPreviewUrl.includes("youtu.be") ? (
+                        <div className="relative aspect-video w-full">
+                          <iframe
+                            src={
+                              videoPreviewUrl.includes("watch?v=")
+                                ? videoPreviewUrl.replace("watch?v=", "embed/")
+                                : videoPreviewUrl
+                            }
+                            className="w-full h-full rounded-md"
+                            allowFullScreen
+                          />
+                        </div>
+                      ) : (
+                        <video
+                          src={videoPreviewUrl}
+                          controls
+                          className="w-full max-h-60 rounded-md object-contain"
+                        />
+                      )}
+                    </div>
+                  )}
+
+                  <Typography variant="caption" color="muted" className="ml-1 font-medium">
+                    Masukkan URL video atau upload file video pratinjau produk.
                   </Typography>
                 </div>
 

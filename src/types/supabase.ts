@@ -390,6 +390,7 @@ export type Database = {
           tags: string[] | null
           thumbnail_url: string | null
           title: string
+          video_url: string | null
         }
         Insert: {
           badge?: string | null
@@ -411,6 +412,7 @@ export type Database = {
           tags?: string[] | null
           thumbnail_url?: string | null
           title: string
+          video_url?: string | null
         }
         Update: {
           badge?: string | null
@@ -432,6 +434,7 @@ export type Database = {
           tags?: string[] | null
           thumbnail_url?: string | null
           title?: string
+          video_url?: string | null
         }
         Relationships: [
           {

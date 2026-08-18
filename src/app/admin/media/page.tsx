@@ -61,8 +61,7 @@ export default async function AdminMediaPage() {
         .select("id, product_id, image_url, created_at, products(title)"),
       admin
         .from("products")
-        .select("id, title, thumbnail_url, created_at")
-        .not("thumbnail_url", "is", null),
+        .select("id, title, thumbnail_url, video_url, created_at"),
       admin
         .from("categories")
         .select("id, name, thumbnail_url, created_at")
@@ -72,7 +71,7 @@ export default async function AdminMediaPage() {
   const dbUsages = new Map<
     string,
     {
-      type: "gallery" | "product_thumbnail" | "category_thumbnail";
+      type: "gallery" | "product_thumbnail" | "product_video" | "category_thumbnail";
       id: string;
       title: string;
       created_at: string;
@@ -94,14 +93,24 @@ export default async function AdminMediaPage() {
       created_at: img.created_at,
     })
   );
-  products?.forEach((p) =>
-    addUsage(p.thumbnail_url, {
-      type: "product_thumbnail",
-      id: p.id,
-      title: p.title,
-      created_at: p.created_at,
-    })
-  );
+  products?.forEach((p) => {
+    if (p.thumbnail_url) {
+      addUsage(p.thumbnail_url, {
+        type: "product_thumbnail",
+        id: p.id,
+        title: p.title,
+        created_at: p.created_at,
+      });
+    }
+    if (p.video_url) {
+      addUsage(p.video_url, {
+        type: "product_video",
+        id: p.id,
+        title: p.title,
+        created_at: p.created_at,
+      });
+    }
+  });
   categories?.forEach((c) =>
     addUsage(c.thumbnail_url, {
       type: "category_thumbnail",
@@ -212,7 +221,7 @@ export default async function AdminMediaPage() {
       {/* ── Sticky Header ── */}
       <StickyHeader
         title="Galeri Media"
-        description="Kelola file gambar produk dan kategori."
+        description="Kelola file gambar dan video produk serta kategori."
       />
 
       <div className="p-4 sm:p-6 md:p-8 space-y-5 md:space-y-6">

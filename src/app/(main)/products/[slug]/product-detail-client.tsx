@@ -16,10 +16,11 @@ import {
   ShieldCheckIcon,
   ShoppingCartIcon,
   TagIcon,
+  VideoCameraIcon,
 } from "@heroicons/react/24/solid";
 import { Button } from "@/components/ui/button";
 import { BuyButton } from "./buy-button";
-import { ProductCard } from "@/components/product-card";
+import { ProductVideoCard } from "@/components/product-video-card";
 import { useCart } from "@/context/cart-context";
 import { resolveImageSrc } from "@/lib/resolve-image";
 import { cn } from "@/lib/utils";
@@ -48,6 +49,7 @@ interface ProductData {
   demo_links: { label: string; url: string; image_url?: string }[];
   tags: string[] | null;
   thumbnail_url: string | null;
+  video_url?: string | null;
   product_images?: { image_url: string; sort_order: number }[];
   category_id: string | null;
   categories: { name: string } | null;
@@ -58,20 +60,16 @@ type ProductMediaImage = {
   sort_order: number;
 };
 
-type RelatedProduct = {
-  id: string;
-};
-
 interface ProductDetailClientProps {
   product: ProductData;
   isLoggedIn: boolean;
-  relatedProducts: RelatedProduct[];
+  recommendedProducts: any[];
 }
 
 export function ProductDetailClient({
   product,
   isLoggedIn,
-  relatedProducts,
+  recommendedProducts = [],
 }: ProductDetailClientProps) {
   const { addToCart, openCart } = useCart();
   const [isDescOpen, setIsDescOpen] = useState(true);
@@ -102,7 +100,7 @@ export function ProductDetailClient({
       navigator.clipboard
         .writeText(shareUrl)
         .then(() => {
-          toast.success("Link produk berhasil disalin! 🚀");
+          toast.success("Link produk berhasil disalin.");
         })
         .catch((err) => {
           console.error("Gagal menyalin link: ", err);
@@ -421,6 +419,7 @@ export function ProductDetailClient({
           </div>
         </section>
 
+
         {product.description && (
           <section className="container mx-auto mt-4 max-w-6xl px-4 md:px-6">
             <div className="overflow-hidden rounded-xl border border-border/50 bg-card/40 backdrop-blur-md">
@@ -460,16 +459,17 @@ export function ProductDetailClient({
           </section>
         )}
 
-        {relatedProducts.length > 0 && (
-          <section className="container mx-auto mt-6 max-w-6xl px-4 md:px-6">
+        {/* Section Produk Rekomendasi */}
+        {recommendedProducts && recommendedProducts.length > 0 && (
+          <section className="container mx-auto mt-8 max-w-6xl px-4 md:px-6">
             <div className="mb-6 flex items-center justify-between md:mb-8">
               <Typography variant="h4" as="h2">
-                Produk Terkait
+                Rekomendasi Produk
               </Typography>
             </div>
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6">
-              {relatedProducts.map((rp) => (
-                <ProductCard key={rp.id} product={rp} />
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
+              {recommendedProducts.slice(0, 4).map((rp: any) => (
+                <ProductVideoCard key={rp.id} product={rp} />
               ))}
             </div>
           </section>

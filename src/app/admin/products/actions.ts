@@ -64,6 +64,8 @@ export async function createProduct(formData: FormData) {
 
   const categoryId = (formData.get("categoryId") as string) || null;
   const driveFileUrl = formData.get("driveFileUrl") as string;
+  const videoUrlRaw = (formData.get("videoUrl") as string) || "";
+  const videoFile = formData.get("videoFile") as File | null;
   const isActive = formData.get("isActive") === "on";
   const thumbnailFile = formData.get("thumbnail") as File | null;
   const existingThumbnail = (formData.get("existingThumbnail") as string) || "";
@@ -92,6 +94,29 @@ export async function createProduct(formData: FormData) {
     thumbnailUrl = publicUrl.publicUrl;
   }
 
+  let finalVideoUrl = videoUrlRaw;
+  if (videoFile && videoFile.size > 0) {
+    const fileExt = videoFile.name.split(".").pop();
+    const fileName = `video-${slug}-${Date.now()}.${fileExt}`;
+
+    const { error: uploadVideoError } = await admin.storage
+      .from("product-images")
+      .upload(fileName, videoFile, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (uploadVideoError) {
+      return { error: `Upload video gagal: ${uploadVideoError.message}` };
+    }
+
+    const { data: publicUrl } = admin.storage
+      .from("product-images")
+      .getPublicUrl(fileName);
+
+    finalVideoUrl = publicUrl.publicUrl;
+  }
+
   const { data: inserted, error } = await admin.from("products").insert({
     title,
     slug,
@@ -102,6 +127,7 @@ export async function createProduct(formData: FormData) {
     tags: tags.length > 0 ? tags : null,
     category_id: categoryId || null,
     drive_file_url: driveFileUrl,
+    video_url: finalVideoUrl || null,
     is_active: isActive,
     thumbnail_url: thumbnailUrl || null,
   }).select("id").single();
@@ -200,6 +226,8 @@ export async function updateProduct(productId: string, formData: FormData) {
 
   const categoryId = (formData.get("categoryId") as string) || null;
   const driveFileUrl = formData.get("driveFileUrl") as string;
+  const videoUrlRaw = (formData.get("videoUrl") as string) || "";
+  const videoFile = formData.get("videoFile") as File | null;
   const isActive = formData.get("isActive") === "on";
   const thumbnailFile = formData.get("thumbnail") as File | null;
   const existingThumbnail = formData.get("existingThumbnail") as string;
@@ -235,6 +263,29 @@ export async function updateProduct(productId: string, formData: FormData) {
     thumbnailUrl = publicUrl.publicUrl;
   }
 
+  let finalVideoUrl = videoUrlRaw;
+  if (videoFile && videoFile.size > 0) {
+    const fileExt = videoFile.name.split(".").pop();
+    const fileName = `video-${slug}-${Date.now()}.${fileExt}`;
+
+    const { error: uploadVideoError } = await admin.storage
+      .from("product-images")
+      .upload(fileName, videoFile, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (uploadVideoError) {
+      return { error: `Upload video gagal: ${uploadVideoError.message}` };
+    }
+
+    const { data: publicUrl } = admin.storage
+      .from("product-images")
+      .getPublicUrl(fileName);
+
+    finalVideoUrl = publicUrl.publicUrl;
+  }
+
   const { error } = await admin
     .from("products")
     .update({
@@ -247,6 +298,7 @@ export async function updateProduct(productId: string, formData: FormData) {
       tags: tags.length > 0 ? tags : null,
       category_id: categoryId || null,
       drive_file_url: driveFileUrl,
+      video_url: finalVideoUrl || null,
       is_active: isActive,
       thumbnail_url: thumbnailUrl || null,
     })
@@ -461,6 +513,7 @@ export async function duplicateProduct(productId: string) {
       tags: original.tags,
       category_id: original.category_id,
       drive_file_url: original.drive_file_url,
+      video_url: original.video_url,
       is_active: false, // Start as inactive so admin can review
       thumbnail_url: original.thumbnail_url, // Reuse the same image URL
     })
@@ -626,4 +679,3 @@ export async function deleteGalleryImage(imageId: string) {
   }
   return { success: true };
 }
-
