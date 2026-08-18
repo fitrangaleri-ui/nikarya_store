@@ -128,18 +128,18 @@ export function ProductVideoCard({ product }: { product: any }) {
       </div>
 
       {/* 2. PRODUCT INFO */}
-      <div className="p-4 flex flex-col flex-1 gap-2.5 bg-card">
+      <div className="p-3 sm:p-4 flex flex-col flex-1 gap-2 sm:gap-2.5 bg-card">
         {/* Title & SKU */}
         <Link href={`/products/${product.slug}`} className="flex-1 block">
           <Typography
             variant="h6"
             as="h3"
-            className="font-bold leading-tight group-hover:text-primary transition-colors line-clamp-2"
+            className="text-xs sm:text-sm md:text-base font-bold leading-tight group-hover:text-primary transition-colors whitespace-normal break-words"
           >
             {product.sku && (
               <Badge
                 variant="default"
-                className="h-6 text-white align-middle px-2.5 font-bold uppercase mr-1.5 text-[10px]"
+                className="h-5 sm:h-6 text-white align-middle px-2 sm:px-2.5 font-bold uppercase mr-1 sm:mr-1.5 text-[9px] sm:text-[10px]"
               >
                 {product.sku}
               </Badge>
