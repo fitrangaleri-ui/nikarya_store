@@ -1,15 +1,10 @@
 import { Suspense } from "react";
 import { HeroSection } from "@/components/hero-section";
 import { FaqSection } from "@/components/faq-section";
-import { WarnSection } from "@/components/warn";
 import { getLandingPageProduct, getRecommendedProducts } from "../../lib";
-import { ProductCardDemo } from "../product-card-demo";
-import { PriceCard } from "../price-card";
-import { Typography } from "@/components/ui/typography";
 import { DemoPreviewProvider } from "@/components/demo-preview-provider";
-import { ScrollReveal } from "@/components/scroll-reveal";
 import { TemplatesAndPricingSkeleton } from "../skeleton-fallback";
-import { ProductVideoCard } from "@/components/product-video-card";
+import { ETSeriesClient } from "./et-series-client";
 
 export const revalidate = 120;
 
@@ -19,7 +14,6 @@ export const metadata = {
 };
 
 const etFaqs = [
-  // ... faq items unchanged ...
   {
     q: "Apa itu Tema Batik Series Series?",
     a: "Tema Batik Series Series adalah template undangan digital bertema Engagement / Lamaran yang disediakan dalam format JSON dan dirancang untuk digunakan di Elementor. Template ini bisa langsung diimpor melalui Dashboard Wordpress dan digunakan tanpa perlu coding.",
@@ -56,111 +50,7 @@ async function ETSeriesData() {
     getRecommendedProducts(),
   ]);
 
-  const demoLinks = [...(etProduct?.product_demo_links || [])].sort(
-    (a: any, b: any) => (a.sort_order || 0) - (b.sort_order || 0)
-  );
-
-  return (
-    <>
-      <section id="templates" className="py-20 md:py-24 bg-transparent border-t border-border/50">
-        <div className="container mx-auto px-8 md:px-6">
-          <ScrollReveal className="max-w-xl mx-auto text-center mb-12 md:mb-16">
-            <Typography variant="h3" className="text-center">
-              Preview Tema
-            </Typography>
-            <Typography variant="body-base" color="muted" className="text-center mt-2">
-              Lihat 5 tema premium <b>Batik Series</b> Series
-            </Typography>
-          </ScrollReveal>
-
-          {demoLinks && demoLinks.length > 0 ? (
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {demoLinks.map((demo, index) => (
-                <ScrollReveal
-                  key={demo.id}
-                  delay={(index % 3) * 100}
-                  className="w-full h-full"
-                >
-                  <ProductCardDemo 
-                    demoLink={demo} 
-                    badgeLabel={index === demoLinks.length - 1 ? "Bonus Template" : "Design Premium"}
-                    badgeVariant={index === demoLinks.length - 1 ? "destructive" : "glass"}
-                  />
-                </ScrollReveal>
-              ))}
-            </div>
-          ) : (
-            <ScrollReveal className="py-20 text-center glass rounded-3xl border-dashed border-border/50">
-              <Typography variant="body-base" color="muted">
-                Belum ada koleksi tema saat ini. Silakan kembali lagi nanti.
-              </Typography>
-            </ScrollReveal>
-          )}
-        </div>
-      </section>
-
-      <section id="pricing" className="relative bg-gradient-to-br from-primary to-secondary-foreground py-20 md:py-28 overflow-hidden">
-        {/* Decorative Circles shared for both Price & Warn */}
-        <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-white/10 pointer-events-none" />
-        <div className="absolute bottom-[10%] left-[10%] h-32 w-32 rounded-full bg-white/5 pointer-events-none" />
-
-        {/* Pricing wrapper */}
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <ScrollReveal className="max-w-xl mx-auto text-center mb-10 md:mb-14" direction="down">
-            <Typography variant="h3" className="text-center text-primary-foreground">
-              Dapatkan harga terbaik
-            </Typography>
-          </ScrollReveal>
-
-          <ScrollReveal delay={200}>
-            <PriceCard
-              product={etProduct || undefined}
-              themeCount={demoLinks.length > 0 ? demoLinks.length : 5}
-              features={[
-                "Tema Batik Series Eksklusif",
-                "Desain Elegan, Khas Nusantara, dan Responsif",
-                "Struktur JSON rapih dan mudah diedit",
-                `${demoLinks.length > 0 ? demoLinks.length : 5} Premium Theme`,
-                "Gratis Aset Script Motion Control",
-                "Gratis Asset Script Animasi (HTML & CSS)",
-                "Gratis Asset Image (WEBP & SVG)"
-              ]}
-            />
-          </ScrollReveal>
-        </div>
-
-        <div className="mt-10 md:mt-16">
-          <ScrollReveal delay={400} distance={50}>
-            <WarnSection transparent={true} />
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* Section Produk Rekomendasi */}
-      {recommendedProducts && recommendedProducts.length > 0 && (
-        <section className="py-20 md:py-24 bg-background border-t border-border/50">
-          <div className="container mx-auto px-4 md:px-6 max-w-7xl">
-            <ScrollReveal className="max-w-xl mx-auto text-center mb-10 md:mb-14">
-              <Typography variant="h3" className="text-center">
-                Rekomendasi Produk
-              </Typography>
-              <Typography variant="body-base" color="muted" className="text-center mt-2">
-                Jelajahi koleksi tema dan produk pilihan lainnya dari Nikarya Store
-              </Typography>
-            </ScrollReveal>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
-              {recommendedProducts.slice(0, 4).map((rp: any, index: number) => (
-                <ScrollReveal key={rp.id} delay={(index % 4) * 100}>
-                  <ProductVideoCard product={rp} />
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-    </>
-  );
+  return <ETSeriesClient etProduct={etProduct} recommendedProducts={recommendedProducts} />;
 }
 
 export default function ETSeriesPage() {

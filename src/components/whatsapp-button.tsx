@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Typography } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
-const WHATSAPP_BASE_URL = "https://wa.me/6285155201380";
+const WHATSAPP_BASE_URL = "https://wa.me/6285175070016";
 const WHATSAPP_TOGGLE_EVENT = "whatsapp:toggle";
 const DEFAULT_WHATSAPP_MESSAGE = "Halo, saya ingin memesan template json ?";
 
