@@ -119,7 +119,7 @@ export function ProductDetailClient({
               className="flex items-center gap-1.5 rounded-full px-1 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <HomeIcon className="h-4 w-4" />
-              <Typography as="span" variant="caption" color="muted" className="font-semibold md:text-sm">
+              <Typography as="span" variant="caption" color="muted" className="font-normal md:text-sm">
                 Beranda
               </Typography>
             </Link>
@@ -128,7 +128,7 @@ export function ProductDetailClient({
               href="/products"
               className="rounded-full px-1 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <Typography as="span" variant="caption" color="muted" className="font-semibold md:text-sm">
+              <Typography as="span" variant="caption" color="muted" className="font-normal md:text-sm">
                 Produk
               </Typography>
             </Link>
@@ -136,7 +136,7 @@ export function ProductDetailClient({
             <Typography
               as="span"
               variant="caption"
-              className="line-clamp-1 max-w-[150px] font-semibold md:max-w-[300px] md:text-sm"
+              className="line-clamp-1 max-w-[150px] font-normal md:max-w-[300px] md:text-sm"
             >
               {product.title}
             </Typography>
@@ -239,7 +239,7 @@ export function ProductDetailClient({
                   <DemoLinksModal demoLinks={dLinks}>
                     <span className="absolute right-3 bottom-3 z-10 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border/60 bg-background/80 px-3 py-1.5 backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-primary hover:bg-primary hover:text-primary-foreground">
                       <EyeIcon className="h-3.5 w-3.5 shrink-0" />
-                      <Typography as="span" variant="caption" className="font-semibold hover:text-primary-foreground">
+                      <Typography as="span" variant="caption" className="font-normal hover:text-primary-foreground">
                         Lihat Demo
                       </Typography>
                     </span>
@@ -249,30 +249,16 @@ export function ProductDetailClient({
             </div>
 
             <div className="flex flex-col gap-6">
-              <div className="space-y-4">
-                <div className="flex items-start justify-between gap-4">
-                  <Typography variant="h3" as="h1" className="flex-1">
-                    {product.title}
-                  </Typography>
-                  <button
-                    onClick={handleShare}
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border/50 bg-card/40 text-muted-foreground transition-all hover:scale-105 active:scale-95 hover:border-primary hover:text-primary hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    title="Bagikan produk"
-                    aria-label="Bagikan produk"
-                  >
-                    <ShareIcon className="h-5 w-5" />
-                  </button>
-                </div>
-
+              <div className="space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
                   {product.sku && (
-                    <Badge variant="sku" className="backdrop-blur-md px-2.5 py-0.5 font-bold uppercase text-xs">
+                    <Badge variant="sku" className="backdrop-blur-md px-2.5 py-0.5 font-normal tracking-tight text-xs">
                       {product.sku}
                     </Badge>
                   )}
 
                   {product.categories?.name && (
-                    <Badge variant="outline" className="backdrop-blur-md px-2.5 py-0.5 font-normal text-muted-foreground uppercase text-xs">
+                    <Badge variant="outline" className="backdrop-blur-md px-2.5 py-0.5 font-normal text-muted-foreground capitalize tracking-tight text-xs">
                       {product.categories.name}
                     </Badge>
                   )}
@@ -284,53 +270,69 @@ export function ProductDetailClient({
                       <Badge
                         key={tag}
                         variant={variant}
-                        className="backdrop-blur-md px-2.5 py-0.5 font-semibold uppercase text-xs"
+                        className="backdrop-blur-md px-2.5 py-0.5 font-normal capitalize tracking-tight text-xs"
                       >
                         {tag}
                       </Badge>
                     );
                   })}
                 </div>
+
+                <div className="flex items-start justify-between gap-4">
+                  <Typography variant="h4" as="h1" className="flex-1 font-bold text-xl md:text-2xl">
+                    {product.title}
+                  </Typography>
+                  <button
+                    onClick={handleShare}
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border/50 bg-card/40 text-muted-foreground transition-all hover:scale-105 active:scale-95 hover:border-primary hover:text-primary hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    title="Bagikan produk"
+                    aria-label="Bagikan produk"
+                  >
+                    <ShareIcon className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
 
-              <div className="relative overflow-hidden rounded-xl border border-border/50 bg-card/50 px-5 py-4 backdrop-blur-md">
+              <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/40 p-5 md:p-6 backdrop-blur-md flex flex-col gap-4">
                 {isDiscounted ? (
                   <div className="relative z-10 flex items-center justify-between gap-4">
                     <div className="flex flex-col">
-                      <Typography variant="body-base" color="muted" as="span" className="mb-1 line-through font-mono font-medium">
+                      <Typography variant="body-sm" color="muted" as="span" className="line-through font-mono">
                         Rp {Number(product.price).toLocaleString("id-ID")}
                       </Typography>
-                      <Typography variant="h3" color="primary" as="span" className="font-mono">
+                      <Typography variant="h3" color="primary" as="span" className="font-mono font-extrabold text-2xl md:text-3xl">
                         Rp {Number(finalPrice).toLocaleString("id-ID")}
                       </Typography>
                     </div>
 
-                    <Badge variant="destructive" className="bg-destructive/80 text-white border-none backdrop-blur-md px-3 py-1.5 h-auto font-bold">
+                    <Badge variant="sale" className="bg-sale/15 text-sale border border-sale/30 px-3 py-1.5 font-medium text-xs rounded-full">
                       Hemat {discountPercentage}%
                     </Badge>
                   </div>
                 ) : (
                   <div className="relative z-10">
-                    <Typography variant="h3" color="primary" as="span" className="font-black font-mono">
+                    <Typography variant="h3" color="primary" as="span" className="font-mono font-extrabold text-2xl md:text-3xl">
                       Rp {Number(finalPrice).toLocaleString("id-ID")}
                     </Typography>
                   </div>
                 )}
-              </div>
 
-              <div className="space-y-3 rounded-xl border border-border/50 bg-card/40 p-5 backdrop-blur-sm">
-                {[
-                  "One Time Purchase",
-                  "Lifetime Access",
-                  "Support Available",
-                ].map((text) => (
-                  <div key={text} className="flex items-center gap-3">
-                    <CheckBadgeIcon className="h-5 w-5 flex-shrink-0 text-primary" />
-                    <Typography variant="body-sm" color="muted" className="font-medium md:text-base">
-                      {text}
-                    </Typography>
-                  </div>
-                ))}
+                <div className="h-px w-full bg-border/40" />
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  {[
+                    "One Time Purchase",
+                    "Lifetime Access",
+                    "Support Available",
+                  ].map((text) => (
+                    <div key={text} className="flex items-center gap-2 rounded-xl border border-border/30 bg-background/30 px-3 py-2 backdrop-blur-xs">
+                      <CheckBadgeIcon className="h-4 w-4 shrink-0 text-primary" />
+                      <Typography variant="caption" color="muted" className="font-medium text-xs leading-tight">
+                        {text}
+                      </Typography>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div className="hidden flex-col gap-3.5 lg:flex">
@@ -341,7 +343,7 @@ export function ProductDetailClient({
                   className="h-14 w-full rounded-full border-primary/40 bg-primary/5 text-primary transition-all hover:bg-primary hover:text-primary-foreground"
                 >
                   <ShoppingCartIcon className="mr-2 h-5 w-5" />
-                  <Typography as="span" variant="body-base" className="font-semibold text-inherit">
+                  <Typography as="span" variant="body-base" className="font-normal text-inherit">
                     Tambah ke Keranjang
                   </Typography>
                 </Button>
@@ -395,16 +397,16 @@ export function ProductDetailClient({
                 ].map((item) => (
                   <div
                     key={item.label}
-                    className="group flex flex-col items-center gap-2 p-2 text-center"
+                    className="group flex flex-col items-center justify-center gap-2 p-2 text-center"
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border/50 bg-card/60 backdrop-blur-sm transition-colors group-hover:border-primary/40 group-hover:bg-primary/5">
                       <item.icon className="h-5 w-5 text-muted-foreground transition-colors group-hover:text-primary" />
                     </div>
-                    <div>
-                      <Typography variant="caption" as="p" className="font-bold uppercase leading-tight tracking-wider">
+                    <div className="flex flex-col items-center text-center">
+                      <Typography variant="caption" as="p" align="center" className="font-bold uppercase leading-tight tracking-wider">
                         {item.label}
                       </Typography>
-                      <Typography variant="caption" as="p" color="muted" className="mt-0.5 leading-tight">
+                      <Typography variant="caption" as="p" align="center" color="muted" className="mt-0.5 leading-tight">
                         {item.sublabel}
                       </Typography>
                     </div>

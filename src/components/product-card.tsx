@@ -155,10 +155,10 @@ export function ProductCard({ product }: { product: any }) {
 
         {/* Badge: Discount */}
         {discountPercentage > 0 && (
-          <div className="absolute top-3 right-3 z-10">
+          <div className="absolute top-3 right-3 z-10 pointer-events-none">
             <Badge
               variant="outline"
-              className="bg-destructive/80 text-white border-none backdrop-blur-md px-2.5"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-destructive/90 p-0 text-[10px] font-normal text-white border-none"
             >
               -{discountPercentage}%
             </Badge>
