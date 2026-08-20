@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { HeroSection } from "@/components/hero-section";
 import { FaqSection } from "@/components/faq-section";
-import { getLandingPageProduct } from "../../lib";
+import { getLandingPageProduct, getRecommendedProducts } from "../../lib";
 import { DemoPreviewProvider } from "@/components/demo-preview-provider";
 import { TemplatesAndPricingSkeleton } from "../skeleton-fallback";
 import { ENVSeriesClient } from "./env-series-client";
@@ -45,8 +45,11 @@ const envFaqs = [
 ];
 
 async function ENVSeriesData() {
-  const envProduct = await getLandingPageProduct("env-series");
-  return <ENVSeriesClient envProduct={envProduct} />;
+  const [envProduct, recommendedProducts] = await Promise.all([
+    getLandingPageProduct("env-series"),
+    getRecommendedProducts(),
+  ]);
+  return <ENVSeriesClient envProduct={envProduct} recommendedProducts={recommendedProducts} />;
 }
 
 export default function ENVSeriesPage() {

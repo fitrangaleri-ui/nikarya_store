@@ -7,12 +7,14 @@ import { Typography } from "@/components/ui/typography";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { ModalPayment } from "../modal-payment";
 import { WarnSection } from "@/components/warn";
+import { ProductVideoCard } from "@/components/product-video-card";
 
 interface ENVSeriesClientProps {
   envProduct: any;
+  recommendedProducts?: any[];
 }
 
-export function ENVSeriesClient({ envProduct }: ENVSeriesClientProps) {
+export function ENVSeriesClient({ envProduct, recommendedProducts = [] }: ENVSeriesClientProps) {
   const [isQrisOpen, setIsQrisOpen] = useState(false);
 
   const demoLinks = [...(envProduct?.product_demo_links || [])].sort(
@@ -95,6 +97,30 @@ export function ENVSeriesClient({ envProduct }: ENVSeriesClientProps) {
           </ScrollReveal>
         </div>
       </section>
+
+      {/* Section Produk Rekomendasi */}
+      {recommendedProducts && recommendedProducts.length > 0 && (
+        <section className="py-20 md:py-24 bg-background border-t border-border/50">
+          <div className="container mx-auto px-4 md:px-6 max-w-7xl">
+            <ScrollReveal className="max-w-xl mx-auto text-center mb-10 md:mb-14">
+              <Typography variant="h3" className="text-center">
+                Rekomendasi Produk
+              </Typography>
+              <Typography variant="body-base" color="muted" className="text-center mt-2">
+                Jelajahi koleksi tema dan produk pilihan lainnya dari Nikarya Store
+              </Typography>
+            </ScrollReveal>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
+              {recommendedProducts.slice(0, 4).map((rp: any, index: number) => (
+                <ScrollReveal key={rp.id} delay={(index % 4) * 100}>
+                  <ProductVideoCard product={rp} />
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <ModalPayment isOpen={isQrisOpen} onClose={() => setIsQrisOpen(false)} />
     </>
