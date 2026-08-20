@@ -39,7 +39,7 @@ export function CategorySection({ category, products }: CategorySectionProps) {
                 {category.name}
               </Typography>
               {(category.slug === "baru-rilis" || category.name === "Baru Rilis") && (
-                <Badge variant="outline" className="bg-primary/80 text-primary-foreground border-none animate-pulse px-3 backdrop-blur-md font-bold">
+                <Badge variant="new-release" className="animate-pulse px-3 backdrop-blur-md font-bold">
                   New Release
                 </Badge>
               )}

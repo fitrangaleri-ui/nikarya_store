@@ -3,7 +3,7 @@ Pass : &zL-NUPtfQW%49m
 project_databasename : nikarya_store
 
 PENTING : kamu bisa scan terlebih dahulu kode dari file sebelum membuat kode baru  Jangan pernah merubah variant font dan color default yang sudah tersedia, perubahan hanya mengenai implementasi konsep dan fitur
-supabase sudah terhubung melalui mcp server dengan url project https://gmqqtgdujdcqabiahcgh.supabase.co jadi kamu juga bisa mengakses supabase dan melakukan perubahan yang memang diperlukan jika memang ada yang perlu di rubah dari sisi supabase
+supabase sudah terhubung melalui mcp server dengan url project https://dkxzvksupmwhysjvmqig.supabase.co jadi kamu juga bisa mengakses supabase dan melakukan perubahan yang memang diperlukan jika memang ada yang perlu di rubah dari sisi supabase
 
 
 git add .
@@ -135,6 +135,10 @@ Buatkan sebuah Implementation Plan (Rencana Implementasi) yang komprehensif dan 
 
 
 
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRreHp2a3N1cG13aHlzanZtcWlnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NzA4NTY0NCwiZXhwIjoyMTAyNjYxNjQ0fQ.XK_lQamagr6j8C-iQ_LC_3O7ycKmZ_DfQ0G-vv8rn1w
+
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRreHp2a3N1cG13aHlzanZtcWlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwODU2NDQsImV4cCI6MjEwMjY2MTY0NH0.yu2a6cuy03oRKmFAs9MzrMyu7ZBIJlOlYfR_y5r237Q
 
 
 

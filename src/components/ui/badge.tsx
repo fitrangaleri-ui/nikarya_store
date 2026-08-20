@@ -21,6 +21,11 @@ const badgeVariants = cva(
         glass:
           "border-white/30 bg-white/10 text-white backdrop-blur-sm [a&]:hover:bg-white/20",
         sale: "bg-sale text-white [a&]:hover:bg-sale/90 border-none",
+        favorite: "bg-badge-favorite text-white border-none",
+        bestseller: "bg-badge-bestseller text-white border-none",
+        new: "bg-badge-new text-white border-none",
+        "new-release": "bg-badge-new-release text-white border-none",
+        sku: "bg-badge-sku text-white border-none",
       },
     },
     defaultVariants: {

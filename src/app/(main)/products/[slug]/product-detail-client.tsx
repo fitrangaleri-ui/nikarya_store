@@ -266,7 +266,7 @@ export function ProductDetailClient({
 
                 <div className="flex flex-wrap items-center gap-2">
                   {product.sku && (
-                    <Badge variant="outline" className="backdrop-blur-md px-2.5 py-0.5 font-normal text-muted-foreground uppercase text-xs">
+                    <Badge variant="sku" className="backdrop-blur-md px-2.5 py-0.5 font-bold uppercase text-xs">
                       {product.sku}
                     </Badge>
                   )}
@@ -278,17 +278,13 @@ export function ProductDetailClient({
                   )}
 
                   {product.tags?.map((tag) => {
-                    const isNew = tag.toLowerCase() === "new";
+                    const t = tag.toLowerCase().trim();
+                    const variant = t === "new" ? "new" : t === "new release" || t === "new-release" || t === "baru rilis" ? "new-release" : t === "terlaris" || t === "bestseller" || t === "best seller" || t === "hot" ? "bestseller" : t === "favorit" || t === "favorite" || t === "wishlist" ? "favorite" : "outline";
                     return (
                       <Badge
                         key={tag}
-                        variant="outline"
-                        className={cn(
-                          "backdrop-blur-md px-2.5 py-0.5 font-normal uppercase text-xs",
-                          isNew
-                            ? "bg-primary/10 text-primary border-primary/20"
-                            : "text-muted-foreground"
-                        )}
+                        variant={variant}
+                        className="backdrop-blur-md px-2.5 py-0.5 font-semibold uppercase text-xs"
                       >
                         {tag}
                       </Badge>

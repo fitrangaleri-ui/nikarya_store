@@ -98,28 +98,27 @@ export function ProductVideoCard({ product }: { product: any }) {
         )}
 
         {/* Badge: Tag */}
-        {displayTag && (
-          <div className="absolute top-3 left-3 z-20 pointer-events-none">
-            <Badge
-              variant="outline"
-              className={cn(
-                "capitalize tracking-tight px-2.5 backdrop-blur-md border-none",
-                displayTag === "new"
-                  ? "bg-primary/80 text-white"
-                  : "bg-black/50 text-white"
-              )}
-            >
-              {displayTag}
-            </Badge>
-          </div>
-        )}
+        {displayTag && (() => {
+          const t = displayTag.toLowerCase().trim();
+          const variant = t === "new" ? "new" : t === "new release" || t === "new-release" || t === "baru rilis" ? "new-release" : t === "terlaris" || t === "bestseller" || t === "best seller" || t === "hot" ? "bestseller" : t === "favorit" || t === "favorite" || t === "wishlist" ? "favorite" : "default";
+          return (
+            <div className="absolute top-3 left-3 z-20 pointer-events-none">
+              <Badge
+                variant={variant}
+                className="capitalize tracking-tight px-2.5 backdrop-blur-md font-semibold"
+              >
+                {displayTag}
+              </Badge>
+            </div>
+          );
+        })()}
 
         {/* Badge: Discount */}
         {discountPercentage > 0 && (
           <div className="absolute top-3 right-3 z-20 pointer-events-none">
             <Badge
               variant="outline"
-              className="bg-red/500 flex h-8 w-8 items-center justify-center rounded-full bg-destructive/90 p-0 text-[10px] font-normal text-white border-none"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-destructive/90 p-0 text-[10px] font-normal text-white border-none"
             >
               -{discountPercentage}%
             </Badge>
@@ -134,11 +133,11 @@ export function ProductVideoCard({ product }: { product: any }) {
           <Typography
             variant="h6"
             as="h3"
-            className="text-xs sm:text-sm md:text-base font-bold leading-tight group-hover:text-primary transition-colors whitespace-normal break-words"
+            className="text-sm sm:text-sm md:text-base font-bold leading-tight group-hover:text-primary transition-colors whitespace-normal break-words"
           >
             {product.sku && (
               <Badge
-                variant="default"
+                variant="sku"
                 className="h-5 sm:h-6 text-white align-middle px-2 sm:px-2.5 font-bold uppercase mr-1 sm:mr-1.5 text-[9px] sm:text-[10px]"
               >
                 {product.sku}

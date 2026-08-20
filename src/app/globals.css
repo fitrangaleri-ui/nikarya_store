@@ -55,6 +55,11 @@
   --color-sale: var(--sale);
   --color-sale-foreground: var(--sale-foreground);
   --color-sale-muted: var(--sale-muted);
+  --color-badge-favorite: var(--badge-favorite);
+  --color-badge-bestseller: var(--badge-bestseller);
+  --color-badge-new: var(--badge-new);
+  --color-badge-new-release: var(--badge-new-release);
+  --color-badge-sku: var(--badge-sku);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -114,6 +119,13 @@
   --sale: #d9485f;
   --sale-foreground: #ffffff;
   --sale-muted: rgba(217, 72, 95, 0.16);
+
+  /* Badge Colors */
+  --badge-favorite: #e11d48;
+  --badge-bestseller: #ea580c;
+  --badge-new: #0d9488;
+  --badge-new-release: #7c3aed;
+  --badge-sku: #4b5563;
 
   --border: rgba(40, 37, 29, 0.08);
   --input: rgba(40, 37, 29, 0.14);
@@ -183,6 +195,13 @@
   --sale: #ff6b81;
   --sale-foreground: #ffffff;
   --sale-muted: rgba(255, 107, 129, 0.16);
+
+  /* Badge Colors */
+  --badge-favorite: #e11d48;
+  --badge-bestseller: #ea580c;
+  --badge-new: #0d9488;
+  --badge-new-release: #7c3aed;
+  --badge-sku: #4b5563;
 
   --border: rgba(247, 246, 242, 0.1);
   --input: rgba(247, 246, 242, 0.14);

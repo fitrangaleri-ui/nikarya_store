@@ -138,21 +138,20 @@ export function ProductCard({ product }: { product: any }) {
         )}
 
         {/* Badge: Tag */}
-        {displayTag && (
-          <div className="absolute top-3 left-3 z-10">
-            <Badge
-              variant="outline"
-              className={cn(
-                "capitalize tracking-tight px-2.5 backdrop-blur-md border-none",
-                displayTag === "new"
-                  ? "bg-primary/80 text-white"
-                  : "bg-black/40 text-white"
-              )}
-            >
-              {displayTag}
-            </Badge>
-          </div>
-        )}
+        {displayTag && (() => {
+          const t = displayTag.toLowerCase().trim();
+          const variant = t === "new" ? "new" : t === "new release" || t === "new-release" || t === "baru rilis" ? "new-release" : t === "terlaris" || t === "bestseller" || t === "best seller" || t === "hot" ? "bestseller" : t === "favorit" || t === "favorite" || t === "wishlist" ? "favorite" : "default";
+          return (
+            <div className="absolute top-3 left-3 z-10">
+              <Badge
+                variant={variant}
+                className="capitalize tracking-tight px-2.5 backdrop-blur-md font-semibold"
+              >
+                {displayTag}
+              </Badge>
+            </div>
+          );
+        })()}
 
         {/* Badge: Discount */}
         {discountPercentage > 0 && (
@@ -177,7 +176,7 @@ export function ProductCard({ product }: { product: any }) {
             className="font-semibold leading-tight group-hover:text-primary transition-colors line-clamp-2"
           >
             {product.sku && (
-              <Badge variant="default" className="h-7 text-white align-middle px-3 font-bold uppercase mr-2">
+              <Badge variant="sku" className="h-7 text-white align-middle px-3 font-bold uppercase mr-2">
                 {product.sku}
               </Badge>
             )}
