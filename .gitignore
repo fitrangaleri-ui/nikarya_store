@@ -1,3 +1,13 @@
+# Strict Text & Scratch Files Ignore Rule
+*.txt
+**/*.txt
+corat-coret*
+scratch/
+notes/
+*.log
+*.bak
+*.draft
+
 # dependencies
 /node_modules
 /.pnp
@@ -29,11 +39,13 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files
+# env files (secrets)
+.env
 .env*
 .env.local
 .env.development.local
 .env.production.local
+*.env
 
 # vercel
 .vercel
@@ -46,8 +58,12 @@ next-env.d.ts
 .vscode/
 .idea/
 
-# database
+# database & credentials
 *.sql
+*.key
+*.pem
+*.cert
+*.crt
 
 # archives
 *.zip
@@ -56,11 +72,7 @@ next-env.d.ts
 *.rar
 *.7z
 
-# design
+# design & media drafts
 *.psd
 *.ai
 *.fig
-
-# scratch files
-corat-coret.txt
-*.txt
