@@ -52,7 +52,7 @@ interface ProductData {
   video_url?: string | null;
   product_images?: { image_url: string; sort_order: number }[];
   category_id: string | null;
-  categories: { name: string } | null;
+  categories: { name: string; slug?: string } | null;
 }
 
 type ProductMediaImage = {
@@ -132,6 +132,19 @@ export function ProductDetailClient({
                 Produk
               </Typography>
             </Link>
+            {product.categories?.name && (
+              <>
+                <ChevronRightIcon className="h-3.5 w-3.5 text-muted-foreground/40" />
+                <Link
+                  href={`/products?category=${product.categories.slug || ""}`}
+                  className="rounded-full px-1 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <Typography as="span" variant="caption" color="muted" className="font-normal md:text-sm">
+                    {product.categories.name}
+                  </Typography>
+                </Link>
+              </>
+            )}
             <ChevronRightIcon className="h-3.5 w-3.5 text-muted-foreground/40" />
             <Typography
               as="span"
@@ -252,28 +265,31 @@ export function ProductDetailClient({
               <div className="space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
                   {product.sku && (
-                    <Badge variant="sku" className="backdrop-blur-md px-2.5 py-0.5 font-normal tracking-tight text-xs">
+                    <Badge variant="sku" className="backdrop-blur-md px-2.5 py-0.5 font-medium uppercase tracking-tight text-xs">
                       {product.sku}
                     </Badge>
                   )}
 
                   {product.categories?.name && (
-                    <Badge variant="outline" className="backdrop-blur-md px-2.5 py-0.5 font-normal text-muted-foreground capitalize tracking-tight text-xs">
-                      {product.categories.name}
-                    </Badge>
+                    <Link href={`/products?category=${product.categories.slug || ""}`}>
+                      <Badge variant="outline" className="backdrop-blur-md px-2.5 py-0.5 font-normal text-muted-foreground capitalize tracking-tight text-xs hover:border-primary hover:text-primary transition-colors cursor-pointer">
+                        {product.categories.name}
+                      </Badge>
+                    </Link>
                   )}
 
                   {product.tags?.map((tag) => {
                     const t = tag.toLowerCase().trim();
                     const variant = t === "new" ? "new" : t === "new release" || t === "new-release" || t === "baru rilis" ? "new-release" : t === "terlaris" || t === "bestseller" || t === "best seller" || t === "hot" ? "bestseller" : t === "favorit" || t === "favorite" || t === "wishlist" ? "favorite" : "outline";
                     return (
-                      <Badge
-                        key={tag}
-                        variant={variant}
-                        className="backdrop-blur-md px-2.5 py-0.5 font-normal capitalize tracking-tight text-xs"
-                      >
-                        {tag}
-                      </Badge>
+                      <Link key={tag} href={`/products?search=${encodeURIComponent(tag)}`}>
+                        <Badge
+                          variant={variant}
+                          className="backdrop-blur-md px-2.5 py-0.5 font-normal capitalize tracking-tight text-xs hover:opacity-85 transition-opacity cursor-pointer"
+                        >
+                          {tag}
+                        </Badge>
+                      </Link>
                     );
                   })}
                 </div>

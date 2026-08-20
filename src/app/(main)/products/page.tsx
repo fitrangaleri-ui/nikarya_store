@@ -87,7 +87,8 @@ export default async function ProductsPage({
   }
 
   if (search && search.trim()) {
-    query = query.ilike("title", `%${search.trim()}%`);
+    const term = search.trim();
+    query = query.or(`title.ilike.%${term}%,tags.cs.{"${term}"}`);
   }
 
   if (priceMinParam !== null || priceMaxParam !== null) {

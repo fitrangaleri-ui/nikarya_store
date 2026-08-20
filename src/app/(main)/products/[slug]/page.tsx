@@ -40,7 +40,7 @@ export default async function ProductDetailPage({
         video_url: product.video_url,
         product_images: product.product_images,
         category_id: product.category_id,
-        categories: product.categories as unknown as { name: string } | null,
+        categories: product.categories as unknown as { name: string; slug: string } | null,
       }}
       isLoggedIn={!!user}
       recommendedProducts={recommendedProducts}

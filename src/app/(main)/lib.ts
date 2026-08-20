@@ -117,7 +117,7 @@ export const getProductBySlug = unstable_cache(
     const { data } = await admin
       .from("products")
       .select(
-        "id, title, slug, description, price, discount_price, sku, demo_link, tags, thumbnail_url, video_url, category_id, categories(name), product_demo_links(id, label, url, image_url, sort_order), product_images(image_url, sort_order)"
+        "id, title, slug, description, price, discount_price, sku, demo_link, tags, thumbnail_url, video_url, category_id, categories(name, slug), product_demo_links(id, label, url, image_url, sort_order), product_images(image_url, sort_order)"
       )
       .eq("slug", slug)
       .eq("is_active", true)
@@ -149,16 +149,20 @@ export const getRelatedProducts = unstable_cache(
 
 // Cache recommended products (4 random active products across all categories, excluding current product)
 export const getRecommendedProducts = unstable_cache(
-  async (excludeId: string) => {
+  async (excludeId?: string) => {
     const admin = createAdminClient();
-    const { data } = await admin
+    let query = admin
       .from("products")
       .select(
         "id, title, slug, price, discount_price, sku, demo_link, tags, thumbnail_url, video_url, categories(name), product_demo_links(id, label, url, image_url, sort_order), product_images(image_url, sort_order)"
       )
-      .eq("is_active", true)
-      .neq("id", excludeId)
-      .limit(30);
+      .eq("is_active", true);
+
+    if (excludeId && excludeId.trim() !== "") {
+      query = query.neq("id", excludeId);
+    }
+
+    const { data } = await query.limit(30);
 
     if (!data || data.length === 0) return [];
 

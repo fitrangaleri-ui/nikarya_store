@@ -2,13 +2,14 @@ import { Suspense } from "react";
 import { HeroSection } from "@/components/hero-section";
 import { FaqSection } from "@/components/faq-section";
 import { WarnSection } from "@/components/warn";
-import { getLandingPageProduct } from "../../lib";
+import { getLandingPageProduct, getRecommendedProducts } from "../../lib";
 import { ProductCardDemo } from "../product-card-demo";
 import { PriceCard } from "../price-card";
 import { Typography } from "@/components/ui/typography";
 import { DemoPreviewProvider } from "@/components/demo-preview-provider";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { TemplatesAndPricingSkeleton } from "../skeleton-fallback";
+import { ProductVideoCard } from "@/components/product-video-card";
 
 export const revalidate = 120;
 
@@ -50,7 +51,10 @@ const chnFaqs = [
 ];
 
 async function CHNSeriesData() {
-  const chnProduct = await getLandingPageProduct("chn-series");
+  const [chnProduct, recommendedProducts] = await Promise.all([
+    getLandingPageProduct("chn-series"),
+    getRecommendedProducts(),
+  ]);
 
   const demoLinks = [...(chnProduct?.product_demo_links || [])].sort(
     (a: any, b: any) => (a.sort_order || 0) - (b.sort_order || 0)
@@ -134,6 +138,30 @@ async function CHNSeriesData() {
           </ScrollReveal>
         </div>
       </section>
+
+      {/* Section Produk Rekomendasi */}
+      {recommendedProducts && recommendedProducts.length > 0 && (
+        <section className="py-20 md:py-24 bg-background border-t border-border/50">
+          <div className="container mx-auto px-4 md:px-6 max-w-7xl">
+            <ScrollReveal className="max-w-xl mx-auto text-center mb-10 md:mb-14">
+              <Typography variant="h3" className="text-center">
+                Rekomendasi Produk
+              </Typography>
+              <Typography variant="body-base" color="muted" className="text-center mt-2">
+                Jelajahi koleksi tema dan produk pilihan lainnya dari Nikarya Store
+              </Typography>
+            </ScrollReveal>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
+              {recommendedProducts.slice(0, 4).map((rp: any, index: number) => (
+                <ScrollReveal key={rp.id} delay={(index % 4) * 100}>
+                  <ProductVideoCard product={rp} />
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </>
   );
 }
