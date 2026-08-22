@@ -5,7 +5,18 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+function clearProductCaches(slug?: string) {
+  revalidatePath("/", "layout");
+  revalidatePath("/products", "layout");
+  revalidatePath("/admin/products", "layout");
+  if (slug) {
+    revalidatePath(`/products/${slug}`, "page");
+  }
+}
+
+
 function slugify(text: string): string {
+
   return text
     .toLowerCase()
     .replace(/[^\w\s-]/g, "")
@@ -190,9 +201,10 @@ export async function createProduct(formData: FormData) {
     });
   }
 
-  revalidatePath("/admin/products");
+  clearProductCaches(slug);
   redirect("/admin/products");
 }
+
 
 export async function updateProduct(productId: string, formData: FormData) {
   const user = await verifyAdmin();
@@ -392,7 +404,7 @@ export async function updateProduct(productId: string, formData: FormData) {
     });
   }
 
-  revalidatePath("/admin/products");
+  clearProductCaches(slug);
   revalidatePath(`/admin/products/${productId}/edit`);
   redirect("/admin/products");
 }
@@ -405,7 +417,7 @@ export async function deleteProduct(productId: string) {
 
   const { data: product } = await admin
     .from("products")
-    .select("thumbnail_url")
+    .select("thumbnail_url, slug")
     .eq("id", productId)
     .single();
 
@@ -422,7 +434,7 @@ export async function deleteProduct(productId: string) {
     return { error: error.message };
   }
 
-  revalidatePath("/admin/products");
+  clearProductCaches(product?.slug);
 }
 
 export async function toggleProductStatus(
@@ -434,6 +446,12 @@ export async function toggleProductStatus(
 
   const admin = createAdminClient();
 
+  const { data: product } = await admin
+    .from("products")
+    .select("slug")
+    .eq("id", productId)
+    .single();
+
   const { error } = await admin
     .from("products")
     .update({ is_active: isActive })
@@ -443,9 +461,10 @@ export async function toggleProductStatus(
     return { error: error.message };
   }
 
-  revalidatePath("/admin/products");
+  clearProductCaches(product?.slug);
   return { success: true };
 }
+
 
 export async function deleteProductImage(productId: string) {
   const user = await verifyAdmin();

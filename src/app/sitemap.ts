@@ -14,7 +14,9 @@ const staticRoutes = [
   "/landingpage/et-series",
   "/landingpage/env-series",
   "/landingpage/wks-series",
+  "/landingpage/minang-series",
 ];
+
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = getSiteUrl();

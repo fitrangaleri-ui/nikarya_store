@@ -54,24 +54,36 @@ export default async function AdminMediaPage() {
   );
 
   // 2. Fetch all DB Usages
-  const [{ data: galleryImages }, { data: products }, { data: categories }] =
-    await Promise.all([
-      admin
-        .from("product_images")
-        .select("id, product_id, image_url, created_at, products(title)"),
-      admin
-        .from("products")
-        .select("id, title, thumbnail_url, video_url, created_at"),
-      admin
-        .from("categories")
-        .select("id, name, thumbnail_url, created_at")
-        .not("thumbnail_url", "is", null),
-    ]);
+  const [
+    { data: galleryImages },
+    { data: products },
+    { data: categories },
+    { data: demoLinks },
+  ] = await Promise.all([
+    admin
+      .from("product_images")
+      .select("id, product_id, image_url, created_at, products(title)"),
+    admin
+      .from("products")
+      .select("id, title, thumbnail_url, video_url, created_at"),
+    admin
+      .from("categories")
+      .select("id, name, thumbnail_url, created_at")
+      .not("thumbnail_url", "is", null),
+    admin
+      .from("product_demo_links")
+      .select("id, label, image_url, url, created_at, products(title)"),
+  ]);
 
   const dbUsages = new Map<
     string,
     {
-      type: "gallery" | "product_thumbnail" | "product_video" | "category_thumbnail";
+      type:
+        | "gallery"
+        | "product_thumbnail"
+        | "product_video"
+        | "category_thumbnail"
+        | "demo_link";
       id: string;
       title: string;
       created_at: string;
@@ -119,6 +131,17 @@ export default async function AdminMediaPage() {
       created_at: c.created_at || new Date().toISOString(),
     })
   );
+  demoLinks?.forEach((d) => {
+    if (!d.image_url) return;
+    const prodTitle = (d.products as any)?.title || "Produk Dihapus";
+    const demoTitle = d.label ? `${prodTitle} (${d.label})` : prodTitle;
+    addUsage(d.image_url, {
+      type: "demo_link",
+      id: d.id,
+      title: demoTitle,
+      created_at: d.created_at || new Date().toISOString(),
+    });
+  });
 
   const allMedia: MediaItem[] = [];
   const processedUrls = new Set<string>();
@@ -166,21 +189,34 @@ export default async function AdminMediaPage() {
         created_at: file.created_at || new Date().toISOString(),
         size,
         file_name: file.name,
+        usages_types: ["unused"],
+        usages_details: [],
       });
     } else {
       const allTypes = Array.from(new Set(usages.map((u) => u.type)));
       const combinedType = allTypes.length > 1 ? "multiple" : allTypes[0];
+      const uniqueTitles = Array.from(new Set(usages.map((u) => u.title)));
 
       allMedia.push({
         id: usages[0].id,
         type: combinedType,
         product_id: usages[0].id,
-        product_title: usages[0].title,
+        product_title: uniqueTitles.join(" • "),
         image_url: fileUrl,
         created_at:
-          usages[0].created_at || file.created_at || new Date().toISOString(),
+          file.created_at ||
+          file.updated_at ||
+          (file.metadata as any)?.mtime ||
+          usages[0].created_at ||
+          new Date().toISOString(),
         size,
         file_name: file.name,
+        usages_types: allTypes,
+        usages_details: usages.map((u) => ({
+          type: u.type,
+          id: u.id,
+          title: u.title,
+        })),
       });
     }
   });
@@ -188,20 +224,32 @@ export default async function AdminMediaPage() {
   // 4. Find broken links (in DB but not physical files in Storage)
   for (const [url, usages] of dbUsages.entries()) {
     if (!processedUrls.has(url)) {
+      // Safety guard: only consider it a broken storage file if the URL belongs to storage product-images
+      if (!url.includes("product-images")) continue;
+
       const allTypes = Array.from(new Set(usages.map((u) => u.type)));
       const combinedType = allTypes.length > 1 ? "multiple" : allTypes[0];
+      const uniqueTitles = Array.from(new Set(usages.map((u) => u.title)));
 
       allMedia.push({
         id: usages[0].id,
         type: combinedType,
         product_id: usages[0].id,
-        product_title: `${usages[0].title}`,
+        product_title: uniqueTitles.join(" • "),
         image_url: url,
         created_at: usages[0].created_at,
         size: 0,
+        usages_types: allTypes,
+        usages_details: usages.map((u) => ({
+          type: u.type,
+          id: u.id,
+          title: u.title,
+        })),
       });
     }
   }
+
+
 
   // Sort by date descending
   allMedia.sort(

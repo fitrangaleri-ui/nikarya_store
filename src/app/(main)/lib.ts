@@ -25,19 +25,29 @@ export const getHomepageFeaturedCategories = unstable_cache(
       .select(
         `id, name, slug,
          products (
-           id, title, slug, price, discount_price, thumbnail_url, sku, tags, demo_link,
+           id, title, slug, price, discount_price, thumbnail_url, sku, tags, demo_link, is_active,
            categories(name),
            product_demo_links(id, label, url, image_url, sort_order),
            product_images(image_url, sort_order)
          )`
       )
       .not("products", "is", null)
-      .limit(4);
-    return data || [];
+      .limit(8);
+
+    if (!data) return [];
+
+    return data
+      .map((cat) => ({
+        ...cat,
+        products: (cat.products || []).filter((p: any) => p.is_active === true),
+      }))
+      .filter((cat) => cat.products.length > 0)
+      .slice(0, 4);
   },
   ["homepage-featured"],
   { revalidate: 60 }
 );
+
 
 // Cache homepage new arrivals (max 24)
 export const getHomepageNewArrivals = unstable_cache(
