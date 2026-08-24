@@ -83,6 +83,11 @@ export function Navbar() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [signOutError, setSignOutError] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dropdownButtonRef = useRef<HTMLButtonElement>(null);
@@ -200,7 +205,7 @@ export function Navbar() {
             aria-label="Buka keranjang"
           >
             <ShoppingCartIcon className="h-5 w-5" />
-            {cartCount > 0 && (
+            {mounted && cartCount > 0 && (
               <Badge className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary p-0 text-[9px] font-bold text-primary-foreground ring-2 ring-background">
                 {cartCount > 99 ? "99+" : cartCount}
               </Badge>
@@ -208,7 +213,7 @@ export function Navbar() {
           </Button>
 
           <div className="ml-1 hidden md:block">
-            {isLoading ? (
+            {!mounted || isLoading ? (
               <Button
                 variant="ghost"
                 size="icon"
@@ -279,7 +284,7 @@ export function Navbar() {
                       }}
                     >
                       <UserIcon className="h-4 w-4" />
-                      <Typography variant="body-sm">Dashboard</Typography>
+                      <Typography variant="body-sm" as="span">Dashboard</Typography>
                     </Link>
                     <Button
                       type="button"
@@ -290,7 +295,7 @@ export function Navbar() {
                       className="flex h-auto w-full justify-start gap-2 rounded-none px-3.5 py-2.5 text-destructive hover:bg-destructive/10 hover:text-destructive"
                     >
                       <ArrowRightOnRectangleIcon className="h-4 w-4" />
-                      <Typography variant="body-sm">Keluar</Typography>
+                      <Typography variant="body-sm" as="span">Keluar</Typography>
                     </Button>
                     {signOutError && (
                       <Typography variant="caption" className="px-3.5 pt-1 text-destructive" role="alert">
@@ -311,6 +316,7 @@ export function Navbar() {
                   </div>
                   <Typography
                     variant="body-sm"
+                    as="span"
                     className="font-bold tracking-tight text-primary-foreground transition-transform duration-200 ease-out group-active:translate-x-[2px] group-active:translate-y-[1px]"
                   >
                     Login

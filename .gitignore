@@ -76,3 +76,7 @@ next-env.d.ts
 *.psd
 *.ai
 *.fig
+
+# Documentation and local media assets
+/doc/
+doc/

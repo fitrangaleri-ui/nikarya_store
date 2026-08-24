@@ -51,6 +51,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
+
 
 export type MediaItem = {
   id: string;
@@ -225,50 +231,75 @@ function MediaCard({
 
           <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
             {/* Copy Link Icon Button */}
-            <Button
-              variant="secondary"
-              size="icon"
-              onClick={handleCopyLink}
-              title="Salin Link URL"
-              className="h-7 w-7 rounded-full bg-black/60 hover:bg-black/80 text-white backdrop-blur-md border-none transition-transform hover:scale-105"
-            >
-              {isCopied ? (
-                <CheckIcon className="h-3.5 w-3.5 text-success" />
-              ) : (
-                <LinkIcon className="h-3.5 w-3.5" />
-              )}
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  onClick={handleCopyLink}
+                  className="h-7 w-7 rounded-full bg-black/60 hover:bg-black/80 text-white backdrop-blur-md border-none transition-transform hover:scale-105"
+                >
+                  {isCopied ? (
+                    <CheckIcon className="h-3.5 w-3.5 text-success" />
+                  ) : (
+                    <LinkIcon className="h-3.5 w-3.5" />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top">
+                <Typography variant="caption" className="font-semibold text-primary-foreground">
+                  {isCopied ? "Link Tersalin!" : "Salin Link URL"}
+                </Typography>
+              </TooltipContent>
+            </Tooltip>
 
             {/* Open External Link Button */}
-            <Button
-              variant="secondary"
-              size="icon"
-              className="h-7 w-7 rounded-full bg-black/60 hover:bg-black/80 text-white backdrop-blur-md border-none transition-transform hover:scale-105"
-              asChild
-              title="Buka di tab baru"
-            >
-              <a
-                href={item.image_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5" />
-              </a>
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="h-7 w-7 rounded-full bg-black/60 hover:bg-black/80 text-white backdrop-blur-md border-none transition-transform hover:scale-105"
+                  asChild
+                >
+                  <a
+                    href={item.image_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5" />
+                  </a>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top">
+                <Typography variant="caption" className="font-semibold text-primary-foreground">
+                  Buka di tab baru
+                </Typography>
+              </TooltipContent>
+            </Tooltip>
 
             {/* Delete Button */}
             <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  variant="destructive"
-                  size="icon"
-                  className="h-7 w-7 rounded-full transition-transform hover:scale-105"
-                  disabled={isPending}
-                  title="Hapus Media"
-                >
-                  <TrashIcon className="h-3.5 w-3.5" />
-                </Button>
-              </AlertDialogTrigger>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      className="h-7 w-7 rounded-full transition-transform hover:scale-105"
+                      disabled={isPending}
+                    >
+                      <TrashIcon className="h-3.5 w-3.5" />
+                    </Button>
+                  </AlertDialogTrigger>
+                </TooltipTrigger>
+                <TooltipContent side="top">
+                  <Typography variant="caption" className="font-semibold text-primary-foreground">
+                    Hapus Media
+                  </Typography>
+                </TooltipContent>
+              </Tooltip>
+
               <AlertDialogContent className="rounded-xl border-border bg-card/95 backdrop-blur-xl sm:max-w-md p-0 gap-0">
                 <div className="bg-destructive/10 px-5 py-4 md:px-7 md:py-5 border-b border-destructive/20 rounded-t-xl">
                   <div className="flex items-center gap-3">
@@ -448,53 +479,87 @@ function MediaLightboxDialog({
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleCopy}
-              className="h-9 rounded-full border-border bg-background/50 hover:bg-primary/10 hover:text-primary transition-colors text-xs font-bold gap-1.5"
-            >
-              <LinkIcon className="h-4 w-4 text-primary" />
-              <Typography variant="caption" as="span" className="hidden sm:inline font-bold">
-                Salin Link
-              </Typography>
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCopy}
+                  className="h-9 rounded-full border-border bg-background/50 hover:bg-primary/10 hover:text-primary transition-colors text-xs font-bold gap-1.5"
+                >
+                  <LinkIcon className="h-4 w-4 text-primary" />
+                  <Typography variant="caption" as="span" className="hidden sm:inline font-bold">
+                    Salin Link
+                  </Typography>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <Typography variant="caption" className="font-semibold text-primary-foreground">
+                  Salin URL ke Clipboard
+                </Typography>
+              </TooltipContent>
+            </Tooltip>
 
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              className="h-9 w-9 rounded-full border-border bg-background/50 hover:bg-muted"
-              asChild
-            >
-              <a href={item.image_url} target="_blank" rel="noopener noreferrer" title="Buka di tab baru">
-                <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-              </a>
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="h-9 w-9 rounded-full border-border bg-background/50 hover:bg-muted"
+                  asChild
+                >
+                  <a href={item.image_url} target="_blank" rel="noopener noreferrer">
+                    <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                  </a>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <Typography variant="caption" className="font-semibold text-primary-foreground">
+                  Buka di tab baru
+                </Typography>
+              </TooltipContent>
+            </Tooltip>
 
-            <Button
-              type="button"
-              variant="destructive"
-              size="icon"
-              className="h-9 w-9 rounded-full"
-              onClick={handleDelete}
-              disabled={isDeleting}
-              title="Hapus Media"
-            >
-              <TrashIcon className="h-4 w-4" />
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="icon"
+                  className="h-9 w-9 rounded-full"
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                >
+                  <TrashIcon className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <Typography variant="caption" className="font-semibold text-primary-foreground">
+                  Hapus Media
+                </Typography>
+              </TooltipContent>
+            </Tooltip>
 
             <DialogClose asChild>
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                className="h-9 w-9 rounded-full border-border bg-background/50 hover:bg-muted text-muted-foreground hover:text-foreground"
-                title="Tutup Modal"
-              >
-                <XMarkIcon className="h-4 w-4" />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="h-9 w-9 rounded-full border-border bg-background/50 hover:bg-muted text-muted-foreground hover:text-foreground"
+                  >
+                    <XMarkIcon className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <Typography variant="caption" className="font-semibold text-primary-foreground">
+                    Tutup Modal
+                  </Typography>
+                </TooltipContent>
+              </Tooltip>
             </DialogClose>
           </div>
         </div>
@@ -518,27 +583,44 @@ function MediaLightboxDialog({
 
           {/* Navigation Prev Button */}
           {hasPrev && (
-            <button
-              type="button"
-              onClick={onPrev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full bg-black/70 hover:bg-primary text-white backdrop-blur-md flex items-center justify-center transition-all opacity-80 hover:opacity-100 hover:scale-110 shadow-lg cursor-pointer"
-              title="Media Sebelumnya (Panah Kiri)"
-            >
-              <ChevronLeftIcon className="h-6 w-6" />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  onClick={onPrev}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full bg-black/70 hover:bg-primary text-white backdrop-blur-md flex items-center justify-center transition-all opacity-80 hover:opacity-100 hover:scale-110 shadow-lg cursor-pointer"
+                >
+                  <ChevronLeftIcon className="h-6 w-6" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <Typography variant="caption" className="font-semibold text-primary-foreground">
+                  Media Sebelumnya (Panah Kiri)
+                </Typography>
+              </TooltipContent>
+            </Tooltip>
           )}
 
           {/* Navigation Next Button */}
           {hasNext && (
-            <button
-              type="button"
-              onClick={onNext}
-              className="absolute right-4 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full bg-black/70 hover:bg-primary text-white backdrop-blur-md flex items-center justify-center transition-all opacity-80 hover:opacity-100 hover:scale-110 shadow-lg cursor-pointer"
-              title="Media Berikutnya (Panah Kanan)"
-            >
-              <ChevronRightIcon className="h-6 w-6" />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  onClick={onNext}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full bg-black/70 hover:bg-primary text-white backdrop-blur-md flex items-center justify-center transition-all opacity-80 hover:opacity-100 hover:scale-110 shadow-lg cursor-pointer"
+                >
+                  <ChevronRightIcon className="h-6 w-6" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="left">
+                <Typography variant="caption" className="font-semibold text-primary-foreground">
+                  Media Berikutnya (Panah Kanan)
+                </Typography>
+              </TooltipContent>
+            </Tooltip>
           )}
+
         </div>
 
         {/* Usage Details List if multiple/single usage */}

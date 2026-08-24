@@ -2,6 +2,12 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { Badge } from "@/components/ui/badge";
 import { Typography } from "@/components/ui/typography";
 import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
+import {
   ServerStackIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
@@ -249,8 +255,6 @@ export default async function AdminMediaPage() {
     }
   }
 
-
-
   // Sort by date descending
   allMedia.sort(
     (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
@@ -265,60 +269,82 @@ export default async function AdminMediaPage() {
         : "bg-success";
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden pb-10">
-      {/* ── Sticky Header ── */}
-      <StickyHeader
-        title="Galeri Media"
-        description="Kelola file gambar dan video produk serta kategori."
-      />
+    <TooltipProvider delayDuration={150}>
+      <div className="w-full max-w-full overflow-x-hidden pb-10">
+        {/* ── Sticky Header ── */}
+        <StickyHeader
+          title="Galeri Media"
+          description="Kelola file gambar dan video produk serta kategori."
+        />
 
-      <div className="p-4 sm:p-6 md:p-8 space-y-5 md:space-y-6">
-        {/* ── Storage Capacity Card ── */}
-        <div className="rounded-xl border border-border bg-card overflow-hidden">
-          <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20">
-            <Typography variant="h6" as="h2" className="text-white font-bold">
-              Kapasitas Storage
-            </Typography>
-            <Typography variant="caption" className="text-white/70 font-medium mt-0.5">
-              Sistem otomatis mendeteksi file yang terhubung dengan produk / kategori.
-            </Typography>
-          </div>
-
-          <div className="p-5 md:p-7">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <ServerStackIcon className="h-5 w-5 text-primary" />
-                <Typography variant="body-sm" className="font-bold">
-                  Penggunaan Storage
-                </Typography>
-              </div>
-              <Badge className="font-mono font-bold bg-primary/10 text-primary border border-primary/20 rounded-full shadow-none px-3 py-1">
-                {totalStorageMB} MB / {maxStorageMB} MB
-              </Badge>
-            </div>
-
-            {/* Progress Bar */}
-            <div className="h-2.5 w-full bg-muted/50 rounded-full overflow-hidden mb-3">
-              <div
-                className={`h-full rounded-full transition-all duration-1000 ease-out ${progressBarClass}`}
-                style={{ width: `${storagePercentage}%` }}
-              />
-            </div>
-
-            <div className="flex items-start gap-2 bg-muted/30 rounded-sm p-3 border border-border/50">
-              <ExclamationCircleIcon className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
-              <Typography variant="caption" color="muted" className="leading-snug font-medium">
-                Acuan Free Tier Supabase (1GB). Hapus file{" "}
-                <strong className="text-foreground">Tidak Terpakai</strong>{" "}
-                untuk menghemat kuota. Penghapusan gambar yang sudah dipakai akan memutuskan link tersebut.
+        <div className="p-4 sm:p-6 md:p-8 space-y-5 md:space-y-6">
+          {/* ── Storage Capacity Card ── */}
+          <div className="rounded-xl border border-border bg-card overflow-hidden">
+            <div className="bg-primary px-5 py-4 md:px-7 md:py-5 border-b border-primary-bg/20">
+              <Typography variant="h6" as="h2" className="text-white font-bold">
+                Kapasitas Storage
+              </Typography>
+              <Typography variant="caption" className="text-white/70 font-medium mt-0.5">
+                Sistem otomatis mendeteksi file yang terhubung dengan produk / kategori.
               </Typography>
             </div>
-          </div>
-        </div>
 
-        {/* ── Grid of media ── */}
-        <MediaGrid initialMedia={allMedia} />
+            <div className="p-5 md:p-7">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <ServerStackIcon className="h-5 w-5 text-primary" />
+                  <Typography variant="body-sm" className="font-bold">
+                    Penggunaan Storage
+                  </Typography>
+                </div>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge className="font-mono font-bold bg-primary/10 text-primary border border-primary/20 rounded-full shadow-none px-3 py-1 cursor-pointer transition-colors hover:bg-primary/20">
+                      {totalStorageMB} MB / {maxStorageMB} MB
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <Typography variant="caption" className="font-medium text-primary-foreground">
+                      Kapasitas Terpakai: {storagePercentage.toFixed(1)}% dari {maxStorageMB} MB
+                    </Typography>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+
+              {/* Progress Bar */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="h-2.5 w-full bg-muted/50 rounded-full overflow-hidden mb-3 cursor-pointer">
+                    <div
+                      className={`h-full rounded-full transition-all duration-1000 ease-out ${progressBarClass}`}
+                      style={{ width: `${storagePercentage}%` }}
+                    />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <Typography variant="caption" className="font-medium text-primary-foreground">
+                    Penggunaan Kuota: {storagePercentage.toFixed(1)}%
+                  </Typography>
+                </TooltipContent>
+              </Tooltip>
+
+              <div className="flex items-start gap-2 bg-muted/30 rounded-sm p-3 border border-border/50">
+                <ExclamationCircleIcon className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+                <Typography variant="caption" color="muted" className="leading-snug font-medium">
+                  Acuan Free Tier Supabase (1GB). Hapus file{" "}
+                  <strong className="text-foreground">Tidak Terpakai</strong>{" "}
+                  untuk menghemat kuota. Penghapusan gambar yang sudah dipakai akan memutuskan link tersebut.
+                </Typography>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Grid of media ── */}
+          <MediaGrid initialMedia={allMedia} />
+        </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 }
+

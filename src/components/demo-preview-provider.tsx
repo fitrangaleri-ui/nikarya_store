@@ -20,16 +20,17 @@ import {
   ExclamationTriangleIcon,
   XMarkIcon,
   DevicePhoneMobileIcon,
-  ArrowPathIcon,
 } from "@heroicons/react/24/outline";
 import { Typography } from "@/components/ui/typography";
 
 // ── Constants ──────────────────────────────────────────────────
 const DEFAULT_IFRAME_SANDBOX =
-  "allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-downloads";
-const DEVICE_ASPECT_RATIO = "9 / 20";
-const PREVIEW_WIDTH = 390;
-const PREVIEW_HEIGHT = (PREVIEW_WIDTH * 20) / 9;
+  "allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-downloads allow-presentation";
+const DEFAULT_IFRAME_ALLOW =
+  "autoplay; fullscreen; clipboard-read; clipboard-write; encrypted-media; picture-in-picture; web-share";
+const DEVICE_ASPECT_RATIO = "9 / 19.5";
+const PREVIEW_WIDTH = 480; // Lebar optimal 480px mengakomodasi elemen samping & animasi undangan
+const PREVIEW_HEIGHT = Math.round((PREVIEW_WIDTH * 19.5) / 9);
 
 // ── Types ──────────────────────────────────────────────────────
 interface DemoPreviewRequest {
@@ -118,6 +119,11 @@ function PreviewFrame({
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    setLoading(true);
+    setProgress(0);
+  }, [url]);
+
+  useEffect(() => {
     if (!loading || !validUrl) return;
 
     // Animasi persentase simulasi yang semakin melambat saat mendekati 99%
@@ -131,23 +137,23 @@ function PreviewFrame({
         }
         return prev + step;
       });
-    }, 150);
+    }, 120);
 
     return () => clearInterval(interval);
   }, [loading, validUrl]);
 
   return (
     <div
-      className="relative mx-auto shrink-0 overflow-hidden rounded-[2.5rem] border-[3px] border-muted-foreground/15 bg-foreground"
+      className="relative mx-auto shrink-0 overflow-hidden rounded-[2.5rem] border-[3px] border-muted-foreground/20 bg-foreground shadow-none drop-shadow-none transition-all duration-300"
       style={{
         aspectRatio: DEVICE_ASPECT_RATIO,
         width: `${PREVIEW_WIDTH}px`,
         height: `${PREVIEW_HEIGHT}px`,
       }}
     >
-      {/* Notch */}
-      <div className="absolute left-1/2 top-0 z-20 -translate-x-1/2">
-        <div className="h-7 w-[120px] rounded-b-2xl bg-foreground" />
+      {/* Notch (Dynamic Island) */}
+      <div className="pointer-events-none absolute left-1/2 top-0 z-20 -translate-x-1/2">
+        <div className="h-6 w-[120px] rounded-b-2xl bg-foreground/90 backdrop-blur-sm" />
       </div>
 
       {/* Loading state */}
@@ -159,29 +165,40 @@ function PreviewFrame({
               <circle
                 className="text-background/10 stroke-current"
                 strokeWidth="6"
-                cx="50" cy="50" r="42"
+                cx="50"
+                cy="50"
+                r="42"
                 fill="transparent"
-              ></circle>
+              />
               <circle
                 className="text-primary stroke-current transition-all duration-300 ease-out"
                 strokeWidth="6"
                 strokeLinecap="round"
-                cx="50" cy="50" r="42"
+                cx="50"
+                cy="50"
+                r="42"
                 fill="transparent"
                 strokeDasharray="263.89"
                 strokeDashoffset={263.89 - (263.89 * progress) / 100}
-              ></circle>
+              />
             </svg>
-            
+
             {/* Percentage text */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <Typography variant="body-xs" className="font-bold text-background font-mono">
+              <Typography
+                variant="body-xs"
+                className="font-bold text-background font-mono"
+              >
                 {progress}%
               </Typography>
             </div>
           </div>
-          
-          <Typography variant="caption" as="span" className="text-background/70 font-medium tracking-wide animate-pulse">
+
+          <Typography
+            variant="caption"
+            as="span"
+            className="text-background/70 font-medium tracking-wide animate-pulse"
+          >
             Memuat Preview...
           </Typography>
         </div>
@@ -192,25 +209,26 @@ function PreviewFrame({
         <iframe
           src={url}
           title={`Preview: ${label}`}
-          className="block w-full bg-background rounded-[inherit]"
+          className="block h-full w-full bg-background rounded-[inherit]"
           style={{
             border: "none",
             display: "block",
-            height: "calc(100% - 2rem)",
           }}
           onLoad={() => setLoading(false)}
           sandbox={DEFAULT_IFRAME_SANDBOX}
+          allow={DEFAULT_IFRAME_ALLOW}
         />
       ) : (
-        <div
-          className="flex items-center justify-center px-6 text-center"
-          style={{ height: "calc(100% - 2rem)" }}
-        >
+        <div className="flex h-full w-full items-center justify-center px-6 text-center">
           <div className="flex max-w-xs flex-col items-center gap-3 text-background">
             <div className="flex h-10 w-10 items-center justify-center rounded-full border border-muted-foreground/15 bg-muted-foreground/10">
               <ExclamationTriangleIcon className="h-5 w-5 text-background/80" />
             </div>
-            <Typography variant="body-sm" as="p" className="font-semibold text-background">
+            <Typography
+              variant="body-sm"
+              as="p"
+              className="font-semibold text-background"
+            >
               Preview tidak tersedia
             </Typography>
             <Typography variant="caption" as="p" className="text-background/60">
@@ -221,8 +239,8 @@ function PreviewFrame({
       )}
 
       {/* Home indicator */}
-      <div className="flex items-center justify-center bg-foreground py-2">
-        <div className="h-1 w-28 rounded-full bg-background/30" />
+      <div className="pointer-events-none absolute bottom-2 left-1/2 z-20 -translate-x-1/2">
+        <div className="h-1 w-28 rounded-full bg-foreground/40 backdrop-blur-sm" />
       </div>
     </div>
   );
@@ -301,25 +319,31 @@ function DemoPreviewDialog({
             </DialogDescription>
 
             <div className="relative mx-auto flex max-h-[calc(100dvh-2rem)] w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-center gap-4 px-4 py-4 animate-in fade-in zoom-in-95 duration-300">
-              {/* Header bar */}
+              {/* Clean Header bar */}
               <div
                 ref={headerRef}
-                className="flex w-full max-w-[390px] items-center justify-between"
+                style={{ maxWidth: `${PREVIEW_WIDTH}px` }}
+                className="flex w-full items-center justify-between"
               >
                 <div className="flex min-w-0 items-center gap-2">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary">
-                    <DevicePhoneMobileIcon className="h-4 w-4 text-primary-foreground" />
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                    <DevicePhoneMobileIcon className="h-4 w-4" />
                   </div>
-                  <Typography variant="body-sm" as="span" className="truncate font-semibold text-background">
+                  <Typography
+                    variant="body-sm"
+                    as="span"
+                    className="truncate font-semibold text-background leading-tight"
+                  >
                     {payload.label}
                   </Typography>
                 </div>
-                <div className="flex items-center gap-2">
 
+                <div className="flex items-center gap-2">
+                  {/* Close Button */}
                   <button
                     type="button"
                     onClick={onClose}
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-warning text-primary-foreground transition-all hover:bg-primary/50 hover:text-primary-foreground active:scale-95"
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-warning text-primary-foreground transition-all hover:bg-warning/80 active:scale-95"
                     aria-label="Tutup preview"
                   >
                     <XMarkIcon className="h-4 w-4" />

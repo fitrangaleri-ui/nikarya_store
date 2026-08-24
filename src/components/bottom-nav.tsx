@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { HomeIcon, FunnelIcon, UserCircleIcon, ShoppingCartIcon, SwatchIcon } from "@heroicons/react/24/solid";
 import { Badge } from "@/components/ui/badge";
 import { Typography } from "@/components/ui/typography";
@@ -35,10 +35,15 @@ export function BottomNav() {
   const { openCart, cartCount, isCartOpen } = useCart();
   const { user } = useAuth();
   const { toggle: toggleFilter, isOpen: isFilterOpen } = useFilterDrawer();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isProductsPage = pathname.startsWith("/products");
   const isLandingPage = pathname.startsWith("/landingpage");
-  const akunHref = user ? "/dashboard" : "/login";
+  const akunHref = mounted && user ? "/dashboard" : "/login";
 
   const handleCartClick = useCallback(() => {
     openCart();
@@ -72,7 +77,7 @@ export function BottomNav() {
             isCartOpen && "scale-110",
           )}
         />
-        {cartCount > 0 && (
+        {mounted && cartCount > 0 && (
           <Badge className="absolute -top-1.5 -right-2.5 h-4 min-w-[16px] px-1 bg-primary text-[9px] font-bold text-primary-foreground ring-2 ring-background shadow-sm animate-in zoom-in">
             {cartCount > 99 ? "99+" : cartCount}
           </Badge>
