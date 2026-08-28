@@ -69,7 +69,7 @@ export default function MinangSeriesPage() {
               <b>TEMA MINANG SERIES</b> dari <b>NIKARYA DIGITAL</b> hadir dengan nuansa adat Minangkabau yang mewah dan bernilai seni tinggi, responsif, interaktif dan siap pakai dalam format <b>JSON</b>. Dirancang khusus untuk penyedia layanan jasa pembuatan undangan digital profesional.
             </>
           }
-          imageSrc="/landing-assets/env-series.png"
+          imageSrc="https://ebayweiakwknyhrzvpqx.supabase.co/storage/v1/object/public/product-images/minang-series-hero-1787911640128-z1v1i.png"
           buttonLabel="Lihat Koleksi"
           buttonHref="#templates"
           badgeLabel="Koleksi Minang Series"

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { EyeIcon, PhotoIcon } from "@heroicons/react/24/solid";
 import { Typography } from "@/components/ui/typography";
 import { resolveImageSrc } from "@/lib/resolve-image";
-import { useDemoPreview } from "@/components/demo-preview-provider";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -22,14 +21,16 @@ export function ProductCardDemo({
   badgeClassName?: string;
   badgeStyle?: React.CSSProperties;
 }) {
-  const { openPreview } = useDemoPreview();
   const imageSrc = resolveImageSrc(demoLink.image_url);
+  const demoUrl = demoLink.url || "#";
 
   return (
     <div className="group flex flex-col glass rounded-2xl overflow-hidden transition-all duration-500 h-full relative hover:-translate-y-1 hover:border-primary/40">
-      <div
-        className="relative aspect-[4/3] bg-muted/30 overflow-hidden border-b border-border/40 w-full cursor-pointer"
-        onClick={() => openPreview({ label: demoLink.label || "Demo", url: demoLink.url })}
+      <a
+        href={demoUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="relative aspect-[4/3] bg-muted/30 overflow-hidden border-b border-border/40 w-full cursor-pointer block"
       >
         {imageSrc ? (
           <Image
@@ -54,7 +55,7 @@ export function ProductCardDemo({
             {badgeLabel}
           </Badge>
         </div>
-      </div>
+      </a>
 
       <div className="p-5 flex flex-col flex-1 gap-3">
         <Typography
@@ -67,13 +68,19 @@ export function ProductCardDemo({
 
         <div className="mt-auto pt-2 w-full">
           <Button
+            asChild
             variant="brand"
             size="lg"
             className="w-full"
-            onClick={() => openPreview({ label: demoLink.label || "Demo", url: demoLink.url })}
           >
-            <EyeIcon className="size-5" />
-            Preview Tema
+            <a
+              href={demoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <EyeIcon className="size-5" />
+              Preview Tema
+            </a>
           </Button>
         </div>
       </div>
