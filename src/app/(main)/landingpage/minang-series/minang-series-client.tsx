@@ -94,12 +94,11 @@ export function MinangSeriesClient({
               onBuyOverride={() => setIsQrisOpen(true)}
               features={[
                 "Tema Minang Series Eksklusif (Adat Minangkabau)",
-                "Desain Mewah dengan Ornamen Suntiang, Marawa & Rumah Gadang",
                 "Struktur JSON rapih dan mudah diedit di Elementor",
                 `${demoLinks.length > 0 ? demoLinks.length : 5} Premium Theme`,
                 "Gratis Aset Script Motion Control",
                 "Gratis Asset Script Animasi (HTML & CSS)",
-                "Gratis Asset Image (WEBP & SVG)",
+                "Gratis Asset Image (WEBP, PNG & SVG)",
               ]}
             />
           </ScrollReveal>
